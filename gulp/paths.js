@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports={
-		src:"./",
+		src:"src",
 		dev:"dev",
 		dist:"dist",
 		commonFile:"/CommonResource"
