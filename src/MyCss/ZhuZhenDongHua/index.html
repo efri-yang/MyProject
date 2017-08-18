@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>逐帧动画 </title>
+    <link rel="stylesheet" type="text/css" href="../../CommonResource/css/normalize-7.0.0.css">
+    <link rel="stylesheet" type="text/css" href="../../CommonResource/css/base.css">
+</head>
+
+<body style="padding: 30px">
+    <style type="text/css">
+    /**
+ * 多个页面用到，请慎重修改
+ */
+
+    @keyframes animateVicon1 {
+        0% {
+            background-position: 0 0;
+        }
+        100% {
+            
+            background-position: -112px 0;
+        }
+    }
+
+    
+    .pexpert-ayy-item{
+        position:relative;
+        clear: both;
+   	}
+
+    .expert-voice-box .soma-bd {
+        position: relative;
+    }
+
+    .expert-voice-box .soma-bd .voice-bar {
+        border: 1px solid #ffa543;
+        background: #ffae00;
+        height: 76px;
+        border-radius: 8px;
+        overflow: hidden;
+        float: left;
+    }
+   
+
+    .expert-voice-box .soma-bd .vlen {
+        margin-left: 15px;
+        line-height: 76px;
+        color: #d3d3d3;
+       
+    }
+
+    .expert-voice-box .soma-bd .voice-bar .vicon {
+        width: 28px;
+        height: 45px;
+        background: url("./images/yy_icon_zfx_l_1.png") no-repeat 0 0;
+        overflow: hidden;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(0%, -50%);
+        -ms-transform: translate(0%, -50%);
+        -moz-transform: translate(0%, -50%);
+        left: 20px;
+    }
+	 .expert-voice-box .soma-bd .voice-bar.active .vicon{
+                
+        animation: animateVicon1 steps(4,start) 8s infinite;/*80帧*/
+       
+    }
+    .expert-voice-box .arrow {
+        width: 18px;
+        height: 28px;
+        overflow: hidden;
+        background: url("./images/yy_arrow.png") no-repeat top center;
+        background-size: 100% 100%;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -18px;
+    }
+
+
+
+
+        
+
+
+
+    .expert-voice-box2 .soma-bd {
+        position: relative;
+    }
+
+    .expert-voice-box2 .soma-bd .voice-bar {
+        border: 1px solid #ffa543;
+        background: #ffae00;
+        height: 76px;
+        border-radius: 8px;
+        overflow: hidden;
+        float: left;
+    }
+    
+
+    .expert-voice-box2 .soma-bd .vlen {
+        margin-left: 15px;
+        line-height: 76px;
+        color: #d3d3d3;
+       
+    }
+
+    .expert-voice-box2 .soma-bd .voice-bar .vicon {
+        width: 28px;
+        height: 45px;
+        background: url("./images/yy_icon_zfx.png") no-repeat 0 0;
+        overflow: hidden;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(0%, -50%);
+        -ms-transform: translate(0%, -50%);
+        -moz-transform: translate(0%, -50%);
+        left: 20px;
+    }
+    .expert-voice-box2 .soma-bd .voice-bar.active .vicon{
+                
+        animation: animateVicon1 steps(4,end) 8s infinite;/*80帧*/
+       
+    }
+
+    .expert-voice-box2 .arrow {
+        width: 18px;
+        height: 28px;
+        overflow: hidden;
+        background: url("./images/yy_arrow.png") no-repeat top center;
+        background-size: 100% 100%;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -18px;
+    }
+    </style>
+
+	<div style="background: #000; float: left;"><img src="images/yy_icon_zfx_l_1.png"></div>
+	<p style="clear:both;">
+		<pre>
+@keyframes animateVicon1 {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        
+        background-position: -112px 0;
+    }
+}
+animation: animateVicon1 steps(4,start) 8s infinite;
+	</pre>
+	  到-112 而不是到-140
+	</p>
+	<p style="clear: both;">steps(4,start)</p>
+	<p>很明显 start 表示第一步 是在1/4，然后2/4 3/4 4/4 每部停留时间8/2=2s</p>
+    <div class="pexpert-ayy-item">
+        <div class="expert-voice-box clearfix">
+            <i class="arrow"></i>
+            <div class="soma-bd">
+                <!--  -->
+                <div class="voice-bar active" style="width:21%">
+                    <i class="vicon"></i>
+                </div>
+                <span class="vlen">1''</span>
+            </div>  
+        </div>
+    </div>
+
+
+	
+	<br/><br/>
+	<p style="background: #000;float: left;"><img src="images/yy_icon_zfx.png"/></p>
+	<p style="clear: both;">
+		<pre>
+@keyframes animateVicon1 {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        
+        background-position: -112px 0;
+    }
+}
+animation: animateVicon1 steps(4,end) 8s infinite;
+	    </pre>
+	</p>
+    <div class="pexpert-ayy-item">
+        <div class="expert-voice-box2 clearfix">
+            <i class="arrow"></i>
+            <div class="soma-bd">
+                <!--  -->
+                <div class="voice-bar active" style="width:21%">
+                    <i class="vicon"></i>
+                </div>
+                <span class="vlen">1''</span>
+            </div>  
+        </div>
+    </div>
+<br/>
+
+
+
+    <style type="text/css">
+
+    @keyframes animateVicon2 {  
+    0%{
+        background-position:-112px 0;
+
+    }
+    100%{
+         background-position:0 0;
+    }
+}
+
+		.expert-voice-box3 .soma-bd {
+        position: relative;
+    }
+
+    .expert-voice-box3 .soma-bd .voice-bar {
+        border: 1px solid #ffa543;
+        background: #ffae00;
+        height: 76px;
+        border-radius: 8px;
+        overflow: hidden;
+        float: left;
+    }
+    
+
+    .expert-voice-box3 .soma-bd .vlen {
+        margin-left: 15px;
+        line-height: 76px;
+        color: #d3d3d3;
+       
+    }
+
+    .expert-voice-box3 .soma-bd .voice-bar .vicon {
+        width: 28px;
+        height: 45px;
+        background: url("./images/yy_icon_list2.png") no-repeat 0 0;
+        overflow: hidden;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(0%, -50%);
+        -ms-transform: translate(0%, -50%);
+        -moz-transform: translate(0%, -50%);
+        left: 20px;
+    }
+    .expert-voice-box3 .soma-bd .voice-bar.active .vicon{
+                
+         animation: animateVicon2 steps(4,end) 8s infinite;/*80帧*/
+       
+    }
+
+    .expert-voice-box3 .arrow {
+        width: 18px;
+        height: 28px;
+        overflow: hidden;
+        background: url("./images/yy_arrow.png") no-repeat top center;
+        background-size: 100% 100%;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -18px;
+    }
+    </style>
+
+	<p style="background: #000;float: left;clear: both;"><img src="images/yy_icon_list2.png"></p>
+	<p style="clear: both;">
+		<pre>
+@keyframes animateVicon2 {  
+    0%{
+        background-position:-112px 0;
+
+    }
+    100%{
+         background-position:0 0;
+    }
+}
+ animation: animateVicon2 steps(4,end) 8s infinite;/*80帧*/
+		</pre>
+	</p>
+    <div class="pexpert-ayy-item">
+        <div class="expert-voice-box3 clearfix">
+            <i class="arrow"></i>
+            <div class="soma-bd">
+                <!--  -->
+                <div class="voice-bar active" style="width:21%">
+                    <i class="vicon"></i>
+                </div>
+                <span class="vlen">1''</span>
+            </div>  
+        </div>
+    </div>
+
+
+    <br/>
+
+    <style type="text/css">
+			.expert-voice-box4 .soma-bd {
+        position: relative;
+    }
+
+    .expert-voice-box4 .soma-bd .voice-bar {
+        border: 1px solid #ffa543;
+        background: #ffae00;
+        height: 76px;
+        border-radius: 8px;
+        overflow: hidden;
+        float: left;
+    }
+    
+
+    .expert-voice-box4 .soma-bd .vlen {
+        margin-left: 15px;
+        line-height: 76px;
+        color: #d3d3d3;
+       
+    }
+
+    .expert-voice-box4 .soma-bd .voice-bar .vicon {
+        width: 28px;
+        height: 45px;
+        background: url("./images/yy_icon_list21.png") no-repeat 0 0;
+        overflow: hidden;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(0%, -50%);
+        -ms-transform: translate(0%, -50%);
+        -moz-transform: translate(0%, -50%);
+        left: 20px;
+    }
+    .expert-voice-box4 .soma-bd .voice-bar.active .vicon{
+                
+         animation: animateVicon2 steps(4,start) 8s infinite;/*80帧*/
+       
+    }
+
+    .expert-voice-box4 .arrow {
+        width: 18px;
+        height: 28px;
+        overflow: hidden;
+        background: url("./images/yy_arrow.png") no-repeat top center;
+        background-size: 100% 100%;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -18px;
+    }
+    </style>
+    <p style="background: #000;float: left;clear: both;"><img src="images/yy_icon_list21.png"></p>
+	<p style="clear: both;">
+		<pre>
+@keyframes animateVicon2 {  
+    0%{
+        background-position:-112px 0;
+
+    }
+    100%{
+         background-position:0 0;
+    }
+}
+animation: animateVicon2 steps(4,start) 8s infinite;/*80帧*/
+		</pre>
+	</p>
+    <div class="pexpert-ayy-item">
+        <div class="expert-voice-box4 clearfix">
+            <i class="arrow"></i>
+            <div class="soma-bd">
+                <!--  -->
+                <div class="voice-bar active" style="width:21%">
+                    <i class="vicon"></i>
+                </div>
+                <span class="vlen">1''</span>
+            </div>  
+        </div>
+    </div>
+
+
+</body>
+
+</html>
