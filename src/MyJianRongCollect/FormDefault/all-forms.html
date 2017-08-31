@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>表单整理</title>
+	<link rel="stylesheet" type="text/css" href="../css/reset.css">
+	<link rel="stylesheet" type="text/css" href="../css/global.css">
+	<link rel="stylesheet" type="text/css" href="css/form.css">
+	
+</head>
+<body class="pd5">
+	<div class="situation-box mb20">
+        <div class="hd">所有表单</div>
+        <div class="bd">
+            <div class="form-item">
+            	<span>type=text</span>
+				<input type="text" class="form-field" />
+            </div>
+            <div class="form-item">
+            	<span>type=password</span>
+				<input type="password" class="form-field" />
+            </div>
+            <div class="form-item">
+            	<span>type=checbox</span>
+				<label><input type="checkbox"/>篮球</label>
+				<label><input type="checkbox"/>足球</label>
+				<label><input type="checkbox"/>排球</label>
+            </div>
+            <div class="form-item">
+            	<span>type=radio</span>
+				<label><input type="radio" name="sex" />男</label>
+				<label><input type="radio" name="sex"/>女</label>
+            </div>
+            <div class="form-item">
+            	<span>type=button</span>
+				<input type="button" value="按钮">
+            </div>
+            <div class="form-item">
+            	<span>type=reset</span>
+				<input type="reset" value="重置">
+            </div>
+            <div class="form-item">
+            	<span>type=hidden</span>
+				<input type="hidden">
+            </div>
+            <div class="form-item">
+            	<span>type=select</span>
+				<select>
+					<option>福建省</option>
+					<option>浙江省</option>
+				</select>
+            </div>
+            <div class="form-item">
+            	<span>type=file</span>
+				<input type="file" value="按钮">
+            </div>
+            <h1 style="font-size: 18px;margin-bottom:10px">HTML5新增对象</h1>
+            <div class="form-item">
+            	<span>type=number</span>
+				<input type="number" class="form-field">
+            </div>
+            <div class="form-item">
+            	<span>type=email</span>
+				<input type="email" class="form-field">
+            </div>
+            <div class="form-item">
+            	<span>type=search</span>
+				<input type="search" class="form-field" placeholder="搜索..">	
+            </div>
+            <div class="form-item">
+            	<span>type=image</span>
+				<input type="image" class="form-field" width="30px" height="30px" src="http://wnworld.com/wp-content/uploads/2015/09/pic01.png">
+            </div>
+            <div class="form-item">
+            	<span>type=color</span>
+				<input type="color">
+            </div>
+            <div class="form-item">
+            	<span>type=month</span>
+				<input type="month">
+            </div>
+            <div class="form-item">
+            	<span>type=date</span>
+				<input type="date">
+            </div>
+            <div class="form-item">
+            	<span>type=datetime</span>
+				<input type="datetime">
+            </div>
+            <div class="form-item">
+            	<span>type=datetime-local</span>
+				<input type="datetime-local">
+            </div>
+            <div class="form-item">
+            	<span>type=range</span>
+				<input type="range">
+            </div>
+            <div class="form-item">
+            	<span>type=time</span>
+				<input type="time">
+            </div>
+            <div class="form-item">
+            	<span>type=week</span>
+				<input type="week">
+            </div>
+            <div class="form-item">
+            	<span>type=url</span>
+				<input type="url">
+            </div>
+            
+        </div>
+    </div>
+    <div class="situation-box mb20">
+        <div class="hd">注意点</div>
+        <div class="bd">
+        	<p>1、type=search 和type=image 在手机端的作用还是非常明显的!输入完成后直接按键盘上的搜索就会直接进行搜索了</p>
+        	<p>2、type=file 在不同浏览器的区别还是非常明显的</p>
+        </div>
+    </div>
+
+    <div class="situation-box mb20">
+        <div class="hd">uc浏览器(安卓)</div>
+        <div class="bd all-forms-bd">
+        	<p><img src="../images/uc-forms.png"></p>
+        </div>
+    </div>
+    <div class="situation-box mb20">
+        <div class="hd">微信浏览器(安卓)</div>
+        <div class="bd all-forms-bd">
+        	<p><img src="../images/weixin-forms.png"></p>
+        </div>
+    </div>
+    <div class="situation-box mb20">
+        <div class="hd">360(安卓)</div>
+        <div class="bd all-forms-bd">
+        	<p><img src="../images/360-forms.png"></p>
+        	<p>1、360的datetime竟然不会弹出来对话框，需要用户手写输入</p>
+        	<p>2、type="time"的时候是有明显的bug，竟然设置不了(有弹出框)</p>
+        </div>
+    </div>
+	
+
+
+</body>
+</html>
