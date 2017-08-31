@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../css/reset.css">
+	<link rel="stylesheet" type="text/css" href="../css/global.css">
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+</head>
+<body class="pl20">
+	<style type="text/css">
+		.demo-cursor{cursor: pointer;display: block; padding: 10px;background: #f60}
+		.demo-nocursor{display: block; padding: 10px;background: #5e5e5e}
+	</style>
+	<br/>
+	<br/>
+	<div>
+		<button data-roler='myprize'>点击验证是否弹出(button按钮)</button>
+	</div>
+	<br/>
+	<br/>
+	<div>
+		<i class="demo-cursor" data-roler='myprize'>点击验证是否弹出(i标签设置cursor: pointer)</i>
+	</div>
+		<br/>
+		<br/>
+	<div>
+		<i class="demo-nocursor" data-roler='myprize'>点击验证是否弹出(i标签未设置cursor: pointer)</i>
+	</div>
+		<br/>
+		<br/>
+	<div>
+		<div class="demo-cursor" data-roler='myprize'>点击验证是否弹出(div元素设置cursor: pointer)</div>
+	</div>
+		<br/>
+		<br/>
+	<div>
+		<div class="demo-nocursor" data-roler='myprize'>点击验证是否弹出(div元素未设置cursor: pointer)</div>
+	</div>
+		<br/>
+		<br/>
+	<div>
+		<a href="#" data-roler='myprize'>点击验证是否弹出(button按钮)</a>
+	</div>
+	<script type="text/javascript">
+	$(document).on("click", '[data-roler="myprize"]', function(event) { event.preventDefault();alert("弹出来！") });
+</script>
+</body>
+</html>
