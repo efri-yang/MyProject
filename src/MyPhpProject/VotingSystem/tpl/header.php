@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * $_SERVER['PHP_SELF'] 表示当前 php 文件相对于网站根目录的位置地址
+ * http://www.5idev.com/php/ ：/php/index.php
+http://www.5idev.com/php/index.php ：/php/index.php
+http://www.5idev.com/php/index.php?test=foo ：/php/index.php
+http://www.5idev.com/php/index.php/test/foo ：/php/index.php/test/foo
+
+$_SERVER['PHP_SELF']=/MyProject/src/MyPhpProject/VotingSystem/index.php
+
+strrpos:在字符串中最后一次出现的位置：
+strrpos($_SERVER['PHP_SELF'],'/')=40
+ */
+
 function php_self(){
 
     $php_self=substr($_SERVER['PHP_SELF'],strrpos($_SERVER['PHP_SELF'],'/')+1);
