@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>注册页面</title>
+</head>
+<body>
+	
+
+
+
+	<script type="text/javascript">
+	var Event={
+		clientList:[],
+		listen:function(key,fn){
+			if(!this.clientList[key]){
+				this.clientList[key]=[];
+			}
+			this.clientList[key].push(fn);
+		},
+		trigger:function(){
+			var key=Array.prototype.shift.call(arguments)
+			var fns=this.clientList[key];
+			if(!fns || !fns.length){
+				return false;
+			}
+			for(var i=0;i<fns.length;i++){
+				var fn=fns[i];
+				fn.apply(this,arguments);
+			}
+		}
+	};
+	var header=(function(){
+		Event.listen("name1",function(){
+			alert(header.alt)
+			header.alt();
+		});
+		return {
+			alt:function(){
+				alert("xxx")
+			}
+		}
+	})();
+	</script>
+</body>
+</html>

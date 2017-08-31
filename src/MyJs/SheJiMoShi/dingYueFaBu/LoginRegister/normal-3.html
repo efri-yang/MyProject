@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>发布订阅模式</title>
+</head>
+<body>
+<script type="text/javascript">
+	var Event=(function(){
+		var _default="default",
+			global=this,
+			Event;
+		Event=function(){
+			var _create,
+				each,
+				ret,
+				_shift = Array.prototype.shift,
+                _unshift = Array.prototype.unshift,
+				namespaceCache={};
+			each=function(arr,fn){
+				var ret;
+				for(var i=0;i<arr.length;i++){
+					var n=arr[i];
+					ret=fn.call(n,i,n);
+				}
+				return ret;
+			};
+			var _trigger=function(){
+					
+					var cache=_shift.call(arguments);
+					console.dir(cache)
+					var key=_shift.call(arguments);
+					var fns=cache[key];
+					var _self=this;
+					var args=arguments;
+
+					
+					if(!fns && !fns.length){
+						return;
+					}
+
+					each(fns,function(){
+						this.apply(_self,args);
+					});
+				}
+			
+
+
+			var _listen=function(key,fn,cache){
+				if(!cache[key]){
+					cache[key]=[];
+				}
+				cache[key].push(fn);
+			}
+			_create=function(namespace){
+				var namespace=namespace || _default,
+					ret,
+					cache={},
+					offlineStack = []; //离线堆
+				
+
+				ret={
+					listen:function(key,fn){
+						_listen(key,fn,cache);
+						if(offlineStack===null){
+							return;
+						}
+						each(offlineStack,function(){
+							this();
+						})
+						offlineStack=null;
+					},
+					trigger:function(){
+						//先
+						var args,
+							fn,
+							_self=this;	
+						_unshift.call(arguments,cache); 
+
+						args=arguments;
+						console.dir(args)
+						fn=function(){
+							return _trigger.apply(_self,args)
+						}
+						if(offlineStack){
+							offlineStack.push(fn);
+							return offlineStack;
+						}
+						return  fn();
+
+					}
+				}
+				return namespace ? (namespaceCache[namespace] ? namespaceCache[namespace] : namespaceCache[namespace] = ret) : ret;
+
+			}
+			return {
+					create:_create,
+					listen:function(key,fn){
+						var event=this.create();
+						event.listen(key,fn);
+					},
+					trigger:function(){
+						var event=this.create();
+						event.trigger.apply(this, arguments);
+					}
+			}
+		}()
+		return Event;
+	})();
+
+	Event.trigger('click1',1);
+
+	Event.listen("click1",function(a){
+		alert(a);
+	});
+	
+</script>
+</body>
+</html>

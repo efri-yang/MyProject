@@ -1,0 +1,153 @@
+.header{
+	height: 50px;
+	line-height: 50px;
+	background-color:rgba(0,0,0,0.8);
+	color:#fff;
+}
+.container{
+	width: 1200px;
+	margin: 0 auto;
+}
+.header .txt{
+	float: left;
+}
+.header .login-register{
+	float: right;
+	margin-left: 20px;
+	color:#fff;
+}
+.header .txt a{
+	margin-left: 20px;
+	color:#fff;
+}
+
+.nav-box{
+	background:#333;
+	margin-top: 30px;
+	padding: 0 20px;
+}
+.nav-box li{
+	float: left;
+	margin-right: 15px;
+}
+
+.nav-box li a{
+	color: #fff;
+	display: block;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 30px;
+}
+.nav-box li a:hover{
+	background: #666;
+	text-decoration: none;
+}
+.nav-box li.active a{
+	background: #666;
+}
+
+.footer{
+	height: 100px;
+	line-height: 100px;
+	background: #333;
+	margin-top: 50px;
+	color:#fff;
+	text-align: center;
+}
+
+
+
+
+
+
+
+.sidebar{
+	width: 300px;
+	float: left;
+	overflow: hidden;
+}
+.tit-type1{
+	height: 40px;
+	line-height: 40px;
+	background:#286090;
+	color: #fff;
+	font-size: 24px;
+	padding: 0 10px;
+}
+.tit-type1 .more{
+	float: right;
+	color: #fff;
+	font-size: 12px;
+}
+.hnotice-listbox{
+	border:1px solid #ccc;
+}
+.hnotice-listbox ul li{
+	padding: 5px 10px;
+}
+.mainbox{
+	float: right;
+	width:850px;
+	min-height: 300px;
+	border:1px solid #ccc;
+}
+.hvote-box{
+	padding:15px 25px;
+}
+.hvote-box ul li{
+	margin-bottom: 10px;
+}
+.hvote-box ul li span{
+	border:1px solid #e5e5e5;
+	background: #333;
+	width: 15px;
+	height: 15px;
+	line-height: 15px;
+	text-align: center;
+	margin-right: 10px;
+	color: #fff;
+	display: inline-block;
+}
+
+.noticeDetail-box{}
+
+.noticeDetail-box h1{
+	text-align: center;
+}
+.noticeDetail-box .bar{
+	text-align: center;
+}
+.noticeDetail-box .bar span{
+	margin:0 10px;
+}
+.noticeDetail-box .con-txt{
+	line-height: 25px;
+	line-height: 25px;
+}
+
+.noticeDetail-box .con-txt{
+	margin-top: 50px;
+}
+
+.noticeDetail-box .con-txt p{
+	text-indent: 2em;
+}
+
+.no-notice,.no-databox{
+	font-size: 40px;
+	color:#fff;
+}
+
+.vote-detail-box .items{
+	text-align: center;
+	padding-top: 30px;
+}
+.vote-detail-box h2{
+	border-bottom: 1px solid #666;
+	padding-bottom: 15px;
+}
+
+.vote-detail-box .items label{
+	margin:0 30px;
+	font-size: 20px;
+}

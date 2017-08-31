@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    var Event = (function() {
+        var global = this, //global 就是window
+            Event,
+            _default = 'default';
+        Event = function() {
+            var _listen,
+                _trigger,
+                _remove,
+                _slice = Array.prototype.slice,
+                _shift = Array.prototype.shift,
+                _unshift = Array.prototype.unshift,
+                namespaceCache = {},
+                _create,
+                find,
+                each = function(ary, fn) {
+                    //遍历数组里每个元素，并调用回掉函数fn fn的 this执行 数组当前项 改变作用域
+                    var ret;
+                    for (var i = 0, l = ary.length; i < l; i++) {
+                        var n = ary[i];
+                        ret = fn.call(n, i, n);
+                    }
+                    return ret;
+                };
+            _listen = function(key, fn, cache) {
+                //监听订阅信息 cache
+                if (!cache[key]) {
+                    cache[key] = [];
+                }
+                cache[key].push(fn);
+            };
+            _remove = function(key, cache, fn) {
+                var fns = cache[key];
+                if (fns) {
+                    if (fn) {
+                        for (var i = fns.length - 1; i >= 0; i--) {
+                            if (fns[i] === fn) {
+                                fns.splice(i, 1); //返回被删除的项那个项
+                            }
+                        }
+                    } else {
+                        cache[key] = [];
+                    }
+                }
+            };
+            _trigger = function() {
+                var cache = _shift.call(arguments), //删除第一个元素，并返回该元素arguments = [{“click":[fn1,fn2]},"click",1]     
+                    key = _shift.call(arguments), //删除第一个元素，并返回该元素
+                    args = arguments,
+                    _self = this,
+                    ret,
+                    stack = cache[key];
+                if (!stack || !stack.length) {
+                    return false;
+                }
+                return each(stack, function() { 
+                    //fn.call(n, i, n); this 就是当前函数
+                    return this.apply(_self, args) //数组里的每个项调用执行函数
+                });
+            };
+            _create = function(namespace) {
+                var namespace = namespace || _default;
+                var cache = {},
+                    offlineStack = [], //离线堆
+                    ret = {
+                        listen: function(key, fn, last) {
+
+                        	_listen(key,fn,cache);
+                            if (offlineStack === null) {
+                                return;
+                            }
+                            if (last === 'last') {
+                                offlineStack.length && offlineStack.pop()(); //删除最后一个元素，并返回他 然后执行
+                            } else {
+                            	//已经 listen
+                                each(offlineStack, function() { //遍历离线堆每个项
+                                    this();
+                                });
+                            }
+                            offlineStack = null;
+                        },
+                        getLen:function(){
+                        	console.dir(offlin)
+                        },
+                        one: function(key, fn, last) {
+                            _remove(key, cache, fn); //删除cache中key对应的项
+                            this.listen(key, fn, last);
+                        },
+                        remove: function(key, fn) {
+                            _remove(key, cache, fn);
+                        },
+                        trigger: function() {
+                            var fn,
+                                args,
+                                _self = this;
+                                console.log(this)
+                             //向数组的开头添 或更多元素 Event.trigger("click", 1)
+                             //arguments = [{},"click",1]     
+                            _unshift.call(arguments, cache); 
+                            args = arguments;
+                            // Object.prototype.toString.call(args) [object Arguments]
+                          
+                            fn = function() {
+                            	//保证调用的时候this指向当前返回的对象 
+                                return _trigger.apply(_self, args);
+                            };
+
+                            //先trigger的 时候 offlineStack 就是[],所以值返回true
+                            //先trigger  就把fn加到数组中 
+                            if (offlineStack) { 
+                                return offlineStack.push(fn);
+                            }
+                            return fn();
+                        }
+                    };
+                //namespace="default";namespaceCache{"default":ret}
+                //有 namespace  namespaceCache是否有对应命名空间对象 若没有 直接赋予ret
+                //每个 命名空间下 都会有 ret 相当于引用
+                return namespace ? (namespaceCache[namespace] ? namespaceCache[namespace] : namespaceCache[namespace] = ret) : ret;
+            }
+            return {
+                create: _create,
+                one: function(key, fn, last) {
+                    var event = this.create();
+                    event.one(key, fn, last);
+                },
+                remove: function(key, fn) {
+                    var event = this.create();
+                    event.remove(key, fn);
+                },
+                listen: function(key, fn, last) {
+                    var event = this.create();
+                    event.listen(key, fn, last);
+                },
+                trigger: function() {
+                    var event = this.create();
+                    event.trigger.apply(this, arguments);
+                }
+            }
+        }();
+        return Event;
+    })();
+Event.trigger("click1", 2)
+Event.trigger("click", 1)
+
+    Event.listen('click', fn1 = function(a) {
+        
+        console.log(a)
+    });
+     Event.listen('click1', fn2 = function(a) {
+        
+        console.log(a)
+    });
+   
+
+    
+
+    </script>
+    <p>
+1、如果先trigger某个事件的时候，先把当前某个函数推到 offlineStack，listen的时候，添加到对应的key，遍历offlineStack
+</p>
+</body>
+
+</html>

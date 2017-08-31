@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>作用域1</title>
+</head>
+
+<body>
+    <button id="btn1">按钮1的this指向哪里?</button>
+    <button id="btn2">按钮2的this指向哪里?</button>
+    <button id="btn3">按钮3的this指向哪里?</button>
+    <script type="text/javascript">
+    document.getElementById("btn1").onclick = function() {
+        var alt = function() {
+            alert(this.id);
+        }
+        alt();
+    }
+
+    document.getElementById("btn2").onclick = function() {
+        var that = this;
+        var alt = function() {
+            alert(that.id);
+        }
+        alt();
+    }
+
+    document.getElementById("btn3").onclick = function() {
+        var a = 10;
+        var alt = function() {
+            alert(a)
+        }
+        alt();
+    }
+    </script>
+    <!-- *********************************
+*典型闭包函数作用域，匿名函数执行以后，作用域没有被销毁，而是复制scope 到create 里面
+* -->
+    <script type="text/javascript">
+    var ScopeTest = (function() {
+
+        var namespaceCache = {};
+        var _create = function() {
+            var namespace = "default";
+            var arr = [];
+            var ret = {
+                getLen: function() {
+                    alert(arr.length);
+                },
+                add: function(val) {
+                    arr.push(val);
+                }
+            }
+            return namespace ? (namespaceCache[namespace] ? namespaceCache[namespace] : namespaceCache[namespace] = ret) : ret;
+        }
+        Event = {
+            create: _create,
+            add: function(val) {
+                var event = this.create();
+                event.add(val);
+            },
+            getLen: function() {
+                var event = this.create();
+                event.getLen();
+            }
+        }
+    })()
+    Event.add(1);
+    Event.add(2);
+    Event.getLen();
+    </script>
+</body>
+
+</html>

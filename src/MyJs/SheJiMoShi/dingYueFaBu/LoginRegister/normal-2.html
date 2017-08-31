@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+	/**
+	 * 
+	 */
+	Event=(function(){
+		var global = this, //global 就是window
+            Event,
+            _default = 'default';
+		Event=function(){
+			var namespaceCache = {};
+			var _shift=Array.prototype.shift;
+			var _unshift=Array.prototype.unshift;
+
+			var _trigger=function(){
+
+			}
+
+
+			var _create=function(namespace){
+				var namespace=namespace || _default;
+				var cache={};
+				var offlineStack = []; //离线堆
+
+				var _listen=function(key,fn){
+					if(!cache[key]){
+						cache[key]=[];
+					}
+					cache[key].push(fn)
+				}
+				
+				var ret={
+						listen:function(key,fn){
+							_listen(key,fn);
+
+						},
+						trigger:function(){
+							var args;
+							var key=_shift.call(arguments);
+
+
+							_unshift.call(arguments,cache);
+							var _self=this;
+							var fns=cache[key];
+							
+							args=arguments;
+
+							for(var i=0;i<fns.length;i++){
+								var fn=fns[i];
+								alert(fn);
+								fn.call(_self,args);
+							}
+
+
+
+							
+						}
+				}
+
+				
+
+				return namespace ? (namespaceCache[namespace] ? namespaceCache[namespace] : namespaceCache[namespace]=ret) : ret; 
+			}
+			return {
+				create:_create,
+				listen:function(key,fn,last){
+					var event=this.create();
+					event.listen(key,fn,last);
+				},
+				trigger:function(){
+					var event=this.create();
+					event.trigger.apply(this, arguments);
+				}
+			}
+		}()
+		return Event;
+	})()
+	
+
+	Event.listen("click1",function(){
+		alert("xxx");
+	});
+	Event.trigger("click1")
+	</script>
+</body>
+</html>

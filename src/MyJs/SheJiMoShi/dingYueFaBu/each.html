@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>each</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function each(ary,fn){
+			var ret;
+			for(var i=0;i<ary.length;i++){
+				var n=ary[i];
+				ret=fn.call(n,i,n);//调用fn,this 指向n对象
+			}
+			return ret;
+		}
+
+		var arr=[];
+		var fn1=function(){
+			this.name="yyh1";
+		};
+		var fn2=function(){
+			this.name="yyh2";
+		};
+		
+
+
+		arr.push(fn1);
+		arr.push(fn2);
+		var result=each(arr,function(i,obj){
+			this.username="yyh"+i;
+			return "yyh"+i;
+		})
+		console.dir(result+"xxx")
+	</script>
+</body>
+</html>

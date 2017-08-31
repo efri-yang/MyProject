@@ -1,0 +1,204 @@
+.header{
+	height: 50px;
+	line-height: 50px;
+	background-color:rgba(0,0,0,0.8);
+	color:#fff;
+}
+.container{
+	width: 1200px;
+	margin: 0 auto;
+}
+.header .txt{
+	float: left;
+}
+.header .login-register{
+	float: right;
+	margin-left: 20px;
+	color:#fff;
+}
+.header .txt a{
+	margin-left: 20px;
+	color:#fff;
+}
+
+.nav-box{
+	background:#333;
+	margin-top: 30px;
+	padding: 0 20px;
+}
+.nav-box li{
+	float: left;
+	margin-right: 15px;
+}
+
+.nav-box li a{
+	color: #fff;
+	display: block;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 30px;
+}
+.nav-box li a:hover{
+	background: #666;
+	text-decoration: none;
+}
+.nav-box li.active a{
+	background: #666;
+}
+
+.footer{
+	height: 100px;
+	line-height: 100px;
+	background: #333;
+	margin-top: 50px;
+	color:#fff;
+	text-align: center;
+}
+
+
+.notice-form{
+	padding: 0 50px;
+}
+
+.notice-form .ipt-submit{
+	text-align: center;
+}
+.notice-form .ipt-submit button{
+	padding-left:100px;
+	padding-right:100px;
+}
+
+.tit-type-2{
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+	margin-top: 10px;
+}
+.tit-type-2 .tit{
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 34px;
+}
+.donoticeform{
+	margin-top: 25px;
+}
+
+/**
+ * 公告列表
+ */
+
+.notice-list{
+	padding: 0 25px;
+}
+.notice-list li{
+	position: relative;
+	padding: 8px 80px 8px 30px;
+}
+.notice-list li .num{
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	background:#f60;
+	border-radius: 50%;
+	color: #fff;
+	position: absolute;
+	left:0;
+	top:50%;
+	margin-top:-10px;
+	display: inline-block;
+}
+.notice-list li .hand{
+	height: 20px;
+	line-height: 20px;
+	position: absolute;
+	right: 0;
+	top:50%;
+	margin-top:-10px;
+}
+.notice-list li  .hand a{
+	margin-left: 10px;
+}
+
+.nodata-box{
+	padding: 50px;
+	font-size: 16px;
+	color: #5e5e5e;
+}
+
+
+/**
+ * 投票主题列表
+ */
+
+.theme-list{
+	padding: 0 25px;
+}
+.theme-list li{
+	position: relative;
+	padding: 8px 80px 8px 30px;
+}
+.theme-list li .num{
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	background:#f60;
+	border-radius: 50%;
+	color: #fff;
+	position: absolute;
+	left:0;
+	top:50%;
+	margin-top:-10px;
+	display: inline-block;
+}
+.theme-list li .hand{
+	height: 20px;
+	line-height: 20px;
+	position: absolute;
+	right: 0;
+	top:50%;
+	margin-top:-10px;
+}
+.theme-list li  .hand a{
+	margin-left: 10px;
+}
+
+.theme-form1{
+
+	margin-top:30px;
+}
+
+
+.message-box{
+	border:1px solid #333;
+	padding: 10px;
+}
+
+.message-box ul li{
+	position:relative;
+	padding:10px 30px;
+	border-bottom: 1px dashed #666;
+}
+.message-box ul li .num{
+	position:absolute;
+	left:0;
+	top:50%;
+	height: 28px;
+	line-height: 28px;
+	margin-top: -14px;
+
+}
+.message-box ul li .txt{
+	height: 28px;
+	line-height: 28px;
+	
+}
+.message-box ul li .handle{
+	position: absolute;
+	right:0;
+	top:50%;
+	height: 28px;
+	line-height: 28px;
+	margin-top: -14px;
+}
+
+
+
