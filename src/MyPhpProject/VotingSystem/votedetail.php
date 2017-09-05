@@ -7,7 +7,7 @@
 		$isLogin=true;
 		$userId=$_SESSION["id"];
 		$sql="select * from user where id='$userId'";
-		$result=$mysqli->query($sql);
+		$result=$mysqli->query($sql);//发送请求
 		if($result->num_rows){
 			$row=$result->fetch_array();
 		}
