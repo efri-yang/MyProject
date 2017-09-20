@@ -91,6 +91,7 @@ function uploadFile($file,$allowMime=array("jpeg","jpg","gif","png","wbmp"),$max
 }
 
 $files =getFiles($_FILES);
+// $files =getFiles($_POST["myfile"]);
 
 foreach ($files as $key => $value) {
 	$res=uploadFile($value);
@@ -98,7 +99,7 @@ foreach ($files as $key => $value) {
 	$uploadFiles[]=@$res['dest'];
 }
 
-print_r(array_filter($uploadFiles));
+print_r(array_values(array_filter($uploadFiles)));
 
 
 
