@@ -111,15 +111,19 @@ class upload{
 			$this->checkUploadPath();
 			$this->uniName=$this->getUniName();
 			$this->destination=$this->uploadPath.'/'.$this->uniName.'.'.$this->suffix;
+			$this->resArr=array();
 			if(@move_uploaded_file($this->fileInfo['tmp_name'], $this->destination)){
-				return  $this->destination;
+				$this->resArr["error"]=false;
+				$this->resArr["txt"]=$this->destination;
+				return $this->resArr;
 			}else{
 				$this->error='文件移动失败';
-				$this->showError();
+				
 			}
-		}else{
-			$this->showError();
 		}
+		$this->resArr["error"]=true;
+		$this->resArr["txt"]=$this->error;
+		return $this->resArr;
 	}
 }
 
@@ -144,17 +148,29 @@ function getFiles($files){
     return $fileArr;
 }
 
+
+
+
+// $dest[]=$fileObj["name"];
+
 $files =getFiles($_FILES);
 
-// header('content-type:text/html;charset=utf-8');
-// require_once 'upload.class.php'; 
-// 
 foreach ($files as $key => $value) {
 	
 	$upload=new upload($value);
     
 	$dest[]=$upload->uploadFile();
 }
+
+echo json_encode($dest);
+
+
+// header('content-type:text/html;charset=utf-8');
+// require_once 'upload.class.php'; 
+// 
+
+
+// echo 0;
 // print_r($dest);
 
 // print_r($dest);

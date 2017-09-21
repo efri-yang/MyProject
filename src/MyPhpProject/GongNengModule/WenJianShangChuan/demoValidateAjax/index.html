@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<!-- <script src="https://cdn.bootcss.com/jquery/1.10.2/jquery.js"></script> -->
+	<script src="https://cdn.bootcss.com/jquery/1.10.0/jquery.js"></script>
+	<!-- <script type="text/javascript" src="http://www.w3school.com.cn/jquery/jquery.js"></script> -->
+	<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrapvalidator/js/bootstrapValidator.js"></script>
+	<link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.css">
+</head>
+<body>
+	
+	<form action="index.php" method="post" enctype="multipart/form-data" id="J_forms">
+		
+		<div class="form-group">
+			<label>请选择上传文件：</label>
+			<input type="file" name="myfile[]" class="form-control">
+			<span class="tip"></span>
+		</div>
+		<div class="form-group">
+			<label>请选择上传文件：</label>
+			<input type="file" name="myfile[]"  class="form-control">
+			<span class="tip"></span>
+		</div>
+		<!-- <div class="form-group">
+			<label>请选择上传文件：</label>
+			<input type="file" name="myfile[]"  class="form-control">
+		</div>
+		<div class="form-group">
+			<label>请选择上传文件：</label>
+			<input type="file" name="myfile[]"  class="form-control">
+		</div> -->
+		<div class="form-group"><input type="submit" value="提交" /></div>
+
+	</form>
+
+	<script type="text/javascript">
+		$(function(){
+			$('#J_forms').bootstrapValidator({
+	            message: '验证未通过',
+	            feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            },
+	            fields: {
+
+	            	'myfile[]':{
+	            		validators: {
+	                        notEmpty: { //非空提示
+	                            message: '请上传文件！'
+	                        },
+	                        file: {
+		                        extension: 'jpeg,jpg,png',
+		                        type: 'image/jpeg,image/png',
+		                        maxSize: 2097152,   // 2048 * 1024
+		                        message: 'The selected file is not valid'
+		                    }
+	                    }
+	            	},
+	               
+	            }
+	        }).on('success.form.bv', function (e) { 
+	       
+	           		var dataVal = new FormData($("#J_forms")[0]);  
+	           		console.dir(dataVal);
+	           		var $myfile=$('input[name="myfile[]"]');
+
+	           		$.ajax({
+	           			url:"./index.php",
+	           			type: 'POST',  
+			            data: dataVal,  
+			            dataType: 'JSON',
+			            processData: false,  
+            			contentType: false,    
+	           			success:function(data){
+	           				$.each(data,function(index,obj){
+	           					if(obj.error){
+	           						
+	           						$myfile.eq(index).siblings('.tip').html(obj.txt)
+	           					}
+	           				})
+	           				
+	           			},
+	           			error:function() {
+	           				alert("xxx")
+	           			}
+	           		})
+
+	           		e.preventDefault();
+	           
+	          
+	           
+	        });          
+		})
+
+	</script>
+</body>
+</html>
