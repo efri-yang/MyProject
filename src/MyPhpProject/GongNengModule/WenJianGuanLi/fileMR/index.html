@@ -9,66 +9,88 @@
     <script src="jquery-ui/js/jquery-ui-1.10.4.custom.js"></script>
     <script src="jquery-ui/js/jquery-ui-1.10.4.custom.min.js"></script>
     <link rel="stylesheet" href="jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css" type="text/css" />
-    <style type="text/css">
-    body,
-    p,
-    div,
-    ul,
-    ol,
-    table,
-    dl,
-    dd,
-    dt {
-        margin: 0;
-        padding: 0;
-    }
-
-    a {
-        text-decoration: none;
-    }
-
-    ul,
-    li {
-        list-style: none;
-        float: left;
-    }
-
-    #top {
-        width: 100%;
-        height: 48px;
-        margin: 0 auto;
-        background: #E2E2E2;
-    }
-
-    #navi a {
-        display: block;
-        width: 48px;
-        height: 48px;
-    }
-
-    #main {
-        margin: 0 auto;
-        border: 2px solid #ABCDEF;
-    }
-
-    .small {
-        width: 25px;
-        height: 25px;
-        border: 0;
-    }
-    </style>
-
+    <link rel="stylesheet" type="text/css" href="style.css">
     <body>
         <h1>慕课网-在线文件管理器</h1>
         <div id="top">
             <ul id="navi">
-                <li><a href="index.php" title="主目录"><span style="margin-left: 8px; margin-top: 0px; top: 4px;" class="icon icon-small icon-square"><span class="icon-home"></span></span></a></li>
-                <li><a href="#" onclick="show('createFile')" title="新建文件"><span style="margin-left: 8px; margin-top: 0px; top: 4px;" class="icon icon-small icon-square"><span class="icon-file"></span></span></a></li>
-                <li><a href="#" onclick="show('createFolder')" title="新建文件夹"><span style="margin-left: 8px; margin-top: 0px; top: 4px;" class="icon icon-small icon-square"><span class="icon-folder"></span></span></a></li>
-                <li><a href="#" onclick="show('uploadFile')" title="上传文件"><span style="margin-left: 8px; margin-top: 0px; top: 4px;" class="icon icon-small icon-square"><span class="icon-upload"></span></span></a></li>
-                <li><a href="#" title="返回上级目录" onclick="goBack('file')"><span style="margin-left: 8px; margin-top: 0px; top: 4px;" class="icon icon-small icon-square"><span class="icon-arrowLeft"></span></span></a></li>
+                <li>
+                    <a href="#" title="主目录">
+                        <span class="icon icon-small icon-square">
+                            <span class="icon-home"></span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" title="新建文件">
+                        <span class="icon icon-small icon-square">
+                            <span class="icon-file"></span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" title="新建文件夹">
+                            <span class="icon icon-small icon-square">
+                                <span class="icon-folder"></span>
+                            </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" title="上传文件">
+                            <span class="icon icon-small icon-square">
+                                <span class="icon-upload"></span>
+                            </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" title="返回上级目录">
+                            <span class="icon icon-small icon-square">
+                                <span class="icon-arrowLeft"></span>
+                            </span>
+                    </a>
+                </li>
             </ul>
         </div>
+        <table class="tbl">
+            <thead>
+                <tr>
+                    <th width="5%">编号</th>
+                    <th width="10%">名称</th>
+                    <th width="5%">类型</th>
+                    <th width="5%">大小</th>
+                    <th width="5%">可读</th>
+                    <th width="5%">可写</th>
+                    <th width="5%">可执行</th>
+                    <th width="10%">创建时间</th>
+                    <th width="10%">修改时间</th>
+                    <th width="10%">访问时间</th>
+                    <th width="30%">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2.jpg</td>
+                    <td><img src="images/file_ico.png"></td>
+                    <td>158.52KB</td>
+                    <td><img src="images/correct.png"></td>
+                    <td><img src="images/correct.png"></td>
+                    <td><img src="images/error.png"></td>
+                    <td>2017-09-21 15:14:34 </td>
+                    <td>2017-09-21 15:14:34</td>
+                    <td>2017-09-21 15:14:34</td>
+                    <td>
+                        <img class="small" src="images/show.png" alt="" />
+                        <img class="small" src="images/edit.png" alt="" />
+                        <img class="small" src="images/rename.png" alt="" />
+                        <img class="small" src="images/copy.png" alt="" />
+                        <img class="small" src="images/cut.png" alt="" />
+                        <img class="small" src="images/delete.png" alt="">
+                        <img class="small" src="images/download.png" alt="">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </body>
 
 </html>
