@@ -73,3 +73,16 @@
     text-align: center;
     padding: 100px 0; 
 }
+
+.dialog-show-box{
+    float:left;
+}
+
+.act-show-box{
+    border:2px solid #f60;
+}
+
+.show-content-nodata{
+    text-align: center;
+    padding: 50px 0;
+}

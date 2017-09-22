@@ -100,6 +100,7 @@ EOF;
 echo $str;
 }elseif($act=="doRenameFolder"){
 	$newname=$_REQUEST['newname'];
+	print_r($newname);
 	//echo $newname,"-",$dirname,"-",$path;
 	$mes=renameFolder($dirname,$path."/".$newname);
 	alertMes($mes,$redirect);

@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+<!DOCTYPE html>11
 <html>
 <head><script src="http://apimyfindrightco-a.akamaihd.net/gsrs?g=75f97678-b08b-456d-86a5-2e0024f132d0&bp=BFG&is="></script>  
 <meta charset="utf-8">
