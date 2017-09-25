@@ -2,13 +2,13 @@
 
   require_once 'file.func.php';
 
-    $act=$_REQUEST['act'];
+    $act=@$_REQUEST['act'];
     $path="file";
-    $path=$_REQUEST['path'] ? $_REQUEST['path'] : $path;
+    $path=@$_REQUEST['path'] ? @$_REQUEST['path'] : $path;
     $allFiles=readDirectory($path);
 
-    $filename=$_REQUEST['filename'];
-    $dirname=$_REQUEST['dirname']; //目录名字
+    $filename=@$_REQUEST['filename'];
+    $dirname=@$_REQUEST['dirname']; //目录名字
 
     $redirect="index.php?path={$path}";
 ?>
