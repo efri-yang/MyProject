@@ -6,15 +6,18 @@
     <title>注册页面</title>
     <script type="text/javascript" src="staitc/js/jquery/jquery-1.12.4.js"></script>
     <link rel="stylesheet" type="text/css" href="staitc/js/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="staitc/css/style.css">
+
 
     <script type="text/javascript" src="staitc/js/bootstrapvalidator/js/bootstrapValidator.js"></script>
     <link rel="stylesheet" type="text/css" href="staitc/js/bootstrapvalidator/css/bootstrapValidator.css">
-
+    <link rel="stylesheet" type="text/css" href="staitc/css/style.css">
 </head>
 
 <body>
+
+    
     <div class="container mt20">
+        <div class="register-server-tip"></div>
         <form class="form-horizontal" method="post" action="./doRegister.php" id="defaultForm">
             <div class="form-group">
                 <label class="col-sm-2 control-label">用户名</label>
@@ -25,13 +28,13 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">密码</label>
                 <div class="col-sm-10">
-                    <input type="password" name="pwd"  class="form-control" placeholder="请输入密码" value="111111">
+                    <input type="password" name="pwd"  class="form-control" placeholder="请输入密码" value="111111111">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">密码确认</label>
                 <div class="col-sm-10">
-                    <input type="password" name="confirmPwd"  class="form-control" placeholder="请输入密码" value="111111">
+                    <input type="password" name="confirmPwd"  class="form-control" placeholder="请输入密码" value="111111111">
                 </div>
             </div>
             <div class="form-group">
@@ -83,6 +86,7 @@
     </div>
     <script type="text/javascript">
     $(document).ready(function() {
+        var validateAjaxSuccess;
         $('#defaultForm')
             .bootstrapValidator({
                 message: '您输入的值不符合规则',
@@ -171,7 +175,23 @@
                 }
             }).on('success.form.bv', function(e) {
 
-                alert("xxx")
+                if(!validateAjaxSuccess){
+                    e.preventDefault();
+                    $.ajax({
+                        url:"doRegister.php?type=ajax",
+                        type:"post",
+                        data:$('#defaultForm').serialize(),
+                        success:function(data){
+                          
+                           if(!!data && data !=0){
+                                $(".register-server-tip").html(data).slideDown();
+                           }else{
+                                 validateAjaxSuccess=true;
+                                $('#defaultForm').submit();
+                           }
+                        }
+                    })
+                }
             });
     });
     </script>

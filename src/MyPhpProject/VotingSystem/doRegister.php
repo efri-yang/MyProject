@@ -1,3 +1,4 @@
+
 <?php 
 	include("./libs/mysql.func.php");
 	date_default_timezone_set('PRC');

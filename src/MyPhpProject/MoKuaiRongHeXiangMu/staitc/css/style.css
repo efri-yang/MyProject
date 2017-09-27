@@ -28,3 +28,12 @@
 .mb15{margin-bottom:15px;}
 .mb20{margin-bottom:20px;}
 .mb30{margin-bottom:30px;}
+
+
+.register-server-tip{
+	border:1px solid #f60;
+	padding: 20px;
+	font-size: 16px;
+	display: none;
+	margin-bottom: 30px;
+}
