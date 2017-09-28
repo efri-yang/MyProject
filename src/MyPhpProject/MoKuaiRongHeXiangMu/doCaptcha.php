@@ -44,6 +44,7 @@
 	       imageline($image,rand(1,99),rand(1,29),rand(1,99),rand(1,29),$linecolor);
 	   }
 	   	header('Content-type: image/jpeg');
+	    ob_clean();
 		imagepng($image);
 		imagedestroy($image);
 

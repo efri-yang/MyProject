@@ -5,6 +5,7 @@
 	$db->where("id",$userId);
 	$result=$db->getOne("user");
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,13 +24,13 @@
 <body>
 	<div class="container mt20">
     <?php
-    	if($_REQUEST['type']=="eidt"){
+    	if($_REQUEST['type'] !="edit"){
     ?>
 		<form class="form-horizontal userinfo-form-1" method="post" action="userInformation.php?type=edit">
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
-                    <div class="avatar"><img src="avatar/<?php echo !!$result["avatar"] ? $result["avatar"] :'default_avatar.jpg' ?>"></div>
+                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? $result["avatar"] :'avatar/default_avatar.jpg' ?>"></div>
                 </div>
             </div>
             <div class="form-group">
@@ -90,12 +91,12 @@
     <?php
     	}else{
     ?>
-		<form class="form-horizontal userinfo-form-1" method="post" action="doUserInformation.php" id="defaultForm">
+		<form class="form-horizontal userinfo-form-1" enctype="multipart/form-data"  action="doUserInformation.php" id="defaultForm" method="post">
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
-                    <div class="avatar"><img src="avatar/<?php echo !!$result["avatar"] ? $result["avatar"] :'default_avatar.jpg' ?>"></div>
-                    <input type="file" name="avatarfile" />
+                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? $result["avatar"] :'avatar/default_avatar.jpg' ?>" id="J_avatar-pic"></div>
+                    <input type="file" name="avatarfile" id="J_avatarfile" />
                 </div>
             </div>
             <div class="form-group">
@@ -159,11 +160,30 @@
            
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-6">
-                    <button type="submit" id="J_submit" class="btn btn-default">编辑</button>
+                    <button type="submit" id="J_submit" class="btn btn-default">保存</button>
                 </div>
                 
             </div>
         </form>
+        <script type="text/javascript">
+             function getObjectURL(file) {
+                var url = null;
+                if (window.createObjectURL != undefined) {
+                    url = window.createObjectURL(file)
+                } else if (window.URL != undefined) {
+                    url = window.URL.createObjectURL(file)
+                } else if (window.webkitURL != undefined) {
+                    url = window.webkitURL.createObjectURL(file)
+                }
+                return url
+            };
+            $(function(){
+                $("#J_avatarfile").on("change",function(){
+                     var url = getObjectURL(this.files[0]); 
+                    $("#J_avatar-pic").attr("src",url);
+                })
+            })
+        </script>
     <?php
     	}
     ?>
