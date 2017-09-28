@@ -22,31 +22,31 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">用户名</label>
                 <div class="col-sm-10">
-                    <input type="text" name="username"  class="form-control" placeholder="请输入用户名" value="yyh1">
+                    <input type="text" name="username"  class="form-control" placeholder="请输入用户名" >
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">密码</label>
                 <div class="col-sm-10">
-                    <input type="password" name="pwd"  class="form-control" placeholder="请输入密码" value="111111111">
+                    <input type="password" name="pwd"  class="form-control" placeholder="请输入密码" >
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">密码确认</label>
                 <div class="col-sm-10">
-                    <input type="password" name="confirmPwd"  class="form-control" placeholder="请输入密码" value="111111111">
+                    <input type="password" name="confirmPwd"  class="form-control" placeholder="请输入密码">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">邮箱</label>
                 <div class="col-sm-10">
-                    <input type="text" name="email"  class="form-control" placeholder="请输入邮箱" value="948061564@qq.com">
+                    <input type="text" name="email"  class="form-control" placeholder="请输入邮箱" >
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">手机号码</label>
                 <div class="col-sm-10">
-                    <input type="text" name="phone" class="form-control" placeholder="请输入手机号码" value="18559160494">
+                    <input type="text" name="phone" class="form-control" placeholder="请输入手机号码" >
                 </div>
             </div>
             <div class="form-group">
@@ -64,7 +64,7 @@
                 <label class="col-sm-2 control-label">职业</label>
                 <div class="col-sm-10">
                     <label>
-                        <input type="checkbox" checked value="1" name="occupation[]" />Java工程师</label>
+                        <input type="checkbox" value="1" name="occupation[]" />Java工程师</label>
                     <label>
                         <input type="checkbox" value="2" name="occupation[]" />C工程师</label>
                     <label>
@@ -77,9 +77,13 @@
                         <input type="checkbox" value="6" name="occupation[]" />Visual Basic工程师</label>
                 </div>
             </div>
+           
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="col-sm-offset-2 col-sm-6">
                     <button type="submit" id="J_submit" class="btn btn-default">登陆</button>
+                </div>
+                <div class="col-sm-2">
+                    <span>已有账号？<a href="login.php">马上登陆</a></span>
                 </div>
             </div>
         </form>

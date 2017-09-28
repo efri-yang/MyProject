@@ -1,3 +1,5 @@
+
+
 /* margin */
 .m0{margin:0;}
 .ml1{margin-left:1px;}
@@ -30,10 +32,100 @@
 .mb30{margin-bottom:30px;}
 
 
-.register-server-tip{
+.register-server-tip,.login-server-tip{
 	border:1px solid #f60;
 	padding: 20px;
 	font-size: 16px;
 	display: none;
 	margin-bottom: 30px;
+}
+
+.login-form-box .yzm-btn{
+		line-height: 34px;
+}
+.login-form-box .yzm-pic{
+	width: 100px;
+	height: 34px;
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.fr{
+	float: right;
+}
+
+
+.coms-header-top{
+	height: 30px;
+	line-height: 30px;
+	background: url("../images/header_bg.png") repeat-x top center;
+}
+
+.coms-header-top .avatar{
+	float: right;
+	color:#fff; 
+}
+
+.coms-header-top .avatar a{
+	color:#fff; 
+}
+
+.coms-header-top .avatar .name{
+	float: left;
+	margin-right: 10px;
+}
+
+.coms-header-top .avatar .pic{
+	float: left;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	margin-top: 3px;
+	overflow: hidden;
+	border-radius: 100%;
+
+}
+.coms-header-top .avatar .pic img{
+	width: 100%;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.cnav{
+	height: 60px;
+	line-height:60px;
+	background-color: rgba(0,0,0,0.8); 
+	margin-top: 20px;
+}
+
+.cnav li{
+	float: left;
+	
+}
+
+.cnav li a{
+	color:#fff;
+	font-size: 16px;
+	padding: 0 30px; 
+}
+
+.userinfo-form-1{
+	
+}
+.userinfo-form-1 .userinfo-val{
+	line-height: 34px;
+	vertical-align: middle;
+}
+
+.userinfo-form-1 .avatar{
+	width:100px;
+	height: 100px;
+	border-radius: 100%;
+	overflow: hidden;
+	
+}
+.userinfo-form-1 .avatar img{
+	width: 100%;
+	height: 100%;
 }

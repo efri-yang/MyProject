@@ -1,7 +1,9 @@
 <?php
 	include("./lib/MysqliDb.php");
 	date_default_timezone_set('PRC');//设置中国时区
-
+	if(!isset($_POST["submit"])){ 
+		exit("<h1 style='text-align:center;padding:20px 0;'>不可访问！</h1>");
+	}
 	$username=$_POST["username"];//用户名
 	$pwd=$_POST["pwd"];//密码
 	$confirmPwd=$_POST["confirmPwd"];
@@ -11,6 +13,11 @@
 	$occupation=implode($_POST["occupation"],","); //职业
 	$regtime=time();
 	$regip=$_SERVER['REMOTE_ADDR'];
+	
+
+	
+
+
 
 	//前台要验证 后端也要验证
 	$resError;
@@ -49,7 +56,7 @@
 		}
 
 		$db = new MysqliDb ('localhost', 'root', 'yyh', 'mokuai');
-		$data=array("username"=>$username,"password"=>$md5Pwd,"email"=>$email,"phone"=>$phone,"sex"=>$sexInteger,"occupation"=>$occupation,"reg_time"=>$regtime,"reg_ip"=>$regip);
+		$data=array("username"=>$username,"password"=>$md5Pwd,"email"=>$email,"phone"=>$phone,"sex"=>$sexInteger,"occupation"=>$occupation,"reg_time"=>$regtime,"reg_ip"=>$regip,"avatar"=>$avatar);
 		$id=$db->insert("user",$data);
 		if($id){
 ?>
