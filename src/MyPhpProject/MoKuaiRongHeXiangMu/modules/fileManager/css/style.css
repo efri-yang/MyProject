@@ -20,6 +20,9 @@
 	overflow: hidden;
 	display: block;
 	margin: 0 auto;
+	
+}
+.filemanager-tbl .img-type.type-file{
 	background: url("../images/file_ico.png") no-repeat top center;
 }
 

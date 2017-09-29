@@ -1,12 +1,13 @@
 <?php
 	session_start();
+	date_default_timezone_set('Asia/Shanghai');
 	include("../../config.inc.php");
     include($dirName."/common/mysqli.php");
 	include("file.class.php");
 
 	$files=getFiles();  
 
-
+  print_r($files);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,37 +49,62 @@
 				</thead>
 				<tbody>
 					<?php
-						
+						$keyCount=1;
+						foreach ($files as $key => $value) {
+							echo $value;
 					?>
-					<tr>
-						<td>1</td>
-	                    <td>2.jpg</td>
-	                    <td><span class="img-type"></span></td>
-	                    <td>158.52KB</td>
-	                    <td><span class="img-wr wr-y"></span></td>
-	                    <td><span class="img-wr wr-n"></span></td>
-	                    <td><span class="img-wr wr-n"></span></td>
-	                    <td>2017-09-21 15:14:34 </td>
-	                    <td>2017-09-21 15:14:34</td>
-	                    <td>2017-09-21 15:14:34</td>
-	                    <td>
-	                    	<a href="" class="img-handle img-see"></a>
+							<tr>
+								<td><?php echo $keyCount; ?></td>
+			                    <td><?php echo substr($value,strripos($value,'/')+1); ?></td>
+			                    <td><span class="img-type type-file"></span></td>
+			                    <td><?php echo getSize($value); ?></td>
+			                    <td><span class="img-wr <?php echo is_readable($value) ? 'wr-y' : 'wr-n'; ?>"></span></td>
+			                    <td><span class="img-wr <?php echo is_writable($value) ? 'wr-y' : 'wr-n'; ?>"></span></td>
+			                    <td><span class="img-wr <?php echo is_executable($value) ? 'wr-y' : 'wr-n'; ?>"></span></td>
+			                    <td><?php echo date('Y-m-d H:i:s',filectime($value)); ?></td>
+			                    <td><?php echo date('Y-m-d H:i:s',filemtime($value)); ?></td>
+			                    <td><?php echo date('Y-m-d H:i:s',fileatime($value)); ?></td>
+			                    <td>
+			                    	<?php 
 
-	                    	<a href="" class="img-handle img-rename"></a>
+			                    		
+			                    		if(getFileType($value)=="image"){
+			                    	?>
+			                    			<a href="javascript:void(0)" data-url="<?php echo $value; ?>" class="img-handle img-see"></a>
+			                    			<a href="index.php?act=edit&filetype=image&path=<?php echo $path; ?>" class="img-handle img-rename"></a>
+			                    	<?php		
+			                    		}elseif(getFileType($file)=="dir"){
+			                    	?>
+											<a href="index.php?act=showdir&path=<?php echo $path; ?>" class="img-handle img-rename"></a>
+			                    	<?php		
+			                    		}else{
+			                    	?>
+			                    			<a href="index.php?act=edit&filetype=image&path=<?php echo $path; ?>" class="img-handle img-rename"></a>
+			                    	<?php		
+			                    		}
+			                    	 ?>
+			                    	
+
+			                    	
 
 
-	                    	<a href="" class="img-handle img-copy"></a>
+			                    	<a href="" class="img-handle img-copy"></a>
 
 
-	                    	<a href="" class="img-handle img-cut"></a>
+			                    	<a href="" class="img-handle img-cut"></a>
 
-	                    	<a href="" class="img-handle img-delete"></a>
+			                    	<a href="" class="img-handle img-delete"></a>
 
-	                    	<a href="" class="img-handle img-download"></a>
-	                    	
-	                   
-	                    </td>
-					</tr>
+			                    	<a href="" class="img-handle img-download"></a>
+			                    	
+			                   
+			                    </td>
+							</tr>
+					<?php
+							$keyCount++;		
+						}
+					?>
+					
 				</tbody>
 				</table>
 			</div>	

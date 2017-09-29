@@ -15,7 +15,7 @@
 	// 
 	
 	
-	echo $url;
+	echo filetype("./staitc");
 
 
 ?>
