@@ -1,6 +1,7 @@
 <?php
 	session_start();
-	include("./common/mysqli.php");
+	include("./config.inc.php");
+    include("./common/mysqli.php");
 	$userId=$_SESSION["userid"];
 	$db->where("id",$userId);
 	$result=$db->getOne("user");
@@ -30,7 +31,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
-                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? $result["avatar"] :'avatar/default_avatar.jpg' ?>"></div>
+                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? $avatarUrl.$result["avatar"] :$avatarUrl.'default_avatar.jpg' ?>"></div>
                 </div>
             </div>
             <div class="form-group">
@@ -61,7 +62,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">性别</label>
                 <div class="col-sm-10 userinfo-val">
-                    <?php echo $result["sex"]==1 ? '男' : ($result["sex"]==2 ? '女' : '保密'); ?>
+                    <?php echo $result["sex"]; ?>
                 </div>
             </div>
             <div class="form-group">
@@ -95,8 +96,9 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
-                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? $result["avatar"] :'avatar/default_avatar.jpg' ?>" id="J_avatar-pic"></div>
+                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? $avatarUrl.$result["avatar"] :$avatarUrl.'default_avatar.jpg' ?>" id="J_avatar-pic"></div>
                     <input type="file" name="avatarfile" id="J_avatarfile" />
+                    <input type="hidden" name="avatarfilepre" value="<?php echo $result["avatar"]; ?>" />
                 </div>
             </div>
             <div class="form-group">
@@ -130,11 +132,11 @@
                 <div class="col-sm-10 userinfo-val">
 
                     <label>
-                        <input type="radio" name="sex" value="1" <?php echo $result['sex']=='男' ? 'checked' : ''; ?> /> 男</label>
+                        <input type="radio" name="sex" value="男" <?php echo $result['sex']=='男' ? 'checked' : ''; ?> /> 男</label>
                     <label>
-                        <input type="radio" name="sex" value="2" <?php echo $result['sex']=='女' ? 'checked' : ''; ?> />女</label>
+                        <input type="radio" name="sex" value="女" <?php echo $result['sex']=='女' ? 'checked' : ''; ?> />女</label>
                     <label>
-                        <input type="radio" name="sex" value="3" <?php echo $result['sex']=='保密' ? 'checked' : ''; ?>>保密</label>
+                        <input type="radio" name="sex" value="保密" <?php echo $result['sex']=='保密' ? 'checked' : ''; ?>>保密</label>
                 </div>
             </div>
             <div class="form-group">

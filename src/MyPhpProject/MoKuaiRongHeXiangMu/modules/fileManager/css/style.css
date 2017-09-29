@@ -1,0 +1,66 @@
+/**
+ * 文件管理
+*/
+.filemanager-tbl-wrap{
+	padding:20px;
+}
+.filemanager-tbl{
+	width: 100%;
+	text-align: center;
+	border:1px solid #e5e5e5; 
+}
+.filemanager-tbl th,.filemanager-tbl td{
+	padding: 10px 0;
+	text-align: center;
+	border:1px solid #e5e5e5; 
+}
+.filemanager-tbl .img-type{
+	width: 32px;
+	height: 32px;
+	overflow: hidden;
+	display: block;
+	margin: 0 auto;
+	background: url("../images/file_ico.png") no-repeat top center;
+}
+
+.filemanager-tbl .img-wr{
+	width: 60px;
+	height: 60px;
+	overflow: hidden;
+	display: block;
+	margin: 0 auto;
+}
+
+.filemanager-tbl .img-wr.wr-y{
+	background: url("../images/correct.png") no-repeat top center;
+}
+.filemanager-tbl .img-wr.wr-n{
+	background: url("../images/error.png") no-repeat top center;
+}
+
+.filemanager-tbl .img-handle{
+	width: 60px;
+	height: 60px;
+	overflow: hidden;
+	display:inline-block;
+	margin: 0 auto;
+}
+.filemanager-tbl .img-handle.img-see{
+	background: url("../images/show.png") no-repeat top center;
+}
+
+.filemanager-tbl .img-handle.img-rename{
+	background: url("../images/rename.png") no-repeat top center;
+}
+.filemanager-tbl .img-handle.img-copy{
+	background: url("../images/copy.png") no-repeat top center;
+}
+.filemanager-tbl .img-handle.img-cut{
+	background: url("../images/cut.png") no-repeat top center;
+}
+.filemanager-tbl .img-handle.img-delete{
+	background: url("../images/delete.png") no-repeat top center;
+}
+.filemanager-tbl .img-handle.img-download{
+	background: url("../images/download.png") no-repeat top center;
+}

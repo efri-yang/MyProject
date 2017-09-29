@@ -1,9 +1,10 @@
 <?php
     session_start();
+    include("./config.inc.php");
     include("./common/mysqli.php");
 
     $avatarFile=$_FILES["avatarfile"];
-    
+    $avatarFilePre=$_POST['avatarfilepre'];
     $username=$_POST["username"];
     $email=$_POST["email"];
     $phone=$_POST["phone"];
@@ -18,7 +19,7 @@
     $path="avatar";
     $resError;
     $avatarUrl;
-    echo $avatarFile['name'];
+
     if($avatarFile['name']){
         //用户有上传文件
         $maxSize=10240000;
@@ -43,9 +44,10 @@
             if(!move_uploaded_file($avatarFile["tmp_name"],$destination)){
                  $fileError="文件上传失败！";
             }else{
-                $avatarUrl=$destination;
-                echo $avatarUrl;
+                $avatarUrl=$uniName;
             }
+
+
         }else{
             switch($avatarFile["error"]){
               case 1:
@@ -69,9 +71,12 @@
                   break;            
            } 
         }
+    }else{
+        $avatarUrl=$avatarFilePre;
     }
 
-    if($avatarFile['name'] && !empty($avatarUrl)){
+
+    if($avatarFile['name'] && !empty($avatarUrl) && $fileError){
         $resError=$fileError;
     }elseif(empty($username) || strlen($username) < 3 || strlen($username) >16){
         $resError="您的用户名需要3~16个字符！";
@@ -84,14 +89,54 @@
     }elseif(empty($occupation)){
         $resError="请选择职业！";
     }
-    echo $resError;
+
 
     if(@$_REQUEST["type"]=="ajax"){
         echo !!@$resError ? $resError : 0;
     }else{
+
         if(!!@$resError){
-            exit();
-            header("location:userInformation.php?type=edit");
+?>
+    <style type="text/css">
+    .doregister-box-success{
+        text-align: center;
+        margin-top: 80px;
+    }
+
+    .doregister-box-success h1{
+        text-align: center;
+        font-size: 32px;
+        color:green;
+        font-weight: bold; 
+    }
+</style>
+    <div class="doregister-box-fail">
+    <h1><?php echo $resError; ?></h1>
+    <p>页面将在<span id="timecount"></span>秒之后跳转！<a href="register.php">手动点击重新注册！</a></p>
+</div>
+<script type="text/javascript">
+    var countElem=document.getElementById("timecount");
+    var num=3;
+    var Timer; 
+    countElem.innerHTML=num;
+    function timereduce(){
+        clearTimeout(Timer);
+        if(num<=1){
+            window.location.href="userInformation.php?type=edit";
+        }else{
+            num--;
+            countElem.innerHTML=num;
+            Timer=setTimeout(timereduce,1000);
+
+        }
+
+    }
+    Timer=setTimeout(timereduce,1000);
+</script>
+
+
+<?php        
+
            
         }else{
             if($sex=="男"){
@@ -101,7 +146,8 @@
             }else{
                 $sexInteger=3;
             }
-            echo $avatarUrl;
+
+    
             $data=array("username"=>$username,"email"=>$email,"phone"=>$phone,"sex"=>$sexInteger,"occupation"=>$occupation,"avatar"=>$avatarUrl);
             $id=$db->update("user",$data);
             if($id){
@@ -121,7 +167,7 @@
 </style>
 
 <div class="doregister-box-success">
-    <h1>恭喜您注册成功！</h1>
+    <h1>修改成功！</h1>
     <p>页面将在<span id="timecount"></span>秒之后跳转！<a href="#">手动点击跳转！</a></p>
 </div>
 <script type="text/javascript">
@@ -161,7 +207,7 @@
     }
 </style>
 <div class="doregister-box-fail">
-    <h1>您注册失败成功！</h1>
+    <h1>修改失败！</h1>
     <p>页面将在<span id="timecount"></span>秒之后跳转！<a href="register.php">手动点击重新注册！</a></p>
 </div>
 <script type="text/javascript">

@@ -1,7 +1,7 @@
 <?php
 session_start();
-include "./lib/MysqliDb.php";
-
+include("./config.inc.php");
+include("./common/mysqli.php");
 $authCode = $_SESSION["authcode"];
 
 $username = $_POST["username"];
@@ -17,7 +17,7 @@ if (empty($username)) {
 } elseif (empty($yzm) || $yzm != $authCode) {
     $resError = "请输入正确的验证码";
 } else {
-    $db = new MysqliDb('localhost', 'root', 'yyh', 'mokuai');
+  
     $db->where("username", $username);
     $db->where("password", md5($pwd));
     $result = $db->getOne("user");

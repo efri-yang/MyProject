@@ -1,9 +1,8 @@
 <?php
-	include("./lib/MysqliDb.php");
+	include("./config.inc.php");
+	include("./common/mysqli.php");
 	date_default_timezone_set('PRC');//设置中国时区
-	if(!isset($_POST["submit"])){ 
-		exit("<h1 style='text-align:center;padding:20px 0;'>不可访问！</h1>");
-	}
+	
 	$username=$_POST["username"];//用户名
 	$pwd=$_POST["pwd"];//密码
 	$confirmPwd=$_POST["confirmPwd"];
@@ -55,8 +54,8 @@
 			$sexInteger=3;
 		}
 
-		$db = new MysqliDb ('localhost', 'root', 'yyh', 'mokuai');
-		$data=array("username"=>$username,"password"=>$md5Pwd,"email"=>$email,"phone"=>$phone,"sex"=>$sexInteger,"occupation"=>$occupation,"reg_time"=>$regtime,"reg_ip"=>$regip,"avatar"=>$avatar);
+		
+		$data=array("username"=>$username,"password"=>$md5Pwd,"email"=>$email,"phone"=>$phone,"sex"=>$sexInteger,"occupation"=>$occupation,"reg_time"=>$regtime,"reg_ip"=>$regip);
 		$id=$db->insert("user",$data);
 		if($id){
 ?>
@@ -136,7 +135,7 @@
 		}
 
 	}
-	Timer=setTimeout(timereduce,1000);
+	// Timer=setTimeout(timereduce,1000);
 </script>
 <?php
 		}
