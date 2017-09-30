@@ -25,6 +25,9 @@
 .filemanager-tbl .img-type.type-file{
 	background: url("../images/file_ico.png") no-repeat top center;
 }
+.filemanager-tbl .img-type.type-dir{
+	background: url("../images/folder_ico.png") no-repeat top center;
+}
 
 .filemanager-tbl .img-wr{
 	width: 60px;
@@ -66,4 +69,34 @@
 }
 .filemanager-tbl .img-handle.img-download{
 	background: url("../images/download.png") no-repeat top center;
+}
+
+.filemanager-tbl .file-textarea{
+	width: 60%;
+	min-height:250px;
+	vertical-align: middle;
+}
+.filemanager-tbl .ipt-xg-btn{
+	width: 100px;
+	height: 45px;
+	background: green;
+	border: none;
+	color:#fff;
+	border-radius:5px;
+}
+
+.filemanager-tbl .cancel-btn{
+	width: 100px;
+	height: 45px;
+	line-height: 45px;
+	display: inline-block;
+	background: #999;
+	border: none;
+	color:#fff;
+	border-radius:5px;
+	vertical-align: middle;
+}
+
+.filemanager-tbl .image-rename-form .item{
+	padding:5px 0;
 }

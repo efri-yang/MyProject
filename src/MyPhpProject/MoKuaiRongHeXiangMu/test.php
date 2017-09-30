@@ -15,7 +15,8 @@
 	// 
 	
 	
-	echo filetype("./staitc");
+   $flag=false;
+   echo (!!$flag ? $flag :10);
 
 
 ?>

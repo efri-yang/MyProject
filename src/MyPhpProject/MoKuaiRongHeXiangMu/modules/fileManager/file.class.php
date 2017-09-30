@@ -1,6 +1,6 @@
 <?php
-	function getFiles(){
-		$path="./files/";
+	function getFiles($path){
+		
 		$fileArr=array();
 		$fileResouce=opendir($path);
 
@@ -8,8 +8,8 @@
 
 			 //考虑到0的文件夹  
 			if($fileName !="." && $fileName !=".."){
-				$file=$path.$fileName;
-				$fileArr[]=$file;
+				// $file=$path."/".$fileName;
+				$fileArr[]=$fileName;
 			}
 		}
 		return $fileArr;
@@ -28,21 +28,22 @@
 		return round($size,2).$unitArr[$i];
 	}
 
+	function getFileExt($file){
+		return pathinfo($file,PATHINFO_EXTENSION);
+	}
+
 	function getFileType($file){
 		$imageExt=array("gif","jpg","jpeg","png");
 		$fileType=fileType($file);
-		
 		if($fileType=="dir"){
 			return "dir";
-		}elseif($fileType==file){
+		}elseif($fileType=="file"){
 			$fileExt=pathinfo($file,PATHINFO_EXTENSION);
 			if(in_array($fileExt,$imageExt)){
 				return "image";
 			}else{
 				return "file";
 			}
-		}else{
-			// echo  "xxx";
 		}
 	}
 
