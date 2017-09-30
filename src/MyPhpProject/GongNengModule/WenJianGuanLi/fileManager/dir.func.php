@@ -97,7 +97,7 @@ function renameFolder($oldname,$newname){
 
 function copyFolder($src,$dst){
 	//echo $src,"---",$dst."----";
-	if(!file_exists($dst)){
+	if(!file_exists($dst)){ //判断文件夹是否存在，不存在就创建
 		mkdir($dst,0777,true);
 	}
 	$handle=opendir($src);

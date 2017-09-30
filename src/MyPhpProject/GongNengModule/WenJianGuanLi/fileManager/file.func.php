@@ -117,6 +117,7 @@ function downFile($filename){
 function copyFile($filename,$dstname){
 	if(file_exists($dstname)){
 		if(!file_exists($dstname."/".basename($filename))){
+			//判断文件是否存在
 			if(copy($filename,$dstname."/".basename($filename))){
 				$mes="文件复制成功";
 			}else{
