@@ -60,6 +60,9 @@
 				</thead>
 				<tbody>
 					<?php
+						if($act=="download"){
+							dl_file($currFile);
+						} 
 						$keyCount=1;
 						foreach ($filesName as $key => $value) {
 							$file=$path."/".$value;
@@ -107,16 +110,16 @@
 			                    <a href="index.php?act=copy&path=<?php echo $path; ?>&name=<?php echo $value; ?>" class="img-handle img-copy"></a>
 
 
-			                    	<a href="" class="img-handle img-cut"></a>
+		                    	<a href="" class="img-handle img-cut"></a>
 
-			                    	<a href="" class="img-handle img-delete"></a>
+		                    	<a href="index.php?act=delete&path=<?php echo $path; ?>&name=<?php echo $value; ?>" class="img-handle img-delete"></a>
 
-			                    	<a href="" class="img-handle img-download"></a>
+		                    	<a href="index.php?act=download&path=<?php echo $path; ?>&name=<?php echo $value; ?>" class="img-handle img-download"></a>
 			                    	
 			                   
 			                    </td>
 							</tr>
-							<?php 
+							<?php
 								if($act=='seefile' && $currFile==$file){
 
 							?>
@@ -350,6 +353,42 @@
 										</td>
 									</tr>
 							<?php		
+								}elseif($act=="delete" && $currFile==$file){
+							?>
+									<tr>
+										<td colspan="8">
+										<?php 
+											if(delFiles($file)){
+										?>
+												<script type="text/javascript">
+														$(function(){
+															layer.msg('删除成功！', {
+																  icon: 1,
+																  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+																}, function(){
+																   window.location.href="index.php";
+																});
+														})
+												    </script>
+										<?php
+											}else{
+										?>
+											<script type="text/javascript">
+														$(function(){
+															layer.msg('删除失败！', {
+																  icon: 1,
+																  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+																}, function(){
+																   window.location.href="index.php?act=edit&path=<?php echo $path; ?>&name=<?php echo $currFileName; ?>";
+																});
+														})
+												    </script>
+										<?php
+											}
+										 ?>
+										</td>
+									</tr>
+							<?php
 								}
 							 ?>
 					<?php
