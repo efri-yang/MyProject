@@ -1,22 +1,21 @@
 <?php
-	// include("./lib/MysqliDb.php");
-	// $db=new MysqliDb('localhost','root','yyh','mokuai');
-	// $db->where("username",'yyh1');
-	// $db->where("password",'96e79218965eb72c92a549dd5a330112');
-	// $result=$db->getOne("user");
-	// print_r($result["id"]);
-?>
+	namespace Article;
 
-
-
-<?php
+	class Comment { 
+			function __construct(){
+				echo "Article/Comment".'<br/>';
+			}
+	}
 	
-	// echo $_SERVER['DOCUMENT_ROOT'];
-	// 
-	
-	
-   $flag=false;
-   echo (!!$flag ? $flag :10);
 
+	namespace MessageBoard;
 
+	class Comment {
+
+		function __construct(){
+				echo "MessageBoard/Comment".'<br/>';
+			}
+	}
+	$comment = new Comment();
+	$comment = new \Article\Comment();
 ?>
