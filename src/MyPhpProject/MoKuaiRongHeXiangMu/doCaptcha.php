@@ -1,5 +1,5 @@
 <?php
-	
+	session_start();
 	if($_REQUEST["type"]=="ajax"){
 		if($_REQUEST["yzm"]==$_SESSION["authcode"]){
 			echo json_encode(array("valid"=>true));
@@ -15,7 +15,7 @@
 		//填充文字
 		$captch_code;
 		$fontsize=6;
-		$codeStr='abcdefghigklmnopqrstuvwxyz123456789';
+		$codeStr='12345678';
 		for($i=0;$i<4;$i++){
 			$fontcontent=substr($codeStr,rand(0,strlen($codeStr)-1),1);
 			$fontcolor=imagecolorallocate($image,rand(0,120),rand(0,120),rand(0,120));

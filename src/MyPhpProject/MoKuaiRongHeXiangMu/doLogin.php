@@ -1,7 +1,7 @@
 <?php
 
 
-include("common/session.php");
+session_start();
 
 	
 
