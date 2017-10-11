@@ -1,4 +1,5 @@
 <?php
+	include("common/session.php");
 	include("./config.inc.php");
 	include("./common/mysqli.php");
 	date_default_timezone_set('PRC');//设置中国时区

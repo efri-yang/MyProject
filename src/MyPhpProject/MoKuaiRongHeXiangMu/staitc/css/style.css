@@ -86,6 +86,11 @@
 	border-radius: 100%;
 
 }
+
+.coms-header-top .loginout{
+	 margin-left: 8px;
+	 text-decoration: underline;
+}
 .coms-header-top .avatar .pic img{
 	width: 100%;
 	height: 100%;

@@ -1,4 +1,5 @@
 <?php
+	// include("../../common/session.php");
 	session_start();
 	date_default_timezone_set('Asia/Shanghai');
 	include("../../config.inc.php");

@@ -1,6 +1,4 @@
 <?php
-	session_start();
-	 //创建一个画布
 	
 	if($_REQUEST["type"]=="ajax"){
 		if($_REQUEST["yzm"]==$_SESSION["authcode"]){

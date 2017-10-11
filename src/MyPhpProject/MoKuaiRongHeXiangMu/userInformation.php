@@ -1,5 +1,5 @@
 <?php
-	session_start();
+	include("common/session.php");
 	include("./config.inc.php");
     include("./common/mysqli.php");
 	$userId=$_SESSION["userid"];

@@ -10,6 +10,8 @@
 				<span class="name"><?php echo $result["username"]; ?></span>
 				<span class="pic"><img src="<?php echo !!$result["avatar"] ? $avatarUrl.$result["avatar"] :$avatarUrl.'default_avatar.jpg' ?>"></span>
 			</a>
+
+			<a href="loginout.php" class="loginout">退出</a>
 		
 		 </div>
 	</div>

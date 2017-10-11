@@ -1,5 +1,10 @@
 <?php
-session_start();
+
+
+include("common/session.php");
+
+	
+
 include("./config.inc.php");
 include("./common/mysqli.php");
 $authCode = $_SESSION["authcode"];
