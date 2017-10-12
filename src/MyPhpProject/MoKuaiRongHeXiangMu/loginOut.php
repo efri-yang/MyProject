@@ -1,5 +1,7 @@
 <?php
-	include("common/session.php");
+	include("./Path.php");
+	include("./common/session.php");
+	include("./common/mysqli.php");
 	unset($_SESSION['userid']);
 	if(!isset($_SESSION['userid'])){
 ?>
@@ -28,7 +30,7 @@
 			function timereduce(){
 				clearTimeout(Timer);
 				if(num<=1){
-					window.location.href="login.php"
+					window.location.href="<?php echo APP_ROOT_URL."/login.php" ?>"
 				}else{
 					num--;
 					countElem.innerHTML=num;

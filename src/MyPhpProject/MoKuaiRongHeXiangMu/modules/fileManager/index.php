@@ -1,9 +1,11 @@
 <?php
-	// include("../../common/session.php");
+	
 	session_start();
+
+	include("../../Path.php");
+	include("../../common/session.php");
+	include("../../common/mysqli.php");
 	date_default_timezone_set('Asia/Shanghai');
-	include("../../config.inc.php");
-    include($dirName."/common/mysqli.php");
 	include("file.class.php");
 	$path=(!!$_REQUEST['path'] ? $_REQUEST['path'] : "./files");
 	$currFileName=$_REQUEST['name'];
@@ -26,22 +28,18 @@
 <head>
 	<meta charset="UTF-8">
 	<title>文件管理</title>
-	<script type="text/javascript" src="../../staitc/js/jquery/jquery-1.12.4.js"></script>
-	<script type="text/javascript" src="../../staitc/js/bootstrap/js/bootstrap.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../staitc/js/bootstrap/css/bootstrap.css">
-
-
-    <link rel="stylesheet" type="text/css" href="../../staitc/css/base.css">
-
-
-    <link rel="stylesheet" type="text/css" href="../../staitc/css/style.css">
+	<?php include("../../template/scriptstyle.php"); ?>
     <link rel="stylesheet" type="text/css" href="./css/style.css">
 </head>
 <body>
 	<?php 
+	
 		include("../../template/header_top.php");
+		include("../../template/nav.php");
+
 		if(count($filesName)){
 	?>
+
 			<div class="filemanager-tbl-wrap">
 				<table class="filemanager-tbl">
 				<thead>

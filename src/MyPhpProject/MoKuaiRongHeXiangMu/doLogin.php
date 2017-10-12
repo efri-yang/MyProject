@@ -3,6 +3,8 @@
 session_start();
 include("./Path.php");
 include("./common/mysqli.php");
+
+
 $authCode = $_SESSION["authcode"];
 
 $username = $_POST["username"];

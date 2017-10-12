@@ -1,6 +1,6 @@
 <?php
-	include("common/session.php");
-	include("./config.inc.php");
+
+	include("./Path.php");
 	include("./common/mysqli.php");
 	date_default_timezone_set('PRC');//设置中国时区
 	
@@ -87,7 +87,7 @@
 	function timereduce(){
 		clearTimeout(Timer);
 		if(num<=1){
-			window.location.href="index.php"
+			window.location.href="<?php echo APP_ROOT_URL."/login.php" ?>"
 		}else{
 			num--;
 			countElem.innerHTML=num;
@@ -127,7 +127,7 @@
 	function timereduce(){
 		clearTimeout(Timer);
 		if(num<=1){
-			window.location.href="register.php"
+			window.location.href="<?php echo APP_ROOT_URL."/register.php" ?>"
 		}else{
 			num--;
 			countElem.innerHTML=num;

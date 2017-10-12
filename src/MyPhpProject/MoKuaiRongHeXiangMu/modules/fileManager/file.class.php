@@ -1,6 +1,5 @@
 <?php
 	function getFiles($path){
-		
 		$fileArr=array();
 		$fileResouce=opendir($path);
 

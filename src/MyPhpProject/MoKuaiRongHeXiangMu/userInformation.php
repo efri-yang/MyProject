@@ -1,6 +1,7 @@
 <?php
-	include("common/session.php");
-	include("./config.inc.php");
+	session_start();
+    include("./Path.php");
+    include("common/session.php");
     include("./common/mysqli.php");
 	$userId=$_SESSION["userid"];
 	$db->where("id",$userId);
@@ -31,7 +32,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
-                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? $avatarUrl.$result["avatar"] :$avatarUrl.'default_avatar.jpg' ?>"></div>
+                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? APP_ROOT_URL."/avatar/".$result["avatar"] :APP_ROOT_URL."/avatar/".'default_avatar.jpg' ?>"></div>
                 </div>
             </div>
             <div class="form-group">
@@ -96,7 +97,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
-                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? $avatarUrl.$result["avatar"] :$avatarUrl.'default_avatar.jpg' ?>" id="J_avatar-pic"></div>
+                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? APP_ROOT_URL."/avatar/".$result["avatar"] :APP_ROOT_URL."/avatar/".'default_avatar.jpg' ?>" id="J_avatar-pic"></div>
                     <input type="file" name="avatarfile" id="J_avatarfile" />
                     <input type="hidden" name="avatarfilepre" value="<?php echo $result["avatar"]; ?>" />
                 </div>

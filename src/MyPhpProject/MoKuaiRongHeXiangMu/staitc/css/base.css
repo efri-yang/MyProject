@@ -98,3 +98,157 @@ input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webki
 	width: 1470px;
 	margin: 0 auto;
 }
+
+
+
+
+/* margin */
+.m0{margin:0;}
+.ml1{margin-left:1px;}
+.ml2{margin-left:2px;}
+.ml5{margin-left:5px;}
+.ml10{margin-left:10px;}
+.ml15{margin-left:15px;}
+.ml20{margin-left:20px;}
+.ml30{margin-left:30px;}
+.mr1{margin-right:1px;}
+.mr2{margin-right:2px;}
+.mr5{margin-right:5px;}
+.mr10{margin-right:10px;}
+.mr15{margin-right:15px;}
+.mr20{margin-right:20px;}
+.mr30{margin-right:30px;}
+.mt1{margin-top:1px;}
+.mt2{margin-top:2px;}
+.mt5{margin-top:5px;}
+.mt10{margin-top:10px;}
+.mt15{margin-top:15px;}
+.mt20{margin-top:20px;}
+.mt30{margin-top:30px;}
+.mb1{margin-bottom:1px;}
+.mb2{margin-bottom:2px;}
+.mb5{margin-bottom:5px;}
+.mb10{margin-bottom:10px;}
+.mb15{margin-bottom:15px;}
+.mb20{margin-bottom:20px;}
+.mb30{margin-bottom:30px;}
+
+
+.register-server-tip,.login-server-tip{
+	border:1px solid #f60;
+	padding: 20px;
+	font-size: 16px;
+	display: none;
+	margin-bottom: 30px;
+}
+
+.login-form-box .yzm-btn{
+		line-height: 34px;
+}
+.login-form-box .yzm-pic{
+	width: 100px;
+	height: 34px;
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+
+
+
+.coms-header-top{
+	height: 30px;
+	line-height: 30px;
+	background: url("../images/header_bg.png") repeat-x top center;
+}
+
+.coms-header-top .avatar{
+	float: right;
+	color:#fff; 
+}
+
+.coms-header-top .avatar a{
+	color:#fff; 
+}
+
+.coms-header-top .avatar .name{
+	float: left;
+	margin-right: 10px;
+}
+
+.coms-header-top .avatar .pic{
+	float: left;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	margin-top: 3px;
+	overflow: hidden;
+	border-radius: 100%;
+
+}
+
+.coms-header-top .loginout{
+	 margin-left: 8px;
+	 text-decoration: underline;
+}
+.coms-header-top .avatar .pic img{
+	width: 100%;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.cnav{
+	height: 60px;
+	line-height:60px;
+	background-color: rgba(0,0,0,0.8); 
+	margin-top: 20px;
+}
+
+.cnav li{
+	float: left;
+	
+}
+
+.cnav li a{
+	color:#fff;
+	font-size: 16px;
+	padding: 0 30px; 
+}
+
+.userinfo-form-1{
+	
+}
+.userinfo-form-1 .userinfo-val{
+	line-height: 34px;
+	vertical-align: middle;
+}
+
+.userinfo-form-1 .avatar{
+	width:100px;
+	height: 100px;
+	border-radius: 100%;
+	overflow: hidden;
+	
+}
+.userinfo-form-1 .avatar img{
+	width: 100%;
+	height: 100%;
+}
+
+/**
+ * 
+ */
+
+.bread-crumbs{
+	border-bottom: 1px solid #e5e5e5;
+	font-size: 20px;
+	padding: 20px 0;
+	color:green;
+	margin-bottom:15px; 
+}
+
+
+.align-c{
+	text-align: center;
+}
+
