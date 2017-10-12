@@ -1,8 +1,6 @@
 <?php
 	
 	include("./common/session.php");
-
-	
 	include("./config.inc.php");
 	include("./common/mysqli.php");
 ?>
@@ -22,15 +20,17 @@
     <link rel="stylesheet" type="text/css" href="staitc/css/style.css">
 </head>
 <body>
+	
 	<?php 
 		include("./template/header_top.php");
 	 ?>
 
 	<div class="container">
 		<ul class="cnav">
-			<li><a href="#">首页</a></li>
+			<li><a href="index.php">首页</a></li>
 			<li><a href="./modules/fileManager/index.php">文件管理</a></li>
 			<li><a href="#">图片水印</a></li>
+			<li><a href="./modules/imageEJZ/read.php">图片二进制存储</a></li>
 		</ul>
 	</div>
 

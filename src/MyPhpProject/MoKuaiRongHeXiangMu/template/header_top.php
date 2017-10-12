@@ -1,4 +1,5 @@
-<?php	
+<?php
+	
 	$userId=$_SESSION["userid"];
 	$db->where("id",$userId);
 	$result=$db->getOne("user");
@@ -16,3 +17,5 @@
 		 </div>
 	</div>
 </div>
+
+
