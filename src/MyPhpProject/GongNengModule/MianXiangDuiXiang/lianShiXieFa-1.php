@@ -21,4 +21,4 @@
 
 	$tweet=new Tweet;
 	$id=$tweet->from("@rasmus")->withStatus('PHP 6 released')->send();
-?>
+?>	
