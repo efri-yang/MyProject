@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>列表</title>
+
+	<script type="text/javascript" src="./js/jquery/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="./js/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="./js/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="./css/base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+</head>
+<body>
+	<div class="coms-header-top">
+		<div class="container">
+			 <div class="avatar">
+				<a href="<?php echo APP_ROOT_URL; ?>/userInformation.php?userid=<?php echo $result['id'];?>">
+					<span class="name"><?php echo $result["username"]; ?></span>
+					<span class="pic"><img src="<?php echo !!$result["avatar"] ? APP_ROOT_URL."/avatar/".$result["avatar"] :APP_ROOT_URL."/avatar/".'default_avatar.jpg' ?>"></span>
+				</a>
+
+				<a href="loginout.php" class="loginout">退出</a>
+			
+			 </div>
+		</div>
+	</div>
+
+	<div class="container">
+		<ul class="cnav">
+			<li><a href="">论坛管理</a></li>
+		</ul>
+	</div>
+
+
+	<div class="container">
+		<div class="lt-list-theme-container">
+			<div class="col-intro">
+				<h2>javascript!-插件</h2>
+				<div class="detail">JavaScript一种直译式脚本语言，是一种动态类型、弱类型、基于原型的语言，内置支持类型。它的解释器被称为JavaScript引擎，为浏览器的一部分，广泛用于客户端的脚本语言，最早是在HTML（标准通用标记语言下的一个应用）网页上使用，用来给HTML网页增加动态功能。</div>
+			</div>
+			
+			<p class="mtr30"><a href="" class="btn btn-success">发布主题</a></p>
+			
+
+			<div class="lt-list-theme-list-box">
+				<div class="soma-hd clearfix">
+					<span class="txt-1">全部主题</span>
+				</div>
+				<ul class="lt-list-theme-list">
+					<li class="clearfix">
+						<span class="status">[<b>发布</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度</a>
+
+						<span class="author">yangyh</span>
+					</li>
+					<li>
+						<span class="status xg">[<b>修改</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度</a>
+						<span class="author">yangyh</span>
+					</li>
+					<li class="clearfix">
+						<span class="status">[<b>发布</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度</a>
+
+						<span class="author">yangyh</span>
+					</li>
+					<li>
+						<span class="status xg">[<b>修改</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度</a>
+						<span class="author">yangyh</span>
+					</li>
+					<li class="clearfix">
+						<span class="status">[<b>发布</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度</a>
+
+						<span class="author">yangyh</span>
+					</li>
+					<li>
+						<span class="status xg">[<b>修改</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度</a>
+						<span class="author">yangyh</span>
+					</li>
+					<li class="clearfix">
+						<span class="status">[<b>发布</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度</a>
+
+						<span class="author">yangyh</span>
+					</li>
+					<li>
+						<span class="status xg">[<b>修改</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度</a>
+						<span class="author">yangyh</span>
+					</li>
+					<li class="clearfix">
+						<span class="status">[<b>发布</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度严重投诉未来科技对于模板问题处理速度</a>
+
+						<span class="author">yangyh</span>
+					</li>
+					<li>
+						<span class="status xg">[<b>修改</b>]</span>
+						<a href="#" class="tit">严重投诉未来科技对于模板问题处理速度</a>
+						<span class="author">yangyh</span>
+					</li>
+				</ul>
+
+
+				<div class="pagination-box">
+					<a href="#" class="prev">第一页</a>
+					<a href="#">1</a>
+					<a href="#">2</a>
+					<a href="#">3</a>
+					<a href="#">4</a>
+					<a href="#">5</a>
+					<a href="#">6</a>
+					<a href="#" class="next">下一页</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

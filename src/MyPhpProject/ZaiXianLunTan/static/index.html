@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>首页</title>
+
+	<script type="text/javascript" src="./js/jquery/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="./js/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="./js/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="./css/base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+</head>
+<body>
+	<div class="coms-header-top">
+		<div class="container">
+			 <div class="avatar">
+				<a href="<?php echo APP_ROOT_URL; ?>/userInformation.php?userid=<?php echo $result['id'];?>">
+					<span class="name"><?php echo $result["username"]; ?></span>
+					<span class="pic"><img src="<?php echo !!$result["avatar"] ? APP_ROOT_URL."/avatar/".$result["avatar"] :APP_ROOT_URL."/avatar/".'default_avatar.jpg' ?>"></span>
+				</a>
+
+				<a href="loginout.php" class="loginout">退出</a>
+			
+			 </div>
+		</div>
+	</div>
+
+	<div class="container">
+		<ul class="cnav">
+			<li><a href="">论坛管理</a></li>
+		</ul>
+	</div>
+
+
+	<div class="container">
+		<div class="lt-home-container">
+			<div class="lt-module">
+				<div class="caption">前端专区</div>
+				<ul class="list clearfix">
+					<li class="clearfix">
+						<span class="pic"></span>
+						<div class="txt">
+							<a href="list-column.html">JS栏目</a>
+							<p>主题: 80, 帖数: 2651</p>
+						</div>
+					</li>
+					<li class="clearfix">
+						<span class="pic"></span>
+						<div class="txt">
+							<a href="#">JS栏目</a>
+							<p>主题: 80, 帖数: 2651</p>
+						</div>
+					</li>
+					<li class="clearfix">
+						<span class="pic"></span>
+						<div class="txt">
+							<a href="#">JS栏目</a>
+							<p>主题: 80, 帖数: 2651</p>
+						</div>
+					</li>
+					<li class="clearfix">
+						<span class="pic"></span>
+						<div class="txt">
+							<a href="#">JS栏目</a>
+							<p>主题: 80, 帖数: 2651</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+
+			<div class="lt-module">
+				<div class="caption">后端专区</div>
+				<ul class="list clearfix">
+					<li class="clearfix">
+						<span class="pic"></span>
+						<div class="txt">
+							<a href="#">JS栏目</a>
+							<p>主题: 80, 帖数: 2651</p>
+						</div>
+					</li>
+					<li class="clearfix">
+						<span class="pic"></span>
+						<div class="txt">
+							<a href="#">JS栏目</a>
+							<p>主题: 80, 帖数: 2651</p>
+						</div>
+					</li>
+					<li class="clearfix">
+						<span class="pic"></span>
+						<div class="txt">
+							<a href="#">JS栏目</a>
+							<p>主题: 80, 帖数: 2651</p>
+						</div>
+					</li>
+					<li class="clearfix">
+						<span class="pic"></span>
+						<div class="txt">
+							<a href="#">JS栏目</a>
+							<p>主题: 80, 帖数: 2651</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

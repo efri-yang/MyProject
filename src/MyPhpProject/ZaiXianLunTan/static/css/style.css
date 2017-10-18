@@ -1,0 +1,226 @@
+.lt-home-container{
+	border:1px solid #C2D5E3;
+	margin-top: 20px;
+}
+.lt-module{
+
+}
+
+.lt-module .list{
+	padding: 0 25px;
+	border-bottom:1px solid #C2D5E3;
+}
+
+.lt-module .list .txt{
+	float: left;
+}
+
+.lt-module .list .txt a{
+	color:#f60;
+	font-size:24px; 
+}
+
+.lt-module .list .txt p{
+	color:#444
+}
+.lt-module .list li{
+	width: 50%;
+	text-align: left;
+	float: left;
+	padding: 25px 0;
+	
+
+}
+
+.lt-module .list .pic{
+	width: 31px;
+	height: 29px;
+	overflow:hidden;
+	float: left;
+	margin-top:4px;
+	margin-right: 12px;
+	background: url("../images/luntan/forum_new.gif") no-repeat top center;
+
+}
+
+.lt-module .caption{
+	height: 31px;
+	line-height: 31px;
+	padding:0 10px;
+	background: url("../images/luntan/titlebg.png") repeat-x top center;
+	border-bottom:1px solid #C2D5E3;
+}
+
+
+
+.lt-list-theme-container{
+	margin-top:20px; 
+}
+.lt-list-theme-container .col-intro{
+	border:1px solid #CDCDCD;
+	padding:10px;
+	margin-bottom:30px;  
+}
+
+.lt-list-theme-container .col-intro h2{
+	color:#333;
+	font-weight: bold;
+	font-size:18px;
+	border-bottom:1px dashed #CDCDCD;
+	padding:8px 0 15px;
+}
+
+.lt-list-theme-container .col-intro .detail{
+	padding: 10px 0;
+	text-indent: 2em;
+}
+.lt-list-theme-list-box{
+	border:1px solid #CDCDCD;
+	margin-top: 20px;
+}
+.lt-list-theme-list-box .soma-hd{
+	padding:10px;
+    border-bottom: 1px solid #CDCDCD;
+    background: #F2F2F2;
+    font-size:14px;
+}
+
+.lt-list-theme-list-box .soma-hd .txt-1{
+	float:left;
+}
+
+.lt-list-theme-list{
+	padding: 10px 10px 20px;
+}
+
+.lt-list-theme-list li{
+	padding: 6px 0;
+	border-bottom:1px solid #C2D5E3;
+}
+
+.lt-list-theme-list li:last-child{
+	border-bottom: none;
+}
+
+.lt-list-theme-list li .status{
+	color:#007CD5; 
+	float: left;
+	margin-right: 10px;
+}
+.lt-list-theme-list li .status.xg b{
+	color:#f60; 
+}
+
+.lt-list-theme-list li .author{
+	color:#999; 
+	margin-left: 100px;
+	font-size:12px; 
+}
+
+.lt-list-theme-list li .status b{
+	color:#28ab00; 
+}
+
+.lt-list-theme-list li .tit{
+	color:#666; 
+	float: left;
+	width: 700px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.lt-list-theme-list li .tit:hover{
+	text-decoration: underline;
+}
+
+.lt-list-theme-btn1{
+	display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+
+.pagination-box{
+	text-align: center;
+	padding: 25px 0;
+
+}
+
+.pagination-box a{
+	display: inline-block;
+	width: 28px;
+	height: 32px;
+	line-height: 32px;
+	text-align: center;
+	color:#333;
+	border:1px solid #C2D5E3;
+	vertical-align: middle;
+	font-size:12px;  
+}
+
+.pagination-box a.prev{
+	width:auto;
+	padding: 0 10px 0 23px; 
+	background: url("../images/luntan/prev_arrow.gif") no-repeat  5px center;
+}
+
+
+.pagination-box a.next{
+	width:auto;
+	padding: 0 23px 0 10px; 
+	background: url("../images/luntan/next_arrow.gif") no-repeat  48px center;
+}
+.pagination-box a:hover{
+	    border-color: #369;
+    color: #369;
+}
+
+.lt-theme-detail-container{
+	margin-top: 20px;
+}
+
+.theme-detail-list{
+	width: 100%;
+	margin-top: 30px;
+	border:1px solid #CDCDCD;
+}
+.theme-detail-list .area-left{
+	width: 160px;
+	background:#E5EDF2;
+	border-right: 1px solid #CDCDCD;
+}
+.theme-detail-list td{
+	padding:10px;
+	border-right:1px solid #CDCDCD;
+}
+
+
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+.lt-theme-detail-container{}
+
+
