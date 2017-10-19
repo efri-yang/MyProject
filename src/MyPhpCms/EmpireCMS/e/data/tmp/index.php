@@ -10,8 +10,8 @@ if(!defined('InEmpireCMS'))
 <title>帝国网站管理系统 - Powered by EmpireCMS</title>
 <meta name="keywords" content="帝国网站管理系统,EmpireCMS" />
 <meta name="description" content="　　帝国软件是一家专注于网络软件开发的科技公司，其主营产品“帝国网站管理系统(EmpireCMS)”是目前国内应用最广泛的CMS程序。通过十多年的不断创新与完善，使系统集安全、稳定、强大、灵活于一身。目前EmpireCMS程序已经广泛应用在国内上百万家网站，覆盖国内上千万上网人群，并经过上千家知名网站的严格检测，被称为国内最安全、最稳定的开源CMS系统。" />
-<link href="/APhpCms/EmpireCMS/skin/default/css/style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="/APhpCms/EmpireCMS/skin/default/js/tabs.js"></script>
+<link href="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/js/tabs.js"></script>
 </head>
 <body class="homepage">
 <!-- 页头 -->
@@ -23,11 +23,11 @@ if(!defined('InEmpireCMS'))
 <td width="63%"> 
 <!-- 登录 -->
 <script>
-document.write('<script src="/APhpCms/EmpireCMS/e/member/login/loginjs.php?t='+Math.random()+'"><'+'/script>');
+document.write('<script src="/MyProject/src/MyPhpCms/EmpireCMS/e/member/login/loginjs.php?t='+Math.random()+'"><'+'/script>');
 </script>
 </td>
 <td align="right">
-<a onclick="window.external.addFavorite(location.href,document.title)" href="#ecms">加入收藏</a> | <a onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('/APhpCms/EmpireCMS/')" href="#ecms">设为首页</a> | <a href="/APhpCms/EmpireCMS/e/member/cp/">会员中心</a> | <a href="/APhpCms/EmpireCMS/e/DoInfo/">我要投稿</a> | <a href="/APhpCms/EmpireCMS/e/web/?type=rss2&classid=0" target="_blank">RSS<img src="/APhpCms/EmpireCMS/skin/default/images/rss.gif" border="0" hspace="2" /></a>
+<a onclick="window.external.addFavorite(location.href,document.title)" href="#ecms">加入收藏</a> | <a onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('/MyProject/src/MyPhpCms/EmpireCMS/')" href="#ecms">设为首页</a> | <a href="/MyProject/src/MyPhpCms/EmpireCMS/e/member/cp/">会员中心</a> | <a href="/MyProject/src/MyPhpCms/EmpireCMS/e/DoInfo/">我要投稿</a> | <a href="/MyProject/src/MyPhpCms/EmpireCMS/e/web/?type=rss2&classid=0" target="_blank">RSS<img src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/images/rss.gif" border="0" hspace="2" /></a>
 </td>
 </tr>
 </table>
@@ -36,15 +36,15 @@ document.write('<script src="/APhpCms/EmpireCMS/e/member/login/loginjs.php?t='+M
 </table>
 <table width="100%" border="0" cellpadding="0" cellspacing="10">
 <tr valign="middle">
-<td width="240" align="center"><a href="/APhpCms/EmpireCMS/"><img src="/APhpCms/EmpireCMS/skin/default/images/logo.gif" width="200" height="65" border="0" /></a></td>
-<td align="center"><a href="http://www.phome.net/OpenSource/" target="_blank"><img src="/APhpCms/EmpireCMS/skin/default/images/opensource.gif" width="100%" height="70" border="0" /></a></td>
+<td width="240" align="center"><a href="/MyProject/src/MyPhpCms/EmpireCMS/"><img src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/images/logo.gif" width="200" height="65" border="0" /></a></td>
+<td align="center"><a href="http://www.phome.net/OpenSource/" target="_blank"><img src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/images/opensource.gif" width="100%" height="70" border="0" /></a></td>
 </tr>
 </table>
 <!-- 导航tab选项卡 -->
 <table width="920" border="0" align="center" cellpadding="0" cellspacing="0" class="nav">
   <tr> 
     <td class="nav_global"><ul>
-        <li class="curr" id="tabnav_btn_0" onmouseover="tabit(this)"><a href="/APhpCms/EmpireCMS/">首页</a></li>
+        <li class="curr" id="tabnav_btn_0" onmouseover="tabit(this)"><a href="/MyProject/src/MyPhpCms/EmpireCMS/">首页</a></li>
         <? @sys_ShowClassByTemp('0',12,0,0);?> </ul></td>
   </tr>
 </table>
@@ -95,14 +95,14 @@ document.write('<script src="/APhpCms/EmpireCMS/e/member/login/loginjs.php?t='+M
 </table>
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 <tr>
-    <td align="center" class="banner_ad"><a href="http://www.phome.net/ebak2008/" target="_blank" title="马上免费下载"><img src="/APhpCms/EmpireCMS/skin/default/images/empirebak.gif" width="920" height="90" border="0" /></a></td>
+    <td align="center" class="banner_ad"><a href="http://www.phome.net/ebak2008/" target="_blank" title="马上免费下载"><img src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/images/empirebak.gif" width="920" height="90" border="0" /></a></td>
 </tr>
 </table>
 <table width="100%" border="0" cellspacing="10" cellpadding="0">
 <tr valign="top">
 <td width="230" class="sider"><table width="100%" border="0" cellspacing="0" cellpadding="0" class="title">
 <tr>
-<td><strong><a href="/APhpCms/EmpireCMS/info/">分类信息</a></strong></td>
+<td><strong><a href="/MyProject/src/MyPhpCms/EmpireCMS/info/">分类信息</a></strong></td>
 </tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="box">
@@ -114,7 +114,7 @@ document.write('<script src="/APhpCms/EmpireCMS/e/member/login/loginjs.php?t='+M
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="title margin_top">
 <tr>
-<td><strong><a href="/APhpCms/EmpireCMS/download/">下载更新</a></strong></td>
+<td><strong><a href="/MyProject/src/MyPhpCms/EmpireCMS/download/">下载更新</a></strong></td>
 </tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="box no_doc">
@@ -216,7 +216,7 @@ document.write('<script src="/APhpCms/EmpireCMS/e/member/login/loginjs.php?t='+M
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
 <td align="center" class="search">
-<form action="/APhpCms/EmpireCMS/e/search/index.php" method="post" name="searchform" id="searchform">
+<form action="/MyProject/src/MyPhpCms/EmpireCMS/e/search/index.php" method="post" name="searchform" id="searchform">
 <table border="0" cellspacing="6" cellpadding="0">
 <tr>
 <td><strong>站内搜索：</strong>
@@ -234,9 +234,9 @@ document.write('<script src="/APhpCms/EmpireCMS/e/member/login/loginjs.php?t='+M
 <option value="info">分类信息</option>
 </select>
 </td>
-<td><input type="image" class="inputSub" src="/APhpCms/EmpireCMS/skin/default/images/search.gif" />
+<td><input type="image" class="inputSub" src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/images/search.gif" />
 </td>
-<td><a href="/APhpCms/EmpireCMS/search/" target="_blank">高级搜索</a></td>
+<td><a href="/MyProject/src/MyPhpCms/EmpireCMS/search/" target="_blank">高级搜索</a></td>
 </tr>
 </table>
 </form>
@@ -246,9 +246,9 @@ document.write('<script src="/APhpCms/EmpireCMS/e/member/login/loginjs.php?t='+M
 <td>
 	<table width="100%" border="0" cellpadding="0" cellspacing="4" class="copyright">
         <tr> 
-          <td align="center"><a href="/APhpCms/EmpireCMS/">网站首页</a> | <a href="#">关于我们</a> 
+          <td align="center"><a href="/MyProject/src/MyPhpCms/EmpireCMS/">网站首页</a> | <a href="#">关于我们</a> 
             | <a href="#">服务条款</a> | <a href="#">广告服务</a> | <a href="#">联系我们</a> 
-            | <a href="#">网站地图</a> | <a href="#">免责声明</a> | <a href="/APhpCms/EmpireCMS/e/wap/" target="_blank">WAP</a></td>
+            | <a href="#">网站地图</a> | <a href="#">免责声明</a> | <a href="/MyProject/src/MyPhpCms/EmpireCMS/e/wap/" target="_blank">WAP</a></td>
         </tr>
         <tr> 
           <td align="center">Powered by <strong><a href="http://www.phome.net" target="_blank">EmpireCMS</a></strong> 
