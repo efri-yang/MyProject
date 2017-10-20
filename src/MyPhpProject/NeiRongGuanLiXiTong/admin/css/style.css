@@ -1,0 +1,57 @@
+.page-h{
+	margin-top: 30px;
+	/*border:1px solid #e2e2e2;*/
+}
+.page-h .soma-hd{
+	padding: 15px 0;
+	border-bottom:1px solid #e2e2e2;
+}
+.page-h .caption-1{
+	font-size: 24px;
+	padding: 5px 0 15px 0;
+	text-align:left;
+	border-bottom:1px solid #e2e2e2; 
+}
+.page-h .module-item{
+	border:1px solid #4FB4DE;
+	padding: 1px;
+	margin-top:15px; 
+}
+
+.page-h .module-item .hd{
+	background:#4FB4DE; 
+	padding: 0 5px;
+	color:#fff;
+	height: 25px;
+	line-height: 25px; 
+}
+.page-h .module-item .admin-infor{
+	padding: 10px 20px;
+}
+.page-h .module-item .list-1{
+	padding: 10px 20px;
+}
+
+.page-h .module-item .list-1 li{
+	padding:8px 0;
+	border-bottom:1px solid #e5e5e5; 
+}
+
+.page-h .module-item .list-1 li:last-child{
+	border-bottom: none;
+}
+.page-h{
+	
+}
+.page-h{
+	
+}
+.page-h{
+	
+}
+.page-h{
+	
+}
+.page-h{
+	
+}
