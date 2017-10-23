@@ -1,7 +1,7 @@
 <?php
 $cfg_basehost = 'http://localhost';
 $cfg_cmspath = '/MyProject/src/MyPhpCms/DedeCMS';
-$cfg_cookie_encode = 'hF14I3mxtaCSqN16NBIeX2nCm6QdIg';
+$cfg_cookie_encode = 'pHCD9MCo36tQ35LBcvSRbiHCw03CaVWa';
 $cfg_indexurl = '/MyProject/src/MyPhpCms/DedeCMS';
 $cfg_backup_dir = 'backupdata';
 $cfg_indexname = '主页';
