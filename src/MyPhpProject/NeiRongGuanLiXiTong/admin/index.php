@@ -39,7 +39,7 @@
 					</li>
 					<li>
 						<label>栏目操作：</label>
-						<a href="">管理栏目</a>
+						<a href="./pagecolumns/index.php">管理栏目</a>
 					</li>
 				</ul>
 			</div>

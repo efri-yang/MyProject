@@ -1,0 +1,13 @@
+.columns-h-tbl{
+	width: 100%;
+	border:1px solid #4FB4DE;
+	margin-top: 20px;
+}
+.columns-h-tbl td,.columns-h-tbl th{
+	padding: 6px;
+	border:1px solid #4FB4DE;
+	text-align: center;
+}
+.columns-h-tbl td.align-l{
+	text-align:left;
+}
