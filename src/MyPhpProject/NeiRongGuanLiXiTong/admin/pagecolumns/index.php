@@ -1,9 +1,12 @@
 <?php
 	session_start();
+
 	include("../../Path.php");
 	include("../../common/mysqli.php");
 	include("../common/session.php");
 	include("../common/common.func.php");
+
+	include("../common/classtree.func.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,6 +18,38 @@
 </head>
 <body>
 	<?php include('../temp/header_top.php') ?>
+
+
+	<?php 
+		$sql="select * from mc_columns";
+		$result=$mysqli->query($sql);
+		$results=resultToArray($result);
+		
+		if(empty($results)){
+	?>
+			<div class="columns-nodata">
+				<p class="txt-1">目前没有栏目哦！您可以新建栏目在去发布信息哦！</p>
+				<p><a href="#" class="btn btn-success btn-large">新建栏目</a></p>
+			</div>
+
+	<?php		
+		}else{
+
+			$data=ClassTree::vTree($results);
+			print_r($data);
+		}
+
+
+
+	 ?>
+
+
+	
+	
+
+
+
+
 
 	<div class="container columns-h">
 		<table class="columns-h-tbl">

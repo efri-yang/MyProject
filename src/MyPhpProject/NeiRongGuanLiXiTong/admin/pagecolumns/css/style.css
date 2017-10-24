@@ -11,3 +11,12 @@
 .columns-h-tbl td.align-l{
 	text-align:left;
 }
+
+.columns-nodata{
+	text-align: center;
+}
+.columns-nodata .txt-1{
+	font-size: 18px;
+	
+	padding: 50px 0 20px;
+}
