@@ -18,7 +18,7 @@ class ClassTree {
             $sort[$k]=$v[$cols];
         }
         if(isset($sort))
-            array_multisort($sort,SORT_DESC,$arr);
+            array_multisort($sort,SORT_ASC,$arr);
         return $arr;
     }
     /**

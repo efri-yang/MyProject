@@ -20,3 +20,57 @@
 	
 	padding: 50px 0 20px;
 }
+.columns-h-tbl td.first{
+	text-align: left;
+}
+
+.columns-h-tbl .handle a{
+	display: inline-block;
+	margin: 0 5px;
+	text-decoration: underline;
+}
+
+.columns-h .soma-hd{
+	padding: 30px 0 5px;
+}
+
+.col-add-tbl{
+	width: 100%;
+	margin-top: 30px;
+	border:1px solid #666;
+}
+
+.col-add-tbl td{
+	border:1px solid #666;
+	padding: 10px;
+}
+
+.col-add-tbl .sel-1{
+	padding: 10px;
+	width: 200px;
+	overflow: scroll;
+}
+
+
+.dir-tbl .dir-up td{
+	background:#DBEAF5; 
+}
+
+
+.col-add-error-box{
+	margin-top: 20px;
+	border:2px solid #f60;
+	padding: 15px;
+}
+
+.col-zoomimg{
+	width:120px;
+	height: 120px;
+	overflow: hidden;
+	background: #666;
+	
+}
+.col-zoomimg img{
+	width:100%;
+	height: 100%;
+}

@@ -29,19 +29,63 @@
 	?>
 			<div class="columns-nodata">
 				<p class="txt-1">目前没有栏目哦！您可以新建栏目在去发布信息哦！</p>
-				<p><a href="#" class="btn btn-success btn-large">新建栏目</a></p>
+				<p><a href="./addColumns.php" class="btn btn-success btn-large">新建栏目</a></p>
 			</div>
 
 	<?php		
 		}else{
 
-			$data=ClassTree::vTree($results);
-			print_r($data);
+			
+			$data=ClassTree::hTree($results);
+			$data=ClassTree::sort($data,'sortrank');
+			
+			function disPlayList($arr,$str="",$step=0){
+				
+				foreach($arr as $key=>$value){
+					$flg = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$step);
+					$str.="<tr>";
+					$str.="<td class='first'>".$flg."<img src='./images/".($value['islast']==1 ? "txt.gif" :"dir.gif")."'/></td>";
+					$str.="<td>".$value['sortrank']."</td>";
+					$str.="<td>".$value['classid']."</td>";
+					$str.="<td class='align-l'>".$flg.$value['classname']."</td>";
+					$str.="<td class='handle'><a href='#'>编辑</a><a href='#'>删除</a></td>";
+					$str.="<tr>";
+					if(!empty($value['sub'])){
+						$str=disPlayList($value['sub'],$str,$step+1);
+					}
+				}
+				return $str;
+
+			}
+
+			
+
+		?>
+		<div class="container columns-h">
+			<div class="soma-hd clearfix">
+				<a href="./addColumns.php" class="btn btn-success btn-large fr">添加栏目</a>
+			</div>
+			<table class="columns-h-tbl">
+				<thead>
+					<tr>
+						<th width="10%">类型</th>
+						<th width="10%">排序值</th>
+						<th>ID</th>
+						<th>栏目名</th>
+						<th>栏目管理</th>
+					</tr>
+				</thead>	
+				<tbody>
+					<?php
+						echo disPlayList($data);
+					?>
+				</tbody>
+			</table>
+		</div>
+
+	<?php  
 		}
-
-
-
-	 ?>
+	?>
 
 
 	
@@ -51,47 +95,6 @@
 
 
 
-	<div class="container columns-h">
-		<table class="columns-h-tbl">
-			<thead>
-				<tr>
-					<th></th>
-					<th>ID</th>
-					<th>栏目名</th>
-					<th>栏目管理</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				<tr>
-					<td class="align-l"><img src="images/dir.gif"></td>
-					<td>1</td>
-					<td>前端专区</td>
-					<td class="handle">
-						<a href="#">编辑</a>
-						<a href="#">删除</a>
-					</td>
-				</tr>
-				<tr>
-					<td class="align-l">&nbsp;&nbsp;<img src="images/txt.gif"></td>
-					<td>4</td>
-					<td>css设计</td>
-					<td class="handle">
-						<a href="#">编辑</a>
-						<a href="#">删除</a>
-					</td>
-				</tr>
-				<tr>
-					<td class="align-l">&nbsp;&nbsp;<img src="images/txt.gif"></td>
-					<td>5</td>
-					<td>js设计</td>
-					<td class="handle">
-						<a href="#">编辑</a>
-						<a href="#">删除</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+	
 </body>
 </html>

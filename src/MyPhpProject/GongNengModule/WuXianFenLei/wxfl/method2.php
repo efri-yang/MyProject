@@ -70,10 +70,10 @@
 
 	// $arr=ClassTree::sort($arr,'sort');
 
-	$data2=ClassTree::hTree($arr);
+	$data2=ClassTree::vTree($arr);
 	$arr=ClassTree::sort($data2,'sort');
 
-	// print_r($arr);
+	print_r($arr);
 
 	// $data=ClassTree::hTree($arr);
 

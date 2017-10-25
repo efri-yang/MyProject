@@ -1,0 +1,20 @@
+.news-add-tbl{
+	margin-top: 30px;
+	width:100%;
+	border:1px solid #999;
+}
+.news-add-tbl td{
+	border:1px solid #999;
+	padding: 10px;
+}
+.news-add-tbl td.para-tit{
+	width: 150px;
+	text-align: right;
+}
+.news-add-tbl td.para-tit .star{
+	color: #f60;
+	font-weight: bold;
+	font-size: 16px;
+	padding: 0 8px;
+	vertical-align: middle;
+}
