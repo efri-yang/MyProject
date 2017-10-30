@@ -198,7 +198,7 @@ if ( $done ) {
         'file_id'=>$_REQUEST['id'],
         ];
 
-    // die(json_encode($response));
+    // die(json_encode($fileName));
 }
 
 // Return Success JSON-RPC response

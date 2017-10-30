@@ -214,6 +214,7 @@
 
         // 当有文件添加进来时执行，负责view的创建
         function addFile( file ) {
+           
             var $li = $( '<li id="' + file.id + '">' +
                     '<p class="title">' + file.name + '</p>' +
                     '<p class="imgWrap"></p>'+
@@ -250,6 +251,7 @@
             } else {
                 // @todo lazyload
                 $wrap.text( '预览中' );
+                //生成缩略图，此过程为异步，所以需要传入callback。 通常情况在图片加入队里后调用此方法来生成预览图以增强交互效果。
                 uploader.makeThumb( file, function( error, src ) {
                     var img;
 
@@ -282,6 +284,7 @@
             }
 
             file.on('statuschange', function( cur, prev ) {
+                console.dir("xxxxx");
                 if ( prev === 'progress' ) {
                     $prgress.hide().width(0);
                 } else if ( prev === 'queued' ) {
