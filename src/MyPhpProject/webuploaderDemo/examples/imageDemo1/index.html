@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>测试页面</title>
+	<link rel="stylesheet" type="text/css" href="../../dist/webuploader.css">
+	<script type="text/javascript" src="../../dist/jquery.js"></script>
+	<script type="text/javascript" src="../../dist/webuploader.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	<div id="wrapper">
+		<div id="container">
+            <!--头部，相册选择和格式选择-->
+
+            <div id="uploader">
+                <div class="queueList">
+                    <div id="dndArea" class="placeholder">
+                        <div id="filePicker"></div>
+                        <p>或将照片拖到这里，单次最多可选300张</p>
+                    </div>
+                </div>
+                <div class="statusBar" style="display:none;">
+                    <div class="progress">
+                        <span class="text">0%</span>
+                        <span class="percentage"></span>
+                    </div>
+                    <div class="info"></div>
+                    <div class="btns">
+                        <div id="filePicker2"></div><div class="uploadBtn">开始上传</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			var $wrap = $('#uploader'),
+			
+			$queue = $( '<ul class="filelist"></ul>' )
+                .appendTo( $wrap.find( '.queueList' ) ),
+
+                // 状态栏，包括进度和控制按钮
+            $statusBar = $wrap.find( '.statusBar' ),
+
+            // 文件总体选择信息。
+            $info = $statusBar.find( '.info' ),
+            // 上传按钮
+            $upload = $wrap.find( '.uploadBtn' ),
+
+             // 没选择文件之前的内容。
+            $placeHolder = $wrap.find( '.placeholder' ),
+
+            $progress = $statusBar.find( '.progress' ).hide();
+
+            uploader = WebUploader.create({
+            	pick: {
+	                id: '#filePicker',
+	                label: '点击选择图片'
+	            },
+            })
+		})
+
+	</script>
+</body>
+</html>

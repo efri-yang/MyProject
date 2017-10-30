@@ -1,0 +1,110 @@
+.container{
+	width: 1120px;
+	margin:20px auto 0;
+}
+
+.wrapper{
+	border:1px solid #dadada;
+	padding:20px 0px 0;
+}
+.uploader-default-container{
+	border:3px dashed #e6e6e6;
+	padding: 100px 0;
+	margin: 0 20px 20px;
+}
+.uploader-default-container .tip-1{
+	font-size: 18px;
+	color: #ccc;
+	text-align: center;
+}
+
+.uploader-no-pic{
+	width: 88px;
+	height: 75px;
+	margin: 0 auto;
+	overflow: hidden;
+	background: url("../image/not_img_pic.png") no-repeat top center;
+}
+.filepicker-container{
+	padding: 15px 0;
+	text-align: center;
+}
+
+
+.statusBar {
+    height: 63px;
+    border-top: 1px solid #dadada;
+    padding: 0 20px;
+    line-height: 63px;
+    vertical-align: middle;
+    position: relative;
+    display: none;
+}
+
+
+
+.statusBar .progress {
+    border: 1px solid #1483d8;
+    width: 198px;
+    background: #fff;
+    height: 18px;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    line-height: 20px;
+    color: #6dbfff;
+    position: relative;
+    margin-right: 10px;
+}
+.statusBar .progress span.percentage {
+    width: 0;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: #1483d8;
+    position: absolute;
+}
+.statusBar .progress span.text {
+    position: relative;
+    z-index: 10;
+}
+
+
+.statusBar .info{
+	display: inline-block;
+    font-size: 14px;
+    color: #666666;
+}
+
+.statusBar .btns {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    line-height: 40px;
+}
+
+.filepicker2-container {
+    display: inline-block;
+    float: left;
+}
+.statusBar .btns .webuploader-pick,
+.statusBar .btns .uploadBtn{
+	background: #ffffff;
+    border: 1px solid #cfcfcf;
+    color: #565656;
+    padding: 0 18px;
+    display: inline-block;
+    border-radius: 3px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    float: left;
+}
+
+.statusBar .btns .uploadBtn {
+    background: #00b7ee;
+    color: #fff;
+    border-color: transparent;
+}
+
+
