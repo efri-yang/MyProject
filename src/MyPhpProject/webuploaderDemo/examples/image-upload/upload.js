@@ -384,22 +384,22 @@
         }
 
         function updateTotalProgress() {
-            var loaded = 0,
-                total = 0,
-                spans = $progress.children(),
-                percent;
+            // var loaded = 0,
+            //     total = 0,
+            //     spans = $progress.children(),
+            //     percent;
+            // console.dir(percentages);
+            // $.each( percentages, function( k, v ) {
+            //     total += v[ 0 ];
+            //     loaded += v[ 0 ] * v[ 1 ];
+            // } );
 
-            $.each( percentages, function( k, v ) {
-                total += v[ 0 ];
-                loaded += v[ 0 ] * v[ 1 ];
-            } );
-
-            percent = total ? loaded / total : 0;
+            // percent = total ? loaded / total : 0;
 
 
-            spans.eq( 0 ).text( Math.round( percent * 100 ) + '%' );
-            spans.eq( 1 ).css( 'width', Math.round( percent * 100 ) + '%' );
-            updateStatus();
+            // spans.eq( 0 ).text( Math.round( percent * 100 ) + '%' );
+            // spans.eq( 1 ).css( 'width', Math.round( percent * 100 ) + '%' );
+            // updateStatus();
         }
 
         function updateStatus() {
@@ -488,6 +488,7 @@
                     if ( stats.successNum ) {
 
                         alert( '上传成功' );
+                        console.dir(percentages);
                     } else {
                         // 没有成功的图片，重设
                         state = 'done';
@@ -520,8 +521,9 @@
             updateTotalProgress();
         };
 
+       
         uploader.onFileDequeued = function( file ) {
-            alert("xx  ")
+           
             fileCount--;
             fileSize -= file.size;
 
@@ -536,6 +538,21 @@
         uploader.on("uploadSuccess",function(file,response){
             console.dir(response);
         });
+
+        uploader.on( 'uploadProgress', function( file, percentage ) {  
+           var $li = $( '#'+file.id ),  
+               $percent = $li.find('.progress span');  
+            console.dir("percentage:"+percentage);
+           // 避免重复创建  
+           if ( !$percent.length ) {  
+               $percent = $('<p class="progress"><span></span></p>')  
+                       .appendTo( $li )  
+                       .find('span');  
+           }  
+           $percent.show()
+      
+           $percent.css( 'width', percentage * 100 + '%' );  
+       });  
         // 所有的事件都可以被相应到
         uploader.on( 'all', function( type ) {
            console.dir("all——"+type);

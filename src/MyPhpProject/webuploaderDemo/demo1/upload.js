@@ -37,6 +37,10 @@ $(function() {
     	console.group("触发了：beforeFileQueued事件(当文件被加入队列之前触发)");
     });
 
+     uploader.on("uploadProgress",function(file,totalPercent){
+            console.dir("xxx")
+     });
+
     uploader.on("fileQueued",function(file){
     	console.group("触发了：fileQueued事件(当文件被加入队列以后触发)");
     	fileCount++;
