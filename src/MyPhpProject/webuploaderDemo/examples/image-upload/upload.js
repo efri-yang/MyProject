@@ -230,6 +230,7 @@
                 $info = $('<p class="error"></p>'),
 
                 showError = function( code ) {
+
                     switch( code ) {
                         case 'exceed_size':
                             text = '文件大小超出';
@@ -435,7 +436,6 @@
 
         function setState( val ) {
             var file, stats;
-
             if ( val === state ) {
                 return;
             }
@@ -449,7 +449,7 @@
                     $placeHolder.removeClass( 'element-invisible' );
                     $queue.hide();
                     $statusBar.addClass( 'element-invisible' );
-                    uploader.refresh();
+                    // uploader.refresh();
                     break;
 
                 case 'ready':
@@ -457,7 +457,7 @@
                     $( '#filePicker2' ).removeClass( 'element-invisible');
                     $queue.show();
                     $statusBar.removeClass('element-invisible');
-                    uploader.refresh();
+                    // uploader.refresh();
                     break;
 
                 case 'uploading':
