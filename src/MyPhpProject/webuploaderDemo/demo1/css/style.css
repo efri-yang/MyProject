@@ -110,6 +110,11 @@
     color: #fff;
     border-color: transparent;
 }
+.statusBar .btns .uploadBtn.paused{
+    background: rgb(255, 255, 255);
+    border:1px solid #e5e5e5;
+     color: #565656;
+}
 
 
 .queue-list {
@@ -242,7 +247,17 @@
 .queue-list li img {
     width: 100%;
 }
-
+.queue-list li .error{
+    background: #f43838;
+    color: #fff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 28px;
+    line-height: 28px;
+    width: 100%;
+    z-index: 100;
+}
 .queue-list li p.error {
     background: #f43838;
     color: #fff;
@@ -288,6 +303,12 @@
     background: url(../image/icons.png) no-repeat;
     margin: 5px 1px 1px;
     cursor: pointer;
+}
+.queue-list div.file-panel .reuploader{
+    float: left;
+    color:#fff;
+    line-height: 28px;
+    margin-left: 5px; 
 }
 
 .queue-list div.file-panel span.rotateLeft {

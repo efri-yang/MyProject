@@ -16,27 +16,129 @@
 				<div id="filePicker" class="filepicker-container"></div>
 				<p class="tip-1">或将照片拖到这里，单次最多可选300张</p>
 			</div>
-			<ul class="queue-list" id="J_queue-list">
+			<ul class="queue-list" id="J_queue-list" style="display: block;">
+				<li>
+					<p class="imgWrap">预览中...</p>
+					<!-- <p class="progress"><span style="width: 50%;"></span></p> -->
+					<!-- <p class="title">01.jpg</p>
+					
+					<div class="file-panel">
+						<span class="cancel">删除</span>
+						
+					</div> -->
+					<!-- <span class="success"></span> -->
+					<!-- <span class="error">上传文件出错</span> -->
+				</li>
+				<li>
+					<p class="imgWrap"><img src="image/body_bg.jpg"></p>
+					<!-- <p class="progress"><span style="width: 50%;"></span></p> -->
+					<p class="title">01.jpg</p>
+					
+					<div class="file-panel">
+						<span class="cancel">删除</span>
+						<!-- <span class="rotateRight">向右旋转</span>
+						<span class="rotateLeft">向左旋转</span> -->
+					</div>
+					<!-- <span class="success"></span> -->
+					<!-- <span class="error">上传文件出错</span> -->
+				</li>
 				<li>
 					<p class="imgWrap"><img src="image/body_bg.jpg"></p>
 					<p class="progress"><span style="width: 50%;"></span></p>
 					<p class="title">01.jpg</p>
-					<span class="success"></span>
-					<div class="file-panel">
+					<!-- <span class="success"></span> -->
+					<!-- <div class="file-panel">
 						<span class="cancel">删除</span>
 						<span class="rotateRight">向右旋转</span>
 						<span class="rotateLeft">向左旋转</span>
+					</div> -->
+					<!-- <span class="error">上传文件出错</span> -->
+				</li>
+				<li>
+					<p class="imgWrap"><img src="image/body_bg.jpg"></p>
+					<!-- <p class="progress"><span style="width: 50%;"></span></p> -->
+					<p class="title">01.jpg</p>
+					<span class="success"></span>
+					<!-- <div class="file-panel">
+						<span class="cancel">删除</span>
+						<span class="rotateRight">向右旋转</span>
+						<span class="rotateLeft">向左旋转</span>
+					</div> -->
+					<!-- <span class="error">上传文件出错</span> -->
+				</li>
+				<li>
+					<p class="imgWrap"><img src="image/body_bg.jpg"></p>
+					<!-- <p class="progress"><span style="width: 50%;"></span></p> -->
+					<p class="title">01.jpg</p>
+					<!-- <span class="success"></span> -->
+					<div class="file-panel">
+						<span class="cancel">删除</span>
+						<a href="" class="reuploader">重新上传</a>
 					</div>
+					<span class="error">上传文件出错</span>
 				</li>
 			</ul>
 
-			<div class="statusBar" id="J_statusBar">
-				<div class="progress">
+
+			<div class="statusBar" id="J_statusBar" style="display: block;">
+				<!-- <div class="progress" style="display: block;">
+                    <span class="text">15%</span>
+                    <span class="percentage" style="width:15%"></span>
+                </div>
+ -->
+                <div class="info">选中1张图片，共113.29K。</div>
+                <div class="btns">
+                    <div id="filePicker2" class="filepicker2-container"></div>
+                    <div class="uploadBtn" id="J_uploadBtn">开始上传</div>
+                </div>
+
+			</div>
+			<div class="statusBar" id="J_statusBar" style="display: block;">
+				<div class="progress" style="display: block;">
                     <span class="text">15%</span>
                     <span class="percentage" style="width:15%"></span>
                 </div>
 
                 <div class="info">共0张（0B），已上传0张</div>
+                <div class="btns">
+                    <div id="filePicker2" class="filepicker2-container"></div>
+                    <div class="uploadBtn paused" id="J_uploadBtn">暂停上传</div>
+                </div>
+
+			</div>
+			<div class="statusBar" id="J_statusBar" style="display: block;">
+				<div class="progress" style="display: block;">
+                    <span class="text">15%</span>
+                    <span class="percentage" style="width:15%"></span>
+                </div>
+
+                <div class="info">共5张（178B），已上传4张</div>
+                <div class="btns">
+                    <div id="filePicker2" class="filepicker2-container"></div>
+                    <div class="uploadBtn paused" id="J_uploadBtn">暂停上传</div>
+                </div>
+
+			</div>
+			<div class="statusBar" id="J_statusBar" style="display: block;">
+				<!-- <div class="progress" style="display: block;">
+                    <span class="text">15%</span>
+                    <span class="percentage" style="width:15%"></span>
+                </div>
+ -->
+                <div class="info">已成功上传5张照片至XX相册,2张照片上传失败，<a class="retry" href="#">重新上传</a>失败图片或<a class="ignore" href="#">忽略</a></div>
+                <div class="btns">
+                    <div id="filePicker2" class="filepicker2-container"></div>
+                    <div class="uploadBtn" id="J_uploadBtn">开始上传</div>
+                </div>
+
+			</div>
+			<div class="statusBar" id="J_statusBar" style="display: block;">
+				<!-- <div class="progress" style="display: block;">
+                    <span class="text">15%</span>
+                    <span class="percentage" style="width:15%"></span>
+                </div>
+ -->
+                <div class="info">共10张（105.56KB），已上传7张，失败3张</div>
                 <div class="btns">
                     <div id="filePicker2" class="filepicker2-container"></div>
                     <div class="uploadBtn" id="J_uploadBtn">开始上传</div>
