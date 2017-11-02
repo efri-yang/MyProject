@@ -322,3 +322,64 @@
 .queue-list div.file-panel span.cancel:hover {
     background-position: -48px 0;
 }
+
+
+/**
+ *编辑栏目
+ */
+.col-edit-tbl{
+    width: 100%;
+    margin-top: 30px;
+    border:1px solid #666;
+}
+
+.col-edit-tbl td{
+    border:1px solid #666;
+    padding: 10px;
+}
+.col-edit-tbl .para-tit{
+    text-align: right;
+    font-weight: bold;
+}
+.col-edit-tbl .sel-type-1{
+        padding: 10px;
+    width: 200px;
+    overflow: scroll;
+}
+
+.col-edit-tbl .filedir-tbl .dir-up td{
+    background:#DBEAF5; 
+}
+.col-edit-tbl .zoom-img{
+    float: left;
+    padding:30px;
+    
+}
+.col-edit-tbl .zoom-img .no-pic{
+    width: 88px;
+    height: 75px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: url("../images/pagecolumn/not_img_pic.png") no-repeat top center;
+}
+.col-edit-tbl .zoom-img .upload-img{
+    border:1px solid #e5e5e5;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    text-align:center;
+    line-height: 120px;
+    overflow: hidden;
+}
+.col-edit-tbl .zoom-img .upload-img.preview{
+    background: url("../images/pagecolumn/bg.png") repeat top center;
+}
+.col-edit-tbl .zoom-img .upload-img img{
+    vertical-align: middle;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.col-edit-tbl .zoom-img .upload-img .upload-btn{
+      
+}

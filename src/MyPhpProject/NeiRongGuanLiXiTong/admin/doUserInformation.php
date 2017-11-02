@@ -44,7 +44,6 @@ include(ROOT_PATH."/admin/common/common.func.php");
             }
             $uniName=md5(uniqid(microtime(true),true)).".".$ext;
             $destination=$path."/".$uniName;
-            echo $destination;
             if(!move_uploaded_file($avatarFile["tmp_name"],$destination)){
                  $fileError="文件上传失败！";
             }else{

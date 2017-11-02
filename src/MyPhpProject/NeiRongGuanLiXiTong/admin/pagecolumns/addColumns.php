@@ -219,6 +219,7 @@
 				//
 				$("#selparent").on("change",function(){
 					var valId=$(this).val();
+					alert("xxx");
 					$.ajax({
 						url:"doPath.php",
 						dataType:"json",

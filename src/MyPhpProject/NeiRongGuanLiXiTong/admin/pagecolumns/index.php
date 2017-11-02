@@ -49,7 +49,7 @@
 					$str.="<td>".$value['sortrank']."</td>";
 					$str.="<td>".$value['classid']."</td>";
 					$str.="<td class='align-l'>".$flg.$value['classname']."</td>";
-					$str.="<td class='handle'><a href='#'>编辑</a><a href='#'>删除</a></td>";
+					$str.="<td class='handle'><a href='editColumns.php?classid=".$value['classid']."'>编辑</a><a href='delColumns.php?classid=".$value['classid']."'>删除</a></td>";
 					$str.="<tr>";
 					if(!empty($value['sub'])){
 						$str=disPlayList($value['sub'],$str,$step+1);

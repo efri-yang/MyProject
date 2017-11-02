@@ -8,8 +8,8 @@ if(!defined('InEmpireCMS'))
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>新闻中心 - Powered by EmpireCMS</title>
-<meta name="keywords" content="新闻中心-关键字" />
-<meta name="description" content="新闻中心-栏目简介" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
 <link href="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/js/tabs.js"></script>
 </head>
@@ -52,7 +52,7 @@ document.write('<script src="/MyProject/src/MyPhpCms/EmpireCMS/e/member/login/lo
 <tr valign="top">
 <td class="news_list"><table width="100%" border="0" cellspacing="0" cellpadding="0" class="position">
 <tr>
-<td>您当前的位置：<a href="/MyProject/src/MyPhpCms/EmpireCMS/">首页</a>&nbsp;>&nbsp;<a href="/MyProject/src/MyPhpCms/EmpireCMS/news/">新闻中心</a></td>
+<td>您当前的位置：<a href="/MyProject/src/MyPhpCms/EmpireCMS/">首页</a>&nbsp;>&nbsp;<a href="/MyProject/src/MyPhpCms/EmpireCMS/download/">下载中心</a>&nbsp;>&nbsp;<a href="/MyProject/src/MyPhpCms/EmpireCMS/download/news/">新闻中心</a></td>
 </tr>
 </table>
 <? @sys_ForSonclassData('selfinfo',5,38,0,0,7,0,0);?></td>
