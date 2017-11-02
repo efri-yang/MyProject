@@ -9,20 +9,10 @@
 	// $db->onDuplicate($updateColumns, $lastInsertId);
 	// $id = $db->insert ('sqli', $data);
 	// 
-	class A{
-		public static function who(){
-			echo __CLASS__;
-		}
-		public static function test(){
-			static::who();
-		}
-	}
+	echo dirname(__FILE__);
+	echo "<br/>";
+	echo  $_SERVER['DOCUMENT_ROOT'];
+	echo "<br/>";
 
-	class B extends A{
-		Public static function who(){
-			echo __CLASS__;
-		}
-	}
-
-	B::test();
+	echo chdir(dirname(__FILE__));
 ?>
