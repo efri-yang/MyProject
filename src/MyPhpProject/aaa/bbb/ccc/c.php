@@ -7,6 +7,7 @@
 	 echo $basepath;
 	 echo "<br/>";
 echo $url;
+echo ROOT_PATH;
 
 
 

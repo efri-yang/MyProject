@@ -1,19 +1,19 @@
 <?php
 	session_start();
-	include("../Path.php");
-	include("../common/mysqli.php");
-	include("./common/session.php");
-	include("./common/common.func.php");
+	include("../config.php");
+	include(ROOT_PATH."/include/mysqli.php");
+	include(ROOT_PATH."/admin/common/session.php");
+	include(ROOT_PATH."/admin/common/common.func.php");
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>首页</title>
-	<?php include('../template/scriptstyle.php') ?>
+	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
-	<?php include('temp/header_top.php') ?>
+	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
 	
 	<!-- 
 		没有栏目的话 显示没有栏目，提示去创建栏目

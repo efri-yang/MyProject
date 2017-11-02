@@ -1,9 +1,9 @@
 <?php
 
 session_start();
-include("../Path.php");
-include("../common/mysqli.php");
-include("./common/common.func.php");
+include("../config.php");
+include(ROOT_PATH."/include/mysqli.php");
+include(ROOT_PATH."/admin/common/common.func.php");
 
 
 $authCode = $_SESSION["authcode"];

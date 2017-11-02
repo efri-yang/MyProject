@@ -1,6 +1,6 @@
 <?php
-    include("../Path.php");
-    include("./common/common.func.php");
+    include("../config.php");
+    include(ROOT_PATH."/admin/common/common.func.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,11 +9,11 @@
     <meta charset="UTF-8">
     <title>登录页面</title>
     <?php 
-        include("../template/scriptstyle.php")
+        include(ROOT_PATH."/admin/template/scriptstyle.php")
     ?>
 
-    <script type="text/javascript" src="<?php echo APP_ROOT_URL; ?>/staitc/js/bootstrapvalidator/js/bootstrapValidator.js"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo APP_ROOT_URL; ?>/staitc/js/bootstrapvalidator/css/bootstrapValidator.css">
+    <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/bootstrapvalidator/js/bootstrapValidator.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/js/bootstrapvalidator/css/bootstrapValidator.css">
    
 </head>
 
