@@ -141,24 +141,24 @@
         uploader = WebUploader.create({
             pick: {
                 id: '#filePicker',
-                label: '点击选择图片',
-
+                label: '点击选择图片'
             },
             formData: {
                 uid: 123
             },
-            //指定Drag And Drop拖拽的容器，如果不指定，则不启动
             dnd: '#dndArea',
-            //指定监听paste事件的容器，如果不指定，不启用此功能。此功能为通过粘贴来添加截屏的图片。建议设置为document.body.
             paste: '#uploader',
-            //
             swf: '../../dist/Uploader.swf',
-            //是否要分片处理大文件上传
             chunked: false,
             chunkSize: 512 * 1024,
             server: '../../server/fileupload.php',
             // runtimeOrder: 'flash',
 
+            // accept: {
+            //     title: 'Images',
+            //     extensions: 'gif,jpg,jpeg,bmp,png',
+            //     mimeTypes: 'image/*'
+            // },
 
             // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
             disableGlobalDnd: true,
@@ -186,10 +186,6 @@
             return !denied;
         });
 
-        uploader.on('dialogOpen', function() {
-            console.log('here');
-        });
-
         // uploader.on('filesQueued', function() {
         //     uploader.sort(function( a, b ) {
         //         if ( a.name < b.name )
@@ -206,15 +202,12 @@
             label: '继续添加'
         });
 
-        
-
         uploader.on('ready', function() {
             window.uploader = uploader;
         });
 
         // 当有文件添加进来时执行，负责view的创建
         function addFile( file ) {
-           
             var $li = $( '<li id="' + file.id + '">' +
                     '<p class="title">' + file.name + '</p>' +
                     '<p class="imgWrap"></p>'+
@@ -230,7 +223,6 @@
                 $info = $('<p class="error"></p>'),
 
                 showError = function( code ) {
-
                     switch( code ) {
                         case 'exceed_size':
                             text = '文件大小超出';
@@ -247,12 +239,12 @@
 
                     $info.text( text ).appendTo( $li );
                 };
+
             if ( file.getStatus() === 'invalid' ) {
                 showError( file.statusText );
             } else {
                 // @todo lazyload
                 $wrap.text( '预览中' );
-                //生成缩略图，此过程为异步，所以需要传入callback。 通常情况在图片加入队里后调用此方法来生成预览图以增强交互效果。
                 uploader.makeThumb( file, function( error, src ) {
                     var img;
 
@@ -285,7 +277,6 @@
             }
 
             file.on('statuschange', function( cur, prev ) {
-                console.dir("xxxxx");
                 if ( prev === 'progress' ) {
                     $prgress.hide().width(0);
                 } else if ( prev === 'queued' ) {
@@ -301,14 +292,11 @@
                 } else if ( cur === 'interrupt' ) {
                     showError( 'interrupt' );
                 } else if ( cur === 'queued' ) {
-                    $info.remove();
-                    $prgress.css('display', 'block');
                     percentages[ file.id ][ 1 ] = 0;
                 } else if ( cur === 'progress' ) {
                     $info.remove();
                     $prgress.css('display', 'block');
                 } else if ( cur === 'complete' ) {
-                    $prgress.hide().width(0);
                     $li.append( '<span class="success"></span>' );
                 }
 
@@ -385,23 +373,38 @@
         }
 
         function updateTotalProgress() {
-            // var loaded = 0,
-            //     total = 0,
-            //     spans = $progress.children(),
-            //     percent;
-            // console.dir(percentages);
-            // $.each( percentages, function( k, v ) {
-            //     total += v[ 0 ];
-            //     loaded += v[ 0 ] * v[ 1 ];
-            // } );
+            var loaded = 0,
+                total = 0,
+                spans = $progress.children(),
+                percent;
 
-            // percent = total ? loaded / total : 0;
+            $.each( percentages, function( k, v ) {
+                total += v[ 0 ];
+                loaded += v[ 0 ] * v[ 1 ];
+            } );
+           
+            percent = total ? loaded / total : 0;
 
 
-            // spans.eq( 0 ).text( Math.round( percent * 100 ) + '%' );
-            // spans.eq( 1 ).css( 'width', Math.round( percent * 100 ) + '%' );
-            // updateStatus();
+            spans.eq( 0 ).text( Math.round( percent * 100 ) + '%' );
+            spans.eq( 1 ).css( 'width', Math.round( percent * 100 ) + '%' );
+            updateStatus();
         }
+
+        uploader.on( 'uploadProgress', function( file, percentage ) {  
+           var $li = $( '#'+file.id ),  
+               $percent = $li.find('.progress span');  
+      
+           // 避免重复创建  
+           if ( !$percent.length ) {  
+               $percent = $('<p class="progress"><span></span></p>')  
+                       .appendTo( $li )  
+                       .find('span');  
+           }  
+           $percent.show();
+      
+           $percent.css( 'width', percentage * 100 + '%' );  
+       });  
 
         function updateStatus() {
             var text = '', stats;
@@ -418,24 +421,21 @@
 
             } else {
                 stats = uploader.getStats();
-
                 text = '共' + fileCount + '张（' +
                         WebUploader.formatSize( fileSize )  +
                         '），已上传' + stats.successNum + '张';
 
                 if ( stats.uploadFailNum ) {
-
                     text += '，失败' + stats.uploadFailNum + '张';
                 }
             }
-
-
 
             $info.html( text );
         }
 
         function setState( val ) {
             var file, stats;
+
             if ( val === state ) {
                 return;
             }
@@ -449,7 +449,7 @@
                     $placeHolder.removeClass( 'element-invisible' );
                     $queue.hide();
                     $statusBar.addClass( 'element-invisible' );
-                    // uploader.refresh();
+                    uploader.refresh();
                     break;
 
                 case 'ready':
@@ -457,7 +457,7 @@
                     $( '#filePicker2' ).removeClass( 'element-invisible');
                     $queue.show();
                     $statusBar.removeClass('element-invisible');
-                    // uploader.refresh();
+                    uploader.refresh();
                     break;
 
                 case 'uploading':
@@ -484,31 +484,30 @@
                     break;
                 case 'finish':
                     stats = uploader.getStats();
-                    console.dir(stats);
                     if ( stats.successNum ) {
-
                         alert( '上传成功' );
-                        console.dir(percentages);
                     } else {
                         // 没有成功的图片，重设
                         state = 'done';
                         location.reload();
                     }
-
                     break;
             }
 
             updateStatus();
         }
 
-        uploader.onBeforeFileQueued = function( file ) {
-            console.dir("onBeforeFileQueued");
-        }
+        uploader.onUploadProgress = function( file, percentage ) {
+            var $li = $('#'+file.id),
+                $percent = $li.find('.progress span');
+
+            $percent.css( 'width', percentage * 100 + '%' );
+            percentages[ file.id ][ 1 ] = percentage;
+            updateTotalProgress();
+        };
+
         uploader.onFileQueued = function( file ) {
-            
-           
             fileCount++;
-            console.dir("onFileQueued"+fileCount);
             fileSize += file.size;
 
             if ( fileCount === 1 ) {
@@ -521,9 +520,7 @@
             updateTotalProgress();
         };
 
-       
         uploader.onFileDequeued = function( file ) {
-           
             fileCount--;
             fileSize -= file.size;
 
@@ -535,27 +532,8 @@
             updateTotalProgress();
 
         };
-        uploader.on("uploadSuccess",function(file,response){
-            console.dir(response);
-        });
 
-        uploader.on( 'uploadProgress', function( file, percentage ) {  
-           var $li = $( '#'+file.id ),  
-               $percent = $li.find('.progress span');  
-            console.dir("percentage:"+percentage);
-           // 避免重复创建  
-           if ( !$percent.length ) {  
-               $percent = $('<p class="progress"><span></span></p>')  
-                       .appendTo( $li )  
-                       .find('span');  
-           }  
-           $percent.show()
-      
-           $percent.css( 'width', percentage * 100 + '%' );  
-       });  
-        // 所有的事件都可以被相应到
         uploader.on( 'all', function( type ) {
-           console.dir("all——"+type);
             var stats;
             switch( type ) {
                 case 'uploadFinished':

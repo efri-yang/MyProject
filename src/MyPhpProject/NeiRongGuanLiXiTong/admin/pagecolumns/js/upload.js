@@ -28,7 +28,7 @@ $(function() {
     var uploader = WebUploader.create({
         pick: {
             id: '#filePicker',
-            label: '点击选择图片'
+            label: '点击上传本地图片'
         },
         formData: {
             uid: 123
@@ -38,11 +38,11 @@ $(function() {
             extensions: 'gif,jpg,bmp,png',
             mimeTypes: 'image/jpg,image/jpeg,image/png'
         },
-        server: '../server/fileupload.php',
-        swf: '../../dist/Uploader.swf',
+        server: './fileupload.php',
+        swf: '../../../staitc/js/webuploader/Uploader.swf',
         //限制文件的大小
         fileSingleSizeLimit:2 * 1024 * 1024,
-        fileNumLimit:20,
+        fileNumLimit:1,
         fileSizeLimit: 4 * 1024 * 1024
     });
 
@@ -85,6 +85,8 @@ $(function() {
     });
 
     uploader.on("beforeFileQueued", function(file) {
+       
+      
         console.group("触发了：beforeFileQueued事件(当文件被加入队列之前触发)");
     });
     uploader.on("fileQueued", function(file) {
@@ -99,7 +101,7 @@ $(function() {
             $statusBar.show();
             //添加文件到队列，然后展示预览图
             addFile(file);
-
+            $upload.show();
             //设置状态告知现在可以上传了，通过这个状态去改变文本显示
             setState('ready');
 
@@ -110,8 +112,9 @@ $(function() {
     });
 
     uploader.on("filesQueued", function(file) {
-        console.dir(file);
+        
         console.group("触发了：filesQueued事件(当一批文件添加进队列以后触发)");
+        console.dir(percentages);
     });
 
     uploader.on("uploadStart", function(file) {
@@ -135,7 +138,9 @@ $(function() {
 
     uploader.on("uploadSuccess", function(file, response) {
          console.group("触发了：uploadSuccess");
+        
          $("#"+file.id).find(".file-panel").remove();
+         $("#J_zoomurl").val(response.filePath);
     });
 
 
@@ -212,11 +217,29 @@ $(function() {
                     $prgress.hide().width(0);
                     $success.appendTo($li);
                 }
+            });
+
+            $li.find(".cancel").on("click",function(){
+
+                uploader.removeFile(file);
+
             })
         }
         $queueList.show().append($li);
     }
 
+    uploader.on("fileDequeued",function(file){
+         fileCount--;
+            fileSize -= file.size;
+
+            if ( !fileCount ) {
+                setState( 'pedding' );
+            }
+            removeFile(file);
+    })
+    // uploader.onFileDequeued = function( file ) {
+    //     alert("xxx")
+    // }
     function setState(val) {
         var file, stats;
         if (val === state) {
@@ -229,12 +252,14 @@ $(function() {
                 $queueList.hide();
                 $statusBar.hide();
                 uploader.refresh();
+                $upload.hide();
                 break;
             case 'ready':
                 $uploaderDefaultContainer.hide();
                 $filePicker2.show();
                 $statusBar.show();
                 $queueList.show();
+                $upload.show();
                 uploader.refresh();
                 
                 break;
@@ -242,6 +267,7 @@ $(function() {
             case 'uploading':
                 $filePicker2.hide();
                 $progress.show();
+                $upload.hide();
                 $upload.addClass('paused').text('暂停上传');
                 updateTotalProgress();
                 break;
@@ -249,10 +275,19 @@ $(function() {
                 updateTotalText();
                 $filePicker2.show();
                 $progress.hide();
-                $upload.removeClass('paused').text('开始上传');
+                $upload.hide();
+               
                 
         }
     }
+
+    function removeFile( file ) {
+            var $li = $('#'+file.id);
+
+            delete percentages[ file.id ];
+            $li.remove();
+          
+        }
 
     function updateTotalText() {
         var text = '',
@@ -301,7 +336,8 @@ $(function() {
                 break;
         }
     });
-    $upload.on("click", function() {
+    $upload.on("click", function(event) {
+        event.preventDefault();
         if ($(this).hasClass('disabled')) {
             return false;
         }
