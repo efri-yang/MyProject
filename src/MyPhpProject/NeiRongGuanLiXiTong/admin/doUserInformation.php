@@ -1,8 +1,10 @@
 <?php
 session_start();
-include("../Path.php");
-include("../common/mysqli.php");
-include("./common/common.func.php");
+include("../config.php");
+include(ROOT_PATH."/include/mysqli.php");
+include(ROOT_PATH."/admin/common/common.func.php");
+
+
     $userId=$_SESSION['userid'];
     $avatarFile=$_FILES["avatarfile"];
     $avatarFilePre=$_POST['avatarfilepre'];
@@ -16,17 +18,17 @@ include("./common/common.func.php");
     if(!!count($occupation)){
         $occupation=implode(",",$occupation);
     }
-    
-    $path="avatar";
+   
+    $path=ROOT_PATH."/uploads/avatar";
     $resError;
     $avatarUrl;
+
 
     if($avatarFile['name']){
         //用户有上传文件
         $maxSize=10240000;
-        $allowMime=array('jpeg','png','gif');
+        $allowMime=array('jpeg','png','gif',"jpg");
         $ext=@strtolower(end(explode(".",$avatarName)));
-
         if($avatarFile["error"]==0){
             if($avatarFile["size"] > $maxSize){
                 $fileError="文件上传尺寸过大！";
@@ -42,6 +44,7 @@ include("./common/common.func.php");
             }
             $uniName=md5(uniqid(microtime(true),true)).".".$ext;
             $destination=$path."/".$uniName;
+            echo $destination;
             if(!move_uploaded_file($avatarFile["tmp_name"],$destination)){
                  $fileError="文件上传失败！";
             }else{
@@ -97,6 +100,8 @@ include("./common/common.func.php");
     }else{
 
         if(!!@$resError){
+
+            echo $destination;
 ?>
     <style type="text/css">
     .doregister-box-success{

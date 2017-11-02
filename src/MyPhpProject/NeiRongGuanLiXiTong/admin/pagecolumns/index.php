@@ -1,23 +1,24 @@
 <?php
 	session_start();
 
-	include("../../Path.php");
-	include("../../common/mysqli.php");
-	include("../common/session.php");
-	include("../common/common.func.php");
-
-	include("../common/classtree.func.php");
+	
+	include("../../config.php");
+	include(ROOT_PATH."/include/mysqli.php");
+	include(ROOT_PATH."/admin/common/session.php");
+	include(ROOT_PATH."/admin/common/common.func.php");
+	include(ROOT_PATH."/admin/common/classtree.func.php");
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title></title>
-	<?php include('../../template/scriptstyle.php') ?>
+	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
 	
-	<link rel="stylesheet" type="text/css" href="./css/style.css">
+
+	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/css/page-column.css">
 </head>
 <body>
-	<?php include('../temp/header_top.php') ?>
+	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
 
 
 	<?php 

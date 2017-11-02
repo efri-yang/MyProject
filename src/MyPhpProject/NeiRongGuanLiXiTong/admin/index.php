@@ -10,7 +10,7 @@
 <head>
 	<title>首页</title>
 	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/css/home-index.css">
 </head>
 <body>
 	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>

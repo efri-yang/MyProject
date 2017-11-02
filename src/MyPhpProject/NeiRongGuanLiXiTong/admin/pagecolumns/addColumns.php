@@ -1,11 +1,11 @@
 <?php
 	session_start();
 
-	include("../../Path.php");
-	include("../../common/mysqli.php");
-	include("../common/session.php");
-	include("../common/common.func.php");
-	include("../common/classtree.func.php");
+	include("../../config.php");
+	include(ROOT_PATH."/include/mysqli.php");
+	include(ROOT_PATH."/admin/common/session.php");
+	include(ROOT_PATH."/admin/common/common.func.php");
+	include(ROOT_PATH."/admin/common/classtree.func.php");
 
 	$className=$_POST["classname"];
 	$pclassId=$_POST["pclassid"];
@@ -50,14 +50,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>添加栏目</title>
-	<?php include('../../template/scriptstyle.php') ?>
-	<link rel="stylesheet" type="text/css" href="./css/style.css">
-	<script type="text/javascript" src="../../staitc/js/layer/layer.js"></script>
-	<link rel="stylesheet" type="text/css" href="../../staitc/js/webuploader/webuploader.css">
-	<script type="text/javascript" src="../../staitc/js/webuploader/webuploader.js"></script>
+	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
+
+
+	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/css/page-column.css">
+	<script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/layer/layer.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.css">
+	<script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.js"></script>
 </head>
 <body>
-	<?php include('../temp/header_top.php') ?>
+	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
 
 	
 	<div class="container">

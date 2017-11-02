@@ -1,9 +1,11 @@
 <?php
     session_start();
-    include("../Path.php");
-    include("../common/mysqli.php");
-    include("./common/session.php");
-    include("./common/common.func.php");
+  
+
+    include("../config.php");
+    include(ROOT_PATH."/include/mysqli.php");
+    include(ROOT_PATH."/admin/common/session.php");
+    include(ROOT_PATH."/admin/common/common.func.php");
     
     $userId=$_SESSION["userid"];
     $sql="select * from admin where id='".$userId."'";
@@ -19,12 +21,10 @@
     <meta charset="UTF-8">
     <title>用户信息页面</title>
         
-    <?php 
-        include("../template/scriptstyle.php")
-    ?>
+    <?php include(ROOT_PATH.'/admin/template/scriptstyle.php'); ?>
 
-    <script type="text/javascript" src="<?php echo APP_ROOT_URL; ?>/staitc/js/bootstrapvalidator/js/bootstrapValidator.js"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo APP_ROOT_URL; ?>/staitc/js/bootstrapvalidator/css/bootstrapValidator.css">
+    <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/bootstrapvalidator/js/bootstrapValidator.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/js/bootstrapvalidator/css/bootstrapValidator.css">
 
     
     
@@ -39,7 +39,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
-                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? APP_ROOT_URL."/admin/avatar/".$result["avatar"] :APP_ROOT_URL."/admin/avatar/".'default_avatar.jpg' ?>"></div>
+                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? STATIC_PATH."/uploads/avatar/".$result["avatar"] :STATIC_PATH."/admin/static/images/pagecolumn/".'default_avatar.jpg' ?>"></div>
                 </div>
             </div>
             <div class="form-group">
@@ -105,7 +105,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
-                    <div class="avatar"><img src="<?php echo !!$result["avatar"] ? APP_ROOT_URL."/admin/avatar/".$result["avatar"] :APP_ROOT_URL."/admin/avatar/".'default_avatar.jpg' ?>" id="J_avatar-pic"></div>
+                    <div class="avatar"><img  id="J_avatar-pic" src="<?php echo !!$result["avatar"] ? STATIC_PATH."/uploads/avatar/".$result["avatar"] :STATIC_PATH."/admin/static/images/pagecolumn/".'default_avatar.jpg' ?>"></div>
                     <input type="file" name="avatarfile" id="J_avatarfile" />
                     <input type="hidden" name="avatarfilepre" value="<?php echo $result["avatar"]; ?>" />
                 </div>
