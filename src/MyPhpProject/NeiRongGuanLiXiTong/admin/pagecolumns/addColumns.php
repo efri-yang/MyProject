@@ -15,7 +15,7 @@
 	$classImg=$_POST["classimg"];
 	$keyword=$_POST["keyword"];
 	$intro=$_POST["intro"];
-	$thumbnailImg=$_FILES["classimg"];
+	$thumbnailImg=$_POST["zoomurl"];
 	$path="../../";
 	$classPath=$path.(!!$dirFile ? $dirFile."/" : "/").$distFile;
 
@@ -53,6 +53,8 @@
 	<?php include('../../template/scriptstyle.php') ?>
 	<link rel="stylesheet" type="text/css" href="./css/style.css">
 	<script type="text/javascript" src="../../staitc/js/layer/layer.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../staitc/js/webuploader/webuploader.css">
+	<script type="text/javascript" src="../../staitc/js/webuploader/webuploader.js"></script>
 </head>
 <body>
 	<?php include('../temp/header_top.php') ?>
@@ -60,11 +62,12 @@
 	
 	<div class="container">
 		<?php 
-			if(!$errorTxt && isset($_POST['submit'])){
-				$dest=uploadFile($thumbnailImg,$allowExt=array("jpeg","jpg","gif","png"),2097152,$path="./thumbnailimg",true);
-
+			
+			if(empty($errorTxt) && isset($_POST['submit'])){
 				
-				$sql="insert into mc_columns(pclassid,classname,classpath,thumbnail,description,keywords,	islast) values('$pclassId','$className','$classPath','$dest','$intro','$keyword','$isLast')";
+				echo "dsafsadfasdf重中之重做做";
+				
+				$sql="insert into mc_columns(pclassid,classname,classpath,thumbnail,description,keywords,islast) values('$pclassId','$className','$classPath','$thumbnailImg','$intro','$keyword','$isLast')";
 				$result=$mysqli->query($sql);
 				if($result){
 					echo "<h1>添加成功！</h1>";
@@ -86,7 +89,7 @@
 		<?php		
 			}
 		 ?>
-		<form action="./addColumns.php" method="post"  enctype="multipart/form-data">
+		<form action="./addColumns.php" method="post">
 
 
 		
@@ -170,10 +173,15 @@
 				<tr>
 					<td>栏目缩略图:</td>
 					<td>
-						<div class="col-zoomimg">
-							<img src="" id="J_zoomimg">
+						<div class="zoom-container">
+							<ul class="queue-list" id="J_queue-list"></ul>
+							<div class="uploader-default-container">
+								<div class="uploader-no-pic"></div>
+							</div>
+							<div id="filePicker" class="filepicker-container"></div>
+							<a href="#" class="upload-btn" id="J_uploadBtn">上传</a>
+							<input type="hidden" name="zoomurl" value="" id="J_zoomurl">
 						</div>
-						<input type="file" name="classimg" id="J_classimgfile">
 					</td>
 				</tr>
 				<tr>
@@ -199,21 +207,14 @@
 	</div>
 
 	<div style="height: 80px"></div>
-
+	
+	<script type="text/javascript" src="./js/upload.js"></script>
 	<script type="text/javascript">
 
-             function getObjectURL(file) {
-                var url = null;
-                if (window.createObjectURL != undefined) {
-                    url = window.createObjectURL(file)
-                } else if (window.URL != undefined) {
-                    url = window.URL.createObjectURL(file)
-                } else if (window.webkitURL != undefined) {
-                    url = window.webkitURL.createObjectURL(file)
-                }
-                return url
-            };
+             
 			$(function(){
+				
+				//
 				$("#selparent").on("change",function(){
 					var valId=$(this).val();
 					$.ajax({
@@ -231,11 +232,7 @@
 					})
 				});
 
-			$("#J_classimgfile").on("change",function(){
-				var url = getObjectURL(this.files[0]); 
-                $("#J_zoomimg").attr("src",url);
-			});
-
+			
 			$("#J_jclmbtn").on("click",function(event){
 				event.preventDefault();
 				var distVal=$.trim($("#J_distfile").val());
