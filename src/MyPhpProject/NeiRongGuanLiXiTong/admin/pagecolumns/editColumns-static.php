@@ -7,6 +7,9 @@
 	include(ROOT_PATH."/admin/common/session.php");
 	include(ROOT_PATH."/admin/common/common.func.php");
 	include(ROOT_PATH."/admin/common/classtree.func.php");
+
+	$classId=$_REQUEST["classid"];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,7 +76,8 @@
 					<td>
 						<div class="zoom-img">
 							<div class="no-pic"></div>
-							<div class="upload-img preview">
+							<!-- preview -->
+							<div class="upload-img">
 								预览中...
 							</div>
 							<div class="upload-img">
@@ -81,6 +85,16 @@
 								<div class="handle-bar">
 									<span class="upload-btn">上传</span>
 									<span class="del-btn">删除</span>
+								</div>
+							</div>
+							<div class="upload-img">
+								<img src="../static/images/pagecolumn/default_avatar.jpg" />
+								<!-- <div class="handle-bar">
+									<span class="upload-btn">上传</span>
+									<span class="del-btn">删除</span>
+								</div> -->
+								<div class="progress">
+									<span style="width: 15%;"></span>
 								</div>
 							</div>
 							<div class="upload-img">
@@ -133,34 +147,10 @@
 	</div>
 	<div style="height: 200px;"></div>
 
-
-	<script type="text/javascript" src="./js/upload2.js"></script>
-
-
-
 	<script type="text/javascript">
-		$(function(){
-			var uploader = WebUploader.create({
-		        pick: {
-		            id: '#filePicker',
-		            label: '点击上传本地图片'
-		        },
-		        formData: {
-		            uid: 123
-		        },
-		        accept: {// 只允许选择图片文件格式
-		            title: 'Images',
-		            extensions: 'gif,jpg,bmp,png',
-		            mimeTypes: 'image/jpg,image/jpeg,image/png'
-		        },
-		        server: './fileupload.php',
-		        swf: '../../../staitc/js/webuploader/Uploader.swf',
-		        //限制文件的大小
-		        fileSingleSizeLimit:2 * 1024 * 1024,
-		        fileNumLimit:1,
-		        fileSizeLimit: 4 * 1024 * 1024
-		    });
-		})
+		var $classId=<?php echo $classId;?>;
 	</script>
+	<script type="text/javascript" src="./js/upload2.js"></script>
+	
 </body>
 </html>

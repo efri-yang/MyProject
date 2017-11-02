@@ -76,14 +76,18 @@
 					<td>
 						<div class="zoom-img">
 							<div class="no-pic"></div>
-							<div class="upload-img preview">
+							<!-- .preview -->
+							<div class="upload-img" id="J_upload-imgbox">
 								预览中...
 							</div>
 							<div class="upload-img">
-								<img src="../static/images/pagecolumn/default_avatar.jpg" />
-								<div class="handle-bar">
+								<img src="../static/images/pagecolumn/default_avatar.jpg"/>
+								<div class="handle-bar" id="J_handle-bar">
 									<span class="upload-btn">上传</span>
 									<span class="del-btn">删除</span>
+								</div>
+								<div class="progress" id="J_progress">
+									<span style="width: 15%;"></span>
 								</div>
 							</div>
 							<div class="upload-img">
@@ -92,8 +96,8 @@
 									<span class="upload-btn">上传</span>
 									<span class="del-btn">删除</span>
 								</div> -->
-								<div class="progress">
-									<span width="15%"></span>
+								<div class="progress" id="J_progress">
+									<span style="width: 15%;"></span>
 								</div>
 							</div>
 							<div class="upload-img">

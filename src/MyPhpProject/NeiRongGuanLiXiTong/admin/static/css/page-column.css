@@ -107,221 +107,7 @@
     top:35px;
     display: none;
 }
-}
-.queue-list {
-    list-style: none;
-    margin: 0;
-    padding: 0 20px 10px;
-    display: none;
-}
 
-.queue-list:after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    clear: both;
-}
-
-.queue-list li {
-    width: 110px;
-    height: 110px;
-    background: url(../images/pagecolumn/bg.png) no-repeat;
-    text-align: center;
-    margin: 0 8px 20px 0;
-    position: relative;
-    display: inline;
-    float: left;
- 
-    font-size: 12px;
-}
-
-.queue-list li p.log {
-    position: relative;
-    top: -45px;
-}
-
-.queue-list li p.title {
-  
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow : ellipsis;
-  
-    color:#000; 
-    text-align: center;
-}
-
-.queue-list li p.progress {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-    height:15px;
-    overflow: hidden;
-    z-index: 50;
-}
-.queue-list li p.progress span {
-   /* display: none;*/
-    overflow: hidden;
-    width: 0;
-    height: 100%;
-    background: #1483d8 url(../images/pagecolumn/progress.png) repeat-x;
-
-    -webit-transition: width 200ms linear;
-    -moz-transition: width 200ms linear;
-    -o-transition: width 200ms linear;
-    -ms-transition: width 200ms linear;
-    transition: width 200ms linear;
-
-    -webkit-animation: progressmove 2s linear infinite;
-    -moz-animation: progressmove 2s linear infinite;
-    -o-animation: progressmove 2s linear infinite;
-    -ms-animation: progressmove 2s linear infinite;
-    animation: progressmove 2s linear infinite;
-
-    -webkit-transform: translateZ(0);
-    display: block;
-}
-
-@-webkit-keyframes progressmove {
-    0% {
-       background-position: 0 0;
-    }
-    100% {
-       background-position: 17px 0;
-    }
-}
-@-moz-keyframes progressmove {
-    0% {
-       background-position: 0 0;
-    }
-    100% {
-       background-position: 17px 0;
-    }
-}
-@keyframes progressmove {
-    0% {
-       background-position: 0 0;
-    }
-    100% {
-       background-position: 17px 0;
-    }
-}
-
-.queue-list li p.imgWrap {
-    position: relative;
-    z-index: 2;
-    line-height: 110px;
-    vertical-align: middle;
-    overflow: hidden;
-    width: 110px;
-    height: 110px;
-    border:1px solid #e5e5e5;
-    -webkit-transform-origin: 50% 50%;
-    -moz-transform-origin: 50% 50%;
-    -o-transform-origin: 50% 50%;
-    -ms-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-
-    -webit-transition: 200ms ease-out;
-    -moz-transition: 200ms ease-out;
-    -o-transition: 200ms ease-out;
-    -ms-transition: 200ms ease-out;
-    transition: 200ms ease-out;
-
-    margin-bottom: 5px;
-
-}
-
-.queue-list li img {
-    width: 100%;
-}
-.queue-list li .error{
-    background: #f43838;
-    color: #fff;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 28px;
-    line-height: 28px;
-    width: 100%;
-    z-index: 100;
-}
-.queue-list li p.error {
-    background: #f43838;
-    color: #fff;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 28px;
-    line-height: 28px;
-    width: 100%;
-    z-index: 100;
-}
-
-.queue-list li .success {
-    display: block;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 40px;
-    width: 100%;
-    z-index: 200;
-    background: url(../images/pagecolumn/success.png) no-repeat right bottom;
-}
-
-.queue-list div.file-panel {
-    position: absolute;
-   
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#80000000', endColorstr='#80000000')\0;
-    background: rgba( 0, 0, 0, 0.5 );
-    width: 100%;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    z-index: 300;
-}
-
-.queue-list div.file-panel span {
-    width: 24px;
-    height: 24px;
-    display: inline;
-    float: right;
-    text-indent: -9999px;
-    overflow: hidden;
-    background: url(../images/pagecolumn/icons.png) no-repeat;
-    margin: 5px 1px 1px;
-    cursor: pointer;
-}
-.queue-list div.file-panel .reuploader{
-    float: left;
-    color:#fff;
-    line-height: 28px;
-    margin-left: 5px; 
-}
-
-.queue-list div.file-panel span.rotateLeft {
-    background-position: 0 -24px;
-}
-.queue-list div.file-panel span.rotateLeft:hover {
-    background-position: 0 0;
-}
-
-.queue-list div.file-panel span.rotateRight {
-    background-position: -24px -24px;
-}
-.queue-list div.file-panel span.rotateRight:hover {
-    background-position: -24px 0;
-}
-
-.queue-list div.file-panel span.cancel {
-    background-position: -48px -24px;
-}
-.queue-list div.file-panel span.cancel:hover {
-    background-position: -48px 0;
-}
 
 
 /**
@@ -391,6 +177,7 @@
     height:30px;
     line-height:30px;
     background-color: rgba(0,0,0,0.8);
+    display: none;
 }
 .col-edit-tbl .zoom-img .upload-img .handle-bar .upload-btn{
      float: left;
@@ -430,13 +217,15 @@
     height:15px;
     overflow: hidden;
     z-index: 50;
+    margin-bottom: 0;
+    display: none;
 }
 
 .col-edit-tbl .zoom-img .upload-img .progress span{
-    display: none;
     overflow: hidden;
     width: 0;
     height: 100%;
+    display: block;
     background: #1483d8 url(../images/pagecolumn/progress.png) repeat-x;
 
     -webit-transition: width 200ms linear;

@@ -2,6 +2,9 @@ $(function(){
 
 	var fileCount=0;
 	var fileSize=0;
+
+    var $imgBox=$("#J_upload-imgbox");
+
 	var uploader = WebUploader.create({
         pick: {
             id: '#filePicker',
@@ -23,12 +26,11 @@ $(function(){
         fileSizeLimit: 4 * 1024 * 1024
     });
 
-    uploader.on("filesQueued",function(file){
+    uploader.on("filesQueued", function(file) {
     	fileCount++;
     	if(fileCount >1){
-    		alert("xxx")
+    		
     	}
     })
-
-   
+    
 })
