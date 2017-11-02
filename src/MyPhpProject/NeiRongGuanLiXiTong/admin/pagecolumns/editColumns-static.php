@@ -78,38 +78,64 @@
 							</div>
 							<div class="upload-img">
 								<img src="../static/images/pagecolumn/default_avatar.jpg" />
-								<span class="upload-btn">上传</span>
+								<div class="handle-bar">
+									<span class="upload-btn">上传</span>
+									<span class="del-btn">删除</span>
+								</div>
+							</div>
+							<div class="upload-img">
+								<img src="../static/images/pagecolumn/default_avatar.jpg" />
+								<div class="handle-bar">
+									<!-- <span class="upload-btn">上传</span> -->
+									<span class="del-btn">删除</span>
+								</div>
+								<div class="error">上传错误！</div>
+							</div>
+							<div class="upload-img">
+								<img src="../static/images/pagecolumn/default_avatar.jpg" />
+								<div class="handle-bar" id="J_handle-bar">
+									<!-- <span class="upload-btn">上传</span> -->
+									<span class="del-btn">删除</span>
+								</div>
+								<div class="success"></div>
 							</div>
 							<div id="filePicker" class="filepicker-container">
 								<button></button>
 							</div>
-						</div>
-					</td>
-				</tr>
-
-				<tr>
-					<td  class="para-tit">栏目缩略图：</td>
-					<td>
-						<div class="zoom-img">
-							<div class="no-pic"></div>
-							<div id="filePicker" class="filepicker-container">
-								<button></button>
-							</div>
+							<div class="uploader-server">从服务器端选择</div>
 						</div>
 					</td>
 				</tr>
 
 				
+
+				
 				<tr>
-					<td  class="para-tit">页面关键字：</td>
-					<td><input type="text" name="classname"></td>
+					<td class="para-tit">页面关键字：</td>
+					<td>
+						<textarea rows="3" cols="50" name="keyword"></textarea>
+					</td>
 				</tr>
 				<tr>
 					<td  class="para-tit">栏目简介：</td>
-					<td><input type="text" name="classname"></td>
+					<td>
+						<textarea rows="3" cols="50" name="keyword"></textarea>
+					</td>
+				</tr>
+				<tr>
+					
+					<td colspan="2" class="align-c">
+						<input type="submit" name="submit" value="提交" class="btn btn-success  btn-lg">
+					</td>
 				</tr>
 			</tbody>
+		</table>
 	</div>
+	<div style="height: 200px;"></div>
+
+
+	<script type="text/javascript" src="./js/upload2.js"></script>
+
 
 
 	<script type="text/javascript">

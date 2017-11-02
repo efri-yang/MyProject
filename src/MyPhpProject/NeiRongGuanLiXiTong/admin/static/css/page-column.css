@@ -337,7 +337,7 @@
     border:1px solid #666;
     padding: 10px;
 }
-.col-edit-tbl .para-tit{
+.col-edit-tbl td.para-tit{
     text-align: right;
     font-weight: bold;
 }
@@ -370,7 +370,9 @@
     text-align:center;
     line-height: 120px;
     overflow: hidden;
+    position: relative;
 }
+
 .col-edit-tbl .zoom-img .upload-img.preview{
     background: url("../images/pagecolumn/bg.png") repeat top center;
 }
@@ -380,6 +382,112 @@
     max-height: 100%;
 }
 
-.col-edit-tbl .zoom-img .upload-img .upload-btn{
-      
+.col-edit-tbl .zoom-img .upload-img .handle-bar{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0 5px;
+    height:30px;
+    line-height:30px;
+    background-color: rgba(0,0,0,0.8);
+}
+.col-edit-tbl .zoom-img .upload-img .handle-bar .upload-btn{
+     float: left;
+     color:#fff;
+     text-decoration: underline; 
+}
+.col-edit-tbl .zoom-img .upload-img .handle-bar .del-btn{
+    float: right;
+    color:#fff;
+    text-decoration: underline;
+}
+.col-edit-tbl .zoom-img .upload-img  .error{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    background: #f60;
+    color:#fff;
+    font-size: 12px; 
+}
+.col-edit-tbl .zoom-img .upload-img .success{
+    width: 40px;
+    height: 40px;
+    background: url("../images/pagecolumn/success.png") no-repeat top center;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.col-edit-tbl .zoom-img .upload-img .progress{
+     position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    height:15px;
+    overflow: hidden;
+    z-index: 50;
+}
+
+.col-edit-tbl .zoom-img .upload-img .progress span{
+    display: none;
+    overflow: hidden;
+    width: 0;
+    height: 100%;
+    background: #1483d8 url(../images/pagecolumn/progress.png) repeat-x;
+
+    -webit-transition: width 200ms linear;
+    -moz-transition: width 200ms linear;
+    -o-transition: width 200ms linear;
+    -ms-transition: width 200ms linear;
+    transition: width 200ms linear;
+
+    -webkit-animation: progressmove 2s linear infinite;
+    -moz-animation: progressmove 2s linear infinite;
+    -o-animation: progressmove 2s linear infinite;
+    -ms-animation: progressmove 2s linear infinite;
+    animation: progressmove 2s linear infinite;
+
+    -webkit-transform: translateZ(0);
+}
+
+@-webkit-keyframes progressmove {
+    0% {
+       background-position: 0 0;
+    }
+    100% {
+       background-position: 17px 0;
+    }
+}
+@-moz-keyframes progressmove {
+    0% {
+       background-position: 0 0;
+    }
+    100% {
+       background-position: 17px 0;
+    }
+}
+@keyframes progressmove {
+    0% {
+       background-position: 0 0;
+    }
+    100% {
+       background-position: 17px 0;
+    }
+}
+
+.col-edit-tbl .zoom-img .uploader-server{
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    background: green;
+    padding: 10px 15px;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0 auto;
 }
