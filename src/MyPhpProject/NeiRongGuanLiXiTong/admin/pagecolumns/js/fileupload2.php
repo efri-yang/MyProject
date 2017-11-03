@@ -63,7 +63,7 @@ $targetDir = 'upload_tmp';
 
 
 //文件上传后的目录
-$uploadDir = '../../uploads/image/column/';
+$uploadDir = ROOT_PATH."/uploads/columnthumbnail/";
 
 
 $cleanupTargetDir = false; // Remove old files

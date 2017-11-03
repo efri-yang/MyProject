@@ -8,7 +8,7 @@
 	include(ROOT_PATH."/admin/common/common.func.php");
 	include(ROOT_PATH."/admin/common/classtree.func.php");
 
-	$classId=$_REQUEST["classid"];
+	
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +23,7 @@
 	<script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.js"></script>
 </head>
 <body>
-	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
+	
 	<div class="container">
 		<table class="col-edit-tbl">
 			<thead>
@@ -130,7 +130,7 @@
 	<div style="height: 200px;"></div>
 
 	<script type="text/javascript">
-		var $classId=<?php echo $classId;?>;
+		var $classId=1;
 	</script>
 	<script type="text/javascript" src="./js/upload2.js"></script>
 	

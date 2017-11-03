@@ -75,32 +75,35 @@
 					<td  class="para-tit">栏目缩略图：</td>
 					<td>
 						<div class="zoom-img">
-							<div class="no-pic"></div>
-							<!-- preview -->
-							<div class="upload-img">
+							<div class="no-pic" id="J_no-pic"></div>
+							<!-- .preview -->
+							<div class="upload-img" id="J_upload-imgbox">
 								预览中...
 							</div>
 							<div class="upload-img">
-								<img src="../static/images/pagecolumn/default_avatar.jpg" />
-								<div class="handle-bar">
+								<img src="../static/images/pagecolumn/default_avatar.jpg"/>
+								<div class="handle-bar" id="J_handle-bar">
 									<span class="upload-btn">上传</span>
 									<span class="del-btn">删除</span>
 								</div>
-							</div>
-							<div class="upload-img">
-								<img src="../static/images/pagecolumn/default_avatar.jpg" />
-								<!-- <div class="handle-bar">
-									<span class="upload-btn">上传</span>
-									<span class="del-btn">删除</span>
-								</div> -->
-								<div class="progress">
+								<div class="progress" id="J_progress">
 									<span style="width: 15%;"></span>
 								</div>
 							</div>
 							<div class="upload-img">
 								<img src="../static/images/pagecolumn/default_avatar.jpg" />
 								<div class="handle-bar">
-									<!-- <span class="upload-btn">上传</span> -->
+									<span class="upload-btn">上传</span>
+									<span class="del-btn">删除</span>
+								</div>
+								<div class="progress" id="J_progress">
+									<span style="width: 15%;"></span>
+								</div>
+							</div>
+							<div class="upload-img">
+								<img src="../static/images/pagecolumn/default_avatar.jpg" />
+								<div class="handle-bar">
+									<span class="upload-btn">上传</span>
 									<span class="del-btn">删除</span>
 								</div>
 								<div class="error">上传错误！</div>
@@ -108,13 +111,13 @@
 							<div class="upload-img">
 								<img src="../static/images/pagecolumn/default_avatar.jpg" />
 								<div class="handle-bar" id="J_handle-bar">
-									<!-- <span class="upload-btn">上传</span> -->
+									<span class="upload-btn">上传</span>
 									<span class="del-btn">删除</span>
 								</div>
 								<div class="success"></div>
 							</div>
 							<div id="filePicker" class="filepicker-container">
-								<button></button>
+								
 							</div>
 							<div class="uploader-server">从服务器端选择</div>
 						</div>

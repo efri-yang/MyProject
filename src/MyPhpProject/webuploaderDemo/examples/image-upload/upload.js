@@ -510,7 +510,8 @@
             fileCount++;
             fileSize += file.size;
 
-            if ( fileCount === 1 ) {
+            if ( fileCount > 1 ) {
+                alert("xxx")
                 $placeHolder.addClass( 'element-invisible' );
                 $statusBar.show();
             }
