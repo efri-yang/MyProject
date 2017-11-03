@@ -1,0 +1,12 @@
+<?php
+$ecms_adminloginr=array();
+$ecms_adminloginr=Array('userid'=>'1',
+'ernd'=>'OaGswtzbSOjKfteJILZBOxFiilD',
+'erndtwo'=>'NBcu8VuuKSrrjMBxdxWj',
+'erndadd'=>'avyjzoo1OnqeJsLtmhaoH6u5M4l5SXG8',
+'ehash'=>'xccQB4IexP8mN9X4FLSv',
+'ehashname'=>'ehash_CJvX',
+'rhash'=>'c6dVdVNC6Ncp',
+'rhashname'=>'rhash_bDbI',
+'edbdata'=>'1');
+?>
