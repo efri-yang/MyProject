@@ -8,6 +8,8 @@ $(function(){
     var $uploaderList=$('<ul class="upload-img"></ul>');
     $uploaderList.appendTo($("#J_uploader-list"));
 
+    var $thumbNailIpt=$("#J_thumbnail-ipt");
+
 
 	var uploader = WebUploader.create({
         pick: {
@@ -25,9 +27,9 @@ $(function(){
         server: './js/fileupload2.php',
         swf: '../../static/js/webuploader/Uploader.swf',
         //限制文件的大小
-        fileSingleSizeLimit:4 * 1024 * 1024,
+        fileSingleSizeLimit:10 * 1024 * 1024,
         fileNumLimit:5,
-        fileSizeLimit: 4 * 1024 * 1024
+        fileSizeLimit: 10 * 1024 * 1024
     });
 
     uploader.onError = function(code) {
@@ -53,22 +55,30 @@ $(function(){
        }
     };
    uploader.on("beforeFileQueued",function(file){
+     console.group("触发了：beforeFileQueued事件(某个文件开始上传前触发，一个文件只会触发一次)");
+       //避免重复错误提示
+       //
+       //如果只要上插一张图片，那么点击上插按钮的时候就要删除之前的未上传的队列文件()
         var files=uploader.getFiles();
         $.each(files,function(key,val){
             uploader.removeFile(val,true);
         });
-        fileCount=0;
-        $uploaderList.children().remove();
+        // fileCount=0;
+        
+        // console.dir(files)
         
    });
    uploader.on('fileQueued', function( file ) {
-    	fileCount++;
-    	if(fileCount===1){
+    console.group("触发了：fileQueued事件(某个文件开始上传前触发，一个文件只会触发一次)");
+    	
+    	   $uploaderList.children().remove();
     		$noPicBox.hide();
             addFile(file);
-    	} 
-        var files=uploader.getFiles();
-        console.dir(files)
+    	
+       
+        var allFiles=uploader.getFiles();
+        // console.dir(initedFiles);
+        // console.dir(allFiles);
     });
 
    uploader.on("uploadProgress", function(file, percentage) {
@@ -77,13 +87,25 @@ $(function(){
         var $percent = $li.find(".progress span");
         $percent.css('width', percentage * 100 + '%');
         console.dir(percentage);
+
     });
 
    uploader.on("uploadSuccess", function(file, response) {
          console.group("触发了：uploadSuccess");
+         console.dir(response);
+         $thumbNailIpt.val(response.filePath);
+
          
     });
 
+    uploader.on("fileDequeued", function(file) {
+         console.group("触发了：fileDequeued");
+         $uploaderList.children().remove();
+         $noPicBox.show();
+          $(".webuploader-pick").text("点击上传本地图片");
+        
+
+    });
 
 
    function showError($elem,code){
@@ -122,6 +144,7 @@ $(function(){
         var $success=$li.find(".success");
         var $handleBar=$li.find(".handle-bar");
         var $uploadBtn=$li.find(".upload-btn");
+        var $delBtn=$li.find(".del-btn");
         var fileState=uploader.getStats();
 
         $imgWrap.text("预览中...");
@@ -136,6 +159,7 @@ $(function(){
         });
         //图片已经生成预览
         file.on('statuschange',function(cur, prev){
+
             if(cur=="invalid" || cur=="error"){
                 showError($error);
             }else if(cur=='interrupt'){
@@ -147,10 +171,18 @@ $(function(){
                 $handleBar.hide();
                 $success.show();
                 $(".webuploader-pick").text("重新上传图片")
+            }else if(cur=="cancelled"){
+
             }
         });
         $uploadBtn.on("click",function(){
            uploader.upload();
-        })
+        });
+
+
+
+        $delBtn.on("click",function(){
+            uploader.removeFile(file);
+        });
     }
 })

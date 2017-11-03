@@ -3,8 +3,8 @@
 
 	
 	include("../../config.php");
-	include(ROOT_PATH."/include/mysqli.php");
-	include(ROOT_PATH."/admin/common/session.php");
+	// include(ROOT_PATH."/include/mysqli.php");
+	// include(ROOT_PATH."/admin/common/session.php");
 	include(ROOT_PATH."/admin/common/common.func.php");
 	include(ROOT_PATH."/admin/common/classtree.func.php");
 

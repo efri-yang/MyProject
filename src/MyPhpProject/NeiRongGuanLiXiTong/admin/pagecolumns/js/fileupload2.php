@@ -61,9 +61,10 @@ if ( !empty($_REQUEST[ 'debug' ]) ) {
 // 虚拟文件存放的目录
 $targetDir = 'upload_tmp';
 
+$fileSubDir="/uploads/columnthumbnail/";
 
 //文件上传后的目录
-$uploadDir = ROOT_PATH."/uploads/columnthumbnail/";
+$uploadDir = ROOT_PATH.$fileSubDir;
 
 
 $cleanupTargetDir = false; // Remove old files
@@ -91,9 +92,10 @@ if (isset($_REQUEST["name"])) {
 }
 
 $oldName = $fileName;
-
+$ext=@strtolower(end(explode(".",$fileName)));
+$uniName=md5(uniqid(microtime(true),true)).".".$ext;
 $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
-$uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+$uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $uniName;
 //DIRECTORY_SEPARATOR>\  就是反斜杠的意思
 // Chunking might be enabled
 // 获取变量的整数值
@@ -193,13 +195,13 @@ if ( $done ) {
     $response = [
         'success'=>true,
         'oldName'=>$oldName,
-        'filePath'=>$uploadPath,
+        'filePath'=>STATIC_PATH.$fileSubDir.$uniName,
         'fileSize'=>$_REQUEST['size'],
         'fileSuffixes'=>$pathInfo['extension'],
         'file_id'=>$_REQUEST['id'],
         ];
 
-    // die(json_encode($fileName));
+    die(json_encode($response));
 }
 
 // Return Success JSON-RPC response

@@ -2,6 +2,6 @@
 
 	
 	if(empty($_SESSION['userid'])){
-		header("Location:".ROOT_PATH."/admin/login.php");
+		header("Location:".STATIC_PATH."/admin/login.php");
 	}
 ?>

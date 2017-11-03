@@ -76,29 +76,12 @@
 					<td>
 						<div class="zoom-img">
 							<div class="no-pic" id="J_no-pic"></div>
-							<!-- .preview -->
 							<div id="J_uploader-list" class="clearfix"></div>
-							<!-- <ul class="upload-img">
-								<li>
-									
-									<div class="img-wrap preview">
-
-									</div>
-									
-									<div class="handle-bar" id="J_handle-bar">
-										<span class="upload-btn">上传</span>
-										<span class="del-btn">删除</span>
-									</div>
-									<div class="progress" id="J_progress">
-										<span style="width: 15%;"></span>
-									</div>
-								</li>
-							</ul> -->
-							
 							<div id="filePicker" class="filepicker-container">
 								
 							</div>
 							<div class="uploader-server">从服务器端选择</div>
+							<input type="hidden" name="thumbnail" id="J_thumbnail-ipt">
 						</div>
 					</td>
 				</tr>
