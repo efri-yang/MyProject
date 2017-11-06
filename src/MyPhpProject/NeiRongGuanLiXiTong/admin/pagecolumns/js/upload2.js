@@ -17,7 +17,7 @@ $(function(){
             label: '点击上传本地图片'
         },
         formData: {
-            classid:$classId
+           
         },
         accept: {// 只允许选择图片文件格式
             title: 'Images',

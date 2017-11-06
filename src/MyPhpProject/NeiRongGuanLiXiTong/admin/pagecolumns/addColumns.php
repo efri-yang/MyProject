@@ -117,7 +117,7 @@
 							$data=ClassTree::hTree($results);
 							$data=ClassTree::sort($data,'sortrank');
 							
-							function dispalyList($arr,$str="",$step=1,$pclassId=""){
+							function dispalyList($arr,$str="",$step=1,$pclassId=0){
 								foreach($arr as $key =>$value){
 									$emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$step);
 									$flag="|-";
@@ -144,8 +144,6 @@
 					<td>是否终级栏目:</td> 
 					<td>	
 						<input type="radio" value="1" checked name="islast">是
-
-
 						<input type="radio" value="0"  name="islast">否
 					</td>
 				</tr>
@@ -263,12 +261,8 @@
 					}else{
 						alert("目录必须是以字母开头，由字母和数字或者下划线组成");
 					}
-				}
-				
-				
-				
-				
-			})
+				}	
+			});
 		})
 	</script>
 <?php		
