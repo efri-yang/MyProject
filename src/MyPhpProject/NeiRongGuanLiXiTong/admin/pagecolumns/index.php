@@ -30,7 +30,7 @@
 	?>
 			<div class="columns-nodata">
 				<p class="txt-1">目前没有栏目哦！您可以新建栏目在去发布信息哦！</p>
-				<p><a href="./addColumns.php" class="btn btn-success btn-large">新建栏目</a></p>
+				<p><a href="./editColumns.php?action=create" class="btn btn-success btn-large">新建栏目</a></p>
 			</div>
 
 	<?php		
@@ -49,7 +49,7 @@
 					$str.="<td>".$value['sortrank']."</td>";
 					$str.="<td>".$value['classid']."</td>";
 					$str.="<td class='align-l'>".$flg.$value['classname']."</td>";
-					$str.="<td class='handle'><a href='editColumns.php?classid=".$value['classid']."'>编辑</a><a href='delColumns.php?classid=".$value['classid']."'>删除</a></td>";
+					$str.="<td class='handle'><a href='editColumns.php?action=edit&classid=".$value['classid']."'>编辑</a><a href='delColumns.php?classid=".$value['classid']."'>删除</a></td>";
 					$str.="<tr>";
 					if(!empty($value['sub'])){
 						$str=disPlayList($value['sub'],$str,$step+1);
@@ -64,7 +64,7 @@
 		?>
 		<div class="container columns-h">
 			<div class="soma-hd clearfix">
-				<a href="./addColumns.php" class="btn btn-success btn-large fr">添加栏目</a>
+				<a href="./editColumns.php?action=edit" class="btn btn-success btn-large fr">添加栏目</a>
 			</div>
 			<table class="columns-h-tbl">
 				<thead>

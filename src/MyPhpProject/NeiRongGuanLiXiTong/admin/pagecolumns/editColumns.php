@@ -8,9 +8,12 @@
 
 
 	$classId=$_REQUEST["classid"];
-	$editType=!!$classId && !isset($_POST['submit']);
+	$action=$_REQUEST["action"];
+	
 
-	if($editType){
+	if($action=="edit" && !isset($_POST["submit"])){
+
+		echo "edit-非submit"."<br/>";
 		$sql="select * from mc_columns where classid='$classId'";
 		$result=$mysqli->query($sql);
 		$results=resultToArray($result);
@@ -22,10 +25,25 @@
 			$classImg=$value["thumbnail"];
 			$keyword=$value["keyword"];
 			$intro=$value["intro"];
-			$pFile=substr($classPath,0,strrpos($classPath,'/')+1);
-			$distFile=substr($classPath,strrpos($classPath,'/')+1);
+			// echo $classPath;
+			// echo (strrpos($classPath,'/')+1);
+			// echo strlen($classPath);
+			if((strrpos($classPath,'/')+1) !=strlen($classPath)){
+				$flag="/";
+			}
+			if(strrpos($classPath,'/')!==false){
+				
+				$pFile=substr($classPath,0,strrpos($classPath,'/')+1);
+				$distFile=substr($classPath,strrpos($classPath,'/')+1);
+			
+			}else{
+				
+				$pFile=STATIC_PATH."/";
+				$distFile=substr($classPath,0);
+			}
+			
 		}
-	}else if(isset($_POST['submit'])){
+	}else if(isset($_POST["submit"])){
 		$className=$_POST["classname"];
 		$pclassId=$_POST["pclassid"];
 		$isLast=$_POST["islast"];
@@ -34,18 +52,20 @@
 		$classImg=$_POST["thumbnail"];
 		$keyword=$_POST["keyword"];
 		$intro=$_POST["intro"];
-		$path="../../";
-		$classPath=$path.(!!$pFile ? $pFile."/" : "/").$distFile;
+		$classPath=$pFile.$distFile;
+
+
+	
 
 		$errorTxt="";
 		if(empty($className)){
 			$errorTxt.="<p>栏目名称不能为空</p>";
 		}
-		if(empty($pclassId)){
+		if(!isset($pclassId)){
 			$errorTxt.="<p>父栏目不能为空</p>";
 		}
-		if(empty($dirFile)){
-			$errorTxt.="<p>存放的路劲不能为空</p>";
+		if(empty($pFile)){
+			$errorTxt.="<p>存放的父文件夹不能为空</p>";
 		}
 		if(empty($distFile)){
 			$errorTxt.="<p>存放的最终文件夹不能为空</p>";
@@ -54,6 +74,7 @@
 			$errorTxt.="<p>存放的完整路劲不正确！</p>";
 		}
 	}
+
 
 
 ?>
@@ -74,31 +95,43 @@
 
 	<div class="container">
 		<?php 
-				if(empty($errorTxt) && isset($_POST['submit'])){
+				if(empty($errorTxt) && isset($_POST['submit']) && $action=="create"){
 					
 					
-					$sql="insert into mc_columns(pclassid,classname,classpath,thumbnail,description,keywords,islast) values('$pclassId','$className','$classPath','$classImg','$intro','$keyword','$isLast')";
+			$sql="insert into mc_columns(pclassid,classname,classpath,thumbnail,description,keywords,islast) values('$pclassId','$className','$classPath','$classImg','$intro','$keyword','$isLast')";
 					$result=$mysqli->query($sql);
 					if($result){
 						echo "<h1>添加成功！</h1>";
-						header("location:index.php");
+						// header("location:index.php");
 					}else{
 						echo "<h1>添加失败！</h1>";
-						header("location:addColumns.php");
+						// header("location:addColumns.php");
 
 					}
+				}else if(empty($errorTxt) && isset($_POST['submit']) && $action=="edit"){
+					echo $classname;
+					$sql='update mc_columns set pclassid="'.$pclassId.'",classname="'.$className.'",classpath="'.$classPath.'",thumbnail="'.$classImg.'",description="'.$intro.'",keywords="'.$keyword.'",islast="'.$isLast.'" where classid="'.$classId.'"';
+
+					$result=$mysqli->query($sql);
+					if($mysqli->affected_rows){
+						echo "<h1>更新成功！</h1>";
+					}else{
+						echo "<h1>更新失败！</h1>";
+					}
+
+					
 				}else{
 					
 		?>
-		<?php 
-			if($errorTxt){
-		?>
-			<div class='col-add-error-box'>
-				<?php echo $errorTxt; ?>
-			</div>
-		<?php		
-			}
-	    ?>
+					<?php 
+						if($errorTxt){
+					?>
+						<div class='col-add-error-box'>
+							<?php echo $errorTxt; ?>
+						</div>
+					<?php		
+						}
+				    ?>
 		<table class="col-edit-tbl">
 			<thead>
 				<tr>
@@ -107,10 +140,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<form action="./editColumns.php" method="post">
+				<form action="./editColumns.php?action=edit&classid=<?php  echo $classId;?>" method="post">
 						<tr>
 							<td class="para-tit">栏目名称：</td>
-							<td><input type="text" name="classname" size="50" value='<?php echo $className; ?>'></td>
+							<td><input type="text" name="classname" size="85" value='<?php echo $className; ?>'></td>
 						</tr>
 						<tr>
 							<td class="para-tit">所属父栏目：</td>
@@ -122,35 +155,42 @@
 									$data=ClassTree::hTree($results);
 									$data=ClassTree::sort($data,'sortrank');
 
-									function dispalyList($arr,$str="",$step=1,$pclassId=0){
+									function dispalyList($arr,$str="",$step=1,$pclassId=0,$child=false){
 										foreach($arr as $key =>$value){
 											$emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$step);
 											$flag="|-";
-											$disabled=$value['islast'] ? 'disabled' :'';
+											if($child){
+												$disabled="disabled";
+											}else{
+												$disabled=$value['islast'] ? 'disabled' :($child ? "disabled" :"");
+											}
+											
 											if($pclassId==$value['classid']){
+												
 												$str.="<option selected value='".$value['classid']."' $disabled>".$emptyholer.$flag.$value["classname"]."</option>";
 											}else{
 												$str.="<option value='".$value['classid']."' $disabled>".$emptyholer.$flag.$value["classname"]."</option>";
 											}
 											
 											if(!empty($value['sub'])){
-												$str=dispalyList($value['sub'],$str,$step+1,$pclassId);
+
+												$str=dispalyList($value['sub'],$str,$step+1,$pclassId,$child);
 											}
 										}
 										return $str;
 									}
 								?>
 								<select class="sel-type-1" size="10" name="pclassid" id="selparent">
-									<option value="0">根目录</option>
-									<?php echo dispalyList($data,"",1,$classId) ?>
+									<option value="0"<?php echo $pclassId==0 ? 'selected': ''; ?>>根目录</option>
+									<?php echo dispalyList($data,"",1,$pclassId) ?>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td class="para-tit">是否是终极栏目：</td>
 							<td>
-								<label><input type="radio" value="1" name="islast" <?php echo $isLast==1 ? 'checked' :''; ?>  <?php echo $editType ? 'disabled' :''; ?>>是</label>
-								<label><input type="radio" value="0" name="islast" <?php echo $isLast==0 ? 'checked' :''; ?>  <?php echo $editType ? 'disabled' :''; ?>>否</label>
+								<label><input type="radio" value="1" name="islast" <?php echo $isLast==1 ? 'checked' :''; ?>  <?php echo ($action=="edit") ? 'disabled' :''; ?>>是</label>
+								<label><input type="radio" value="0" name="islast" <?php echo $isLast==0 ? 'checked' :''; ?>  <?php echo ($action=="edit") ? 'disabled' :''; ?>>否</label>
 								
 							</td>
 						</tr>
@@ -167,9 +207,9 @@
 										</tr>
 										<tr>
 
-											<td>根目录/</td>
+											<td>根目录</td>
 											<td>
-												<input type="text" name="pfile" id="J_dirfile" value="<?php echo $pFile; ?>">
+												<input type="text" size="85" name="pfile" id="J_dirfile" value="<?php echo $pFile; ?>">
 											</td>
 											<td><input type="text" name="distfile" id="J_distfile" value="<?php echo $distFile; ?>"></td>
 											<td><button class="btn btn-success" id="J_jclmbtn">检测目录</button></td>
@@ -233,11 +273,13 @@
 					data:{pid:valId},
 					type:"post",
 					success:function(data){
-						if(data.length){
-							$("#J_dirfile").val(data[0].classpath)
+						if(data.classpath){
+							console.dir(data);
+							$("#J_dirfile").val(data.classpath);
 						}else{
 							$("#J_dirfile").val("");
 						}
+						
 					}
 				})
 			});

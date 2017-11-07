@@ -1,7 +1,7 @@
 <?php
-	$mystring = '/aa/bb/cc';
-$findme   = 'x';
+	$mystring = '/aa/bb/cc/';
+$findme   = '/';
 $pos = strrpos($mystring, $findme);
-echo  $pos;
+echo ($pos+1)==strlen($mystring);
 
 ?>
