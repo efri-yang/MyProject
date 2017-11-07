@@ -1,10 +1,12 @@
 <?php
 	session_start();
-	include("../../Path.php");
-	include("../../common/mysqli.php");
-	include("../../common/session.php");
-	include("../common/common.func.php");
-	include("../common/classtree.func.php");
+
+	
+	include("../../config.php");
+	include(ROOT_PATH."/include/mysqli.php");
+	include(ROOT_PATH."/admin/common/session.php");
+	include(ROOT_PATH."/admin/common/common.func.php");
+	include(ROOT_PATH."/admin/common/classtree.func.php");
 
 	if(isset($_POST["submit"])){
 		$title=$_POST["title"];
@@ -19,6 +21,8 @@
 		}
 	}
 
+
+
 	
 ?>
 <!DOCTYPE html>
@@ -26,19 +30,23 @@
 <head>
 	<meta charset="UTF-8">
 	<title>添加信息</title>
-	<?php include('../../template/scriptstyle.php') ?>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script type="text/javascript" charset="utf-8" src="../../staitc/js/ueditor1_4_3_3/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../../staitc/js/ueditor1_4_3_3/ueditor.all.min.js"> </script>
+	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
+	<script type="text/javascript">
+		var imageSave='<?php echo STATIC_PATH; ?>'+"/uploads/images/";
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/css/page-news.css">
+	<script type="text/javascript" charset="utf-8" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/ueditor.all.js"> </script>
     <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
     <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
-    <script type="text/javascript" charset="utf-8" src="../../staitc/js/ueditor1_4_3_3/lang/zh-cn/zh-cn.js"></script>
-
-
-    <script type="text/javascript" src="../../staitc/js/layer/layer.js"></script>
+    <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/lang/zh-cn/zh-cn.js"></script>
+    <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.css">
+	<script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.js"></script>
 </head>
 <body>
-
+	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
 	<div class="container">
 		<?php  
 			if(isset($_POST["submit"]) && !empty($strErorr)){
@@ -91,6 +99,8 @@
 							<?php echo dispalyList($data,"",1,$pclassId) ?>
 						</select>
 
+						<p style="padding-top: 10px"><a href="../pagecolumns/editColumns.php?action=create" class="btn btn-success">创建目录</a></p>
+
 					</td>
 				</tr>
 				
@@ -107,17 +117,17 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="para-tit">缩略图：</td>
+					<td class="para-tit">封面图：</td>
 					<td>
-						<div class="news-zoomimg">
-							<img src="" id="J_zoomimg">
+						<div class="coms-zoom-img">
+							<div class="no-pic" id="J_no-pic"></div>
+							<div id="J_uploader-list" class="clearfix"></div>
+							<div id="filePicker" class="filepicker-container">
+								
+							</div>
+							<div class="uploader-server">从服务器端选择</div>
+							<input type="hidden" name="thumbnail" id="J_thumbnail-ipt">
 						</div>
-
-						<a href="javascript:;" class="a-upload">
-    						<input type="file" name="thumbnail" id="J_classimgfile">点击这里上传文件
-    					</a>
-
-						<p><button class="btn btn-success">从服务端选择</button></p>
 					</td>
 				</tr>
 				<tr>
@@ -135,62 +145,15 @@
 			</table>
 		</form>
 	</div>
-	<div class="upload-box" id="J_upload-box">
-			<div class="newzoom-img">
-				<img src=""  id="J_newzoom-img" />
-			</div>
-			<p class="align-c mt15"><button class="btn btn-success btn-lg" id="J_uploadbtn">上传</button></p>
-	</div>
-	<div style="height: 150px"></div>
+
+	<script type="text/javascript" src="./js/upload2.js"></script>
 	<script type="text/javascript">
-		function getObjectURL(file) {
-            var url = null;
-            if (window.createObjectURL != undefined) {
-                url = window.createObjectURL(file)
-            } else if (window.URL != undefined) {
-                url = window.URL.createObjectURL(file)
-            } else if (window.webkitURL != undefined) {
-                url = window.webkitURL.createObjectURL(file)
-            }
-            return url
-        };
 		$(function(){
-			var ue = UE.getEditor('editor');
-			ue.addListener("ready", function () {
-		        // editor准备好之后才可以使用
-		        ue.setContent('<?php echo $content; ?>');
-			});
-			
-
-			$("#J_classimgfile").on("change",function(){
-				var _this=this;
-				layer.open({
-				  type: 1,
-				  title:"上传文件",
-				  area: '516px',
-				  shadeClose: true,
-				  content: $('#J_upload-box'),
-				  success:function(){
-				  	var url = getObjectURL(_this.files[0]); 
-                	$("#J_newzoom-img").attr("src",url);
-				  }
-				});
-			});
-
-
-			$("#J_uploadbtn").on("click",function(){
-				$.$.ajax({
-					url: './doUploadFile.php',
-					type: 'POST',
-					dataType: 'json',
-					data: {file: },
-				})
-				
-				
-			})			
-			 
-
+			 var ue = UE.getEditor('editor');
 		})
 	</script>
+	
+	<div style="height: 150px"></div>
+	
 </body>
 </html>

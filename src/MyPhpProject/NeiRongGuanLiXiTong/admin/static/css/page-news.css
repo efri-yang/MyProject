@@ -18,6 +18,9 @@
 	padding: 0 8px;
 	vertical-align: middle;
 }
+.news-add-tbl .sel-1{
+	vertical-align: top;
+}
 .news-add-tbl .sel-1 option{
 	color: #000;
 }

@@ -64,7 +64,7 @@
 		?>
 		<div class="container columns-h">
 			<div class="soma-hd clearfix">
-				<a href="./editColumns.php?action=edit" class="btn btn-success btn-large fr">添加栏目</a>
+				<a href="./editColumns.php?action=create" class="btn btn-success btn-large fr">添加栏目</a>
 			</div>
 			<table class="columns-h-tbl">
 				<thead>

@@ -140,7 +140,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<form action="./editColumns.php?action=edit&classid=<?php  echo $classId;?>" method="post">
+				<form action="./editColumns.php?action=<?php echo $action;?>&classid=<?php  echo $classId;?>" method="post">
 						<tr>
 							<td class="para-tit">栏目名称：</td>
 							<td><input type="text" name="classname" size="85" value='<?php echo $className; ?>'></td>
