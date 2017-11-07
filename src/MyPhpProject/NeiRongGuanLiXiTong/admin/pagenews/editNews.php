@@ -1,0 +1,273 @@
+
+<?php
+	session_start();
+
+	
+	include("../../config.php");
+	include(ROOT_PATH."/include/mysqli.php");
+	include(ROOT_PATH."/admin/common/session.php");
+	include(ROOT_PATH."/admin/common/common.func.php");
+	include(ROOT_PATH."/admin/common/classtree.func.php");
+
+	$action=$_REQUEST['action'];
+	if($action=="edit"){
+		$newId=$_REQUEST["id"];
+		$sql="select mc_article.classid,mc_columns.classname,mc_article.title,mc_article.shorttitle,mc_article.content,mc_article.thumbnail,mc_article.keywords,mc_article.description from mc_article  inner join mc_columns on mc_article.classid=mc_columns.classid where mc_article.id='$newId'";
+		$result=$mysqli->query($sql);
+		$results=resultToArray($result);
+
+		$title=$results[0]["title"];
+		$subtitle=$results[0]["shorttitle"];
+		$pclassid=$results[0]["classid"];
+		$keyword=$results[0]["keywords"];
+		$intro=$results[0]["description"];
+		$thumbnail=$results[0]["thumbnail"];
+		$content=$results[0]["content"];
+	}
+
+	if(isset($_POST["submit"])){
+		$title=$_POST["title"];
+		$subtitle=$_POST["subtitle"];
+		$pclassid=$_POST["pclassid"];
+		$keyword=$_POST["keyword"];
+		$intro=$_POST["intro"];
+		$thumbnail=$_POST["thumbnail"];
+		$content=$_POST["content"];
+		if(empty($title)){
+			$strErorr="<p>请输入标题！</p>";
+		}elseif(!isset($pclassid)){
+			$strErorr="<p>请选择父栏目！</p>";
+		}
+	}
+
+	
+	
+
+
+
+
+
+	
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>添加信息</title>
+	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
+	
+	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/css/page-news.css">
+	<script type="text/javascript" charset="utf-8" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/ueditor.all.js"> </script>
+    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+    <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/lang/zh-cn/zh-cn.js"></script>
+    <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.css">
+	<script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.js"></script>
+</head>
+<body>
+	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
+	
+		<?php  
+			if(isset($_POST["submit"]) && !empty($strErorr)){
+		?>
+			<div class="container">
+				<div class="news-add-error">
+					<?php echo $strErorr; ?>
+				</div>
+			</div>
+		<?php		
+			}elseif(isset($_POST["submit"]) && empty($strErorr)){
+				$sql="insert into mc_article(classid,title,shorttitle,content,thumbnail,keywords,description) values('$pclassid','$title','$subtitle','$content','$thumbnail','$keyword','$intro')";
+				$result=$mysqli->query($sql);
+				if($mysqli->affected_rows){
+		?>
+						<style type="text/css">
+							.dologin-box-success{
+								text-align: center;
+								margin-top: 80px;
+							}
+
+							.dologin-box-success h1{
+								text-align: center;
+								font-size: 32px;
+								color:green;
+								font-weight: bold;
+							}
+						</style>
+						<div class="dologin-box-success">
+							<h1>添加成功！</h1>
+							<p>页面将在<span id="timecount"></span>秒之后跳转！<a href="index.php">手动点击跳转！</a></p>
+						</div>
+		
+		<?php		
+				}else{
+		?>
+					<style type="text/css">
+						.dologin-box-success{
+							text-align: center;
+							margin-top: 80px;
+						}
+
+						.dologin-box-success h1{
+							text-align: center;
+							font-size: 32px;
+							color:green;
+							font-weight: bold;
+						}
+					</style>
+							<div class="dologin-box-success">
+						<h1>添加失败！</h1>
+						<p>页面将在<span id="timecount"></span>秒之后跳转！<a href="register.php">手动点击跳转！</a></p>
+					</div>
+		<?php			
+				}
+		?>
+				<script type="text/javascript">
+					var countElem=document.getElementById("timecount");
+					var num=3;
+					var Timer;
+					countElem.innerHTML=num;
+					function timereduce(){
+						clearTimeout(Timer);
+						if(num<=1){
+							window.location.href="index.php"
+						}else{
+							num--;
+							countElem.innerHTML=num;
+							Timer=setTimeout(timereduce,1000);
+
+						}
+
+					}
+					Timer=setTimeout(timereduce,1000);
+				</script>	
+		<?php
+			}else{
+		?>
+		
+
+		
+	<div class="container">
+		<form method="post" action="editNews.php">
+			<table class="news-add-tbl">
+				<tr>
+					<td class="para-tit"><span class="star">*</span>标题：</td>
+					<td><input type="text" size="45" name="title" value="<?php echo $title;?>"></td>
+				</tr>
+				<tr>
+					<td class="para-tit">副标题：</td>
+					<td><input type="text" size="45" name="subtitle"  value="<?php echo $subtitle;?>"></td>
+				</tr>
+				<tr>
+					<td class="para-tit">所属栏目：</td>
+					<td>
+						<?php  
+							$sql="select * from mc_columns";
+							$result=$mysqli->query($sql);
+							$results=resultToArray($result);
+							$data=ClassTree::hTree($results);
+							$data=ClassTree::sort($data,'sortrank');
+							function dispalyList($arr,$str="",$step=1,$pclassId=""){
+								foreach($arr as $key =>$value){
+									$emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$step);
+									$flag="|-";
+									$disabled=!!$value["islast"] ? "" :"disabled";
+									if($pclassId==$value['classid']){
+										$str.="<option selected value='".$value['classid']."' ".$disabled.">".$emptyholer.$flag.$value["classname"]."</option>";
+									}else{
+										$str.="<option value='".$value['classid']."' ".$disabled.">".$emptyholer.$flag.$value["classname"]."</option>";
+									}
+									
+									if(!empty($value['sub'])){
+										$str=dispalyList($value['sub'],$str,$step+1,$pclassId);
+									}
+								}
+								return $str;
+							}
+						?>
+						<select class="sel-1" size="12" name="pclassid" id="selparent">
+							<option value="0" disabled>根目录</option>
+							<?php echo dispalyList($data,"",1,$pclassid); ?>
+						</select>
+
+						<p style="padding-top: 10px"><a href="../pagecolumns/editColumns.php?action=create" class="btn btn-success">创建目录</a></p>
+
+					</td>
+				</tr>
+				
+				<tr>
+					<td class="para-tit">关键字：</td>
+					<td>
+						<textarea rows="2" cols="60" name="keyword" value="<?php echo $keyword;?>"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="para-tit">描述：</td>
+					<td>
+						<textarea rows="3" cols="60" name="intro" value="<?php echo $intro;?>"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="para-tit">封面图：</td>
+					<td>
+						<div class="coms-zoom-img">
+							<?php
+								if(!isset($thumbnail)){
+							?>
+									<div class="no-pic" id="J_no-pic"></div>
+							<?php		
+								}else{
+							?>
+								<ul class="upload-img">
+									<li>
+										<div class="img-wrap">
+											<img src="<?php echo $thumbnail;?>">
+										</div>
+									</li>
+								</ul>
+							<?php		
+								}
+							?>
+							<div id="J_uploader-list" class="clearfix"></div>
+							<div id="filePicker" class="filepicker-container">
+								
+							</div>
+							<div class="uploader-server">从服务器端选择</div>
+							<input type="hidden" name="thumbnail" id="J_thumbnail-ipt">
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="para-tit">内容：</td>
+					<td>
+						<script id="editor" type="text/plain" name="content" style="width:1024px;height:200px;">
+							<?php echo $content; ?>
+						</script>
+					</td>
+				</tr>
+				<tr>
+					<td class="para-tit"></td>
+					<td>
+						<input type="submit" name="submit" class="btn btn-success btn-lg" value="提交" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+	<script type="text/javascript" src="./js/upload2.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			 var ue = UE.getEditor('editor');
+		})
+	</script>
+	<?php		
+		}
+	?>
+	
+	<div style="height: 150px"></div>
+	
+</body>
+</html>

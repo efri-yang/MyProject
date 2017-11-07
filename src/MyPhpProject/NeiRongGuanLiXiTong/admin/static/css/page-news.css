@@ -89,3 +89,40 @@
 .upload-box{
 	padding: 30px;
 }
+
+
+.news-mbx-box{
+	border:1px solid #e5e5e5;
+	padding: 15px;
+	background:#ccc; 
+	margin-top: 30px;
+}
+
+.news-mbx-box .mbx-item{
+	float: left;
+}
+.news-mbx-box .handle-item{
+	background: #f60;
+}
+
+.news-list-tbl{
+	width: 100%;
+	margin-top: 15px;
+}
+.news-list-tbl thead th{
+	background:#fff;
+	border:1px solid #cfcfcf;
+	padding:10px 5px; 
+	text-align: center;
+	background:#e6e6e6;
+}
+
+.news-list-tbl .handle a{
+	margin:0 10px;
+	color:blue;
+	text-decoration: underline;
+}
+.news-list-tbl tbody td{
+	padding:10px 5px;
+	border:1px solid #cfcfcf;
+}

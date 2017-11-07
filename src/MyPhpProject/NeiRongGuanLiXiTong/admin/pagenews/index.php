@@ -1,159 +1,172 @@
 <?php
 	session_start();
-
-	
 	include("../../config.php");
 	include(ROOT_PATH."/include/mysqli.php");
 	include(ROOT_PATH."/admin/common/session.php");
 	include(ROOT_PATH."/admin/common/common.func.php");
 	include(ROOT_PATH."/admin/common/classtree.func.php");
 
-	if(isset($_POST["submit"])){
-		$title=$_POST["title"];
-		$subtitle=$_POST["subtitle"];
-		$pclassid=$_POST["pclassid"];
-		$keyword=$_POST["keyword"];
-		$intro=$_POST["intro"];
-		$thumbnail=$_POST["thumbnail"];
-		$content=$_POST["content"];
-		if(empty($title)){
-			$strErorr="<p>请输入标题！</p>";
-		}
-	}
+	$sql="select * from mc_article";
+	$result=$mysqli->query($sql);
+	$resultNum=$result->num_rows;
 
+
+	$pageNum=$_REQUEST["page"] ? $_REQUEST["page"] : 1;
+	$pageView=5;
+	$pageEveryNum=5;
+	$pageTotal=ceil($resultNum/$pageEveryNum);
+	$pageOffset=($pageView-1)/2;
+
+
+	$sql="select * from mc_article order by id desc limit ".$pageEveryNum*($pageNum-1).",".$pageEveryNum;
+	$result=$mysqli->query($sql);
+	$results=resultToArray($result);
 
 
 	
+
+
+	
+
+
+
+
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="UTF-8">
-	<title>添加信息</title>
+	<title></title>
 	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
-	<script type="text/javascript">
-		var imageSave='<?php echo STATIC_PATH; ?>'+"/uploads/images/";
-	</script>
-
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/css/page-news.css">
-	<script type="text/javascript" charset="utf-8" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/ueditor.all.js"> </script>
-    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
-    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
-    <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/ueditor1_4_3_3/lang/zh-cn/zh-cn.js"></script>
-    <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/layer/layer.js"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.css">
-	<script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.js"></script>
 </head>
 <body>
 	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
 	<div class="container">
-		<?php  
-			if(isset($_POST["submit"]) && !empty($strErorr)){
-		?>
-				<div class="news-add-error">
-					<?php echo $strErorr; ?>
-				</div>
-		<?php		
-			}
-		?>
-		<form method="post" action="index.php">
-			<table class="news-add-tbl">
-				<tr>
-					<td class="para-tit"><span class="star">*</span>标题：</td>
-					<td><input type="text" size="45" name="title" value="<?php echo $title;?>"></td>
-				</tr>
-				<tr>
-					<td class="para-tit">副标题：</td>
-					<td><input type="text" size="45" name="subtitle"  value="<?php echo $subtitle;?>"></td>
-				</tr>
-				<tr>
-					<td class="para-tit">所属栏目：</td>
-					<td>
-						<?php  
-							$sql="select * from mc_columns";
-							$result=$mysqli->query($sql);
-							$results=resultToArray($result);
-							$data=ClassTree::hTree($results);
-							$data=ClassTree::sort($data,'sortrank');
-							function dispalyList($arr,$str="",$step=1,$pclassId=""){
-								foreach($arr as $key =>$value){
-									$emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$step);
-									$flag="|-";
-									$disabled=!!$value["islast"] ? "" :"disabled";
-									if($pclassId==$value['classid']){
-										$str.="<option selected value='".$value['classid']."' ".$disabled.">".$emptyholer.$flag.$value["classname"]."</option>";
-									}else{
-										$str.="<option value='".$value['classid']."' ".$disabled.">".$emptyholer.$flag.$value["classname"]."</option>";
-									}
-									
-									if(!empty($value['sub'])){
-										$str=dispalyList($value['sub'],$str,$step+1,$pclassId);
-									}
-								}
-								return $str;
-							}
-						?>
-						<select class="sel-1" size="12" name="pclassid" id="selparent">
-							<option value="0" disabled>根目录</option>
-							<?php echo dispalyList($data,"",1,$pclassId) ?>
-						</select>
+		<div class="news-mbx-box clearfix">
+			<div class="mbx-item">面包导航写</div>
+			<div class="handle-item fr">
+				<a href="editNews.php?action=add" class="btn btn-success">添加信息</a>
+			</div>
+		</div>
 
-						<p style="padding-top: 10px"><a href="../pagecolumns/editColumns.php?action=create" class="btn btn-success">创建目录</a></p>
+		<div class="news-list-wrap">
+			<table class="news-list-tbl">
+				<thead>
+					<tr>
+						<th width="5%"><input type="checkbox" /></th>
+						<th width="35%">标题</th>
+						<th width="15%">分类目录</th>
+						<th width="15%">发布者</th>
+						<th width="15%">发布时间</th>
+						<th width="15%">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php 
+					foreach ($results as $key => $value) {
+				?>
+						<tr>
+							<td class="align-c"><input type="checkbox" name="newsid" value="<?php echo $value['id'] ?>" /></td>
+							<td><a href="#"><?php echo $value['title']; ?></a></td>
+							<td class="align-c">前端开发</td>
+							<td class="align-c"></td>
+							<td class="align-c"><?php echo $value['publictime']; ?></td>
+							<td>
+								<div class="handle align-c">
+									<a href="editNews.php?action=edit&id=<?php echo $value['id']; ?>">修改</a>
 
-					</td>
-				</tr>
-				
-				<tr>
-					<td class="para-tit">关键字：</td>
-					<td>
-						<textarea rows="2" cols="60" name="keyword" value="<?php echo $keyword;?>"></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td class="para-tit">描述：</td>
-					<td>
-						<textarea rows="3" cols="60" name="intro" value="<?php echo $intro;?>"></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td class="para-tit">封面图：</td>
-					<td>
-						<div class="coms-zoom-img">
-							<div class="no-pic" id="J_no-pic"></div>
-							<div id="J_uploader-list" class="clearfix"></div>
-							<div id="filePicker" class="filepicker-container">
-								
-							</div>
-							<div class="uploader-server">从服务器端选择</div>
-							<input type="hidden" name="thumbnail" id="J_thumbnail-ipt">
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td class="para-tit">内容：</td>
-					<td>
-						<script id="editor" type="text/plain" name="content" style="width:1024px;height:200px;"></script>
-					</td>
-				</tr>
-				<tr>
-					<td class="para-tit"></td>
-					<td>
-						<input type="submit" name="submit" class="btn btn-success btn-lg" value="提交" />
-					</td>
-				</tr>
+									<a href="delNews.php?id=<?php echo $value['id']; ?>">删除</a>
+								</div>
+							</td>
+						</tr>	
+				<?php		
+					}
+				 ?>
+					
+					
+				</tbody>
 			</table>
-		</form>
-	</div>
+			
+			<?php 
+				
+				/**
+				 * 如果页数不够 那么  全部显示
+				 * 如果页数够，那么  拿当前页做判断
+				 * 		1234567  
+				 *   		12345... 点击1
+				 *           12345...  点击2
+				 *            12345...  点击3
+				 *              ...23456... 点击4
+				 *                ...34567 点击 5
+				 *                	...34567 点击 6
+				 */
 
-	<script type="text/javascript" src="./js/upload2.js"></script>
-	<script type="text/javascript">
-		$(function(){
-			 var ue = UE.getEditor('editor');
-		})
-	</script>
+				$pageStart=1;
+				$pageEnd=$pageTotal;
+
+				$pageStr='<div class="pagination-box">';
+
+				if($pageNum <= 1){
+					$pageStr.="<span class='first disabled page'>首页</span>";
+					$pageStr.="<span class='prev disabled page'>上一页</span>";
+				}else{
+					$pageStr.='<a href="'.$_SERVER['PHP_SELF'].'?page=1" class="first">首页</a>';
+					$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".($pageNum-1)."' class='prev'>上一页</a>";
+				}
+
+				if($pageTotal > $pageView){
+					if($pageNum>($pageOffset+1)){
+						$pageStr.="<span>...</span>";
+					}
+
+					if($pageNum > $pageOffset){
+						$pageStart=$pageNum-$pageOffset;
+						$pageEnd=(($pageNum+$pageOffset) > $pageTotal) ? $pageTotal :($pageNum+$pageOffset);
+					}else{
+						$pageStart=1;
+						$pageEnd=$pageView;
+					}
+
+					if(($pageNum+$pageOffset) > $pageTotal){
+						$pageStart=$pageStart-($pageNum+$pageOffset-$pageEnd);
+						$pageEnd=$pageTotal;
+					}
+				}
+				for($i=$pageStart;$i<=$pageEnd;$i++){
+					if($pageNum==$i){
+						$pageStr.="<span class='current page'>{$i}</span>";
+					}else{
+						$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".$i."'>{$i}</a>";
+					}
+				}
+
+				if($pageTotal > $pageView && $pageTotal > ($pageNum+$pageOffset)){
+					$pageStr.="<span class='page'>...</span>";
+				}
+
+
+				if($pageNum >=$pageTotal){
+					$pageStr.="<span class='next disabled page'>下一页</span>";
+					$pageStr.="<span class='last disabled page'>尾页</span>";
+					
+				}else{
+					
+					$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".($pageNum+1)."' class='next'>下一页</a>";
+					$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".$totalPage."' class='last'>尾页</a>";
+				}
+				$pageStr.="<span>共".$pageTotal."页</span>";
+				$pageStr.="<form class='pageform' action='index.php' method='post'>";
+				$pageStr.="<span>到 <input type='text' size='2' name='page'>页</span><input type='submit' value='确定' />";
+				$pageStr.="</form>";
+				$pageStr.="</div>";
+			
+				echo $pageStr;
+
+			?>
+		</div>
+	</div>
 	
-	<div style="height: 150px"></div>
+
 	
 </body>
 </html>

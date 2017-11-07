@@ -60,8 +60,8 @@ if ( !empty($_REQUEST[ 'debug' ]) ) {
 // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
 // 虚拟文件存放的目录
 $targetDir = 'upload_tmp';
-
-$fileSubDir="/uploads/columnthumbnail/";
+$date=date("Y-m-d");
+$fileSubDir="/uploads/image/".$date."/";
 
 //文件上传后的目录
 $uploadDir = ROOT_PATH.$fileSubDir;
