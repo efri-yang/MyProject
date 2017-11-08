@@ -10,7 +10,7 @@
 	include(ROOT_PATH."/admin/common/classtree.func.php");
 
 	$action=$_REQUEST['action'];
-	if($action=="edit"){
+	if($action=="edit" && !isset($_POST["submit"])){
 		$newId=$_REQUEST["id"];
 		$sql="select mc_article.classid,mc_columns.classname,mc_article.title,mc_article.shorttitle,mc_article.content,mc_article.thumbnail,mc_article.keywords,mc_article.description from mc_article  inner join mc_columns on mc_article.classid=mc_columns.classid where mc_article.id='$newId'";
 		$result=$mysqli->query($sql);
@@ -23,9 +23,8 @@
 		$intro=$results[0]["description"];
 		$thumbnail=$results[0]["thumbnail"];
 		$content=$results[0]["content"];
-	}
-
-	if(isset($_POST["submit"])){
+	}else{
+		$newId=$_REQUEST["id"];
 		$title=$_POST["title"];
 		$subtitle=$_POST["subtitle"];
 		$pclassid=$_POST["pclassid"];
@@ -33,21 +32,15 @@
 		$intro=$_POST["intro"];
 		$thumbnail=$_POST["thumbnail"];
 		$content=$_POST["content"];
-		if(empty($title)){
-			$strErorr="<p>请输入标题！</p>";
-		}elseif(!isset($pclassid)){
-			$strErorr="<p>请选择父栏目！</p>";
+	
+		if(isset($_POST["submit"])){
+			if(empty($title)){
+				$strErorr="<p>请输入标题！</p>";
+			}elseif(!isset($pclassid)){
+				$strErorr="<p>请选择父栏目！</p>";
+			}
 		}
 	}
-
-	
-	
-
-
-
-
-
-	
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,18 +63,30 @@
 	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
 	
 		<?php  
-			if(isset($_POST["submit"]) && !empty($strErorr)){
+			if(!empty($strErorr)){
 		?>
-			<div class="container">
-				<div class="news-add-error">
-					<?php echo $strErorr; ?>
+				<div class="container">
+					<div class="news-add-error">
+						<?php echo $strErorr; ?>
+					</div>
 				</div>
-			</div>
+
+
 		<?php		
-			}elseif(isset($_POST["submit"]) && empty($strErorr)){
-				$sql="insert into mc_article(classid,title,shorttitle,content,thumbnail,keywords,description) values('$pclassid','$title','$subtitle','$content','$thumbnail','$keyword','$intro')";
+			}
+			if(isset($_POST["submit"]) && empty($strErorr)){
+				$content2=addslashes($content);
+				if($action=="create" || empty($action)){
+					$sql="insert into mc_article(classid,title,shorttitle,content,thumbnail,keywords,description) values('$pclassid','$title','$subtitle','$content2','$thumbnail','$keyword','$intro')";
+				}elseif($action=="edit"){
+					$sql='update mc_article set classid="'.$pclassid.'",title="'.$title.'",shorttitle="'.$subtitle.'",content="'.$content2.'",thumbnail="'.$thumbnail.'",keywords="'.$keyword.'",description="'.$intro.'" where id="'.$newId.'"';
+
+					
+				}
+				
 				$result=$mysqli->query($sql);
 				if($mysqli->affected_rows){
+			
 		?>
 						<style type="text/css">
 							.dologin-box-success{
@@ -97,7 +102,14 @@
 							}
 						</style>
 						<div class="dologin-box-success">
-							<h1>添加成功！</h1>
+							<?php 
+								if($action=="edit"){
+									$tip="<h1>修改成功！</h1>";
+								}else{
+									$tip="<h1>添加成功！</h1>";
+								}
+								echo $tip;
+							?>
 							<p>页面将在<span id="timecount"></span>秒之后跳转！<a href="index.php">手动点击跳转！</a></p>
 						</div>
 		
@@ -118,7 +130,14 @@
 						}
 					</style>
 							<div class="dologin-box-success">
-						<h1>添加失败！</h1>
+						<?php 
+								if($action=="edit"){
+									$tip="<h1>修改失败！</h1>";
+								}else{
+									$tip="<h1>添加失败！</h1>";
+								}
+								echo $tip;
+							?>
 						<p>页面将在<span id="timecount"></span>秒之后跳转！<a href="register.php">手动点击跳转！</a></p>
 					</div>
 		<?php			
@@ -147,10 +166,10 @@
 			}else{
 		?>
 		
-
 		
+
 	<div class="container">
-		<form method="post" action="editNews.php">
+		<form method="post" action="editNews.php?action=<?php echo $action; ?>&id=<?php echo $newId; ?>">
 			<table class="news-add-tbl">
 				<tr>
 					<td class="para-tit"><span class="star">*</span>标题：</td>
@@ -200,7 +219,7 @@
 				<tr>
 					<td class="para-tit">关键字：</td>
 					<td>
-						<textarea rows="2" cols="60" name="keyword" value="<?php echo $keyword;?>"></textarea>
+						<textarea rows="2" cols="60" name="keyword"><?php echo $keyword;?></textarea>
 					</td>
 				</tr>
 				<tr>
@@ -214,7 +233,8 @@
 					<td>
 						<div class="coms-zoom-img">
 							<?php
-								if(!isset($thumbnail)){
+
+								if(empty($thumbnail)){
 							?>
 									<div class="no-pic" id="J_no-pic"></div>
 							<?php		
@@ -263,11 +283,18 @@
 			 var ue = UE.getEditor('editor');
 		})
 	</script>
-	<?php		
+
+	<?php
 		}
 	?>
 	
+	
 	<div style="height: 150px"></div>
+
+
+	<!-- 
+	
+	 -->
 	
 </body>
 </html>

@@ -1,8 +1,8 @@
 <?php
-session_start();
-include("../Path.php");
-include("../common/mysqli.php");
-include("./common/common.func.php");
+	session_start();
+	include("../config.php");
+	include(ROOT_PATH."/include/mysqli.php");
+	include(ROOT_PATH."/admin/common/session.php");
 	unset($_SESSION['userid']);
 	if(!isset($_SESSION['userid'])){
 ?>

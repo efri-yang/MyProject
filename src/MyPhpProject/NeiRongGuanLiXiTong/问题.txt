@@ -1,1 +1,18 @@
 1、一个文章可以属于多个分类，这个怎么弄，数据库怎么设计
+2、百度编辑器插入字符的时候，需要转移，否则插入或者修改是不会成功的！
+
+     当我们在向mysql写入数据时，如果数据中有特殊字符就会出现数据无法正常入库的情况，比如：
+		mysql_query(”update table set `name`='make's'”);
+		
+
+		而这个时候一般就是使用addslashes()这个函数来转义数据中的特殊字符
+
+http://www.jb51.net/article/98169.htm
+
+
+使用了addslashes()处理后的数据在数据库中将以\'形式保存，如果此时直接输出的话，就会发现比自己期待的内容多了个\，因此stripslashes()出场了，它能把\去掉
+
+
+面包导航的注意事项：
+
+http://localhost/phpmyadmin/sql.php?db=empirecms&token=316f4ce967c51b7e7b5e502001135643&goto=db_structure.php&table=phome_enewstable&pos=0

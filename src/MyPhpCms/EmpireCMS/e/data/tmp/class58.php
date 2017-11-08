@@ -7,9 +7,9 @@ if(!defined('InEmpireCMS'))
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>新闻中心-栏目1 - Powered by EmpireCMS</title>
+<title>栏目测试1 - Powered by EmpireCMS</title>
 <meta name="keywords" content="" />
-<meta name="description" content="" />
+<meta name="description" content="栏目测试1——简介" />
 <link href="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/js/tabs.js"></script>
 </head>
@@ -52,7 +52,7 @@ document.write('<script src="/MyProject/src/MyPhpCms/EmpireCMS/e/member/login/lo
 <tr valign="top">
 <td class="news_list"><table width="100%" border="0" cellspacing="0" cellpadding="0" class="position">
 <tr>
-<td>您当前的位置：<a href="/MyProject/src/MyPhpCms/EmpireCMS/">首页</a>&nbsp;>&nbsp;<a href="/MyProject/src/MyPhpCms/EmpireCMS/news/">新闻中心</a>&nbsp;>&nbsp;<a href="/MyProject/src/MyPhpCms/EmpireCMS/news/news01/">新闻中心-栏目1</a></td>
+<td>您当前的位置：<a href="/MyProject/src/MyPhpCms/EmpireCMS/">首页</a>&nbsp;>&nbsp;<a href="/MyProject/src/MyPhpCms/EmpireCMS/lanmucs01/">栏目测试1</a></td>
 </tr>
 </table>
 <? @sys_ForSonclassData('selfinfo',5,38,0,0,7,0,0);?></td>

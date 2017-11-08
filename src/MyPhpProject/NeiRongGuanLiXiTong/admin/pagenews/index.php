@@ -26,11 +26,6 @@
 	
 
 
-	
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,10 +40,12 @@
 		<div class="news-mbx-box clearfix">
 			<div class="mbx-item">面包导航写</div>
 			<div class="handle-item fr">
-				<a href="editNews.php?action=add" class="btn btn-success">添加信息</a>
+				<a href="editNews.php?action=create" class="btn btn-success">添加信息</a>
 			</div>
 		</div>
-
+		<?php 
+			if($pageTotal){
+		?>
 		<div class="news-list-wrap">
 			<table class="news-list-tbl">
 				<thead>
@@ -100,67 +97,77 @@
 				 *                ...34567 点击 5
 				 *                	...34567 点击 6
 				 */
+				
 
-				$pageStart=1;
-				$pageEnd=$pageTotal;
 
-				$pageStr='<div class="pagination-box">';
+					$pageStart=1;
+					$pageEnd=$pageTotal;
 
-				if($pageNum <= 1){
-					$pageStr.="<span class='first disabled page'>首页</span>";
-					$pageStr.="<span class='prev disabled page'>上一页</span>";
-				}else{
-					$pageStr.='<a href="'.$_SERVER['PHP_SELF'].'?page=1" class="first">首页</a>';
-					$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".($pageNum-1)."' class='prev'>上一页</a>";
-				}
+					$pageStr='<div class="pagination-box">';
 
-				if($pageTotal > $pageView){
-					if($pageNum>($pageOffset+1)){
-						$pageStr.="<span>...</span>";
-					}
-
-					if($pageNum > $pageOffset){
-						$pageStart=$pageNum-$pageOffset;
-						$pageEnd=(($pageNum+$pageOffset) > $pageTotal) ? $pageTotal :($pageNum+$pageOffset);
+					if($pageNum <= 1){
+						$pageStr.="<span class='first disabled page'>首页</span>";
+						$pageStr.="<span class='prev disabled page'>上一页</span>";
 					}else{
-						$pageStart=1;
-						$pageEnd=$pageView;
+						$pageStr.='<a href="'.$_SERVER['PHP_SELF'].'?page=1" class="first">首页</a>';
+						$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".($pageNum-1)."' class='prev'>上一页</a>";
 					}
 
-					if(($pageNum+$pageOffset) > $pageTotal){
-						$pageStart=$pageStart-($pageNum+$pageOffset-$pageEnd);
-						$pageEnd=$pageTotal;
+					if($pageTotal > $pageView){
+						if($pageNum>($pageOffset+1)){
+							$pageStr.="<span>...</span>";
+						}
+
+						if($pageNum > $pageOffset){
+							$pageStart=$pageNum-$pageOffset;
+							$pageEnd=(($pageNum+$pageOffset) > $pageTotal) ? $pageTotal :($pageNum+$pageOffset);
+						}else{
+							$pageStart=1;
+							$pageEnd=$pageView;
+						}
+
+						if(($pageNum+$pageOffset) > $pageTotal){
+							$pageStart=$pageStart-($pageNum+$pageOffset-$pageEnd);
+							$pageEnd=$pageTotal;
+						}
 					}
-				}
-				for($i=$pageStart;$i<=$pageEnd;$i++){
-					if($pageNum==$i){
-						$pageStr.="<span class='current page'>{$i}</span>";
+					for($i=$pageStart;$i<=$pageEnd;$i++){
+						if($pageNum==$i){
+							$pageStr.="<span class='current page'>{$i}</span>";
+						}else{
+							$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".$i."'>{$i}</a>";
+						}
+					}
+
+					if($pageTotal > $pageView && $pageTotal > ($pageNum+$pageOffset)){
+						$pageStr.="<span class='page'>...</span>";
+					}
+
+
+					if($pageNum >=$pageTotal){
+						$pageStr.="<span class='next disabled page'>下一页</span>";
+						$pageStr.="<span class='last disabled page'>尾页</span>";
+						
 					}else{
-						$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".$i."'>{$i}</a>";
+						
+						$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".($pageNum+1)."' class='next'>下一页</a>";
+						$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".$totalPage."' class='last'>尾页</a>";
 					}
-				}
-
-				if($pageTotal > $pageView && $pageTotal > ($pageNum+$pageOffset)){
-					$pageStr.="<span class='page'>...</span>";
-				}
-
-
-				if($pageNum >=$pageTotal){
-					$pageStr.="<span class='next disabled page'>下一页</span>";
-					$pageStr.="<span class='last disabled page'>尾页</span>";
-					
+					$pageStr.="<span>共".$pageTotal."页</span>";
+					$pageStr.="<form class='pageform' action='index.php' method='post'>";
+					$pageStr.="<span>到 <input type='text' size='2' name='page'>页</span><input type='submit' value='确定' />";
+					$pageStr.="</form>";
+					$pageStr.="</div>";
+				
+					echo $pageStr;
 				}else{
-					
-					$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".($pageNum+1)."' class='next'>下一页</a>";
-					$pageStr.="<a href='".$_SERVER['PHP_SELF']."?page=".$totalPage."' class='last'>尾页</a>";
+			?>
+					<div class="news-nodata-box">
+						<p class="tip-1">暂时没有新闻！</p>
+						<p class="align-c"><a class="btn btn-success" href="editNews.php?action=create">添加新闻</a></p>
+					</div>
+			<?php		
 				}
-				$pageStr.="<span>共".$pageTotal."页</span>";
-				$pageStr.="<form class='pageform' action='index.php' method='post'>";
-				$pageStr.="<span>到 <input type='text' size='2' name='page'>页</span><input type='submit' value='确定' />";
-				$pageStr.="</form>";
-				$pageStr.="</div>";
-			
-				echo $pageStr;
 
 			?>
 		</div>

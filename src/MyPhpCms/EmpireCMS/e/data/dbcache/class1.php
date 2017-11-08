@@ -1337,4 +1337,19 @@ $class_r[57]=Array('classid'=>57,
 
 'reorder'=>'newstime DESC',
 'dtlisttempid'=>7);
+$class_r[58]=Array('classid'=>58,
+'bclassid'=>0,
+'classname'=>'栏目测试1',
+'sonclass'=>'',
+'featherclass'=>'',
+'islast'=>0,
+'classpath'=>'lanmucs01',
+'classtype'=>'.html',
+
+'down_num'=>2,
+'online_num'=>2,
+'islist'=>0,
+'tid'=>1,
+'tbname'=>'news',
+'modid'=>1);
 ?>
