@@ -19,7 +19,7 @@
 		没有栏目的话 显示没有栏目，提示去创建栏目
 	 -->
 	 <div class="container page-h">
-			<div class="caption-1">欢迎使用内容管理系统</div>
+			<div class="caption-1">欢迎使用内容管理系统ddd
 
 			<div class="module-item">
 				<div class="hd">我的状态</div>
