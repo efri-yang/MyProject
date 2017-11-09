@@ -36,9 +36,9 @@ if (@$_REQUEST["type"] == "ajax") {
 } else {
 	if(!$resError){
 		$_SESSION["userid"]=$resultData[0]["id"];
-		handleResult(1,"登录成功！","index.php",50);
+		handleResult(1,"登录成功！","index.php",5);
 	}else{
-		handleResult(0,"登录失败！","login.php",20);
+		handleResult(0,"登录失败！","login.php",5);
 	}
    
 }

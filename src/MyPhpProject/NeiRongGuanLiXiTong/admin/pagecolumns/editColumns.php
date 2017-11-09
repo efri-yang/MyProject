@@ -114,11 +114,10 @@
 
 					$result=$mysqli->query($sql);
 					if($mysqli->affected_rows){
-						echo "<h1>更新成功！</h1>";
+						handleResult(1,"更新栏目成功！","index.php");
 					}else{
-						echo "<h1>更新失败！</h1>";
+						handleResult(1,"更新栏目失败！","index.php");
 					}
-
 					
 				}else{
 					

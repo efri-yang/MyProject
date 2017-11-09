@@ -45,7 +45,7 @@
 				foreach($arr as $key=>$value){
 					$flg = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$step);
 					$str.="<tr>";
-					$str.="<td class='first'>".$flg."<img src='./images/".($value['islast']==1 ? "txt.gif" :"dir.gif")."'/></td>";
+					$str.="<td class='first'>".$flg."<img src='".STATIC_PATH."/admin/static/images/pagecolumn/".($value['islast']==1 ? "txt.gif" :"dir.gif")."'/></td>";
 					$str.="<td>".$value['sortrank']."</td>";
 					$str.="<td>".$value['classid']."</td>";
 					$str.="<td class='align-l'>".$flg.$value['classname']."</td>";

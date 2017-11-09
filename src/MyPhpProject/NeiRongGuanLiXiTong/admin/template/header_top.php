@@ -14,7 +14,7 @@
 				<span class="name"><?php echo $resultData[0]["username"]; ?></span>
 				<span class="pic"><img src="<?php echo !!$resultData[0]["avatar"] ? STATIC_PATH."/uploads/avatar/".$resultData[0]["avatar"] :STATIC_PATH."//admin/static/images/pagecolumn/".'default_avatar.jpg' ?>"></span>
 			</a>
-			<a href="loginout.php" class="loginout">退出</a>
+			<a href="<?php echo STATIC_PATH; ?>/admin/loginOut.php" class="loginout">退出</a>
 		 </div>
 	</div>
 </div>
