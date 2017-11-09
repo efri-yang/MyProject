@@ -80,8 +80,6 @@
 					$sql="insert into mc_article(classid,title,shorttitle,content,thumbnail,keywords,description) values('$pclassid','$title','$subtitle','$content2','$thumbnail','$keyword','$intro')";
 				}elseif($action=="edit"){
 					$sql='update mc_article set classid="'.$pclassid.'",title="'.$title.'",shorttitle="'.$subtitle.'",content="'.$content2.'",thumbnail="'.$thumbnail.'",keywords="'.$keyword.'",description="'.$intro.'" where id="'.$newId.'"';
-
-					
 				}
 				
 				$result=$mysqli->query($sql);
