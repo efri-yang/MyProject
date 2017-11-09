@@ -245,10 +245,11 @@
  * 
  */
 
-.dohand-box-success{
+/*.dohand-box-success{
     text-align: center;
     margin-top: 80px;
 }
+
 
 .dohand-box-success h1{
     text-align: center;
@@ -256,3 +257,34 @@
     color:green;
     font-weight: bold;
 }
+
+.dohand-box-success .tip-1{
+    text-align: center;
+    padding: 15px 0;
+}
+
+.dohand-box-success .tip-1 a{
+    text-decoration: underline;
+    color:blue; 
+}
+
+.dohand-box-error{
+    text-align: center;
+    margin-top: 80px;
+}
+.dohand-box-error h1{
+    text-align: center;
+    font-size: 32px;
+    color:red;
+    font-weight: bold;
+}
+
+.dohand-box-error .tip-1{
+    text-align: center;
+    padding:15px 0;
+}
+
+.dohand-box-error .tip-1 a{
+    text-decoration: underline;
+    color:blue; 
+}*/
