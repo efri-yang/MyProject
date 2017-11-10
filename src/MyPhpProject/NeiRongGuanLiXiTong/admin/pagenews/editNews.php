@@ -16,7 +16,7 @@
 	$action=$_REQUEST['action'];
 	if($action=="edit" && !isset($_POST["submit"])){
 		$newId=$_REQUEST["id"];
-		$sql="select mc_article.classid,mc_columns.classname,mc_article.title,mc_article.shorttitle,mc_article.content,mc_article.thumbnail,mc_article.keywords,mc_article.description from mc_article  inner join mc_columns on mc_article.classid=mc_columns.classid where mc_article.id='$newId'";
+		$sql="select mc_article.classid,mc_columns.classname,mc_article.title,mc_article.shorttitle,mc_article.content,mc_article.thumbnail,mc_article.keywords,mc_article.description,author from mc_article  inner join mc_columns on mc_article.classid=mc_columns.classid where mc_article.id='$newId'";
 		$result=$mysqli->query($sql);
 		$results=resultToArray($result);
 
@@ -27,6 +27,7 @@
 		$intro=$results[0]["description"];
 		$thumbnail=$results[0]["thumbnail"];
 		$content=$results[0]["content"];
+		$author=$results[0]["author"];
 	}else{
 		$newId=$_REQUEST["id"];
 		$title=$_POST["title"];
@@ -37,6 +38,7 @@
 		$thumbnail=$_POST["thumbnail"];
 		$content=$_POST["content"];
 		$publicTime=date('Y-m-d H:i:s');
+		$author=$_POST["author"];
 		if(isset($_POST["submit"])){
 			if(empty($title)){
 				$strErorr="<p>请输入标题！</p>";
@@ -79,11 +81,13 @@
 		<?php		
 			}
 			if(isset($_POST["submit"]) && empty($strErorr)){
+
+				//有些字符插入数据库的时候会被解释成控制符，这些字符包括 单引号 双引号 反斜杠和空字符(NULL),所以我们需要转移
 				$content2=addslashes($content);
 				if($action=="create" || empty($action)){
-					$sql="insert into mc_article(classid,title,shorttitle,content,thumbnail,keywords,description,publictime) values('$pclassid','$title','$subtitle','$content2','$thumbnail','$keyword','$intro','$publicTime')";
+					$sql="insert into mc_article(classid,title,shorttitle,content,thumbnail,keywords,description,publictime,author) values('$pclassid','$title','$subtitle','$content2','$thumbnail','$keyword','$intro','$publicTime',$author)";
 				}elseif($action=="edit"){
-					$sql='update mc_article set classid="'.$pclassid.'",title="'.$title.'",shorttitle="'.$subtitle.'",content="'.$content2.'",thumbnail="'.$thumbnail.'",keywords="'.$keyword.'",description="'.$intro.'" where id="'.$newId.'"';
+					$sql='update mc_article set classid="'.$pclassid.'",title="'.$title.'",shorttitle="'.$subtitle.'",content="'.$content2.'",thumbnail="'.$thumbnail.'",keywords="'.$keyword.'",description="'.$intro.'",author="'.$author.'" where id="'.$newId.'"';
 				}
 				
 				$result=$mysqli->query($sql);
@@ -194,6 +198,12 @@
 						<script id="editor" type="text/plain" name="content" style="width:1024px;height:200px;">
 							<?php echo $content; ?>
 						</script>
+					</td>
+				</tr>
+				<tr>
+					<td class="para-tit">作者：</td>
+					<td>
+						<input type="text" name="author" value="<?php echo $author; ?>">
 					</td>
 				</tr>
 				<tr>
