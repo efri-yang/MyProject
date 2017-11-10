@@ -15,7 +15,7 @@
 </head>
 <body>
 	<?php
-		handleResult(0,"asdfasdfsdfsd","index.php",20);
+		$sql="";
 	?>
 </body>
 </html>

@@ -88,7 +88,7 @@ $fun_r=array
 	'TagsInfoList'=>'TAG信息列表',
 	'OneClearTagsSuccess'=>'一组数据整理完毕,正进入下一组.....',
 
-	'index'=>'首页',
+	'index'=>'首页11111',
 	'navfh'=>'>',
 	'pripage'=>'上一页',
 	'nextpage'=>'下一页',

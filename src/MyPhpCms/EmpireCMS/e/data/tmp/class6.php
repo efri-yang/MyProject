@@ -52,7 +52,7 @@ document.write('<script src="/MyProject/src/MyPhpCms/EmpireCMS/e/member/login/lo
 <tr valign="top">
 <td class="news_list"><table width="100%" border="0" cellspacing="0" cellpadding="0" class="position">
 <tr>
-<td>您当前的位置：<a href="/MyProject/src/MyPhpCms/EmpireCMS/">首页</a>&nbsp;>&nbsp;<a href="/MyProject/src/MyPhpCms/EmpireCMS/flash/">FLASH频道</a></td>
+<td>您当前的位置：<a href="/MyProject/src/MyPhpCms/EmpireCMS/">首页11111</a>&nbsp;>&nbsp;<a href="/MyProject/src/MyPhpCms/EmpireCMS/flash/">FLASH频道</a></td>
 </tr>
 </table>
 <? @sys_ForSonclassData('selfinfo',5,38,0,0,7,0,0);?></td>
