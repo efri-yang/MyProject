@@ -7,8 +7,8 @@
     line-height: 50px;
     background: #23282d;
     padding: 0 20px;
-    /* position: relative;
-    z-index: 10;*/
+     position: relative;
+    z-index: 10;
 }
 
 .coms-layout-top .user-avatar {
@@ -41,6 +41,25 @@
     vertical-align: middle;
 }
 
+.coms-layout-top .nav-top{
+    float: right;
+    color:#fff;
+    margin-right:30px;  
+}
+.coms-layout-top .nav-top li{
+    float:left;
+    margin: 0 7px;
+    display: inline;
+}
+
+.coms-layout-top .nav-top li a{
+     color:#fff;
+     font-size:16px; 
+}
+.coms-layout-top .nav-top li a:hover{
+    text-decoration: underline;
+}
+
 .coms-layout-top .loginout {
     margin-left: 16px;
     text-decoration: underline;
@@ -61,7 +80,7 @@
     left: 0;
     top: 50px;
     bottom: 0;
-    width:300px;
+    width:230px;
     overflow-y: scroll;
     color:#fff;
 }
@@ -89,12 +108,14 @@
 
 
 .coms-layout-main{
-   
-    margin-left:330px;
+    margin-left:250px;
     height: 100%;
     position: relative;
     overflow-y:scroll; 
 }
+
+
+
 
 
 
@@ -362,51 +383,3 @@
 
 
 
-/**
- * 
- */
-
-
-/*.dohand-box-success{
-    text-align: center;
-    margin-top: 80px;
-}
-
-
-.dohand-box-success h1{
-    text-align: center;
-    font-size: 32px;
-    color:green;
-    font-weight: bold;
-}
-
-.dohand-box-success .tip-1{
-    text-align: center;
-    padding: 15px 0;
-}
-
-.dohand-box-success .tip-1 a{
-    text-decoration: underline;
-    color:blue; 
-}
-
-.dohand-box-error{
-    text-align: center;
-    margin-top: 80px;
-}
-.dohand-box-error h1{
-    text-align: center;
-    font-size: 32px;
-    color:red;
-    font-weight: bold;
-}
-
-.dohand-box-error .tip-1{
-    text-align: center;
-    padding:15px 0;
-}
-
-.dohand-box-error .tip-1 a{
-    text-decoration: underline;
-    color:blue; 
-}*/

@@ -13,15 +13,17 @@
 <head>
 	<title></title>
 	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
-	
-
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/css/page-column.css">
 </head>
 <body>
 	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
 
-
-	<?php 
+	<div class="coms-layout-wrap">
+		<?php 
+			include(ROOT_PATH.'/admin/template/layoutAside.php');
+		?>
+		<div class="coms-layout-main">
+				<?php 
 		$sql="select * from mc_columns";
 		$result=$mysqli->query($sql);
 		$results=resultToArray($result);
@@ -88,6 +90,9 @@
 		}
 	?>
 
+		</div>
+	</div>
+	
 
 	
 	

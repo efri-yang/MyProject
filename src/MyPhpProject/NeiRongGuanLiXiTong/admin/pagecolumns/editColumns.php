@@ -91,9 +91,12 @@
 </head>
 <body>
 	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
-
-
-	<div class="container">
+	<div class="coms-layout-wrap">
+		<?php 
+			include(ROOT_PATH.'/admin/template/layoutAside.php');
+		?>
+		<div class="coms-layout-main">
+				<div class="container" style="width: 100%;">
 		<?php 
 				if(empty($errorTxt) && isset($_POST['submit']) && $action=="create"){
 					
@@ -258,9 +261,6 @@
 			</tbody>
 		</table>
 	</div>
-	<div style="height: 200px;"></div>
-
-	
 	<script type="text/javascript" src="./js/upload2.js"></script>
 	<script type="text/javascript">
 		$(function(){
@@ -314,9 +314,14 @@
 			});
 		})
 	</script>
-<?php		
+		<?php		
 			}
 
 		 ?>
+
+		</div>
+	</div>
+
+	
 </body>
 </html>

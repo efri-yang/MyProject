@@ -22,7 +22,6 @@
     <title>用户信息页面</title>
         
     <?php include(ROOT_PATH.'/admin/template/scriptstyle.php'); ?>
-
     <script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/bootstrapvalidator/js/bootstrapValidator.js"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/js/bootstrapvalidator/css/bootstrapValidator.css">
 
@@ -31,11 +30,18 @@
 </head>
 
 <body>
-	<div class="container mt20">
+    <?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
+
+    <div class="coms-layout-wrap">
+        <?php 
+            include("template/layoutAside.php");
+        ?>
+        <div class="coms-layout-main">
+            <div class="container mt20">
     <?php
-    	if($_REQUEST['type'] !="edit"){
+        if($_REQUEST['type'] !="edit"){
     ?>
-		<form class="form-horizontal userinfo-form-1" method="post" action="userInformation.php?type=edit">
+        <form class="form-horizontal userinfo-form-1" method="post" action="userInformation.php?type=edit">
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
@@ -80,13 +86,13 @@
                       
                         $sql="select * from station where id in(".$result["occupation"].")";
                     
-                    	$resResource=$mysqli->query($sql);
+                        $resResource=$mysqli->query($sql);
                         $result=resultToArray($resResource);
-                    	foreach ($result as $key => $value) {
-                    		$occupationStrArr[]=$value['title'];
-                    	}
-                    	echo implode(',',$occupationStrArr);
-                    	
+                        foreach ($result as $key => $value) {
+                            $occupationStrArr[]=$value['title'];
+                        }
+                        echo implode(',',$occupationStrArr);
+                        
                      ?>
                 </div>
             </div>
@@ -99,9 +105,9 @@
             </div>
         </form>
     <?php
-    	}else{
+        }else{
     ?>
-		<form class="form-horizontal userinfo-form-1" enctype="multipart/form-data"  action="doUserInformation.php" id="defaultForm" method="post">
+        <form class="form-horizontal userinfo-form-1" enctype="multipart/form-data"  action="doUserInformation.php" id="defaultForm" method="post">
             <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10 userinfo-val">
@@ -132,7 +138,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">手机号码</label>
                 <div class="col-sm-10 userinfo-val">
-                	<input type="text" name="phone"  class="form-control" placeholder="请输入邮箱"  value="<?php echo $result["phone"] ?>">
+                    <input type="text" name="phone"  class="form-control" placeholder="请输入邮箱"  value="<?php echo $result["phone"] ?>">
                    
                 </div>
             </div>
@@ -152,18 +158,18 @@
                 <label class="col-sm-2 control-label">职业</label>
                 <div class="col-sm-10 userinfo-val">
                     <?php 
-                    	$occupation=explode(",",$result["occupation"]);
-                    	$result=resultToArray($mysqli->query("select * from station"));
-                    	foreach ($result as $key => $value) {
+                        $occupation=explode(",",$result["occupation"]);
+                        $result=resultToArray($mysqli->query("select * from station"));
+                        foreach ($result as $key => $value) {
                     ?>
-						<label>
+                        <label>
                         <input type="checkbox" value="<?php echo $value['id'] ?>" name="occupation[]"  <?php echo in_array($value['id'], $occupation) ? 'checked' :''; ?> /><?php echo $value['title'] ?></label>
 
                     <?php
-                    		
-                    	}
-                    	
-                    	
+                            
+                        }
+                        
+                        
 
                      ?>
                 </div>
@@ -196,9 +202,12 @@
             })
         </script>
     <?php
-    	}
+        }
     ?>
     </div>
+        </div>
+    </div>
+	
    
 </body>
 
