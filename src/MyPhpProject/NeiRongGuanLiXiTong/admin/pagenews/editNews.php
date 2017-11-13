@@ -12,13 +12,13 @@ date_default_timezone_set('PRC');
 $action = $_REQUEST['action'];
 if ($action == "edit" && !isset($_POST["submit"])) {
     $newId   = $_REQUEST["id"];
-    $sql     = "select mc_article.classid,mc_columns.classname,mc_article.title,mc_article.shorttitle,mc_article.content,mc_article.thumbnail,mc_article.keywords,mc_article.description,author from mc_article  inner join mc_columns on mc_article.classid=mc_columns.classid where mc_article.id='$newId'";
+    $sql     = "select mc_article.pclassid,mc_columns.classname,mc_article.title,mc_article.shorttitle,mc_article.content,mc_article.thumbnail,mc_article.keywords,mc_article.description,author from mc_article  inner join mc_columns on mc_article.pclassid=mc_columns.classid where mc_article.id='$newId'";
     $result  = $mysqli->query($sql);
     $results = resultToArray($result);
 
     $title     = $results[0]["title"];
     $subtitle  = $results[0]["shorttitle"];
-    $pclassid  = $results[0]["classid"];
+    $pclassid  = $results[0]["pclassid"];
     $keyword   = $results[0]["keywords"];
     $intro     = $results[0]["description"];
     $thumbnail = $results[0]["thumbnail"];
@@ -86,9 +86,9 @@ if (isset($_POST["submit"]) && empty($strErorr)) {
     //有些字符插入数据库的时候会被解释成控制符，这些字符包括 单引号 双引号 反斜杠和空字符(NULL),所以我们需要转移
     $content2 = addslashes($content);
     if ($action == "create" || empty($action)) {
-        $sql = "insert into mc_article(classid,title,shorttitle,content,thumbnail,keywords,description,publictime,author) values('$pclassid','$title','$subtitle','$content2','$thumbnail','$keyword','$intro','$publicTime',$author)";
+        $sql = "insert into mc_article(pclassid,title,shorttitle,content,thumbnail,keywords,description,publictime,author) values('$pclassid','$title','$subtitle','$content2','$thumbnail','$keyword','$intro','$publicTime',$author)";
     } elseif ($action == "edit") {
-        $sql = 'update mc_article set classid="' . $pclassid . '",title="' . $title . '",shorttitle="' . $subtitle . '",content="' . $content2 . '",thumbnail="' . $thumbnail . '",keywords="' . $keyword . '",description="' . $intro . '",author="' . $author . '" where id="' . $newId . '"';
+        $sql = 'update mc_article set pclassid="' . $pclassid . '",title="' . $title . '",shorttitle="' . $subtitle . '",content="' . $content2 . '",thumbnail="' . $thumbnail . '",keywords="' . $keyword . '",description="' . $intro . '",author="' . $author . '" where id="' . $newId . '"';
     }
 
     $result = $mysqli->query($sql);
