@@ -101,6 +101,9 @@
 .news-mbx-box .mbx-item{
 	float: left;
 }
+.news-mbx-box .mbx-item a{
+	text-decoration: underline;	
+}
 .news-mbx-box .handle-item{
 	background: #f60;
 }

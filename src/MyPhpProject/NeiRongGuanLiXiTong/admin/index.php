@@ -37,7 +37,7 @@
 					<ul class="list-1">
 						<li>
 							<label>信息操作：</label>
-							<a href="./pagenews/index.php">添加信息</a>
+							<a href="./pagenews/index.php">信息管理</a>
 						</li>
 						<li>
 							<label>栏目操作：</label>

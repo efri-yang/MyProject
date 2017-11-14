@@ -69,6 +69,12 @@ if ($action == "edit" && !isset($_POST["submit"])) {
 include ROOT_PATH . '/admin/template/layoutAside.php';
 ?>
 		<div class="coms-layout-main">
+			<div class="news-mbx-box clearfix">
+				<div class="mbx-item">
+	                <a href="../index.php">首页</a>  >
+	                <span>信息管理</span>
+	            </div>
+			</div>
 				<?php
 if (!empty($strErorr)) {
     ?>

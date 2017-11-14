@@ -37,7 +37,10 @@ include ROOT_PATH . '/admin/template/layoutAside.php';
 		<div class="coms-layout-main">
 			<div class="container">
 		<div class="news-mbx-box clearfix">
-			<div class="mbx-item">面包导航写</div>
+			<div class="mbx-item">
+                <a href="../index.php">首页</a>  >
+                <span>信息管理</span>
+            </div>
 			<div class="handle-item fr">
 				<a href="editNews.php?action=create" class="btn btn-success">添加信息</a>
 			</div>
