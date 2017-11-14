@@ -11,7 +11,7 @@
 	 *   分两次查询，第一次是查询文章id 对应的 classid,然后通过classid 去配备column 里面的父栏目
 	 */
 
-	$sql="select classid from mc_article where id='8'";
+	$sql="select pclassid from mc_article where id='8'";
 
 	$result=$mysqli->query($sql);
 	$arr=array();
@@ -31,11 +31,11 @@
 		$columnData[]=$row;
 	};
 
-	print_r($columnData);
-	
-	// 3  3
-	// 3  1
-	// 1   0
+	// print_r($columnData);
+	//classid pclassid  
+	// 3      3
+	// 3      1
+	// 1      0
 
 	 function displayBread($columnData,$pclassid,$str=""){
 
@@ -43,12 +43,10 @@
  		foreach($columnData as $key=>$value){
  			if($value["classid"]==$pclassid){
  				
- 				$str.=$value['classname']."——里面——>";
- 				echo $str;
- 				echo "<br/>";
+ 				$str.=$value['classname'];
  				if($value["pclassid"] !=0){
-
- 					displayBread($columnData,$value["pclassid"],$str);
+ 					$str.=">";
+ 					$str=displayBread($columnData,$value["pclassid"],$str);
  				}
  			}
  		}
@@ -57,7 +55,6 @@
  		return $str;
 	 }
 
-	echo '——外面——><br/>';
 	echo displayBread($columnData,3);
 
 
