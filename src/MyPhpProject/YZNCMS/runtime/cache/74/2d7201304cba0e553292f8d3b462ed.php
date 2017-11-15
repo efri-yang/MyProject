@@ -1,0 +1,4 @@
+<?php
+//000000003600
+ exit();?>
+a:22:{s:5:"catid";i:3;s:6:"module";s:7:"content";s:4:"type";i:0;s:7:"modelid";i:1;s:6:"domain";s:0:"";s:8:"parentid";i:1;s:11:"arrparentid";s:3:"0,1";s:5:"child";i:0;s:10:"arrchildid";s:1:"3";s:7:"catname";s:12:"网络营销";s:5:"image";s:0:"";s:11:"description";s:0:"";s:9:"parentdir";s:5:"news/";s:6:"catdir";s:9:"marketing";s:3:"url";s:25:"/home/index/lists/catid/3";s:4:"hits";i:0;s:7:"setting";a:6:{s:17:"category_template";s:13:"category.html";s:13:"list_template";s:9:"list.html";s:13:"show_template";s:9:"show.html";s:10:"meta_title";s:0:"";s:13:"meta_keywords";s:0:"";s:16:"meta_description";s:0:"";}s:9:"listorder";i:3;s:6:"ismenu";i:1;s:7:"sethtml";i:0;s:6:"letter";s:15:"wangluoyingxiao";s:6:"extend";N;}

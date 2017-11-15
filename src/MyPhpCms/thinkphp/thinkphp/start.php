@@ -16,3 +16,7 @@ namespace think;
 require __DIR__ . '/base.php';
 // 执行应用
 App::run()->send();
+
+//加载系统常量的定义
+//加载环境变量的定义文件
+//

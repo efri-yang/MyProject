@@ -1,0 +1,4 @@
+<?php
+//000000000000
+ exit();?>
+a:2:{s:5:"links";a:10:{s:6:"module";s:5:"links";s:10:"modulename";s:12:"友情链接";s:4:"sign";s:32:"960c30f9b119fa6c39a4a31867441c82";s:6:"iscore";i:0;s:8:"disabled";i:1;s:7:"version";s:5:"1.0.0";s:7:"setting";s:0:"";s:11:"installtime";i:1505651640;s:10:"updatetime";i:1505651640;s:9:"listorder";i:0;}s:9:"formguide";a:10:{s:6:"module";s:9:"formguide";s:10:"modulename";s:6:"表单";s:4:"sign";s:32:"b19cc279ed484c13c96c2f7142e2f437";s:6:"iscore";i:0;s:8:"disabled";i:1;s:7:"version";s:5:"1.0.0";s:7:"setting";s:0:"";s:11:"installtime";i:1507204730;s:10:"updatetime";i:1507204730;s:9:"listorder";i:0;}}

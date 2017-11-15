@@ -3,4 +3,6 @@
 	define('ROOT_PATH',dirname(__FILE__));//直接定死了
 	// define('STATIC_PATH',dirname($_SERVER['PHP_SELF'])); //这种方式是错误的
 	define('STATIC_PATH',substr($_SERVER['PHP_SELF'],0,strpos($_SERVER['PHP_SELF'],"NeiRongGuanLiXiTong"))."NeiRongGuanLiXiTong");
+
+	
 ?>
