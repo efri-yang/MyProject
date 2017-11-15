@@ -22,4 +22,9 @@
 	$obj=new BaseClass();
 	$obj=new SubClass();
 	$obj=new OtherSubClass();
+
+
+
+	
+
 ?>
