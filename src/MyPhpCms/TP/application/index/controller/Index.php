@@ -11,5 +11,9 @@ class Index
         
         dump(config());
     }
+
+    public function say(){
+    	return "<h1>Index模块——Index控制器——say方法</h1>";
+    }
     
 }
