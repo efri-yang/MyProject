@@ -9,26 +9,26 @@ class Index extends Controller
     public function index()
     {	
 
-    	$list=[
-    		'user1'=>[
-    			'name'=>'y1',
-    			'email'=>'01'
-    		],
-    		'user2'=>[
-    			'name'=>'y2',
-    			'email'=>'02'
-    		],
-    		'user3'=>[
-    			'name'=>'y3',
-    			'email'=>'03'
-    		]
-    	];
+    	// $list=[
+    	// 	'user1'=>[
+    	// 		'name'=>'y1',
+    	// 		'email'=>'01'
+    	// 	],
+    	// 	'user2'=>[
+    	// 		'name'=>'y2',
+    	// 		'email'=>'02'
+    	// 	],
+    	// 	'user3'=>[
+    	// 		'name'=>'y3',
+    	// 		'email'=>'03'
+    	// 	]
+    	// ];
 
-    	$list=[];
-    	$this->assign('list',$list);
-    	return $this->fetch();	
+    	// $list=[];
+    	// $this->assign('list',$list);
+    	// return $this->fetch();
 		
-		
+		return $this->fetch('index',['name'=>'thinkphp']);
 		
     }
 
