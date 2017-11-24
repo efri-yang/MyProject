@@ -1,24 +1,13 @@
 <?php
-	namespace app\admin\controller;
-
-	use app\common\controller\Index as commonIndex;
-	use think\Config;
-	class Index{
+namespace app\admin\controller;
+use think\Request;
+use think\View;
+use think\Controller;
+	class Index extends Controller{
 		public function index(){
-			// // echo "<h1>admin——>Index控制器——>index方法</h1>";
-			// $config=[
-			// 	"username"=>"application——admin——controller——yyh"
-			// ];
-			return "admin-index";
+			$this->assign("title","page Index");
+			return $this->fetch("index");
 		}
-		public function demo(){
-			return  "asdfsadfasdf——DEMO";
-		}
-		 public function common(){
-			$common=new commonIndex();
-			return $common->index();
-		}
-
 	}
 
 ?>
