@@ -1,14 +1,5 @@
 <?php
-	/**
-	 * 
-	 */
-	// return [
-	// 	'url_route_on'           => true,
-	// 	'url_route_must'         => false
-	// ]
-	
 	return [
-		'default_return_type'    => 'html',
 		'template'               => [
 	        // 模板引擎类型 支持 php think 支持扩展
 	        'type'         => 'Think',
@@ -28,8 +19,8 @@
 	        'taglib_begin' => '{',
 	        // 标签库标签结束标记
 	        'taglib_end'   => '}',
-	        // 'layout_on'=>'true',
-	        // 'layout_name'=>"layout"
+	        'layout_on' => true,
+	        'layout_name' => "layout"
 	    ]
 	];
 ?>
