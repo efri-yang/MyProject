@@ -28,6 +28,10 @@
 	        'taglib_begin' => '{',
 	        // 标签库标签结束标记
 	        'taglib_end'   => '}',
-	    ]
+	    ],
+	    'view_replace_str' => [
+			'__PUBLIC__'=>'/public/',
+			'__ROOT__' => '/',
+		]
 	];
 ?>

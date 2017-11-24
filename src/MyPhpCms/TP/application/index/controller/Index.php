@@ -28,8 +28,16 @@ class Index extends Controller
     	// $this->assign('list',$list);
     	// return $this->fetch();
 		
-		return $this->fetch('index',['name'=>'thinkphp']);
-		
+		// return $this->fetch('index',['name'=>'thinkphp']);
+		// return $this->display("xxxxx{name}",['name'=>"yyh"]);
+        
+        // return view("index",['name'=>'thinkphp']); 
+        // 
+      
+        // return $this->fetch("index",['name'=>"yyh"]);
+        $this->assign('name',"yyh");
+        return $this->fetch();
+	
     }
 
 	
