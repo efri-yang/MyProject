@@ -14,7 +14,8 @@ class Index extends Controller
 
     	// $res=Db::table('user')->where('id',24)->setField('email',"xxx@qq.com");
     	// $res=Db::table('user')->update(['username' => 'thinkphp','id'=>22]);
-    	$res=Db::getTableInfo("user");
+    	$data=["yyh1cccccccc",md2("yyh")];
+    	$res=Db::table('use')->field('username,password')->insert($data);
     	dump($res);
     	// Db::table('user')->chunk(2,function($users){
     	// 	foreach($users as $key =>$user){
