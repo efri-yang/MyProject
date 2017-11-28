@@ -12,13 +12,11 @@ use app\index\model\User;
 class Index extends Controller
 {
     public function index(){
-
-    	$user=new User();
-    	$user->username="ccsadf";
-    	$user->password=md5("yyh");
-    	$user->save();
-    	echo $user->create_time;
-
+		$user = User::get(13);
+		$user->username = 'THINKPHP666';
+		$user->password =md5("ccc");
+		$user->save();
+		echo $user->id;
 
 
   //   	$user=User::create([
