@@ -4,6 +4,8 @@ namespace app\index\controller;
 use think\Controller;
 use think\Db;
 
+use app\index\model\User;
+
 
 
 // use think\Loader;
@@ -11,12 +13,31 @@ class Index extends Controller
 {
     public function index(){
 
+    	$user=new User();
+    	$user->username="ccsadf";
+    	$user->password=md5("yyh");
+    	$user->save();
+    	echo $user->create_time;
 
+
+
+  //   	$user=User::create([
+  //   		'username'=>'thinkphp',
+  //   		'password'=>md5("2ccc"),
+  //   		'email'=>"qq.com"
+  //   	]);
+  //   	echo $user->username;
+		// echo $user->email;
+		// echo $user->id;
+
+
+		// 获取自增ID
     	// $res=Db::table('user')->where('id',24)->setField('email',"xxx@qq.com");
     	// $res=Db::table('user')->update(['username' => 'thinkphp','id'=>22]);
-    	$data=["yyh1cccccccc",md2("yyh")];
-    	$res=Db::table('use')->field('username,password')->insert($data);
-    	dump($res);
+    	// $data=["username"=>"yyh1cccccccc","password"=>md5("yyh"),"email"=>"xxxx@qq.com"];
+    	// $res=Db::table('user')->field('username,password')->insert($data);
+    	// $res=Db::table('user')->limit(3)->page(1)->select();
+    	// dump($res);
     	// Db::table('user')->chunk(2,function($users){
     	// 	foreach($users as $key =>$user){
     	// 		dump($user);
