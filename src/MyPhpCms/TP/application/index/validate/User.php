@@ -4,7 +4,7 @@ use think\Validate;
 class User extends Validate{
 		protected $rule = [
 	        'username|用户名' => 'require|alphaNum', //是否为字母和数字
-	        'password|密码' => 'require|length:6,20',
+	        'password|密码' => 'require|length:1,20',
 	        
 	    ];
 
@@ -13,8 +13,7 @@ class User extends Validate{
 	        'username.require' => '请输入用户名',
 	        'username.alphaNum' => '用户名不合法',
 	        'password.require' => '密码不能为空',
-	        'password.length' => '密码长度6-20位',
-
+	        'password.length' => '密码长度1-20位',
 	    ];
 
 	    //定义验证场景
