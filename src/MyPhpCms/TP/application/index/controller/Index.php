@@ -36,10 +36,12 @@
 				// if(!$validate->check($data)){
     // 				dump($validate->getError());
 				// }
-					$result = $this->validate($data,'User.checklogin');
-					print_r($result);
+					$result = $this->validate($data,"User.checklogin");
 					if(true !== $result){
-					    dump($result);
+					    $this->error($result);
+					}else{
+						
+						
 					}
 
 		 	}
