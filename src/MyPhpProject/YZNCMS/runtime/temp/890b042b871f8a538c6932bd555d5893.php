@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"G:\xampp\htdocs\MyProject\src\MyPhpProject\YZNCMS/apps/admin\view\login.html";i:1510727775;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"G:\xampp\htdocs\MyProject\src\MyPhpProject\YZNCMS/apps/admin\view\login.html";i:1511882448;}*/ ?>
 <!doctype html>
 <html>
 <head>
@@ -32,7 +32,7 @@
         <div class="submit"> <span>
             <div class="code">
               <div class="arrow"></div>
-              <div class="verifycode"><img src="<?php echo url('index/getVerify'); ?>" name="codeimage" id="codeimage" border="0"/></div>
+              <div class="verifycode"><img src="<?php echo url('admin1/index/getVerify'); ?>" name="codeimage" id="codeimage" border="0"/></div>
               <a href="JavaScript:void(0);" id="hide" class="close" title="关闭"><i></i></a><a href="JavaScript:void(0);"  class="reloadverify" title="看不清,点击更换验证码"><i></i></a>
             </div>
             <input name="captcha" type="text" required class="input-code" id="captcha" placeholder="输入验证" title="验证码为4个字符" value="" >

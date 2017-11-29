@@ -19,7 +19,7 @@ class User extends Validate
 {
     //定义验证规则
     protected $rule = [
-        'username|用户名' => 'require|alphaNum',
+        'username|用户名' => 'require|alphaNum', //是否为字母和数字
         'password|密码' => 'require|length:6,20',
 
     ];

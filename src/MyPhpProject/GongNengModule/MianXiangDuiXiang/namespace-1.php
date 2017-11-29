@@ -13,6 +13,8 @@
 	}
 
 	echo $a=\strlen("11");
+
+	// echo $a=strlen("11"); 都是输出2
 	
 
 ?>
