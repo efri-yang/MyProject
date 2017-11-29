@@ -1,9 +1,7 @@
 <?php
-	namespace app\admin\validate;
-	use think\Validate;
-
-
-	class User extends Validate{
+namespace app\index\validate;
+use think\Validate;
+class User extends Validate{
 		protected $rule = [
 	        'username|用户名' => 'require|alphaNum', //是否为字母和数字
 	        'password|密码' => 'require|length:6,20',
@@ -19,9 +17,9 @@
 	    ];
 
 	    //定义验证场景
-	    protected $scene = [
-	        //登录验证
-	        'checklogin' => ['username', 'password'],
-	    ];
+	    // protected $scene = [
+	    //     //登录验证
+	    //     'checklogin' => ['username', 'password'],
+	    // ];
 	}
 ?>
