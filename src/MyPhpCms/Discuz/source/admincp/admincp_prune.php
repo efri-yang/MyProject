@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_prune.php 29902 2012-05-02 08:19:00Z liulanbo $
+ *      $Id: admincp_prune.php 29900 2012-05-02 08:17:44Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -102,7 +102,6 @@ EOT;
 
 	loadcache('posttableids');
 	$posttable = in_array($_GET['posttableid'], $_G['cache']['posttableids']) ? $_GET['posttableid'] : 0;
-	$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
 	foreach(C::t('forum_post')->fetch_all($posttable, ($pids ? explode(',', $pids) : $_GET['pidarray']), false) as $post) {
 		$prune['forums'][] = $post['fid'];
 		$prune['thread'][$post['tid']]++;
@@ -110,12 +109,6 @@ EOT;
 		$pidsdelete[] = $post['pid'];
 		if($post['first']) {
 			$tidsdelete[] = $post['tid'];
-		}
-
-		if($post['first']) {
-			$log_handler->myThreadLog('delete', array('tid' => $post['tid']));
-		} else {
-			$log_handler->myPostLog('delete', array('pid' => $post['pid']));
 		}
 	}
 

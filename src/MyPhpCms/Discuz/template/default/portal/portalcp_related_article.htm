@@ -32,7 +32,7 @@
 	<!--{loop $articlelist $ra}-->
 		<li id="raid_li_$ra[aid]">
 			<input type="hidden" name="raids[]" value="$ra[aid]" size="5">
-			<a href="portal.php?mod=view&aid=$ra[aid]" target="_blank">$ra[title]</a>
+			<a href="{echo fetch_article_url($ra);}" target="_blank">$ra[title]</a>
 			({lang article_id}: $ra[aid])
 			<a href="javascript:;" onclick="raid_delete($ra[aid]);" class="xg1">{lang delete}</a>
 		</li>

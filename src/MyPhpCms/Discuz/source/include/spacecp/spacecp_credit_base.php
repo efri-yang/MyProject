@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: spacecp_credit_base.php 31670 2012-09-20 03:20:56Z zhengqingpeng $
+ *      $Id: spacecp_credit_base.php 33663 2013-07-30 05:06:43Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -80,10 +80,14 @@ if($_GET['op'] == 'base') {
 	}
 
 	if(submitcheck('addfundssubmit')) {
+		if(!isset($_GET['bank_type'])) {
+			showmessage('memcp_credits_addfunds_msg_notype', '', array(), array('showdialog' => 1, 'showmsg' => true, 'closetime' => true));
+		}
 		$apitype = is_numeric($_GET['bank_type']) ? 'tenpay' : $_GET['bank_type'];
 		if($apitype == 'card') {
-			if($_G['setting']['seccodestatus'] & 16) {
-				if(!check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
+			list($seccodecheck) = seccheck('card');
+			if($seccodecheck) {
+				if(!check_seccode($_GET['seccodeverify'], $_GET['seccodehash'])) {
 					showmessage('submit_seccode_invalid', '', array(), array('showdialog' => 1, 'showmsg' => true, 'closetime' => true));
 				}
 			}
@@ -183,7 +187,7 @@ if($_GET['op'] == 'base') {
 		list($tmp['uid']) = $ucresult;
 
 		if($tmp['uid'] <= 0) {
-			showmessage('credits_password_invalid');
+			showmessage('credits_password_invalid', '', array(), array('showdialog' => 1, 'showmsg' => true, 'closetime' => true));
 		}
 
 		updatemembercount($_G['uid'], array($_G['setting']['creditstransextra'][9] => -$amount), 1, 'TFR', $to['uid']);

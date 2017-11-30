@@ -467,7 +467,8 @@
 		<form id="blockformitemdata" name="blockformitemdata" method="post" autocomplete="off" action="portal.php?mod=portalcp&ac=block&op=itemdata&bid=$block[bid]{if $_GET[from]}&from=$_GET[from]{/if}">
 			<table class="dt mtm mbm">
 				<tr>
-					<th width="40">{lang select}</th>
+					<th width="40">{lang delete}</th>
+					<th>{lang display_order}</th>
 					<th>{lang title}</th>
 					<th>{lang pass_moderate_time}</th>
 					<th>{lang is_stick}</th>
@@ -476,6 +477,8 @@
 				<!--{loop $datalist $item}-->
 				<tr>
 					<td><input type="checkbox" class="pc" name="ids[]" value="$item[dataid]" /></td>
+					<td><input type="hidden" name="olddisplayorder[{$item[dataid]}]" value="$item[displayorder]" />
+						<input type="input" class="px" name="displayorder[{$item[dataid]}]" value="$item[displayorder]" size="2" maxlength="4" /></td>
 					<td><a href="$item[url]" target="_blank">$item['title']</a></td>
 					<td>$item['verifiedtime']</td>
 					<td><!--{if $item['stickgrade']}-->{lang stick} $item[stickgrade]<!--{else}-->{lang no}<!--{/if}--></td>
@@ -490,7 +493,7 @@
 						<input type="hidden" name="handlekey" value="$_GET['handlekey']" />
 						<input type="hidden" name="deletesubmit" value="true" />
 						<input type="hidden" name="formhash" value="{FORMHASH}" />
-						<button type="submit" class="pn pnc"><strong>{lang delete}</strong></button>
+						<button type="submit" class="pn pnc"><strong>{lang confirms}</strong></button>
 					</td>
 				</tr>
 			</table>

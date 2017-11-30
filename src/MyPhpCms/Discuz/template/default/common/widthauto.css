@@ -35,8 +35,8 @@ Created & Modified by Pony.
 
 #mu ul { border-bottom: 1px solid {COMMONBORDER}; background-image: none; background-color: {COMMONBG}; }
 
-.pg_post .ct2_a { margin-left: 0; margin-right: 150px; padding-left: 0; }
-	.pg_post .ct2_a .appl { margin-left: 0; margin-right: -150px; background: none; }
+.pg_post .ct2_a { margin-left: 0; padding-left: 0; }
+	.pg_post .ct2_a .appl { margin-left: 0; background: none; }
 .pg_modcp .ct2_a, .pg_announcement .ct2_a { border: none; }
 	.pg_modcp .ct2_a .mn, .pg_announcement .ct2_a .mn { margin-right: 0; padding-top: 0; }
 
@@ -44,3 +44,7 @@ Created & Modified by Pony.
 .tdats .tfxf { width: 79.5%; }
 .tdats .tfx, .tdats .tb, .tscr { width: 39.5%; }
 	.tscr .tdat, .tscr .tdat th, .tscr .tdat td { width: 100%; }
+
+.widthauto #toptb #diy-tg_menu { margin: -7px 0 0 -1px; }
+.widthauto .switchwidth { background-position: 100% -18px; }
+.widthauto .switchwidth:hover { background: url({IMGDIR}/switch_width.png) no-repeat 100% -54px; }

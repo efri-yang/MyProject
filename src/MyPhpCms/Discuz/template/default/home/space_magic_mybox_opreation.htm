@@ -74,7 +74,7 @@
 				</p>
 				<!--{/if}-->
 				<dl class="xld cl">
-					<dd class="m"><img src="{STATICURL}image/magic/$magic[pic]" alt="$magic[name]"></dd>
+					<dd class="m"><img src="$magic[pic]" alt="$magic[name]"></dd>
 					<dt class="z">
 						$magic[name]
 						<div class="pns xw0 cl">
@@ -96,7 +96,7 @@
 				<!--{/if}-->
 			<!--{elseif $operation == 'sell'}-->
 				<dl class="xld cl">
-					<dd class="m"><img src="{STATICURL}image/magic/$magic[pic]" alt="$magic[name]"></dd>
+					<dd class="m"><img src="$magic[pic]" alt="$magic[name]"></dd>
 					<dt class="z">
 						<p class="mtm mbm">{lang magics_operation_sell} <input name="magicnum" type="text" size="2" value="1" class="px pxs" /> {lang magics_unit}"$magic[name]"</p>
 						<p class="xw0">
@@ -112,7 +112,7 @@
 				<input type="hidden" name="operatesubmit" value="yes" />
 			<!--{elseif $operation == 'drop'}-->
 				<dl class="xld cl">
-					<dd class="m"><img src="{STATICURL}image/magic/$magic[pic]" alt="$magic[name]"></dd>
+					<dd class="m"><img src="$magic[pic]" alt="$magic[name]"></dd>
 					<dt class="z">
 						<p class="mtm mbm">{lang magics_operation_drop} <input name="magicnum" type="text" size="2" autocomplete="off" value="1" class="px pxs" /> {lang magics_unit}"$magic[name]"</p>
 						<p class="xw0">{lang magics_weight}: $magic[weight]</p>

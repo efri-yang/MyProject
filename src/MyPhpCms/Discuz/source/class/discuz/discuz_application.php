@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: discuz_application.php 34943 2014-09-05 07:43:38Z nemohou $
+ *      $Id: discuz_application.php 36342 2017-01-09 01:15:30Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -119,6 +119,7 @@ class discuz_application extends discuz_base{
 			'timestamp' => TIMESTAMP,
 			'starttime' => microtime(true),
 			'clientip' => $this->_get_client_ip(),
+			'remoteport' => $_SERVER['REMOTE_PORT'],
 			'referer' => '',
 			'charset' => '',
 			'gzipcompress' => '',
@@ -131,6 +132,8 @@ class discuz_application extends discuz_base{
 			'siteurl' => '',
 			'siteroot' => '',
 			'siteport' => '',
+
+			'pluginrunlist' => !defined('PLUGINRUNLIST') ? array() : explode(',', PLUGINRUNLIST),
 
 			'config' => array(),
 			'setting' => array(),
@@ -163,9 +166,15 @@ class discuz_application extends discuz_base{
 			),
 
 			'mobile' => '',
-
+			'notice_structure' => array(
+				'mypost' => array('post','pcomment','activity','reward','goods','at'),
+				'interactive' => array('poke','friend','wall','comment','click','sharenotice'),
+				'system' => array('system','myapp','credit','group','verify','magic','task','show','group','pusearticle','mod_member','blog','article'),
+				'manage' => array('mod_member','report','pmreport'),
+				'app' => array(),
+			),
+			'mobiletpl' => array('1' => 'mobile', '2' => 'touch', '3' => 'wml', 'yes' => 'mobile'),
 		);
-
 		$_G['PHP_SELF'] = dhtmlspecialchars($this->_get_script_url());
 		$_G['basescript'] = CURSCRIPT;
 		$_G['basefilename'] = basename($_G['PHP_SELF']);
@@ -175,11 +184,16 @@ class discuz_application extends discuz_base{
 		} elseif(defined('IN_ARCHIVER')) {
 			$sitepath = preg_replace("/\/archiver/i", '', $sitepath);
 		}
-		$_G['siteurl'] = dhtmlspecialchars('http://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
+		if(defined('IN_NEWMOBILE')) {
+			$sitepath = preg_replace("/\/m/i", '', $sitepath);
+		}
+		$_G['isHTTPS'] = ($_SERVER['HTTPS'] && strtolower($_SERVER['HTTPS']) != 'off') ? true : false;
+		$_G['scheme'] = 'http'.($_G['isHTTPS'] ? 's' : '');
+		$_G['siteurl'] = dhtmlspecialchars($_G['scheme'].'://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
 
 		$url = parse_url($_G['siteurl']);
 		$_G['siteroot'] = isset($url['path']) ? $url['path'] : '';
-		$_G['siteport'] = empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' ? '' : ':'.$_SERVER['SERVER_PORT'];
+		$_G['siteport'] = empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443' ? '' : ':'.$_SERVER['SERVER_PORT'];
 
 		if(defined('SUB_DIR')) {
 			$_G['siteurl'] = str_replace(SUB_DIR, '/', $_G['siteurl']);
@@ -291,7 +305,6 @@ class discuz_application extends discuz_base{
 			define('DISCUZ_DEBUG', false);
 			error_reporting(0);
 		}
-
 		define('STATICURL', !empty($_config['output']['staticurl']) ? $_config['output']['staticurl'] : 'static/');
 		$this->var['staticurl'] = STATICURL;
 
@@ -308,9 +321,6 @@ class discuz_application extends discuz_base{
 
 	private function _init_output() {
 
-		if($this->config['security']['urlxssdefend'] && $_SERVER['REQUEST_METHOD'] == 'GET' && !empty($_SERVER['REQUEST_URI'])) {
-			$this->_xss_check();
-		}
 
 		if($this->config['security']['attackevasive'] && (!defined('CURSCRIPT') || !in_array($this->var['mod'], array('seccode', 'secqaa', 'swfupload')) && !defined('DISABLEDEFENSE'))) {
 			require_once libfile('misc/security', 'include');
@@ -342,33 +352,55 @@ class discuz_application extends discuz_base{
 	}
 
 	private function _xss_check() {
-		$temp = strtoupper(urldecode(urldecode($_SERVER['REQUEST_URI'])));
-		if(strpos($temp, '<') !== false || strpos($temp, '"') !== false || strpos($temp, 'CONTENT-TRANSFER-ENCODING') !== false) {
+
+		static $check = array('"', '>', '<', '\'', '(', ')', 'CONTENT-TRANSFER-ENCODING');
+
+		if(isset($_GET['formhash']) && $_GET['formhash'] !== formhash()) {
 			system_error('request_tainting');
 		}
+
+		if($_SERVER['REQUEST_METHOD'] == 'GET' ) {
+			$temp = $_SERVER['REQUEST_URI'];
+		} elseif(empty ($_GET['formhash'])) {
+			$temp = $_SERVER['REQUEST_URI'].file_get_contents('php://input');
+		} else {
+			$temp = '';
+		}
+
+		if(!empty($temp)) {
+			$temp = strtoupper(urldecode(urldecode($temp)));
+			foreach ($check as $str) {
+				if(strpos($temp, $str) !== false) {
+					system_error('request_tainting');
+				}
+			}
+		}
+
 		return true;
 	}
 
 	private function _get_client_ip() {
 		$ip = $_SERVER['REMOTE_ADDR'];
-		if (isset($_SERVER['HTTP_CLIENT_IP']) && preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}$/', $_SERVER['HTTP_CLIENT_IP'])) {
-			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		} elseif(isset($_SERVER['HTTP_X_FORWARDED_FOR']) AND preg_match_all('#\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}#s', $_SERVER['HTTP_X_FORWARDED_FOR'], $matches)) {
-			foreach ($matches[0] AS $xip) {
-				if (!preg_match('#^(10|172\.16|192\.168)\.#', $xip)) {
-					$ip = $xip;
-					break;
+		if (!$this->config['security']['onlyremoteaddr']) {
+			if (isset($_SERVER['HTTP_CLIENT_IP']) && preg_match('/^([0-9]{1,3}\.){3}[0-9]{1,3}$/', $_SERVER['HTTP_CLIENT_IP'])) {
+				$ip = $_SERVER['HTTP_CLIENT_IP'];
+			} elseif(isset($_SERVER['HTTP_X_FORWARDED_FOR']) AND preg_match_all('#\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}#s', $_SERVER['HTTP_X_FORWARDED_FOR'], $matches)) {
+				foreach ($matches[0] AS $xip) {
+					if (!preg_match('#^(10|172\.16|192\.168)\.#', $xip)) {
+						$ip = $xip;
+						break;
+					}
 				}
 			}
 		}
-		return $ip;
+		return $ip == '::1' ? '127.0.0.1' : $ip;
 	}
 
 	private function _init_db() {
 		if($this->init_db) {
-			$driver = 'db_driver_mysql';
-			if(count(getglobal('config/db/slave'))) {
-				$driver = 'db_driver_mysql_slave';
+			$driver = function_exists('mysql_connect') ? 'db_driver_mysql' : 'db_driver_mysqli';
+			if(getglobal('config/db/slave')) {
+				$driver = function_exists('mysql_connect') ? 'db_driver_mysql_slave' : 'db_driver_mysqli_slave';
 			}
 			DB::init($driver, $this->config['db']);
 		}
@@ -396,13 +428,20 @@ class discuz_application extends discuz_base{
 
 			if($this->session->get('groupid') == 6) {
 				$this->var['member']['groupid'] = 6;
-				sysmessage('user_banned');
+				if(!defined('IN_MOBILE_API')) {
+					sysmessage('user_banned');
+				} else {
+					mobile_core::result(array('error' => 'user_banned'));
+				}
 			}
 
 			if($this->var['uid'] && !$sessionclose && ($this->session->isnew || ($this->session->get('lastactivity') + 600) < TIMESTAMP)) {
 				$this->session->set('lastactivity', TIMESTAMP);
 				if($this->session->isnew) {
-					C::t('common_member_status')->update($this->var['uid'], array('lastip' => $this->var['clientip'], 'lastvisit' => TIMESTAMP));
+					if($this->var['member']['lastip'] && $this->var['member']['lastvisit']) {
+						dsetcookie('lip', $this->var['member']['lastip'].','.$this->var['member']['lastvisit']);
+					}
+					C::t('common_member_status')->update($this->var['uid'], array('lastip' => $this->var['clientip'], 'port' => $this->var['remoteport'], 'lastvisit' => TIMESTAMP));
 				}
 			}
 
@@ -430,8 +469,23 @@ class discuz_application extends discuz_base{
 				$this->_init_guest();
 			}
 
-			if($user && $user['groupexpiry'] > 0 && $user['groupexpiry'] < TIMESTAMP && (getgpc('mod') != 'spacecp' || CURSCRIPT != 'home')) {
-				dheader('location: home.php?mod=spacecp&ac=usergroup&do=expiry');
+			if($user && $user['groupexpiry'] > 0 && $user['groupexpiry'] < TIMESTAMP) {
+				$memberfieldforum = C::t('common_member_field_forum')->fetch($discuz_uid);
+				$groupterms = dunserialize($memberfieldforum['groupterms']);
+				if(!empty($groupterms['main'])) {
+					C::t("common_member")->update($user['uid'], array('groupexpiry'=> 0, 'groupid' => $groupterms['main']['groupid'], 'adminid' => $groupterms['main']['adminid']));
+					$user['groupid'] = $groupterms['main']['groupid'];
+					$user['adminid'] = $groupterms['main']['adminid'];
+					unset($groupterms['main'], $groupterms['ext'][$this->var['member']['groupid']]);
+					$this->var['member'] = $user;
+					C::t('common_member_field_forum')->update($discuz_uid, array('groupterms' => serialize($groupterms)));
+				} elseif((getgpc('mod') != 'spacecp' || CURSCRIPT != 'home') && CURSCRIPT != 'member') {
+					dheader('location: home.php?mod=spacecp&ac=usergroup&do=expiry');
+				}
+			}
+
+			if($user && $user['freeze'] && (getgpc('mod') != 'spacecp' && getgpc('mod') != 'misc'  || CURSCRIPT != 'home') && CURSCRIPT != 'member' && CURSCRIPT != 'misc') {
+				dheader('location: home.php?mod=spacecp&ac=profile&op=password');
 			}
 
 			$this->cachelist[] = 'usergroup_'.$this->var['member']['groupid'];
@@ -441,6 +495,20 @@ class discuz_application extends discuz_base{
 
 		} else {
 			$this->_init_guest();
+		}
+		setglobal('groupid', getglobal('groupid', 'member'));
+		!empty($this->cachelist) && loadcache($this->cachelist);
+
+		if($this->var['member'] && $this->var['group']['radminid'] == 0 && $this->var['member']['adminid'] > 0 && $this->var['member']['groupid'] != $this->var['member']['adminid'] && !empty($this->var['cache']['admingroup_'.$this->var['member']['adminid']])) {
+			$this->var['group'] = array_merge($this->var['group'], $this->var['cache']['admingroup_'.$this->var['member']['adminid']]);
+		}
+
+		if($this->var['group']['allowmakehtml'] && isset($_GET['_makehtml'])) {
+			$this->var['makehtml'] = 1;
+			$this->_init_guest();
+			loadcache(array('usergroup_7'));
+			$this->var['group'] = $this->var['cache']['usergroup_7'];
+			unset($this->var['inajax']);
 		}
 
 		if(empty($this->var['cookie']['lastvisit'])) {
@@ -454,12 +522,12 @@ class discuz_application extends discuz_base{
 		setglobal('username', getglobal('username', 'member'));
 		setglobal('adminid', getglobal('adminid', 'member'));
 		setglobal('groupid', getglobal('groupid', 'member'));
-
-		!empty($this->cachelist) && loadcache($this->cachelist);
-
-		if($this->var['member'] && $this->var['group']['radminid'] == 0 && $this->var['member']['adminid'] > 0 && $this->var['member']['groupid'] != $this->var['member']['adminid'] && !empty($this->var['cache']['admingroup_'.$this->var['member']['adminid']])) {
-			$this->var['group'] = array_merge($this->var['group'], $this->var['cache']['admingroup_'.$this->var['member']['adminid']]);
+		if($this->var['member']['newprompt']) {
+			$this->var['member']['newprompt_num'] = C::t('common_member_newprompt')->fetch($this->var['member']['uid']);
+			$this->var['member']['newprompt_num'] = unserialize($this->var['member']['newprompt_num']['data']);
+			$this->var['member']['category_num'] = helper_notification::get_categorynum($this->var['member']['newprompt_num']);
 		}
+
 	}
 
 	private function _init_guest() {
@@ -485,6 +553,11 @@ class discuz_application extends discuz_base{
 	}
 
 	private function _init_misc() {
+
+		if($this->config['security']['urlxssdefend'] && !defined('DISABLEXSSCHECK')) {
+			$this->_xss_check();
+		}
+
 		if(!$this->init_misc) {
 			return false;
 		}
@@ -510,18 +583,34 @@ class discuz_application extends discuz_base{
 			$allowvisitflag = in_array(CURSCRIPT, array('member')) || defined('ALLOWGUEST') && ALLOWGUEST;
 			if($this->var['group'] && isset($this->var['group']['allowvisit']) && !$this->var['group']['allowvisit']) {
 				if($this->var['uid'] && !$allowvisitflag) {
-					showmessage('user_banned');
+					if(!defined('IN_MOBILE_API')) {
+						showmessage('user_banned');
+					} else {
+						mobile_core::result(array('error' => 'user_banned'));
+					}
 				} elseif((!defined('ALLOWGUEST') || !ALLOWGUEST) && !in_array(CURSCRIPT, array('member', 'api')) && !$this->var['inajax']) {
-					dheader('location: member.php?mod=logging&action=login&referer='.rawurlencode($this->var['siteurl'].$this->var['basefilename'].($_SERVER['QUERY_STRING'] ? '?'.$_SERVER['QUERY_STRING'] : '')));
+					if(!defined('IN_MOBILE_API')) {
+						dheader('location: member.php?mod=logging&action=login&referer='.rawurlencode($this->var['siteurl'].$this->var['basefilename'].($_SERVER['QUERY_STRING'] ? '?'.$_SERVER['QUERY_STRING'] : '')));
+					} else {
+						mobile_core::result(array('error' => 'to_login'));
+					}
 				}
 			}
 			if(isset($this->var['member']['status']) && $this->var['member']['status'] == -1 && !$allowvisitflag) {
-				showmessage('user_banned');
+				if(!defined('IN_MOBILE_API')) {
+					showmessage('user_banned');
+				} else {
+					mobile_core::result(array('error' => 'user_banned'));
+				}
 			}
 		}
 
 		if($this->var['setting']['ipaccess'] && !ipaccess($this->var['clientip'], $this->var['setting']['ipaccess'])) {
-			showmessage('user_banned');
+			if(!defined('IN_MOBILE_API')) {
+				showmessage('user_banned');
+			} else {
+				mobile_core::result(array('error' => 'user_banned'));
+			}
 		}
 
 		if($this->var['setting']['bbclosed']) {
@@ -530,7 +619,11 @@ class discuz_application extends discuz_base{
 			} else {
 				$closedreason = C::t('common_setting')->fetch('closedreason');
 				$closedreason = str_replace(':', '&#58;', $closedreason);
-				showmessage($closedreason ? $closedreason : 'board_closed', NULL, array('adminemail' => $this->var['setting']['adminemail']), array('login' => 1));
+				if(!defined('IN_MOBILE_API')) {
+					showmessage($closedreason ? $closedreason : 'board_closed', NULL, array('adminemail' => $this->var['setting']['adminemail']), array('login' => 1));
+				} else {
+					mobile_core::result(array('error' => $closedreason ? $closedreason : 'board_closed'));
+				}
 			}
 		}
 
@@ -605,11 +698,19 @@ class discuz_application extends discuz_base{
 	}
 
 	public function _init_style() {
-		$styleid = !empty($this->var['cookie']['styleid']) ? $this->var['cookie']['styleid'] : 0;
-		if(intval(!empty($this->var['forum']['styleid']))) {
-			$this->var['cache']['style_default']['styleid'] = $styleid = $this->var['forum']['styleid'];
-		} elseif(intval(!empty($this->var['category']['styleid']))) {
-			$this->var['cache']['style_default']['styleid'] = $styleid = $this->var['category']['styleid'];
+		if(defined('IN_MOBILE')) {
+			$mobile = max(1, intval(IN_MOBILE));
+			if($mobile && $this->var['setting']['styleid'.$mobile]) {
+				$styleid = $this->var['setting']['styleid'.$mobile];
+			}
+		} else {
+			$styleid = !empty($this->var['cookie']['styleid']) ? $this->var['cookie']['styleid'] : 0;
+
+			if(intval(!empty($this->var['forum']['styleid']))) {
+				$this->var['cache']['style_default']['styleid'] = $styleid = $this->var['forum']['styleid'];
+			} elseif(intval(!empty($this->var['category']['styleid']))) {
+				$this->var['cache']['style_default']['styleid'] = $styleid = $this->var['category']['styleid'];
+			}
 		}
 
 		$styleid = intval($styleid);
@@ -632,34 +733,40 @@ class discuz_application extends discuz_base{
 		if(!$this->init_mobile) {
 			return false;
 		}
-		if($this->var['inajax']) {
-			return false;
-		}
 
 		if(!$this->var['setting'] || !$this->var['setting']['mobile']['allowmobile'] || !is_array($this->var['setting']['mobile']) || IS_ROBOT) {
 			$nomobile = true;
 			$unallowmobile = true;
 		}
 
-		if(getgpc('mobile') === 'no') {
+		if(getgpc('forcemobile')) {
+			dsetcookie('dismobilemessage', '1', 3600);
+		}
+
+		$mobile = getgpc('mobile');
+		$mobileflag = isset($this->var['mobiletpl'][$mobile]);
+		if($mobile === 'no') {
 			dsetcookie('mobile', 'no', 3600);
 			$nomobile = true;
-		} elseif($this->var['cookie']['mobile'] == 'no' && getgpc('mobile') === 'yes') {
+		} elseif($this->var['cookie']['mobile'] == 'no' && $mobileflag) {
 			checkmobile();
 			dsetcookie('mobile', '');
 		} elseif($this->var['cookie']['mobile'] == 'no') {
 			$nomobile = true;
-		} elseif(!checkmobile()) {
+		} elseif(!($mobile_ = checkmobile())) {
 			$nomobile = true;
+		}
+		if(!$mobile || $mobile == 'yes') {
+			$mobile = isset($mobile_) ? $mobile_ : 2;
 		}
 
 		if(!$this->var['mobile'] && !$unallowmobile) {
-			if(getgpc('mobile') === 'yes') {
+			if($mobileflag) {
 				dheader("Location:misc.php?mod=mobile");
 			}
 		}
 
-		if($nomobile || (!$this->var['setting']['mobile']['mobileforward'] && getgpc('mobile') !== 'yes')) {
+		if($nomobile || (!$this->var['setting']['mobile']['mobileforward'] && !$mobileflag)) {
 			if($_SERVER['HTTP_HOST'] == $this->var['setting']['domain']['app']['mobile'] && $this->var['setting']['domain']['app']['default']) {
 				dheader("Location:http://".$this->var['setting']['domain']['app']['default'].$_SERVER['REQUEST_URI']);
 				return false;
@@ -680,12 +787,25 @@ class discuz_application extends discuz_base{
 			}
 			dheader("location:$mobileurl");
 		}
-		define('IN_MOBILE', true);
+		if($this->var['setting']['mobile']['allowmnew'] && !defined('IN_MOBILE_API')) {
+			dheader("location:".$this->var['siteurl'].'m/');
+		}
+		if($mobile === '3' && empty($this->var['setting']['mobile']['wml'])) {
+			return false;
+		}
+		define('IN_MOBILE', isset($this->var['mobiletpl'][$mobile]) ? $mobile : '2');
 		setglobal('gzipcompress', 0);
 
-		$arr = array(strstr($_SERVER['QUERY_STRING'], '&simpletype'), strstr($_SERVER['QUERY_STRING'], 'simpletype'), '&mobile=yes', 'mobile=yes');
-		$query_sting_tmp = str_replace($arr, '', $_SERVER['QUERY_STRING']);
-		$this->var['setting']['mobile']['nomobileurl'] = ($this->var['setting']['domain']['app']['forum'] ? 'http://'.$this->var['setting']['domain']['app']['forum'].'/' : $this->var['siteurl']).$this->var['basefilename'].($query_sting_tmp ? '?'.$query_sting_tmp.'&' : '?').'mobile=no';
+		$arr = array();
+		foreach(array_keys($this->var['mobiletpl']) as $mobiletype) {
+			$arr[] = '&mobile='.$mobiletype;
+			$arr[] = 'mobile='.$mobiletype;
+		}
+                parse_str($_SERVER['QUERY_STRING'], $query);
+                $query['mobile'] = 'no';
+                unset($query['simpletype']);
+                $query_sting_tmp = http_build_query($query);
+                $this->var['setting']['mobile']['nomobileurl'] = ($this->var['setting']['domain']['app']['forum'] ? 'http://'.$this->var['setting']['domain']['app']['forum'].'/' : $this->var['siteurl']).$this->var['basefilename'].'?'.$query_sting_tmp;
 
 		$this->var['setting']['lazyload'] = 0;
 
@@ -702,35 +822,20 @@ class discuz_application extends discuz_base{
 			}
 		}
 
-		if($_GET['simpletype']) {
-			if($_GET['simpletype'] == 'yes') {
-				$this->var['setting']['mobile']['mobilesimpletype'] = 1;
-				dsetcookie('simpletype', 1, 86400);
-			} else {
-				$this->var['setting']['mobile']['mobilesimpletype'] = 0;
-				dsetcookie('simpletype', 0, 86400);
-			}
-		} elseif($this->var['cookie']['simpletype']) {
-			$this->var['setting']['mobile']['mobilesimpletype'] = $this->var['cookie']['simpletype'] == 1 ? 1 : 0 ;
-		}
 
 		if(!$this->var['setting']['mobile']['mobilesimpletype']) {
 			$this->var['setting']['imagemaxwidth'] = 224;
 		}
 
 		$this->var['setting']['regstatus'] = $this->var['setting']['mobile']['mobileregister'] ? $this->var['setting']['regstatus'] : 0 ;
-		if(!$this->var['setting']['mobile']['mobileseccode']) {
-			$this->var['setting']['seccodestatus'] = 0;
-		}
-
-		$this->var['setting']['seccodedata']['animator'] = 0;
-		$this->var['setting']['seccodedata']['type'] = 0;
 
 		$this->var['setting']['thumbquality'] = 50;
+		$this->var['setting']['avatarmethod'] = 0;
 
 		$this->var['setting']['mobile']['simpletypeurl'] = array();
-		$this->var['setting']['mobile']['simpletypeurl'][0] = $this->var['siteurl'].$this->var['basefilename'].($query_sting_tmp ? '?'.$query_sting_tmp.'&' : '?').'mobile=yes&simpletype=no';
-		$this->var['setting']['mobile']['simpletypeurl'][1] =  $this->var['siteurl'].$this->var['basefilename'].($query_sting_tmp ? '?'.$query_sting_tmp.'&' : '?').'mobile=yes&simpletype=yes';
+		$this->var['setting']['mobile']['simpletypeurl'][0] = $this->var['siteurl'].$this->var['basefilename'].($query_sting_tmp ? '?'.$query_sting_tmp.'&' : '?').'mobile=1&simpletype=no';
+		$this->var['setting']['mobile']['simpletypeurl'][1] =  $this->var['siteurl'].$this->var['basefilename'].($query_sting_tmp ? '?'.$query_sting_tmp.'&' : '?').'mobile=1&simpletype=yes';
+		$this->var['setting']['mobile']['simpletypeurl'][2] =  $this->var['siteurl'].$this->var['basefilename'].($query_sting_tmp ? '?'.$query_sting_tmp.'&' : '?').'mobile=2';
 		unset($query_sting_tmp);
 		ob_start();
 	}

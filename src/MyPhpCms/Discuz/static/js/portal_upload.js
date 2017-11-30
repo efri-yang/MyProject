@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: portal_upload.js 32755 2013-03-06 08:12:50Z liulanbo $
+	$Id: portal_upload.js 32590 2013-02-22 09:42:48Z monkey $
 */
 
 var nowid = 0;

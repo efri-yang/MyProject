@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: class_credit.php 30465 2012-05-30 04:10:03Z zhengqingpeng $
+ *      $Id: class_credit.php 32967 2013-03-28 10:57:48Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -224,6 +224,9 @@ class credit {
 		for($i = 1; $i <= 8; $i++) {
 			if(isset($_G['setting']['extcredits'][$i])) {
 				$creditarr['extcredits'.$i] = intval($rule['extcredits'.$i]) * $this->coef;
+				if(defined('IN_MOBILE') && $creditarr['extcredits'.$i] > 0) {
+					$creditarr['extcredits'.$i] += $_G['setting']['creditspolicymobile'];
+				}
 				$updatecredit = true;
 			}
 		}
@@ -232,11 +235,29 @@ class credit {
 		}
 	}
 
+	function frequencycheck($uids) {
+		global $_G;
+		if(empty($_G['config']['security']['creditsafe']['second']) || empty($_G['config']['security']['creditsafe']['times'])) {
+			return true;
+		}
+		foreach($uids as $uid) {
+			$key = 'credit_fc'.$uid;
+			$v = intval(memory('get', $key));
+			memory('set', $key, ++$v, $_G['config']['security']['creditsafe']['second']);
+			if($v > $_G['config']['security']['creditsafe']['times']) {
+				system_error('credit frequency limit', true);
+				return false;
+			}
+		}
+		return true;
+	}
+
 	function updatemembercount($creditarr, $uids = 0, $checkgroup = true, $ruletxt = '') {
 		global $_G;
 
 		if(!$uids) $uids = intval($_G['uid']);
 		$uids = is_array($uids) ? $uids : array($uids);
+		$this->frequencycheck($uids);
 		if($uids && ($creditarr || $this->extrasql)) {
 			if($this->extrasql) $creditarr = array_merge($creditarr, $this->extrasql);
 			$sql = array();

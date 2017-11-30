@@ -9,25 +9,30 @@ $_config['db']['1']['dbuser'] = 'root';
 $_config['db']['1']['dbpw'] = 'yyh';
 $_config['db']['1']['dbcharset'] = 'utf8';
 $_config['db']['1']['pconnect'] = '0';
-$_config['db']['1']['dbname'] = 'ultrax';
+$_config['db']['1']['dbname'] = 'discuz';
 $_config['db']['1']['tablepre'] = 'pre_';
+$_config['db']['slave'] = '';
 $_config['db']['common']['slave_except_table'] = '';
 
 // --------------------------  CONFIG MEMORY  --------------------------- //
-$_config['memory']['prefix'] = 'kGk3Rq_';
+$_config['memory']['prefix'] = 'IucqRr_';
 $_config['memory']['redis']['server'] = '';
 $_config['memory']['redis']['port'] = 6379;
 $_config['memory']['redis']['pconnect'] = 1;
 $_config['memory']['redis']['timeout'] = '0';
+$_config['memory']['redis']['requirepass'] = '';
 $_config['memory']['redis']['serializer'] = 1;
 $_config['memory']['memcache']['server'] = '';
 $_config['memory']['memcache']['port'] = 11211;
 $_config['memory']['memcache']['pconnect'] = 1;
 $_config['memory']['memcache']['timeout'] = 1;
-$_config['memory']['apc'] = 1;
-$_config['memory']['xcache'] = 1;
-$_config['memory']['eaccelerator'] = 1;
-$_config['memory']['wincache'] = 1;
+$_config['memory']['apc'] = '0';
+$_config['memory']['apcu'] = '0';
+$_config['memory']['xcache'] = '0';
+$_config['memory']['eaccelerator'] = '0';
+$_config['memory']['wincache'] = '0';
+$_config['memory']['yac'] = '0';
+$_config['memory']['file']['server'] = '';
 
 // --------------------------  CONFIG SERVER  --------------------------- //
 $_config['server']['id'] = 1;
@@ -36,9 +41,6 @@ $_config['server']['id'] = 1;
 $_config['download']['readmod'] = 2;
 $_config['download']['xsendfile']['type'] = '0';
 $_config['download']['xsendfile']['dir'] = '/down/';
-
-// ---------------------------  CONFIG CACHE  --------------------------- //
-$_config['cache']['type'] = 'sql';
 
 // --------------------------  CONFIG OUTPUT  --------------------------- //
 $_config['output']['charset'] = 'utf-8';
@@ -51,12 +53,12 @@ $_config['output']['ajaxvalidate'] = '0';
 $_config['output']['iecompatible'] = '0';
 
 // --------------------------  CONFIG COOKIE  --------------------------- //
-$_config['cookie']['cookiepre'] = 'IOWq_';
+$_config['cookie']['cookiepre'] = 'iwpP_';
 $_config['cookie']['cookiedomain'] = '';
 $_config['cookie']['cookiepath'] = '/';
 
 // -------------------------  CONFIG SECURITY  -------------------------- //
-$_config['security']['authkey'] = '149f43cTE2YPtSg2';
+$_config['security']['authkey'] = '7dd9ef9b4ae7ac9e40f1b5ad90d8cb028ufXtDcXnOM0JAO54m';
 $_config['security']['urlxssdefend'] = 1;
 $_config['security']['attackevasive'] = '0';
 $_config['security']['querysafe']['status'] = 1;
@@ -80,6 +82,8 @@ $_config['security']['querysafe']['dnote']['3'] = '--';
 $_config['security']['querysafe']['dnote']['4'] = '"';
 $_config['security']['querysafe']['dlikehex'] = 1;
 $_config['security']['querysafe']['afullnote'] = '0';
+$_config['security']['creditsafe']['second'] = '0';
+$_config['security']['creditsafe']['times'] = 10;
 
 // --------------------------  CONFIG ADMINCP  -------------------------- //
 // -------- Founders: $_config['admincp']['founder'] = '1,2,3'; --------- //

@@ -1,11 +1,10 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 	<!--{subtemplate home/spacecp_header}-->
 		<!--{hook/spacecp_credit_top}-->
 		<!--{subtemplate home/spacecp_credit_header}-->
 			<p class="tbmu bw0">
 				<a{if $_GET[suboperation] != 'creditrulelog'} class="a"{/if} href="home.php?mod=spacecp&ac=credit&op=log" hidefocus="true">{lang credit_log}</a><span class="pipe">|</span>
 				<a{if $_GET[suboperation] == 'creditrulelog'} class="a"{/if} href="home.php?mod=spacecp&ac=credit&op=log&suboperation=creditrulelog" hidefocus="true">{lang credit_log_sys}</a>
-
 			</p>
 			<!--{if $_GET[suboperation] != 'creditrulelog'}-->
 			<script type="text/javascript" src="{$_G[setting][jspath]}calendar.js?{VERHASH}"></script>
@@ -64,9 +63,9 @@
 					<!--{loop $loglist $value}-->
 					<!--{eval $value = makecreditlog($value, $otherinfo);}-->
 					<tr>
-						<td><a href="home.php?mod=spacecp&ac=credit&op=log&optype=$value['operation']">$value['optype']</a></td>
+						<td><!--{if $value['operation']}--><a href="home.php?mod=spacecp&ac=credit&op=log&optype=$value['operation']">$value['optype']</a><!--{else}-->$value['title']<!--{/if}--></td>
 						<td>$value['credit']</td>
-						<td>$value['opinfo']</td>
+						<td><!--{if $value['operation']}-->$value['opinfo']<!--{else}-->$value['text']<!--{/if}--></td>
 						<td>$value['dateline']</td>
 					</tr>
 					<!--{/loop}-->
@@ -111,4 +110,4 @@
 	</div>
 </div>
 
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

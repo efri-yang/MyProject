@@ -9,9 +9,8 @@ body { background: transparent url(bgimg.jpg) no-repeat 50% 0; }
 #nv { background-color: #BA350F; background-image: url(nv.png); }
 	#nv li, #nv li a:hover, #nv li.hover a, #nv li.hover a:hover { background-image: url(nv_a.png) !important; }
 	#nv li.a { background-color: #840000; }
-	#qmenu { background-image: url(qmenu.png); }
-#scbar, #scbar_form, .scbar_icon_td, .scbar_txt_td, .scbar_type_td, .scbar_btn_td { background-image: url(search.png); }
-#scbar { border-color: #FCC; }
+#scbar { background-image: url(search.png); border-color: #FCC; }
+.scbar_icon_td { background: url(search.png) 0 -451px; }
 
 .bm_h, .tl th, .tl td { border-bottom-color: #CDCDCD; }
 .fl .bm_h { border-color: #FCC; background: #FFECEC url(titlebg.png) repeat-x 0 0; }

@@ -85,7 +85,7 @@
 						var disablepostctrl = parseInt('{$_G['group']['disablepostctrl']}');
 					</script>
 					<!--{eval $dmfid = $_G['setting']['followforumid'] && !empty($defaultforum) ? $_G['setting']['followforumid'] : 0;}-->
-					<form method="post" autocomplete="off" id="fastpostform" action="home.php?mod=spacecp&ac=follow&op=newthread&topicsubmit=yes&infloat=yes&handlekey=fastnewpost&inajax=1" onsubmit="return fastpostvalidate(this);" style="float: left;width: 400px;">
+					<form method="post" autocomplete="off" id="fastpostform" action="home.php?mod=spacecp&ac=follow&op=newthread&topicsubmit=yes&infloat=yes&handlekey=fastnewpost&inajax=1" onsubmit="return fastpostvalidate(this);" style="float: left;">
 						<div id="fastpostreturn" style="margin:-5px 0 5px"></div>
 						<div id="flw_post_subject" style="display:none;">
 							<span id="flw_checklen" class="y"><span id="checklen" class="xg1">80</span></span>
@@ -108,77 +108,75 @@
 							var editorid = '';
 							var ATTACHNUM = {'imageused':0,'imageunused':0,'attachused':0,'attachunused':0}, ATTACHUNUSEDAID = new Array(), IMGUNUSEDAID = new Array();
 							</script>
-							<script type="text/javascript" src="{$_G[setting][jspath]}swfupload.js?{VERHASH}"></script>
-							<script type="text/javascript" src="{$_G[setting][jspath]}swfupload.queue.js?{VERHASH}"></script>
-							<script type="text/javascript" src="{$_G[setting][jspath]}handlers.js?{VERHASH}"></script>
-							<script type="text/javascript" src="{$_G[setting][jspath]}fileprogress.js?{VERHASH}"></script>
 
 							<div class="upfl{if empty($_GET[from]) && $_G[setting][fastsmilies]} hasfsl{/if}">
 								<div id="attachlist" class="fieldset flash cl"><span style="font-size:0"></span></div>
+								<!--{if empty($_G['setting']['pluginhooks']['follow_upload_extend'])}-->
+									<!--{subtemplate common/upload}-->
+									<script type="text/javascript">
+										var upload = new SWFUpload({
+											// Backend Settings
+											upload_url: "{$_G[siteurl]}misc.php?mod=swfupload&action=swfupload&operation=upload&fid={$dmfid}",
+											post_params: {"uid" : "$_G[uid]", "hash":"$swfconfig[hash]"},
 
+											// File Upload Settings
+											file_size_limit : "$swfconfig[max]",	// 100MB
+											file_types : "$swfconfig[attachexts][ext]",
+											file_types_description : "$swfconfig[attachexts][depict]",
+											file_upload_limit : $swfconfig['limit'],
+											file_queue_limit : 0,
+											// Event Handler Settings (all my handlers are in the Handler.js file)
+											swfupload_preload_handler : preLoad,
+											swfupload_load_failed_handler : loadFailed,
+											file_dialog_start_handler : fileDialogStart,
+											file_queued_handler : fileQueued,
+											file_queue_error_handler : fileQueueError,
+											file_dialog_complete_handler : fileDialogComplete,
+											upload_start_handler : uploadStart,
+											upload_progress_handler : uploadProgress,
+											upload_error_handler : uploadError,
+											upload_success_handler : uploadSuccess,
+											upload_complete_handler : uploadComplete,
+											// Button Settings
+											button_image_url : "{IMGDIR}/flw_post_attach.png",
+											button_placeholder_id : "spanButtonPlaceholder",
+											button_width: 18,
+											button_height: 25,
+											button_cursor:SWFUpload.CURSOR.HAND,
+											button_window_mode: "transparent",
+											custom_settings : {
+												progressTarget : "attachlist",
+												uploadSource: 'forum',
+												uploadType: 'attach',
+												<!--{if $swfconfig['maxsizeperday']}-->
+												maxSizePerDay: $swfconfig['maxsizeperday'],
+												<!--{/if}-->
+												<!--{if $swfconfig['maxattachnum']}-->
+												maxAttachNum: $swfconfig['maxattachnum'],
+												<!--{/if}-->
+												uploadFrom: 'fastpost'
+											},
+
+											// Debug Settings
+											debug: false
+										});
+									</script>
+								<!--{else}-->
+									<!--{hook/follow_upload_extend}-->
+								<!--{/if}-->
 								<script type="text/javascript">
 									var fid = <!--{if $_G['setting']['followforumid']}-->$_G['setting']['followforumid']<!--{else}-->0<!--{/if}-->;
 									var resulttype = 'follow';
-									var upload = new SWFUpload({
-										// Backend Settings
-										upload_url: "{$_G[siteurl]}misc.php?mod=swfupload&action=swfupload&operation=upload&fid={$dmfid}",
-										post_params: {"uid" : "$_G[uid]", "hash":"$swfconfig[hash]"},
-		
-										// File Upload Settings
-										file_size_limit : "$swfconfig[max]",	// 100MB
-										file_types : "$swfconfig[attachexts][ext]",
-										file_types_description : "$swfconfig[attachexts][depict]",
-										file_upload_limit : $swfconfig['limit'],
-										file_queue_limit : 0,
-		
-										// Event Handler Settings (all my handlers are in the Handler.js file)
-										swfupload_preload_handler : preLoad,
-										swfupload_load_failed_handler : loadFailed,
-										file_dialog_start_handler : fileDialogStart,
-										file_queued_handler : fileQueued,
-										file_queue_error_handler : fileQueueError,
-										file_dialog_complete_handler : fileDialogComplete,
-										upload_start_handler : uploadStart,
-										upload_progress_handler : uploadProgress,
-										upload_error_handler : uploadError,
-										upload_success_handler : uploadSuccess,
-										upload_complete_handler : uploadComplete,
-		
-										// Button Settings
-										button_image_url : "{IMGDIR}/flw_post_attach.png",
-										button_placeholder_id : "spanButtonPlaceholder",
-										button_width: 18,
-										button_height: 25,
-										button_cursor:SWFUpload.CURSOR.HAND,
-										button_window_mode: "transparent",
-
-										custom_settings : {
-											progressTarget : "attachlist",
-											uploadSource: 'forum',
-											uploadType: 'attach',
-											<!--{if $swfconfig['maxsizeperday']}-->
-											maxSizePerDay: $swfconfig['maxsizeperday'],
-											<!--{/if}-->
-											<!--{if $swfconfig['maxattachnum']}-->
-											maxAttachNum: $swfconfig['maxattachnum'],
-											<!--{/if}-->
-											uploadFrom: 'fastpost'
-										},
-		
-										// Debug Settings
-										debug: false
-									});
-		
 									var attachBtn = $('flw_bar').getElementsByTagName('object')[0];
 									var flwbarBtn = $('flw_bar').getElementsByTagName('a');
 									if(BROWSER.ie && BROWSER.ie < 7 && attachBtn) {
 										attachBtn.style.left = flwbarBtn ? flwbarBtn.length * 25 : 0;
 									}
-		
+
 								</script>
 							</div>
 
-							<!--{if checkperm('seccode') && ($secqaacheck || $seccodecheck)}-->
+							<!--{if $secqaacheck || $seccodecheck}-->
 								<!--{block sectpl}--><sec> <span id="sec<hash>" onclick="showMenu(this.id)"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div><!--{/block}-->
 								<div class="mtm sec"><!--{subtemplate common/seccheck}--></div>
 							<!--{/if}-->
@@ -396,7 +394,7 @@
 						}
 					}
 					</script>
-				
+
 			</div>
 			<!--{/if}-->
 
@@ -414,7 +412,7 @@
 						<ul id="followlist">
 							<!--{subtemplate home/follow_feed_li}-->
 						</ul>
-						
+
 						<!--{if count($list['feed']) > 19 && ($archiver || $primary)}-->
 						<div id="loadingfeed" class="flw_more"><a href="javascript:;" onclick="loadmore();return false;" class="xi2">{lang follow_more} &raquo;</a></div>
 						<!--{else}-->
@@ -557,9 +555,9 @@
 				<!--{if $list}-->
 					<ul class="flw_ulist">
 					<!--{loop $list $fuid $fuser}-->
-						<li class="cl">
+						<li class="cl<!--{if in_array($fuser['uid'], $newfollower_list)}--> unread<!--{/if}-->">
 						<!--{if $do=='following'}-->
-							<a href="home.php?mod=space&uid=$fuser['followuid']" title="$fuser['fusername']" id="edit_avt" class="flw_avt" c="1" shref="home.php?mod=space&uid=$fuser['followuid']"><!--{avatar($fuser['followuid'],small)}--></a>
+							<a href="home.php?mod=space&uid=$fuser['followuid']" title="$fuser['fusername']" id="edit_avt" class="flw_avt" shref="home.php?mod=space&uid=$fuser['followuid']"><!--{avatar($fuser['followuid'],small)}--></a>
 							<!--{if $viewself}-->
 								<a id="a_followmod_{$fuser['followuid']}" href="home.php?mod=spacecp&ac=follow&op=del&fuid=$fuser['followuid']" onclick="ajaxget(this.href);doane(event);" class="flw_btn_unfo">{lang follow_del}</a>
 							<!--{elseif $fuser[followuid] != $_G[uid]}-->
@@ -570,9 +568,9 @@
 								<!--{/if}-->
 							<!--{/if}-->
 							<h6 class="pbn xs2"><a href="home.php?mod=space&uid=$fuser['followuid']" title="$fuser['fusername']" class="xi2" c="1" shref="home.php?mod=space&uid=$fuser['followuid']">$fuser['fusername']</a>&nbsp;<span id="followbkame_{$fuser['followuid']}" class="xg1 xs1 xw0"><!--{if $fuser['bkname']}-->$fuser[bkname]<!--{/if}--></span></h6>
-							<!--{if !empty($fuser['recentnote'])}--><p><span class="xg1">{lang follow_recent_note}：</span>$fuser[recentnote]</p><!--{/if}-->
+							<!--{if !empty($fuser['recentnote'])}--><p><span class="xg1">{lang follow_recent_note}: </span>$fuser[recentnote]</p><!--{/if}-->
 							<p class="ptm xg1">
-								<!--{if $memberprofile[$fuid]['resideprovince'] || $memberprofile[$fuid]['residecity']}-->{lang comefrom}：$memberprofile[$fuid]['resideprovince'] $memberprofile[$fuid]['residecity'] &nbsp;<!--{/if}-->
+								<!--{if $memberprofile[$fuid]['resideprovince'] || $memberprofile[$fuid]['residecity']}-->{lang comefrom}: $memberprofile[$fuid]['resideprovince'] $memberprofile[$fuid]['residecity'] &nbsp;<!--{/if}-->
 								{lang follow_follower}: <a href="home.php?mod=follow&do=follower&uid=$fuser['followuid']"><strong class="xi2" id="followernum_$fuser['followuid']">$memberinfo[$fuid]['follower']</strong></a>{lang person} &nbsp;
 								{lang follow_add}: <a href="home.php?mod=follow&do=following&uid=$fuser['followuid']"><strong class="xi2">$memberinfo[$fuid]['following']</strong></a>{lang person} &nbsp;
 								<!--{if $viewself && $fuser[followuid] != $_G[uid]}-->
@@ -594,9 +592,9 @@
 								<!--{/if}-->
 							<!--{/if}-->
 							<h6 class="pbn xs2"><a href="home.php?mod=space&uid=$fuser['uid']" title="$fuser['username']" class="xi2" c="1" shref="home.php?mod=space&uid=$fuser['uid']">$fuser['username']</a></h6>
-							<p><span class="xg1">{lang follow_recent_note}：</span>$fuser[recentnote]</p>
+							<p><span class="xg1">{lang follow_recent_note}: </span>$fuser[recentnote]</p>
 							<p class="ptm xg1">
-								<!--{if $memberprofile[$fuid]['resideprovince'] || $memberprofile[$fuid]['residecity']}-->{lang comefrom}：$memberprofile[$fuid]['resideprovince'] $memberprofile[$fuid]['residecity'] &nbsp;<!--{/if}-->
+								<!--{if $memberprofile[$fuid]['resideprovince'] || $memberprofile[$fuid]['residecity']}-->{lang comefrom}: $memberprofile[$fuid]['resideprovince'] $memberprofile[$fuid]['residecity'] &nbsp;<!--{/if}-->
 								{lang follow_follower}: <a href="home.php?mod=follow&do=follower&uid=$fuser['uid']"><strong class="xi2" id="followernum_$fuser['uid']">$memberinfo[$fuid]['follower']</strong></a>{lang person} &nbsp;
 								{lang follow_add}: <a href="home.php?mod=follow&do=following&uid=$fuser['uid']"><strong class="xi2">$memberinfo[$fuid]['following']</strong></a>{lang person}
 							</p>
@@ -682,13 +680,13 @@
 				if($('unfollowflag')) $('unfollowflag').style.display = 'none';
 				if($('fbkname_'+values['fuid'])) $('fbkname_'+values['fuid']).style.display = '';
 			} else if($('a_followmod_'+values['fuid'])) {
-								
+
 				$('a_followmod_'+values['fuid']).innerHTML = '{lang follow_del}';
 				if(values['from'] != 'block') {
 					$('a_followmod_'+values['fuid']).className = 'flw_btn_unfo';
 				}
 				$('a_followmod_'+values['fuid']).href = 'home.php?mod=spacecp&ac=follow&op=del&fuid='+values['fuid']+(values['from'] == 'block' ? '&from=block' : '');
-				
+
 			}
 			if(numObj) {
 				numObj.innerHTML = followernum + 1;
@@ -757,4 +755,4 @@
 	}
 </script>
 
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

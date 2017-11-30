@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: forum_upload.php 32057 2012-11-05 08:16:03Z monkey $
+ *      $Id: forum_upload.php 32858 2013-03-15 03:36:22Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -19,17 +19,19 @@ class forum_upload {
 	var $statusid;
 	var $attach;
 	var $error_sizelimit;
+	var $getaid;
 
-	function forum_upload() {
+	function forum_upload($getaid = 0) {
 		global $_G;
 
 		$_G['uid'] = $this->uid = intval($_GET['uid']);
 		$swfhash = md5(substr(md5($_G['config']['security']['authkey']), 8).$this->uid);
 		$this->aid = 0;
+		$this->getaid = $getaid;
 		$this->simple = !empty($_GET['simple']) ? $_GET['simple'] : 0;
 
 		if($_GET['hash'] != $swfhash) {
-			$this->uploadmsg(10);
+			return $this->uploadmsg(10);
 		}
 
 
@@ -38,25 +40,25 @@ class forum_upload {
 		$this->attach = &$upload->attach;
 
 		if($upload->error()) {
-			$this->uploadmsg(2);
+			return $this->uploadmsg(2);
 		}
 
 		$allowupload = !$_G['group']['maxattachnum'] || $_G['group']['maxattachnum'] && $_G['group']['maxattachnum'] > getuserprofile('todayattachs');;
 		if(!$allowupload) {
-			$this->uploadmsg(6);
+			return $this->uploadmsg(6);
 		}
 
 		if($_G['group']['attachextensions'] && (!preg_match("/(^|\s|,)".preg_quote($upload->attach['ext'], '/')."($|\s|,)/i", $_G['group']['attachextensions']) || !$upload->attach['ext'])) {
-			$this->uploadmsg(1);
+			return $this->uploadmsg(1);
 		}
 
 		if(empty($upload->attach['size'])) {
-			$this->uploadmsg(2);
+			return $this->uploadmsg(2);
 		}
 
 		if($_G['group']['maxattachsize'] && $upload->attach['size'] > $_G['group']['maxattachsize']) {
 			$this->error_sizelimit = $_G['group']['maxattachsize'];
-			$this->uploadmsg(3);
+			return $this->uploadmsg(3);
 		}
 
 		loadcache('attachtype');
@@ -68,10 +70,10 @@ class forum_upload {
 		if(isset($maxsize)) {
 			if(!$maxsize) {
 				$this->error_sizelimit = 'ban';
-				$this->uploadmsg(4);
+				return $this->uploadmsg(4);
 			} elseif($upload->attach['size'] > $maxsize) {
 				$this->error_sizelimit = $maxsize;
-				$this->uploadmsg(5);
+				return $this->uploadmsg(5);
 			}
 		}
 
@@ -79,23 +81,23 @@ class forum_upload {
 			$todaysize = getuserprofile('todayattachsize') + $upload->attach['size'];
 			if($todaysize >= $_G['group']['maxsizeperday']) {
 				$this->error_sizelimit = 'perday|'.$_G['group']['maxsizeperday'];
-				$this->uploadmsg(11);
+				return $this->uploadmsg(11);
 			}
 		}
 		updatemembercount($_G['uid'], array('todayattachs' => 1, 'todayattachsize' => $upload->attach['size']));
 		$upload->save();
 		if($upload->error() == -103) {
-			$this->uploadmsg(8);
+			return $this->uploadmsg(8);
 		} elseif($upload->error()) {
-			$this->uploadmsg(9);
+			return $this->uploadmsg(9);
 		}
 		$thumb = $remote = $width = 0;
 		if($_GET['type'] == 'image' && !$upload->attach['isimage']) {
-			$this->uploadmsg(7);
+			return $this->uploadmsg(7);
 		}
 		if($upload->attach['isimage']) {
 			if(!in_array($upload->attach['imageinfo']['2'], array(1,2,3,6))) {
-				$this->uploadmsg(7);
+				return $this->uploadmsg(7);
 			}
 			if($_G['setting']['showexif']) {
 				require_once libfile('function/attachment');
@@ -125,7 +127,7 @@ class forum_upload {
 		$insert = array(
 			'aid' => $aid,
 			'dateline' => $_G['timestamp'],
-			'filename' => censor($upload->attach['name']),
+			'filename' => dhtmlspecialchars(censor($upload->attach['name'])),
 			'filesize' => $upload->attach['size'],
 			'attachment' => $upload->attach['attachment'],
 			'isimage' => $upload->attach['isimage'],
@@ -138,12 +140,16 @@ class forum_upload {
 		if($upload->attach['isimage'] && $_G['setting']['showexif']) {
 			C::t('forum_attachment_exif')->insert($aid, $exif);
 		}
-		$this->uploadmsg(0);
+		return $this->uploadmsg(0);
 	}
 
 	function uploadmsg($statusid) {
 		global $_G;
 		$this->error_sizelimit = !empty($this->error_sizelimit) ? $this->error_sizelimit : 0;
+		if($this->getaid) {
+			$this->getaid = $statusid ? -$statusid : $this->aid;
+			return;
+		}
 		if($this->simple == 1) {
 			echo 'DISCUZUPLOAD|'.$statusid.'|'.$this->aid.'|'.$this->attach['isimage'].'|'.$this->error_sizelimit;
 		} elseif($this->simple == 2) {

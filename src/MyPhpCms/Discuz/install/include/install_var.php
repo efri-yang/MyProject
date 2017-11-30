@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: install_var.php 28275 2012-02-27 04:14:58Z monkey $
+ *      $Id: install_var.php 36324 2016-12-22 01:01:16Z nemohou $
  */
 
 if(!defined('IN_COMSENZ')) {
@@ -63,17 +63,19 @@ define('UNDEFINE_FUNC', 32);
 define('MISSING_PARAMETER', 33);
 define('LOCK_FILE_NOT_TOUCH', 34);
 
-$func_items = array('mysql_connect', 'gethostbyname', 'file_get_contents', 'xml_parser_create');
+$func_items = array(function_exists('mysql_connect') ? 'mysql_connect' : 'mysqli_connect', 'gethostbyname', 'file_get_contents', 'xml_parser_create');
 
 $filesock_items = array('fsockopen', 'pfsockopen', 'stream_socket_client', 'curl_init');
 
 $env_items = array
 (
 	'os' => array('c' => 'PHP_OS', 'r' => 'notset', 'b' => 'unix'),
-	'php' => array('c' => 'PHP_VERSION', 'r' => '5.1', 'b' => '5.3'),
+	'php' => array('c' => 'PHP_VERSION', 'r' => '5.2', 'b' => '7.0'),
 	'attachmentupload' => array('r' => 'notset', 'b' => '2M'),
 	'gdversion' => array('r' => '1.0', 'b' => '2.0'),
-	'diskspace' => array('r' => '10M', 'b' => 'notset'),
+	'curl' => array('r' => 'notset', 'b' => 'enable'),
+	'opcache' => array('r' => 'notset', 'b' => 'enable'),
+	'diskspace' => array('r' => 30 * 1048576, 'b' => 'notset'),
 );
 
 $dirfile_items = array

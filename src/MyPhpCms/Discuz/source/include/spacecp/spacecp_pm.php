@@ -77,7 +77,7 @@ if($_GET['op'] == 'checknewpm') {
 		$msguser = $member['username'];
 	}
 	if(!$msgonly) {
-		$online = C::app()->session->fetch_by_uid($touid) !== false ? 1 : 0;
+		$online = C::app()->session->fetch_by_uid($touid) ? 1 : 0;
 		if($_G['member']['newpm']) {
 			$newpm = setstatus(1, 0, $_G['member']['newpm']);
 			C::t('common_member')->update($_G['uid'], array('newpm' => $newpm));
@@ -375,7 +375,8 @@ if($_GET['op'] == 'checknewpm') {
 		showmessage('operating_too_fast', '', array('waittime' => $waittime), array('return' => true));
 	}
 	$username = $_GET['username'];
-	if(!$username) {
+
+	if(!$username || !uc_get_user(addslashes($username))) {
 		showmessage('pm_ignore_error_nopm');
 	}
 

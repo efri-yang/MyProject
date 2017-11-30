@@ -1,11 +1,6 @@
 <!--{block creditstring}--><!--{loop $postattachcredits $id $credit}--><!--{if $credit != ''}-->{$_G['setting']['extcredits'][$id][title]} <!--{if $credit >= 0}-->+$credit<!--{else}-->$credit<!--{/if}--> {$_G['setting']['extcredits'][$id][unit]} &nbsp;<!--{/if}--><!--{/loop}--><!--{/block}-->
 
-<!--{if $allowuploadtoday}-->
-<script type="text/javascript" src="{$_G[setting][jspath]}swfupload.js?{VERHASH}"></script>
-<script type="text/javascript" src="{$_G[setting][jspath]}swfupload.queue.js?{VERHASH}"></script>
-<script type="text/javascript" src="{$_G[setting][jspath]}handlers.js?{VERHASH}"></script>
-<script type="text/javascript" src="{$_G[setting][jspath]}fileprogress.js?{VERHASH}"></script>
-<!--{/if}-->
+
 <script type="text/javascript">
 	function switchImagebutton(btn) {
 		switchButton(btn, 'image');
@@ -24,7 +19,7 @@
 		<!--{if $allowpostimg}-->
 			<li class="current" id="{$editorid}_btn_imgattachlist"><a href="javascript:;" hidefocus="true" onclick="switchImagebutton('imgattachlist');">{lang e_img_attach}</a></li>
 			<!--{if $allowuploadtoday}-->
-			<li id="{$editorid}_btn_local" style="display:none;" did="{$editorid}_btn_imgattachlist|local"><a href="javascript:;" hidefocus="true" onclick="switchImagebutton('local');">{lang normal_upload}</a></li>
+				<li id="{$editorid}_btn_local" style="display:none;" did="{$editorid}_btn_imgattachlist|local"><a href="javascript:;" hidefocus="true" onclick="switchImagebutton('local');">{lang normal_upload}</a></li>
 			<!--{/if}-->
 		<!--{/if}-->
 		<!--{if helper_access::check_module('album')}--><li {if !$allowpostimg}class="current"{/if} id="{$editorid}_btn_albumlist"><a href="javascript:;" hidefocus="true" onclick="switchImagebutton('albumlist');">{lang e_img_albumlist}</a></li><!--{/if}-->
@@ -139,53 +134,6 @@
 				<div class="fieldset flash" id="imgUploadProgress"></div>
 
 				<script type="text/javascript">
-					var imgUpload = new SWFUpload({
-						upload_url: "{$_G[siteurl]}misc.php?mod=swfupload&action=swfupload&operation=upload&fid=$_G[fid]",
-						post_params: {"uid" : "$_G[uid]", "hash":"$swfconfig[hash]", "type":"image"},
-
-						file_size_limit : "$swfconfig[max]",
-						file_types : "$swfconfig[imageexts][ext]",
-						file_types_description : "$swfconfig[imageexts][depict]",
-						file_upload_limit : $swfconfig['limit'],
-						file_queue_limit : 0,
-						swfupload_preload_handler : preLoad,
-						swfupload_load_failed_handler : loadFailed,
-						file_dialog_start_handler : fileDialogStart,
-						file_queued_handler : fileQueued,
-						file_queue_error_handler : fileQueueError,
-						file_dialog_complete_handler : fileDialogComplete,
-						upload_start_handler : uploadStart,
-						upload_progress_handler : uploadProgress,
-						upload_error_handler : uploadError,
-						upload_success_handler : uploadSuccess,
-						upload_complete_handler : uploadComplete,
-
-						button_image_url : "{IMGDIR}/uploadbutton.png",
-						button_placeholder_id : "imgSpanButtonPlaceholder",
-						button_width: 100,
-						button_height: 25,
-						button_cursor:SWFUpload.CURSOR.HAND,
-						button_window_mode: "transparent",
-
-						custom_settings : {
-							progressTarget : "imgUploadProgress",
-							uploadSource: 'forum',
-							uploadType: 'image',
-							imgBoxObj: $('imgattachlist'),
-							<!--{if $swfconfig['maxsizeperday']}-->
-							maxSizePerDay: $swfconfig['maxsizeperday'],
-							<!--{/if}-->
-							<!--{if $swfconfig['maxattachnum']}-->
-							maxAttachNum: $swfconfig['maxattachnum'],
-							<!--{/if}-->
-							<!--{if $swfconfig['filtertype']}-->
-							filterType: $swfconfig['filtertype'],
-							<!--{/if}-->
-							singleUpload: $('{$editorid}_btn_local')
-						},
-						debug: false
-					});
-
 					function createNewAlbum() {
 						var inputObj = $('newalbum');
 						if(inputObj.value == '' || inputObj.value == '{lang input_album_name}') {
@@ -353,58 +301,7 @@
 				<div id="unusedattachlist"></div>
 
 				<!--{if $allowuploadtoday}-->
-
-				<div class="fieldset flash" id="fsUploadProgress"></div>
-				<script type="text/javascript">
-					var upload = new SWFUpload({
-						upload_url: "{$_G[siteurl]}misc.php?mod=swfupload&action=swfupload&operation=upload&fid=$_G[fid]",
-						post_params: {"uid":"$_G[uid]", "hash":"$swfconfig[hash]"},
-
-						file_size_limit : "$swfconfig[max]",
-						file_types : "$swfconfig[attachexts][ext]",
-						file_types_description : "$swfconfig[attachexts][depict]",
-						file_upload_limit : $swfconfig['limit'],
-						file_queue_limit : 0,
-
-						swfupload_preload_handler : preLoad,
-						swfupload_load_failed_handler : loadFailed,
-						file_dialog_start_handler : fileDialogStart,
-						file_queued_handler : fileQueued,
-						file_queue_error_handler : fileQueueError,
-						file_dialog_complete_handler : fileDialogComplete,
-						upload_start_handler : uploadStart,
-						upload_progress_handler : uploadProgress,
-						upload_error_handler : uploadError,
-						upload_success_handler : uploadSuccess,
-						upload_complete_handler : uploadComplete,
-
-						button_image_url : "{IMGDIR}/uploadbutton.png",
-						button_placeholder_id : "spanButtonPlaceholder",
-						button_width: 100,
-						button_height: 25,
-						button_cursor:SWFUpload.CURSOR.HAND,
-						button_window_mode: "transparent",
-
-						custom_settings : {
-							progressTarget : "fsUploadProgress",
-							uploadSource: 'forum',
-							uploadType: 'attach',
-							<!--{if $swfconfig['maxsizeperday']}-->
-							maxSizePerDay: $swfconfig['maxsizeperday'],
-							<!--{/if}-->
-							<!--{if $swfconfig['maxattachnum']}-->
-							maxAttachNum: $swfconfig['maxattachnum'],
-							<!--{/if}-->
-							<!--{if $swfconfig['filtertype']}-->
-							filterType: $swfconfig['filtertype'],
-							<!--{/if}-->
-							singleUpload: $('{$editorid}_btn_upload')
-						},
-
-						debug: false
-					});
-
-				</script>
+					<div class="fieldset flash" id="fsUploadProgress"></div>
 				<!--{/if}-->
 
 			</div>

@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: at.js 27406 2012-01-30 09:22:34Z monkey $
+	$Id: at.js 31619 2012-09-17 01:05:07Z monkey $
 */
 
 if(typeof EXTRAFUNC['keydown'] != "undefined") {
@@ -40,7 +40,7 @@ function extrafunc_atMenuKeyUp() {
 		doane(EXTRAEVENT);
 	}
 	if(wysiwyg && $('at_menu') && $('at_menu').style.display == '' && postaction && (postaction == 'newthread' || postaction == 'reply' || postaction == 'edit')) {
-		if(EXTRAEVENT.keyCode == 32 || EXTRAEVENT.keyCode == 9 || EXTRAEVENT.keyCode == 13 || EXTRAEVENT.keyCode == 8 && !keyMenuObj.innerHTML.substr(1).length) {
+		if(EXTRAEVENT.keyCode == 32 || EXTRAEVENT.keyCode == 9 || EXTRAEVENT.keyCode == 8 && !keyMenuObj.innerHTML.substr(1).length) {
 			$('at_menu').style.display = 'none';
 			ctlent_enable[13] = 1;
 		} else {

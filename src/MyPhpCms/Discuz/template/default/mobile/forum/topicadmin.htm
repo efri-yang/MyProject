@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 <!--{if ($_GET['optgroup'] == 3 && $operation == 'delete') || ($_GET['optgroup'] == 4 && $operation == '')}-->
     <form id="moderateform" method="post" autocomplete="off" action="forum.php?mod=topicadmin&action=moderate&optgroup=$optgroup&modsubmit=yes&mobile=yes" >
         <input type="hidden" name="frommodcp" value="$frommodcp" />
@@ -47,6 +47,6 @@
 	<div class="box ban pbn">
     	<p>{lang admin_threadtopicadmin_error}</p>
     	<input type="button" onclick="javascript:history.back();return false;" value="{lang goback}" />
-    </box>
+    </div>
 <!--{/if}-->
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

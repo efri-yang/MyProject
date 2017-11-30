@@ -137,6 +137,23 @@ function loginfailed($username) {
 	C::t('common_failedlogin')->update_failed($_G['clientip']);
 }
 
+function failedipcheck($numiptry, $timeiptry) {
+	global $_G;
+	if(!$numiptry) {
+		return false;
+	}
+	list($ip1, $ip2) = explode('.', $_G['clientip']);
+	$ip = $ip1.'.'.$ip2;
+	return $numiptry <= C::t('common_failedip')->get_ip_count($ip, TIMESTAMP - $timeiptry);
+}
+
+function failedip() {
+	global $_G;
+	list($ip1, $ip2) = explode('.', $_G['clientip']);
+	$ip = $ip1.'.'.$ip2;
+	C::t('common_failedip')->insert_ip($ip);
+}
+
 function getinvite() {
 	global $_G;
 
@@ -167,14 +184,14 @@ function getinvite() {
 		$appid = intval($cookies[2]);
 
 		$invite_code = space_key($uid, $appid);
-		if($code == $invite_code) {
-			$inviteprice = 0;
+		if($code === $invite_code) {
 			$member = getuserbyuid($uid);
 			if($member) {
 				$usergroup = C::t('common_usergroup')->fetch($member['groupid']);
-				$inviteprice = $usergroup['inviteprice'];
+				if(!$usergroup['allowinvite'] || $usergroup['inviteprice'] > 0) return array();
+			} else {
+				return array();
 			}
-			if($inviteprice > 0) return array();
 			$result['uid'] = $uid;
 			$result['appid'] = $appid;
 		}
@@ -232,10 +249,10 @@ function crime($fun) {
 		list(, $uid, $action) = $arg_list;
 		return $crimerecord->$fun($uid, $action);
 	} elseif($fun == 'search') {
-		list(, $action, $username, $operator, $startime, $endtime, $reason, $start, $limit) = $arg_list;
-		return $crimerecord->$fun($action, $username, $operator, $startime, $endtime, $reason, $start, $limit);
+		list(, $action, $username, $operator, $starttime, $endtime, $reason, $start, $limit) = $arg_list;
+		return $crimerecord->$fun($action, $username, $operator, $starttime, $endtime, $reason, $start, $limit);
 	} elseif($fun == 'actions') {
-		return $crimerecord->$fun;
+		return crime_action_ctl::$actions;
 	}
 	return false;
 }
@@ -266,11 +283,21 @@ function checkfollowfeed() {
 	dsetcookie('checkfollow', 1, 30);
 }
 function checkemail($email) {
+	global $_G;
 
 	$email = strtolower(trim($email));
 	if(strlen($email) > 32) {
 		showmessage('profile_email_illegal', '', array(), array('handle' => false));
 	}
+	if($_G['setting']['regmaildomain']) {
+		$maildomainexp = '/('.str_replace("\r\n", '|', preg_quote(trim($_G['setting']['maildomainlist']), '/')).')$/i';
+		if($_G['setting']['regmaildomain'] == 1 && !preg_match($maildomainexp, $email)) {
+			showmessage('profile_email_domain_illegal', '', array(), array('handle' => false));
+		} elseif($_G['setting']['regmaildomain'] == 2 && preg_match($maildomainexp, $email)) {
+			showmessage('profile_email_domain_illegal', '', array(), array('handle' => false));
+		}
+	}
+
 	loaducenter();
 	$ucresult = uc_user_checkemail($email);
 

@@ -1,10 +1,6 @@
 <!--{template common/header_ajax}-->
 <div id="flsrchdiv">
-	<div class="pbm cl">
-		<div class="sch">{lang search}: <input type="text" class="px vm" onkeyup="forumlistsearch(this.value)" /></div>
-		<h2><!--{if $visitedforums || $favforums}-->{lang forumlist}<!--{else}-->&nbsp;<!--{/if}--></h2>
-	</div>
-
+	<div class="mbm">{lang search_forum}: <input type="text" class="px vm" onkeyup="forumlistsearch(this.value)" /></div>
 	<ul class="jump_bdl cl">
 		<li>
 			<p class="bbda xg1">{lang forumlist_allforum}</p>
@@ -21,23 +17,19 @@
 		<!--{/loop}-->
 		</li>
 
-		<!--{if $visitedforums}-->
-			<li>
-				<p class="bbda xg1">{lang forumlist_recent}</p>
+		<li>
+			<p class="bbda xg1">{lang forumlist_recent}</p>
 			<!--{loop $visitedforums $fid $forumname}-->
 				<p{if $_GET['jfid'] == $fid} class="a"{/if}><a href="forum.php?mod=forumdisplay&fid=$fid">$forumname</a></p>
 			<!--{/loop}-->
-			</li>
-		<!--{/if}-->
+		</li>
 
-		<!--{if $favforums}-->
-			<li>
-				<p class="bbda xg1">{lang forumlist_myfav}</p>
+		<li>
+			<p class="bbda xg1">{lang forumlist_myfav}</p>
 			<!--{loop $favforums $forum}-->
 				<p{if $_GET['jfid'] == $forum[id]} class="a"{/if}><a href="forum.php?mod=forumdisplay&fid=$forum[id]">$forum['title']</a></p>
 			<!--{/loop}-->
-			</li>
-		<!--{/if}-->
+		</li>
 
 	</ul>
 </div>

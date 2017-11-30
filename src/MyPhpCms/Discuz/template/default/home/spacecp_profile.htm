@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 
 
 <!--{subtemplate home/spacecp_header}-->
@@ -30,7 +30,16 @@
 	</div>
 	<!--{else}-->
 		<!--{if $operation == 'password'}-->
-			<p class="bbda pbm mbm"><!--{if !$_G['setting']['connect']['allow'] || !$conisregister}-->{lang old_password_comment}<!--{else}-->{lang connect_config_newpassword_comment}<!--{/if}--></p>
+			<script type="text/javascript" src="{$_G[setting][jspath]}register.js?{VERHASH}"></script>
+			<p class="bbda pbm mbm">
+				<!--{if !$_G['member']['freeze']}-->
+					<!--{if !$_G['setting']['connect']['allow'] || !$conisregister}-->{lang old_password_comment}<!--{elseif $wechatuser}-->{lang wechat_config_newpassword_comment}<!--{else}-->{lang connect_config_newpassword_comment}<!--{/if}-->
+				<!--{elseif $_G['member']['freeze'] == 1}-->
+					<strong class="xi1">{lang freeze_pw_tips}</strong>
+				<!--{elseif $_G['member']['freeze'] == 2}-->
+					<strong class="xi1">{lang freeze_email_tips}</strong>
+				<!--{/if}-->
+			</p>
 			<form action="home.php?mod=spacecp&ac=profile" method="post" autocomplete="off">
 				<input type="hidden" value="{FORMHASH}" name="formhash" />
 				<table summary="{lang memcp_profile}" cellspacing="0" cellpadding="0" class="tfm">
@@ -44,14 +53,14 @@
 						<th>{lang new_password}</th>
 						<td>
 							<input type="password" name="newpassword" id="newpassword" class="px" />
-							<p class="d">{lang memcp_profile_passwd_comment}</p>
+							<p class="d" id="chk_newpassword">{lang memcp_profile_passwd_comment}</p>
 						</td>
 					</tr>
 					<tr>
 						<th>{lang new_password_confirm}</th>
 						<td>
 							<input type="password" name="newpassword2" id="newpassword2"class="px" />
-							<p class="d">{lang memcp_profile_passwd_comment}</p>
+							<p class="d" id="chk_newpassword2">{lang memcp_profile_passwd_comment}</p>
 						</td>
 					</tr>
 					<tr id="contact"{if $_GET[from] == 'contact'} style="background-color: {$_G['style']['specialbg']};"{/if}>
@@ -65,9 +74,19 @@
 									$acitvemessage
 								<!--{/if}-->
 							</p>
-							<!--{if $_G['setting']['regverify'] == 1 && (($_G['group']['grouptype'] == 'member' && $_G['adminid'] == 0) || $_G['groupid'] == 8)}--><p class="d">{lang memcp_profile_email_comment}</p><!--{/if}-->
+							<!--{if $_G['setting']['regverify'] == 1 && (($_G['group']['grouptype'] == 'member' && $_G['adminid'] == 0) || $_G['groupid'] == 8) || $_G['member']['freeze']}--><p class="d">{lang memcp_profile_email_comment}</p><!--{/if}-->
 						</td>
 					</tr>
+
+					<!--{if $_G['member']['freeze'] == 2}-->
+					<tr>
+						<th>{lang freeze_reason}</th>
+						<td>
+							<textarea rows="3" cols="80" name="freezereson" class="pt">$space[freezereson]</textarea>
+							<p class="d" id="chk_newpassword2">{lang freeze_reason_comment}</p>
+						</td>
+					</tr>
+					<!--{/if}-->
 
 					<tr>
 						<th>{lang security_question}</th>
@@ -94,9 +113,11 @@
 							<p class="d">{lang memcp_profile_security_answer_comment}</p>
 						</td>
 					</tr>
-					<!--{if checkperm('seccode') && ($secqaacheck || $seccodecheck)}-->
-					<!--{eval $sectpl = '<tr><th><sec></th><td><sec><p class="d"><sec></p></td>';}-->
-					<!--{subtemplate common/seccheck}-->
+					<!--{if $secqaacheck || $seccodecheck}-->
+					</table>
+						<!--{eval $sectpl = '<table cellspacing="0" cellpadding="0" class="tfm"><tr><th><sec></th><td><sec><p class="d"><sec></p></td></tr></table>';}-->
+						<!--{subtemplate common/seccheck}-->
+					<table summary="{lang memcp_profile}" cellspacing="0" cellpadding="0" class="tfm">
 					<!--{/if}-->
 					<tr>
 						<th>&nbsp;</th>
@@ -105,6 +126,16 @@
 				</table>
 				<input type="hidden" name="passwordsubmit" value="true" />
 			</form>
+			<script type="text/javascript">
+				var strongpw = new Array();
+				<!--{if $_G['setting']['strongpw']}-->
+					<!--{loop $_G['setting']['strongpw'] $key $val}-->
+					strongpw[$key] = $val;
+					<!--{/loop}-->
+				<!--{/if}-->
+				var pwlength = <!--{if $_G['setting']['pwlength']}-->$_G['setting']['pwlength']<!--{else}-->0<!--{/if}-->;
+				checkPwdComplexity($('newpassword'), $('newpassword2'), true);
+			</script>
 		<!--{else}-->
 			<!--{hook/spacecp_profile_top}-->
 			<!--{subtemplate home/spacecp_profile_nav}-->
@@ -263,4 +294,4 @@
 	<!--{/if}-->
 </div>
 
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

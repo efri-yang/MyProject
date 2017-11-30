@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: toplist.php 28687 2012-03-08 03:30:54Z monkey $
+ *      $Id: toplist.php 34314 2014-02-20 01:04:24Z nemohou $
  */
 
 if(!defined('IN_MOBILE_API')) {
@@ -37,7 +37,7 @@ class mobile_api {
 			$threads = $_G['cache']['mobile_toplist_'.$_G['fid']]['variable'];
 		}
 		$variable = array(
-			'forum_threadlist' => mobile_core::getvalues($threads, array('/^\d+$/'), array('tid', 'author', 'authorid', 'subject', 'subject', 'dateline', 'lastpost', 'lastposter', 'attachment', 'replies', 'views')),
+			'forum_threadlist' => mobile_core::getvalues($threads, array('/^\d+$/')),
 		);
 		$variable['forum']['password'] = $variable['forum']['password'] ? '1' : '0';
 		mobile_core::result(mobile_core::variable($variable));

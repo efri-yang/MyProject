@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: mobile.php 35057 2014-11-03 08:27:42Z nemohou $
+ *      $Id: mobile.php 35114 2014-11-27 01:07:53Z nemohou $
  */
 
 define('IN_MOBILE_API', 1);
@@ -24,13 +24,13 @@ $modules = array('extends', 'buyattachment', 'buythread', 'checkpost', 'connect'
 	'modcp', 'topicadmin', 'forumimage', 'newthreads', 'signin', 'smiley', 'threadrecommend', 'check', 'mobilesign',
 	'wsqindex', 'wsqsiteinfo', 'recommend',
 	'wechat', 'wechat_clearlogin', 'checkinfo', 'seccodehtml',
-	'showactivity', 'bestanswer', 'misc', 'checkcookie', 'viewcomment', 'plugin');
+	'showactivity', 'bestanswer', 'forummisc', 'checkcookie', 'viewcomment', 'plugin');
 
 $defaultversions = array(
 	'wechat' => 4,
 );
 
-if(!in_array($_GET['module'], $modules)) {
+if(!isset($_GET['module']) || !in_array($_GET['module'], $modules)) {
 	mobile_core::result(array('error' => 'module_not_exists'));
 }
 $_GET['version'] = !empty($_GET['version']) ? intval($_GET['version']) : (!$defaultversions[$_GET['module']] ? 1 : $defaultversions[$_GET['module']]);

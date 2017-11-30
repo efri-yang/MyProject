@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_space.php 32010 2012-10-31 02:12:04Z zhengqingpeng $
+ *      $Id: function_space.php 34052 2013-09-25 06:18:43Z andyzheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -451,8 +451,10 @@ function getblockhtml($blockname,$parameters = array()) {
 				} else {
 					$html .= lang('space', 'visitor_list', array(
 							'uid' => $value['vuid'],
+							'cuid' => $uid,
 							'username' => $value['vusername'],
 							'class' => ($_G['ols'][$value['vuid']]?'gol':''),
+							'self' => $value['vuid'] == $_G['uid'] ? 'god' : '',
 							'avatar' => avatar($value['vuid'],'small')));
 				}
 				$html .= "<span class=\"xg2\">".dgmdate($value['dateline'],'u', '9999', 'Y-m-d')."</span>";
@@ -560,7 +562,7 @@ function getblockhtml($blockname,$parameters = array()) {
 				} else {
 					$parameters['config']['height'] .= 'px';
 				}
-				$html = "<script language=\"javascript\" type=\"text/javascript\">document.write(AC_FL_RunContent('id', 'mp3player', 'name', 'mp3player', 'devicefont', 'false', 'width', '100%', 'height', '".$parameters['config']['height']."', 'src', '$swfurl', 'menu', 'false',  'allowScriptAccess', 'sameDomain', 'swLiveConnect', 'true', 'wmode', 'transparent'));</script>";
+				$html = "<script language=\"javascript\" type=\"text/javascript\">document.write(AC_FL_RunContent('id', 'mp3player', 'name', 'mp3player', 'devicefont', 'false', 'width', '100%', 'height', '".$parameters['config']['height']."', 'src', '$swfurl', 'menu', 'false',  'allowScriptAccess', 'never', 'swLiveConnect', 'true', 'wmode', 'transparent'));</script>";
 			} else {
 				$html = lang('space', 'music_no_content');
 			}
@@ -569,28 +571,6 @@ function getblockhtml($blockname,$parameters = array()) {
 
 		case 'myapp':
 			$html = '';
-			$listclass = 'ptm ml mls cl';
-			$userapps = C::t('home_userapp')->fetch_all_by_uid_appid($uid, 0, 'menuorder', 'DESC', 0, $shownum);
-			$appids = array();
-			foreach($userapps as $app) {
-				$appids[$app['appid']] = $app['appid'];
-			}
-			if(!empty($appids)) {
-				$myapps = C::t('common_myapp')->fetch_all($appids);
-			}
-			foreach($userapps as $value) {
-				$value['iconstatus'] = $myapps[$value['appid']]['iconstatus'];
-				if(!empty($value['appname'])) {
-					$replace = array('appid'=>$value['appid'], 'appname'=>$value['appname']);
-					$parameters['logotype'] = !empty($parameters['logotype']) && in_array($parameters['logotype'], array('icon', 'logo')) ? $parameters['logotype'] : 'logo';
-					if($parameters['logotype'] == 'icon') {
-						$listclass = 'xl xl1 cl';
-						$replace['icon'] = getmyappiconpath($value['appid'], $value['iconstatus']);
-					}
-					$html .= lang('space', 'myapp_li_'.$parameters['logotype'], $replace);
-				}
-			}
-			$html = !$html ? '<p class="emp">'.lang('space','block_myapp_no_content').($space['self'] ? lang('space', 'block_myapp_no_content_publish', $space) : '').'</p>' : '<ul class="'.$listclass.'">'.$html.'</ul>';
 			break;
 		case 'block1':
 		case 'block2':
@@ -737,6 +717,7 @@ function getblockdata($blockname = '') {
 function check_ban_block($blockname, $space) {
 	global $_G;
 	$return = true;
+	loadcache('usergroup_'.$space['groupid']);
 	if($blockname == 'group' && !helper_access::check_module('group')) {
 		$return = false;
 	} elseif($blockname == 'thread' && $_G['setting']['allowviewuserthread'] === -1) {

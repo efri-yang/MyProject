@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: space_favorite.php 26636 2011-12-19 02:26:51Z monkey $
+ *      $Id: space_favorite.php 33832 2013-08-20 03:32:32Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -52,11 +52,25 @@ if($count) {
 		'albumid'=>'<img src="static/image/feed/album.gif" alt="album" class="t" /> ',
 		'aid'=>'<img src="static/image/feed/article.gif" alt="article" class="t" /> ',
 	);
+	$articles = array();
 	foreach(C::t('home_favorite')->fetch_all_by_uid_idtype($_G['uid'], $idtype, $favid, $start,$perpage) as $value) {
 		$value['icon'] = isset($icons[$value['idtype']]) ? $icons[$value['idtype']] : '';
 		$value['url'] = makeurl($value['id'], $value['idtype'], $value['spaceuid']);
 		$value['description'] = !empty($value['description']) ? nl2br($value['description']) : '';
 		$list[$value['favid']] = $value;
+		if($value['idtype'] == 'aid') {
+			$articles[$value['favid']] = $value['id'];
+		}
+	}
+	if(!empty($articles)) {
+		include_once libfile('function/portal');
+		$_urls = array();
+		foreach(C::t('portal_article_title')->fetch_all($articles) as $aid => $article) {
+			$_urls[$aid] = fetch_article_url($article);
+		}
+		foreach ($articles as $favid => $aid) {
+			$list[$favid]['url'] = $_urls[$aid];
+		}
 	}
 }
 

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: misc_ranklist.php 32808 2013-03-13 09:10:59Z zhengqingpeng $
+ *      $Id: misc_ranklist.php 32807 2013-03-13 08:49:49Z zhengqingpeng $
  */
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
@@ -167,8 +167,8 @@ function getranklist_pictures_index($num = 20, $dateline = 0, $orderby = 'hot DE
 function getranklist_members($offset = 0, $limit = 20) {
 	require_once libfile('function/forum');
 	$members = array();
-	$query = C::t('home_show')->fetch_all_by_unitprice($offset, $limit, true);
-	foreach($query as $member) {
+	$topusers = C::t('home_show')->fetch_all_by_unitprice($offset, $limit, true);
+	foreach($topusers as $member) {
 		$member['avatar'] = avatar($member['uid'], 'small');
 		$member['note'] = dhtmlspecialchars($member['note']);
 		$members[] = $member;
@@ -427,6 +427,9 @@ function getranklist_member_post($num, $orderby) {
 }
 
 function getranklistdata($type, $view = '', $orderby = 'all') {
+	if (!function_exists('getranklist_'.$type)) {
+	    return array();
+	}
 	global $_G;
 	$cache_time = $_G['setting']['ranklist'][$type]['cache_time'];
 	$cache_num =  $_G['setting']['ranklist'][$type]['show_num'];
@@ -440,6 +443,15 @@ function getranklistdata($type, $view = '', $orderby = 'all') {
 
 	$ranklistvars = array();
 	loadcache('ranklist_'.$type);
+	if(!isset($_G['cache']['ranklist_'.$type]) || !is_array($_G['cache']['ranklist_'.$type])) {
+		$_G['cache']['ranklist_'.$type] = array();
+	}
+	if(!isset($_G['cache']['ranklist_'.$type][$view]) || !is_array($_G['cache']['ranklist_'.$type][$view])) {
+		$_G['cache']['ranklist_'.$type][$view] = array();
+	}
+	if(!isset($_G['cache']['ranklist_'.$type][$view][$orderby]) || !is_array($_G['cache']['ranklist_'.$type][$view][$orderby])) {
+		$_G['cache']['ranklist_'.$type][$view][$orderby] = array();
+	}
 	$ranklistvars = & $_G['cache']['ranklist_'.$type][$view][$orderby];
 
 	if(empty($ranklistvars['lastupdated']) || (TIMESTAMP - $ranklistvars['lastupdated'] > $cache_time)) {

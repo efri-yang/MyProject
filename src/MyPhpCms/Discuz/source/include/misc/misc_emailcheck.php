@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: misc_emailcheck.php 30384 2012-05-25 04:48:52Z liulanbo $
+ *      $Id: misc_emailcheck.php 33688 2013-08-02 03:00:15Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -22,6 +22,9 @@ if($_GET['hash']) {
 if($uid && isemail($email) && $time > TIMESTAMP - 86400) {
 	$member = getuserbyuid($uid);
 	$setarr = array('email'=>$email, 'emailstatus'=>'1');
+	if($_G['member']['freeze'] == 2) {
+		$setarr['freeze'] = 0;
+	}
 	loaducenter();
 	$ucresult = uc_user_edit(addslashes($member['username']), '', '', $email, 1);
 	if($ucresult == -8) {
@@ -39,6 +42,7 @@ if($uid && isemail($email) && $time > TIMESTAMP - 86400) {
 	}
 	updatecreditbyaction('realemail', $uid);
 	C::t('common_member')->update($uid, $setarr);
+	C::t('common_member_validate')->delete($uid);
 	dsetcookie('newemail', "", -1);
 
 	showmessage('email_check_sucess', 'home.php?mod=spacecp&ac=profile&op=password', array('email' => $email));

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_threads.php 26864 2011-12-26 09:20:38Z chenmengshu $
+ *      $Id: admincp_threads.php 33828 2013-08-20 02:29:32Z nemohou $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -140,6 +140,9 @@ EOT;
 		array(2, cplang('threads_search_include_no')),
 	), TRUE), $_GET['highlight'], 'mradio');
 	showsetting('threads_save', 'savethread', $_GET['savethread'], 'radio');
+	if($operation != 'group') {
+		showsetting('threads_hide', 'hidethread', $_GET['hidethread'], 'radio');
+	}
 	showtagfooter('tbody');
 
 	showsubmit('searchsubmit', 'submit', '', 'more_options');
@@ -166,6 +169,9 @@ EOT;
 		if(!empty($_GET['savethread'])) {
 			$conditions['sticky'] = 4;
 			$conditions['displayorder'] = -4;
+		}
+		if(!empty($_GET['hidethread'])) {
+			$conditions['hidden'] = 1;
 		}
 
 		if(trim($_GET['keywords'])) {
@@ -363,11 +369,6 @@ EOT;
 			updateforumcount(intval($fid));
 		}
 
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog('move', array('tid' => $tid, 'otherid' => $_GET['toforum']));
-		}
-
 		$cpmsg = cplang('threads_succeed');
 
 	} elseif($optype == 'movesort') {
@@ -394,10 +395,6 @@ EOT;
 			updateforumcount(intval($fid));
 		}
 
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog('delete', array('tid' => $tid));
-		}
 		$cpmsg = cplang('threads_succeed');
 
 	} elseif($optype == 'deleteattach') {
@@ -417,11 +414,6 @@ EOT;
 
 		C::t('forum_thread')->update($tidsarray, array('displayorder'=>$_GET['stick_level']));
 		$my_act = $_GET['stick_level'] ? 'sticky' : 'update';
-
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog($my_act, array('tid' => $tid));
-		}
 
 		if($_G['setting']['globalstick']) {
 			updatecache('globalstick');
@@ -445,21 +437,12 @@ EOT;
 		C::t('forum_thread')->update($tidsarray, array('digest'=>$_GET['digest_level']));
 		$my_act = $_GET['digest_level'] ? 'digest' : 'update';
 
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog($my_act, array('tid' => $tid));
-		}
 		$cpmsg = cplang('threads_succeed');
 
 	} elseif($optype == 'addstatus') {
 
 		C::t('forum_thread')->update($tidsarray, array('closed'=>$_GET['status']));
 		$my_opt = $_GET['status'] ? 'close' : 'open';
-
-		$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-		foreach($_GET['tidarray'] as $tid) {
-			$log_handler->myThreadLog($my_opt, array('tid' => $tid));
-		}
 
 		$cpmsg = cplang('threads_succeed');
 

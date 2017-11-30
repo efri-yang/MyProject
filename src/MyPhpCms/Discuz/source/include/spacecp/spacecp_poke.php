@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: spacecp_poke.php 27023 2011-12-30 06:39:45Z svn_project_zhangjie $
+ *      $Id: spacecp_poke.php 34369 2014-04-01 02:00:04Z jeffjzhang $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -42,8 +42,7 @@ if($op == 'send' || $op == 'reply') {
 			showmessage('space_does_not_exist');
 		}
 
-		$notetext = getstr($_POST['note'], 150);
-		$notetext = censor($notetext);
+		$notetext = censor(htmlspecialchars(cutstr($_POST['note'], strtolower(CHARSET) == 'utf-8' ? 30 : 20, '')));
 		$setarr = array(
 			'pokeuid' => $uid+$_G['uid'],
 			'uid' => $uid,
@@ -58,7 +57,7 @@ if($op == 'send' || $op == 'reply') {
 			'uid' => $uid,
 			'fromuid' => $_G['uid'],
 			'fromusername' => $_G['username'],
-			'note' => getstr($_POST['note'], 150),
+			'note' => $notetext,
 			'dateline' => $_G['timestamp'],
 			'iconid' => intval($_POST['iconid'])
 		);
@@ -105,6 +104,8 @@ if($op == 'send' || $op == 'reply') {
 	if(submitcheck('ignoresubmit')) {
 		$where = empty($uid)?'':"AND fromuid='$uid'";
 		C::t('home_poke')->delete_by_uid_fromuid($_G['uid'], $uid);
+
+		C::t('home_notification')->delete_by_uid_type_authorid($_G['uid'], 'poke', $uid);
 
 		showmessage('has_been_hailed_overlooked', '', array('uid' => $uid, 'from' => $_GET['from']), array('showdialog'=>1, 'showmsg' => true, 'closetime' => true, 'alert' => 'right'));
 	}

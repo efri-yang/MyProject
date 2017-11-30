@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_myrepeats.php 31511 2012-09-04 07:10:47Z monkey $
+ *      $Id: table_myrepeats.php 31512 2012-09-04 07:11:08Z monkey $
  */
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');

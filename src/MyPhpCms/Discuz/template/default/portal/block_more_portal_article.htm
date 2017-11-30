@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 
 <div id="pt" class="bm cl">
 	<div class="z">
@@ -23,10 +23,11 @@
 			<!--{if $list}-->
 				<div class="bm_c xld">
 				<!--{loop $list $value}-->
+					<!--{eval $article_url = fetch_article_url($value);}-->
 					<dl class="bbda cl">
-						<dt class="xs2"><a href="portal.php?mod=view&aid=$value[id]" target="_blank" class="xi2">$value[title]</a></dt>
+						<dt class="xs2"><a href="$article_url" target="_blank" class="xi2">$value[title]</a></dt>
 						<dd class="xs2 cl">
-							<!--{if $value[pic]}--><div class="atc"><a href="portal.php?mod=view&aid=$value[id]" target="_blank"><img src="$value[pic]" alt="$value[title]" class="tn" /></a></div><!--{/if}-->
+							<!--{if $value[pic]}--><div class="atc"><a href="$article_url" target="_blank"><img src="$value[pic]" alt="$value[title]" class="tn" /></a></div><!--{/if}-->
 							$value[summary]
 						</dd>
 						<dd>
@@ -52,4 +53,4 @@
 	<!--[diy=diy3]--><div id="diy3" class="area"></div><!--[/diy]-->
 </div>
 
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

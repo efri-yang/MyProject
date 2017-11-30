@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 
 <!--{block actiontitle}-->
 <!--{if $_GET['action'] == 'newthread'}-->
@@ -50,7 +50,7 @@
 
 <!--{if $special != 2 && $special != 4 }-->
 <!--{eval $adveditor = $isfirstpost && $special && ($_GET['action'] == 'newthread' || $_GET['action'] == 'reply' && !empty($_GET['addtrade']) || $_GET['action'] == 'edit' );}-->
-<form method="post" id="postform"
+<form method="post" id="postform" enctype="multipart/form-data"
 			{if $_GET[action] == 'newthread'}action="forum.php?mod=post&action={if $special != 2}newthread{else}newtrade{/if}&fid=$_G[fid]&extra=$extra&topicsubmit=yes&mobile=yes"
 			{elseif $_GET[action] == 'reply'}action="forum.php?mod=post&action=reply&fid=$_G[fid]&tid=$_G[tid]&extra=$extra&replysubmit=yes&mobile=yes"
 			{elseif $_GET[action] == 'edit'}action="forum.php?mod=post&action=edit&extra=$extra&editsubmit=yes&mobile=yes" $enctype
@@ -131,7 +131,7 @@
 </div>
 
 <div class="inbox">
-	<!--{if $_GET[action] != 'edit' && checkperm('seccode') && ($secqaacheck || $seccodecheck)}-->
+	<!--{if $_GET[action] != 'edit' && ($secqaacheck || $seccodecheck)}-->
 	<!--{subtemplate common/seccheck}-->
 	<!--{/if}-->
 </div>
@@ -141,6 +141,10 @@
     <!--{if $_GET[action] == 'edit' && $isorigauthor && ($isfirstpost && $thread['replies'] < 1 || !$isfirstpost) && !$rushreply && $_G['setting']['editperdel']}-->
         <label><input type="checkbox" name="delete" id="delete" class="pc" value="1" title="{lang post_delpost}{if $thread[special] == 3}{lang reward_price_back}{/if}"> {lang delete_check}</label>
     <!--{/if}-->
+	<input type="hidden" name="uid" value="$_G[uid]" />
+	<input type="hidden" name="type" value="image" />
+	<input type="hidden" name="hash" value="{echo md5(substr(md5($_G['config']['security']['authkey']), 8).$_G['uid'])}">
+	<input type="file" name="Filedata">
 </div>
 <!--{/if}-->
 </div>
@@ -154,4 +158,4 @@
     <!--{/if}-->
     </div>
 <!--{/if}-->
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

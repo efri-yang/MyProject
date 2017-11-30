@@ -63,7 +63,7 @@
 				</div>
 				<!--{/if}-->
 				<div id="comment_ul" class="xld xlda">
-				<!--{loop $list $value}-->
+				<!--{loop $list $k $value}-->
 					<!--{template home/space_comment_li}-->
 				<!--{/loop}-->
 				</div>
@@ -89,7 +89,7 @@
 					<!--{/if}-->
 				</div>
 			</div>
-			<!--{if checkperm('seccode') && ($secqaacheck || $seccodecheck)}-->
+			<!--{if $secqaacheck || $seccodecheck}-->
 				<!--{block sectpl}--><sec> <span id="sec<hash>" onclick="showMenu(this.id);"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div><!--{/block}-->
 				<div class="mtm mbm"><!--{subtemplate common/seccheck}--></div>
 			<!--{/if}-->
@@ -106,7 +106,7 @@
 		<script type="text/javascript">
 			function succeedhandle_qcshare_$id(url, msg, values) {
 				comment_add(values['cid']);
-				<!--{if checkperm('seccode') && $sechash}-->
+				<!--{if $sechash}-->
 					<!--{if $secqaacheck}-->
 					updatesecqaa('$sechash');
 					<!--{/if}-->
@@ -118,7 +118,7 @@
 		</script>
 		<!--{/if}-->
 <script type="text/javascript">
-var elems = selector('div[class~=magicflicker]'); 
+var elems = selector('div[class~=magicflicker]');
 for(var i=0; i<elems.length; i++){
 	magicColor(elems[i]);
 }

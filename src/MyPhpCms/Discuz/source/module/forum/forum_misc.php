@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: forum_misc.php 33491 2013-06-24 07:13:17Z kamichen $
+ *      $Id: forum_misc.php 36284 2016-12-12 00:47:50Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -26,7 +26,7 @@ if($_GET['action'] == 'paysucceed') {
 	exit;
 
 } elseif($_GET['action'] == 'attachcredit') {
-	if($_GET['formhash'] != FORMHASH) {
+	if($_GET['formhash'] != FORMHASH || !$_G['uid']) {
 		showmessage('undefined_action', NULL);
 	}
 
@@ -103,10 +103,10 @@ if($_GET['action'] == 'paysucceed') {
 	}
 
 	$attach['netprice'] = $status != 2 ? round($attach['price'] * (1 - $_G['setting']['creditstax'])) : 0;
-
+	$lockid = 'attachpay_'.$_G['uid'];
 	if(!submitcheck('paysubmit')) {
 		include template('forum/attachpay');
-	} else {
+	} elseif(!discuz_process::islocked($lockid)) {
 		if(!empty($_GET['buyall'])) {
 			$aids = $prices = array();
 			$tprice = 0;
@@ -150,7 +150,7 @@ if($_GET['action'] == 'paysucceed') {
 
 			$aidencode = aidencode($aid, 0, $_GET['tid']);
 		}
-
+		discuz_process::unlock($lockid);
 		if(count($aids) > 1) {
 			showmessage('attachment_buyall', 'forum.php?mod=redirect&goto=findpost&ptid='.$attach['tid'].'&pid='.$attach['pid']);
 		} else {
@@ -243,12 +243,21 @@ if($_GET['action'] == 'paysucceed') {
 		showmessage('postcomment_error');
 	}
 	$extra = !empty($_GET['extra']) ? rawurlencode($_GET['extra']) : '';
-	$seccodecheck = ($_G['setting']['seccodestatus'] & 4) && (!$_G['setting']['seccodedata']['minposts'] || getuserprofile('posts') < $_G['setting']['seccodedata']['minposts']);
-	$secqaacheck = $_G['setting']['secqaa']['status'] & 2 && (!$_G['setting']['secqaa']['minposts'] || getuserprofile('posts') < $_G['setting']['secqaa']['minposts']);
+	list($seccodecheck, $secqaacheck) = seccheck('post', 'reply');
 
 	include template('forum/comment');
 
 } elseif($_GET['action'] == 'commentmore') {
+
+	function forum_misc_commentmore_callback_1($matches, $action = 0) {
+		static $cic = 0;
+
+		if($action == 1) {
+			$cic = $matches;
+		} else {
+			return '<i class="cmstarv" style="background-position:20px -'.(intval($matches[1]) * 16).'px">'.sprintf('%1.1f', $matches[1]).'</i>'.($cic++ % 2 ? '<br />' : '');
+		}
+	}
 
 	if(!$_G['setting']['commentnumber'] || !$_G['inajax']) {
 		showmessage('postcomment_closed');
@@ -264,9 +273,10 @@ if($_GET['action'] == 'paysucceed') {
 		$comment['comment'] = str_replace(array('[b]', '[/b]', '[/color]'), array('<b>', '</b>', '</font>'), preg_replace("/\[color=([#\w]+?)\]/i", "<font color=\"\\1\">", $comment['comment']));
 		$comments[] = $comment;
 	}
+	forum_misc_commentmore_callback_1(0, 1);
 	$totalcomment = C::t('forum_postcomment')->fetch_standpoint_by_pid($_GET['pid']);
 	$totalcomment = $totalcomment['comment'];
-	$totalcomment = preg_replace('/<i>([\.\d]+)<\/i>/e', "'<i class=\"cmstarv\" style=\"background-position:20px -'.(intval(\\1) * 16).'px\">'.sprintf('%1.1f', \\1).'</i>'.(\$cic++ % 2 ? '<br />' : '');", $totalcomment);
+	$totalcomment = preg_replace_callback('/<i>([\.\d]+)<\/i>/', 'forum_misc_commentmore_callback_1', $totalcomment);
 	$count = C::t('forum_postcomment')->count_by_search(null, $_GET['pid']);
 	$multi = multi($count, $commentlimit, $page, "forum.php?mod=misc&action=commentmore&tid=$_G[tid]&pid=$_GET[pid]");
 	include template('forum/comment_more');
@@ -298,6 +308,7 @@ if($_GET['action'] == 'paysucceed') {
 		C::t('forum_post')->update('tid:'.$_G['tid'], $_GET['pid'], array(
 			'message' => $message,
 			'bbcodeoff' => $bbcodeoff,
+			'port' => $_G['remoteport']
 		));
 		showmessage('postappend_add_succeed', "forum.php?mod=viewthread&tid=$post[tid]&pid=$post[pid]&page=$_GET[page]&extra=$_GET[extra]#pid$post[pid]", array('tid' => $post['tid'], 'pid' => $post['pid']));
 	} else {
@@ -356,6 +367,96 @@ if($_GET['action'] == 'paysucceed') {
 	require_once libfile('function/cache');
 	updatecache('heats');
 	dheader('Location: '.dreferer());
+
+} elseif($_GET['action'] == 'showdarkroom') {
+
+	include_once libfile('class/member');
+	if($_G['setting']['darkroom']) {
+		$limit = $_G['tpp'];
+		$cid = $_GET['cid'] ? dintval($_GET['cid']) : 0;
+		$crimelist = array();
+		$i = 0;
+		foreach(C::t('common_member_crime')->fetch_all_by_cid($cid, array(4, 5), $limit) as $crime) {
+			$i++;
+			$cid = $crime['cid'];
+			if(isset($crimelist[$crime['uid']])) {
+				continue;
+			}
+			$crime['action'] = lang('forum/template', crime_action_ctl::$actions[$crime['action']]);
+			$crime['dateline'] = dgmdate($crime['dateline'], 'u');
+			$crimelist[$crime['uid']] = $crime;
+		}
+		if($crimelist && $i == $limit) {
+			$dataexist = 1;
+		} else {
+			$dataexist = 0;
+		}
+		foreach(C::t('common_member')->fetch_all(array_keys($crimelist)) as $uid => $user) {
+			if($user['groupid'] == 4 || $user['groupid'] == 5) {
+				$crimelist[$uid]['username'] = $user['username'];
+				$crimelist[$uid]['groupexpiry'] = $user['groupexpiry'] ? dgmdate($user['groupexpiry'], 'u') : lang('forum/misc', 'never_expired');
+			} else {
+				unset($crimelist[$uid]);
+			}
+		}
+		if($_GET['ajaxdata'] === 'json') {
+			showmessage(array('dataexist' => $dataexist, 'cid' => $cid), '', $crimelist);
+		} else {
+			include_once template("forum/darkroom");
+		}
+		exit;
+	}
+	showmessage('undefined_action');
+} elseif($_GET['action'] == 'shortcut') {
+
+	if($_GET['type'] == 'ico') {
+		$shortcut = @readfile(DISCUZ_ROOT.'favicon.ico');
+		$filename = 'favicon.ico';
+	} else {
+		$shortcut = '[InternetShortcut]
+URL='.$_G['siteurl'].'
+IconFile='.$_G['siteurl'].'favicon.ico
+IconIndex=1
+';
+		$filename = $_G['setting']['bbname'].'.url';
+	}
+
+	if(!strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
+		$filename = diconv($filename, CHARSET, 'UTF-8');
+	} else {
+		$filename = diconv($filename, CHARSET, 'GBK');
+	}
+	dheader('Content-type: application/octet-stream');
+	dheader('Content-Disposition: attachment; filename="'.$filename.'"');
+	echo $shortcut;
+	exit;
+} elseif($_GET['action'] == 'livelastpost') {
+	$fid = dintval($_GET['fid']);
+	$forum = C::t('forum_forumfield')->fetch($fid);
+	$livetid = $forum['livetid'];
+	$postlist = array();
+	if($livetid) {
+		$thread = C::t('forum_thread')->fetch($livetid);
+		$postlist['count'] = $thread['replies'];
+		$postarr = C::t('forum_post')->fetch_all_by_tid('tid:'.$livetid, $livetid, true, 'DESC', 20);
+		ksort($postarr);
+		foreach($postarr as $post) {
+			if($post['first'] == 1 || getstatus($post['status'], 1)) {
+				continue;
+			}
+			$contentarr = array(
+				'authorid' => !$post['anonymous'] ? $post['authorid'] : '',
+				'author' => !$post['anonymous'] ? $post['author'] : lang('forum/misc', 'anonymous'),
+				'message' => str_replace("\r\n", '<br>', messagecutstr($post['message'])),
+				'dateline' => dgmdate($post['dateline'], 'u'),
+				'avatar' => !$post['anonymous'] ? avatar($post['authorid'], 'small') : '',
+			);
+			$postlist['list'][$post['pid']] = $contentarr;
+		}
+	}
+
+	showmessage('', '', $postlist);
+	exit;
 
 } else {
 
@@ -426,7 +527,7 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 		$polloptionid[] = $pollarray['polloptionid'];
 	}
 
-	$polloptionids = '';
+	$polloptionids = array();
 	foreach($_GET['pollanswers'] as $key => $id) {
 		if(!in_array($id, $polloptionid)) {
 			showmessage('parameters_error');
@@ -514,6 +615,9 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 	include template('forum/viewthread_poll_voter');
 
 } elseif($_GET['action'] == 'rate' && $_GET['pid']) {
+
+	$_GET['tid'] = dintval($_GET['tid']);
+	$_GET['pid'] = dintval($_GET['pid']);
 
 	if($_GET['showratetip']) {
 		include template('forum/rate');
@@ -985,20 +1089,19 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 			if(!empty($activity['ufield']['userfield'])) {
 				$censor = discuz_censor::instance();
 				loadcache('profilesetting');
-
-				foreach($_POST as $key => $value) {
-					if(empty($_G['cache']['profilesetting'][$key])) continue;
+				foreach($activity['ufield']['userfield'] as $filedname) {
+					$value = $_POST[$filedname];
 					if(is_array($value)) {
 						$value = implode(',', $value);
 					}
 					$value = cutstr(dhtmlspecialchars(trim($value)), 100, '.');
-					if($_G['cache']['profilesetting'][$key]['formtype'] == 'file' && !preg_match("/^https?:\/\/(.*)?\.(jpg|png|gif|jpeg|bmp)$/i", $value)) {
+					if($_G['cache']['profilesetting'][$filedname]['formtype'] == 'file' && !preg_match("/^https?:\/\/(.*)?\.(jpg|png|gif|jpeg|bmp)$/i", $value)) {
 						showmessage('activity_imgurl_error');
 					}
-					if(empty($value) && $key != 'residedist' && $key != 'residecommunity') {
+					if(empty($value) && $filedname != 'residedist' && $filedname != 'residecommunity') {
 						showmessage('activity_exile_field');
 					}
-					$ufielddata['userfield'][$key] = $value;
+					$ufielddata['userfield'][$filedname] = $value;
 				}
 			}
 			if(!empty($activity['ufield']['extfield'])) {
@@ -1254,7 +1357,7 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 	$applylist = array();
 	$query = C::t('forum_activityapply')->fetch_all_for_thread($_G['tid'], 0, 2000, 0, 1);
 	foreach($query as $apply) {
-		$apply = str_replace(',', '，', $apply);
+		$apply = str_replace(',', lang('forum/thread', 't_comma'), $apply);
 		$apply['dateline'] = dgmdate($apply['dateline'], 'dt');
 		$apply['ufielddata'] = !empty($apply['ufielddata']) ? dunserialize($apply['ufielddata']) : '';
 		$ufielddata = '';
@@ -1468,6 +1571,7 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 	if(empty($_G['uid'])) {
 		showmessage('to_login', null, array(), array('showmsg' => true, 'login' => 1));
 	}
+
 	if(empty($_GET['hash']) || $_GET['hash'] != formhash()) {
 		showmessage('submit_invalid');
 	}
@@ -1501,15 +1605,18 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 		$fieldarr['heats'] = 0;
 	$fieldarr['recommends'] = $_G['group']['allowrecommend'];
 	C::t('forum_thread')->increase($_G['tid'], $fieldarr);
+	if(empty($thread['closed'])) {
+		C::t('forum_thread')->update($_G['tid'], array('lastpost' => TIMESTAMP));
+	}
 	C::t('forum_memberrecommend')->insert(array('tid'=>$_G['tid'], 'recommenduid'=>$_G['uid'], 'dateline'=>$_G['timestamp']));
 
 	dsetcookie('recommend', 1, 43200);
 	$recommendv = $_G['group']['allowrecommend'] > 0 ? '+'.$_G['group']['allowrecommend'] : $_G['group']['allowrecommend'];
 	if($_G['setting']['recommendthread']['daycount']) {
 		$daycount = $_G['setting']['recommendthread']['daycount'] - $recommendcount;
-		showmessage('recommend_daycount_succed', '', array('recommendv' => $recommendv, 'recommendc' => $thread['recommends'], 'daycount' => $daycount), array('msgtype' => 3));
+		showmessage('recommend_daycount_succeed', '', array('recommendv' => $recommendv, 'recommendc' => $thread['recommends'], 'daycount' => $daycount), array('msgtype' => 3));
 	} else {
-		showmessage('recommend_succed', '', array('recommendv' => $recommendv, 'recommendc' => $thread['recommends']), array('msgtype' => 3));
+		showmessage('recommend_succeed', '', array('recommendv' => $recommendv, 'recommendc' => $thread['recommends']), array('msgtype' => 3));
 	}
 
 } elseif($_GET['action'] == 'protectsort') {
@@ -1583,13 +1690,14 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 			$class_tag = new tag();
 			$tagarray = $class_tag->add_tag($_GET['tags'], 0, 'uid', 1);
 			if($tagarray) {
-				$uids = '';
+				$uids = array();
 				if($_G['thread']['special'] == 1) {
 					if($_GET['polloptions']) {
 						$query = C::t('forum_polloption')->fetch_all($_GET['polloptions']);
 					} else {
 						$query = C::t('forum_polloption')->fetch_all_by_tid($_G['tid']);
 					}
+					$uids = '';
 					foreach($query as $row) {
 						$uids .= $row['voterids'];
 					}
@@ -1632,6 +1740,94 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 		showmessage('parameters_error', '', array('haserror' => 1));
 	}
 	include_once template("forum/usertag");
+} elseif($_GET['action'] == 'postreview') {
+
+	if(!$_G['setting']['repliesrank'] || empty($_G['uid'])) {
+		showmessage('to_login', null, array(), array('showmsg' => true, 'login' => 1));
+	}
+	if(empty($_GET['hash']) || $_GET['hash'] != formhash()) {
+		showmessage('submit_invalid');
+	}
+
+	$doArray = array('support', 'against');
+
+	$post = C::t('forum_post')->fetch('tid:'.$_GET['tid'], $_GET['pid'], false);
+
+	if(!in_array($_GET['do'], $doArray) || empty($post) || $post['first'] == 1 || ($_G['setting']['threadfilternum'] && $_G['setting']['filterednovote'] && getstatus($post['status'], 11))) {
+		showmessage('undefined_action', NULL);
+	}
+
+	$hotreply = C::t('forum_hotreply_number')->fetch_by_pid($post['pid']);
+	if($_G['uid'] == $post['authorid']) {
+		showmessage('noreply_yourself_error', '', array(), array('msgtype' => 3));
+	}
+
+	if(empty($hotreply)) {
+		$hotreply['pid'] = C::t('forum_hotreply_number')->insert(array(
+			'pid' => $post['pid'],
+			'tid' => $post['tid'],
+			'support' => 0,
+			'against' => 0,
+			'total' => 0,
+		), true);
+	} else {
+		if(C::t('forum_hotreply_member')->fetch($post['pid'], $_G['uid'])) {
+			showmessage('noreply_voted_error', '', array(), array('msgtype' => 3));
+		}
+	}
+
+	$typeid = $_GET['do'] == 'support' ? 1 : 0;
+
+	C::t('forum_hotreply_number')->update_num($post['pid'], $typeid);
+	C::t('forum_hotreply_member')->insert(array(
+		'tid' => $post['tid'],
+		'pid' => $post['pid'],
+		'uid' => $_G['uid'],
+		'attitude' => $typeid,
+	));
+
+	$hotreply[$_GET['do']]++;
+
+	showmessage('thread_poll_succeed', '', array(), array('msgtype' => 3, 'extrajs' => '<script type="text/javascript">postreviewupdate('.$post['pid'].', '.$typeid.');</script>'));
+} elseif($_GET['action'] == 'hidden') {
+	if($_GET['formhash'] != FORMHASH) {
+		showmessage('undefined_action', NULL);
+	}
+	if(!$_G['uid']) {
+		showmessage('group_nopermission', NULL, array('grouptitle' => $_G['group']['grouptitle']), array('login' => 1));
+	}
+	if(in_array($thread['fid'], $_G['setting']['security_forums_white_list']) || $thread['displayorder'] > 0 || $thread['highlight'] || $thread['digest'] || $thread['stamp'] > -1) {
+		showmessage('thread_hidden_error', NULL);
+	}
+	$member = C::t('common_member')->fetch($thread['authorid']);
+	if(in_array($member['groupid'], $_G['setting']['security_usergroups_white_list'])) {
+		showmessage('thread_hidden_error', NULL);
+	}
+	if(C::t('forum_forumrecommend')->fetch($thread['tid'])) {
+		showmessage('thread_hidden_error', NULL);
+	}
+	C::t('forum_threadhidelog')->insert($_GET['tid'], $_G['uid']);
+	if($thread['hidden'] + 1 == $_G['setting']['threadhidethreshold']) {
+		notification_add($thread['authorid'], 'post', 'thread_hidden', array('tid' => $thread['tid'], 'subject' => $thread['subject']), 1);
+	}
+	$thide = explode('|', $_G['cookie']['thide']);
+	$thide = array_slice($thide, -20);
+	if(!in_array($_GET['tid'], $thide)) {
+		$thide[] = $_GET['tid'];
+	}
+	dsetcookie('thide', implode('|', $thide), 2592000);
+	showmessage('thread_hidden_success', dreferer(), array(), array('showdialog' => true, 'closetime' => true, 'extrajs' => '<script type="text/javascript" reload="1">$(\'normalthread_'.$_GET['tid'].'\').style.display = \'none\'</script>'));
+} elseif($_GET['action'] == 'hiderecover') {
+	if($_GET['formhash'] != FORMHASH) {
+		showmessage('undefined_action', NULL);
+	}
+	$seccodecheck = true;
+	if(submitcheck('hiderecoversubmit')) {
+		C::t('forum_threadhidelog')->delete_by_tid($_GET['tid']);
+		showmessage('thread_hiderecover_success', dreferer());
+	} else {
+		include template('forum/hiderecover');
+	}
 }
 
 function getratelist($raterange) {

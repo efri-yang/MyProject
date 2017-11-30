@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: spacecp_profile.php 36390 2017-09-29 09:08:19Z nemohou $
+ *      $Id: spacecp_profile.php 36284 2016-12-12 00:47:50Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -23,9 +23,8 @@ $operation = in_array($_GET['op'], array('base', 'contact', 'edu', 'work', 'info
 $space = getuserbyuid($_G['uid']);
 space_merge($space, 'field_home');
 space_merge($space, 'profile');
-$seccodecheck = $_G['setting']['seccodestatus'] & 8;
-$secqaacheck = $_G['setting']['secqaa']['status'] & 4;
-$_G['group']['seccode'] = 1;
+
+list($seccodecheck, $secqaacheck) = seccheck('password');
 @include_once DISCUZ_ROOT.'./data/cache/cache_domain.php';
 $spacedomain = isset($rootdomain['home']) && $rootdomain['home'] ? $rootdomain['home'] : array();
 $_GET['id'] = $_GET['id'] ? preg_replace("/[^A-Za-z0-9_:]/", '', $_GET['id']) : '';
@@ -52,7 +51,20 @@ if($_G['setting']['regverify'] == 2 && $_G['groupid'] == 8) {
 }
 if($_G['setting']['connect']['allow']) {
 	$connect = C::t('#qqconnect#common_member_connect')->fetch($_G['uid']);
-	$conisregister = $operation == 'password' && $_G['setting']['connect']['allow'] && $connect['conisregister'];
+	$conisregister = $operation == 'password' && $connect['conisregister'];
+}
+
+if(in_array('wechat', $_G['setting']['plugins']['available'])) {
+	if($_G['wechat']['setting']['wechat_qrtype']) {
+		$wechatuser = C::t('#wechat#common_member_wechatmp')->fetch($_G['uid']);
+		if($wechatuser && !$wechatuser['status']) {
+			$wechatuser['isregister'] = 1;
+		}
+	} else {
+		$wechatuser = C::t('#wechat#common_member_wechat')->fetch($_G['uid']);
+	}
+
+	$conisregister = $operation == 'password' && $wechatuser['isregister'];
 }
 
 if(submitcheck('profilesubmit')) {
@@ -106,7 +118,7 @@ if(submitcheck('profilesubmit')) {
 			if($key == 'sightml') {
 				loadcache(array('smilies', 'smileytypes'));
 				$value = cutstr($value, $_G['group']['maxsigsize'], '');
-				foreach($_G['cache']['smilies']['replacearray'] as $skey => $smiley) {
+				foreach($_G['cache']['smilies']['replacearray'] AS $skey => $smiley) {
 					$_G['cache']['smilies']['replacearray'][$skey] = '[img]'.$_G['siteurl'].'static/image/smiley/'.$_G['cache']['smileytypes'][$_G['cache']['smilies']['typearray'][$skey]]['directory'].'/'.$smiley.'[/img]';
 				}
 				$value = preg_replace($_G['cache']['smilies']['searcharray'], $_G['cache']['smilies']['replacearray'], trim($value));
@@ -118,7 +130,9 @@ if(submitcheck('profilesubmit')) {
 		} elseif($field && !$field['available']) {
 			continue;
 		} elseif($key == 'timeoffset') {
-			C::t('common_member')->update($_G['uid'], array('timeoffset' => intval($value)));
+			if($value >= -12 && $value <= 12 || $value == 9999) {
+				C::t('common_member')->update($_G['uid'], array('timeoffset' => intval($value)));
+			}
 		} elseif($key == 'site') {
 			if(!in_array(strtolower(substr($value, 0, 6)), array('http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://')) && !preg_match('/^static\//', $value) && !preg_match('/^data\//', $value)) {
 				$value = 'http://'.$value;
@@ -294,6 +308,14 @@ if(submitcheck('profilesubmit')) {
 		}
 	}
 
+	if(in_array('mobile', $_G['setting']['plugins']['available']) && $wechatuser['isregister']) {
+		$_GET['oldpassword'] = '';
+		$ignorepassword = 1;
+		if(empty($_GET['newpassword'])) {
+			showmessage('profile_passwd_empty');
+		}
+	}
+
 	if($_GET['questionidnew'] === '') {
 		$_GET['questionidnew'] = $_GET['answernew'] = '';
 	} else {
@@ -348,6 +370,10 @@ if(submitcheck('profilesubmit')) {
 		C::t('#qqconnect#common_member_connect')->update($_G['uid'], array('conisregister' => 0));
 	}
 
+	if(in_array('mobile', $_G['setting']['plugins']['available']) && $wechatuser['isregister']) {
+		C::t('#wechat#common_member_wechat')->update($_G['uid'], array('isregister' => 0));
+	}
+
 	$authstr = false;
 	if($emailnew != $_G['member']['email']) {
 		$authstr = true;
@@ -355,7 +381,13 @@ if(submitcheck('profilesubmit')) {
 		dsetcookie('newemail', "$space[uid]\t$emailnew\t$_G[timestamp]", 31536000);
 	}
 	if($setarr) {
+		if($_G['member']['freeze'] == 1) {
+			$setarr['freeze'] = 0;
+		}
 		C::t('common_member')->update($_G['uid'], $setarr);
+	}
+	if($_G['member']['freeze'] == 2) {
+		C::t('common_member_validate')->update($_G['uid'], array('message' => dhtmlspecialchars($_G['gp_freezereson'])));
 	}
 
 	if($authstr) {
@@ -373,12 +405,13 @@ if($operation == 'password') {
 	$space['newemail'] = !$space['emailstatus'] ? $space['email'] : '';
 	if(!empty($newemail)) {
 		$mailinfo = explode("\t", $newemail);
-		$space['newemail'] = $mailinfo[0] == $_G['uid'] && isemail($mailinfo[1]) && $mailinfo[1] != $space['email'] ? $mailinfo[1] : '';
+		$space['newemail'] = $mailinfo[0] == $_G['uid'] && isemail($mailinfo[1]) ? $mailinfo[1] : '';
 	}
 
 	if($_GET['resend'] && $resend) {
 		$toemail = $space['newemail'] ? $space['newemail'] : $space['email'];
 		emailcheck_send($space['uid'], $toemail);
+		dsetcookie('newemail', "$space[uid]\t$toemail\t$_G[timestamp]", 31536000);
 		dsetcookie('resendemail', TIMESTAMP);
 		showmessage('send_activate_mail_succeed', "home.php?mod=spacecp&ac=profile&op=password");
 	} elseif ($_GET['resend']) {
@@ -389,6 +422,10 @@ if($operation == 'password') {
 	}
 	$actives = array('password' =>' class="a"');
 	$navtitle = lang('core', 'title_password_security');
+	if($_G['member']['freeze'] == 2) {
+		$fzvalidate = C::t('common_member_validate')->fetch($space['uid']);
+		$space['freezereson'] = $fzvalidate['message'];
+	}
 
 } else {
 
@@ -463,7 +500,7 @@ if($operation == 'password') {
 
 include template("home/spacecp_profile");
 
-function profile_showerror($key, $extrainfo) {
+function profile_showerror($key, $extrainfo = '') {
 	echo '<script>';
 	echo 'parent.show_error("'.$key.'", "'.$extrainfo.'");';
 	echo '</script>';

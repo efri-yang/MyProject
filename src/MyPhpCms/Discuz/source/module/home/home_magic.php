@@ -4,7 +4,7 @@
 	[Discuz!] (C)2001-2009 Comsenz Inc111.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: home_magic.php 33876 2013-08-26 07:39:40Z andyzheng $
+	$Id: home_magic.php 33875 2013-08-26 07:33:49Z andyzheng $
 */
 
 if(!defined('IN_DISCUZ')) {
@@ -31,6 +31,7 @@ $page = max(1, intval($_GET['page']));
 $action = $_GET['action'];
 $operation = $_GET['operation'];
 $start_limit = ($page - 1) * $_G['tpp'];
+$_GET['idtype'] = dhtmlspecialchars($_GET['idtype']);
 
 $comma = $typeadd = $filteradd = $forumperm = $targetgroupperm = '';
 $magicarray = is_array($_G['cache']['magics']) ? $_G['cache']['magics'] : array();
@@ -49,6 +50,17 @@ $location = 0;
 
 if(empty($action) && !empty($_GET['mid'])) {
 	$_GET['magicid'] = C::t('common_member_magic')->fetch_magicid_by_identifier($_G['uid'], $_GET['mid']);
+	if(!$_GET['magicid']) {
+		$magic = C::t('common_magic')->fetch_by_identifier($_GET['mid']);
+		if(!$magic['price'] && $magic['num']) {
+			getmagic($magic['magicid'], 1, $magic['weight'], $totalweight, $_G['uid'], $_G['group']['maxmagicsweight']);
+			updatemagiclog($magic['magicid'], '1', 1, $magic['price'].'|'.$magic['credit'], $_G['uid']);
+
+			C::t('common_magic')->update_salevolume($magic['magicid'], 1);
+			updatemembercount($_G['uid'], array($magic['credit'] => -0), true, 'BMC', $magic['magicid']);
+			$_GET['magicid'] = $magic['magicid'];
+		}
+	}
 	if($_GET['magicid']) {
 		$action = 'mybox';
 		$operation = 'use';
@@ -81,7 +93,12 @@ if($action == 'shop') {
 
 		foreach(C::t('common_magic')->fetch_all_page($operation, $start_limit, $_G['tpp']) as $magic) {
 			$magic['discountprice'] = $_G['group']['magicsdiscount'] ? intval($magic['price'] * ($_G['group']['magicsdiscount'] / 10)) : intval($magic['price']);
-			$magic['pic'] = strtolower($magic['identifier']).'.gif';
+			$eidentifier = explode(':', $magic['identifier']);
+			if(count($eidentifier) > 1) {
+				$magic['pic'] = 'source/plugin/'.$eidentifier[0].'/magic/magic_'.$eidentifier[1].'.gif';
+			} else {
+				$magic['pic'] = STATICURL.'image/magic/'.strtolower($magic['identifier']).'.gif';
+			}
 			$magiclist[] = $magic;
 		}
 
@@ -103,10 +120,18 @@ if($action == 'shop') {
 		}
 		$querystring = implode('&', $querystring);
 
-		if(!@include_once DISCUZ_ROOT.($magicfile = "./source/class/magic/magic_$magic[identifier].php")) {
+		$eidentifier = explode(':', $magic['identifier']);
+		if(count($eidentifier) > 1) {
+			$magicfile = './source/plugin/'.$eidentifier[0].'/magic/magic_'.$eidentifier[1].'.php';
+			$magicclass = 'magic_'.$eidentifier[1];
+		} else {
+			$magicfile = './source/class/magic/magic_'.$magic['identifier'].'.php';
+			$magicclass = 'magic_'.$magic['identifier'];
+		}
+
+		if(!@include_once DISCUZ_ROOT.$magicfile) {
 			showmessage('magics_filename_nonexistence', '', array('file' => $magicfile));
 		}
-		$magicclass = 'magic_'.$magic['identifier'];
 		$magicclass = new $magicclass;
 		$magicclass->magic = $magic;
 		$magicclass->parameters = $magicperm;
@@ -115,7 +140,11 @@ if($action == 'shop') {
 		}
 
 		$magic['discountprice'] = $_G['group']['magicsdiscount'] ? intval($magic['price'] * ($_G['group']['magicsdiscount'] / 10)) : intval($magic['price']);
-		$magic['pic'] = strtolower($magic['identifier']).".gif";
+		if(count($eidentifier) > 1) {
+			$magic['pic'] = 'source/plugin/'.$eidentifier[0].'/magic/magic_'.$eidentifier[1].'.gif';
+		} else {
+			$magic['pic'] = STATICURL.'image/magic/'.strtolower($magic['identifier']).'.gif';
+		}
 		$magic['credit'] = $magic['credit'] ? $magic['credit'] : $_G['setting']['creditstransextra'][3];
 		$useperoid = magic_peroid($magic, $_G['uid']);
 
@@ -186,7 +215,12 @@ if($action == 'shop') {
 		}
 
 		$magic['discountprice'] = $_G['group']['magicsdiscount'] ? intval($magic['price'] * ($_G['group']['magicsdiscount'] / 10)) : intval($magic['price']);
-		$magic['pic'] = strtolower($magic['identifier']).".gif";
+		$eidentifier = explode(':', $magic['identifier']);
+		if(count($eidentifier) > 1) {
+			$magic['pic'] = 'source/plugin/'.$eidentifier[0].'/magic/magic_'.$eidentifier[1].'.gif';
+		} else {
+			$magic['pic'] = STATICURL.'image/magic/'.strtolower($magic['identifier']).'.gif';
+		}
 
 		if(!submitcheck('operatesubmit')) {
 
@@ -244,7 +278,12 @@ if($action == 'shop') {
 		$magicm = C::t('common_magic')->fetch_all($magicids);
 		foreach($query as $curmagicid => $mymagic) {
 			$mymagic = $mymagic + $magicm[$mymagic['magicid']];
-			$mymagic['pic'] = strtolower($mymagic['identifier']).'.gif';
+			$eidentifier = explode(':', $mymagic['identifier']);
+			if(count($eidentifier) > 1) {
+				$mymagic['pic'] = 'source/plugin/'.$eidentifier[0].'/magic/magic_'.$eidentifier[1].'.gif';
+			} else {
+				$mymagic['pic'] = STATICURL.'image/magic/'.strtolower($mymagic['identifier']).'.gif';
+			}
 			$mymagic['weight'] = intval($mymagic['weight'] * $mymagic['num']);
 			$mymagic['type'] = $mymagic['type'];
 			$mymagiclist[] = $mymagic;
@@ -264,7 +303,12 @@ if($action == 'shop') {
 			showmessage('magics_nonexistence');
 		}
 		$magicperm = dunserialize($magic['magicperm']);
-		$magic['pic'] = strtolower($magic['identifier']).'.gif';
+		$eidentifier = explode(':', $magic['identifier']);
+		if(count($eidentifier) > 1) {
+			$magic['pic'] = 'source/plugin/'.$eidentifier[0].'/magic/magic_'.$eidentifier[1].'.gif';
+		} else {
+			$magic['pic'] = STATICURL.'image/magic/'.strtolower($magic['identifier']).'.gif';
+		}
 
 		if($operation == 'use') {
 
@@ -280,10 +324,17 @@ if($action == 'shop') {
 
 			$magic['weight'] = intval($magicarray[$magic['magicid']]['weight'] * $magic['num']);
 
-			if(!@include_once DISCUZ_ROOT.($magicfile = "./source/class/magic/magic_$magic[identifier].php")) {
+			if(count($eidentifier) > 1) {
+				$magicfile = './source/plugin/'.$eidentifier[0].'/magic/magic_'.$eidentifier[1].'.php';
+				$magicclass = 'magic_'.$eidentifier[1];
+			} else {
+				$magicfile = './source/class/magic/magic_'.$magic['identifier'].'.php';
+				$magicclass = 'magic_'.$magic['identifier'];
+			}
+
+			if(!@include_once DISCUZ_ROOT.$magicfile) {
 				showmessage('magics_filename_nonexistence', '', array('file' => $magicfile));
 			}
-			$magicclass = 'magic_'.$magic['identifier'];
 			$magicclass = new $magicclass;
 			$magicclass->magic = $magic;
 			$magicclass->parameters = $magicperm;

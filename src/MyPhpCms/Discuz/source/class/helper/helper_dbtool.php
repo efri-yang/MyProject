@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: helper_dbtool.php 26689 2011-12-20 05:05:58Z zhangguosheng $
+ *      $Id: helper_dbtool.php 36319 2016-12-20 02:03:23Z nemohou $
  */
 if (!defined('IN_DISCUZ')) {
 	exit('Access Denied');
@@ -13,7 +13,8 @@ if (!defined('IN_DISCUZ')) {
 class helper_dbtool {
 
 	public static function dbversion() {
-		return DB::result_first("SELECT VERSION()");
+		$db = & DB::object();
+		return $db->version();
 	}
 
 	public static function dbsize() {
@@ -36,6 +37,34 @@ class helper_dbtool {
 		return $status;
 	}
 
+	public static function showtablecloumn($tablename) {
+		$data = array();
+		$db = &DB::object();
+		if($db->version() > '4.1') {
+			$query = $db->query("SHOW FULL COLUMNS FROM ".DB::table($tablename), 'SILENT');
+		} else {
+			$query = $db->query("SHOW COLUMNS FROM ".DB::table($tablename), 'SILENT');
+		}
+		while($field = @DB::fetch($query)) {
+			$data[$field['Field']] = $field;
+		}
+		return $data;
+	}
+
+	public static function isexisttable($tablename) {
+		$tablearr = array();
+		$query = DB::query('SHOW TABLES', 'SILENT');
+		while($table = DB::fetch($query)) {
+			foreach($table as $value) {
+				$tablearr[] = $value;
+			}
+		}
+		if(in_array(DB::table($tablename), $tablearr)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 ?>

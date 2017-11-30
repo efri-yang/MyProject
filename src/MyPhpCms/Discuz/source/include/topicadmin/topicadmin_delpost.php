@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: topicadmin_delpost.php 25289 2011-11-03 10:06:19Z zhangguosheng $
+ *      $Id: topicadmin_delpost.php 36334 2017-01-03 01:32:35Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -90,6 +90,27 @@ if(!submitcheck('modsubmit')) {
 			deletepost($pids, 'pid', true);
 		}
 
+		if($_G['group']['allowbanuser'] && ($_GET['banuser'] || $_GET['userdelpost']) && $_G['deleteauthorids']) {
+			$members = C::t('common_member')->fetch_all($_G['deleteauthorids']);
+			$banuins = array();
+			foreach($members as $member) {
+				if(($_G['cache']['usergroups'][$member['groupid']]['type'] == 'system' &&
+					in_array($member['groupid'], array(1, 2, 3, 6, 7, 8))) || $_G['cache']['usergroups'][$member['groupid']]['type'] == 'special') {
+					continue;
+				}
+				$banuins[$member['uid']] = $member['uid'];
+			}
+			if($banuins) {
+				if($_GET['banuser']) {
+					C::t('common_member')->update($banuins, array('groupid' => 4));
+				}
+
+				if($_GET['userdelpost']) {
+					deletememberpost($banuins);
+				}
+			}
+		}
+
 		if($_GET['crimerecord']) {
 			include_once libfile('function/member');
 
@@ -108,7 +129,7 @@ if(!submitcheck('modsubmit')) {
 
 	$resultarray = array(
 	'redirect'	=> "forum.php?mod=viewthread&tid=$_G[tid]&page=$_GET[page]",
-	'reasonpm'	=> ($sendreasonpm ? array('data' => $posts, 'var' => 'post', 'item' => 'reason_delete_post') : array()),
+	'reasonpm'	=> ($sendreasonpm ? array('data' => $posts, 'var' => 'post', 'item' => 'reason_delete_post', 'notictype' => 'post') : array()),
 	'reasonvar'	=> array('tid' => $thread['tid'], 'subject' => $thread['subject'], 'modaction' => $modaction, 'reason' => $reason),
 	'modtids'	=> 0,
 	'modlog'	=> $thread

@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 
 <div id="pt" class="bm cl">
 	<div class="z">
@@ -53,7 +53,7 @@
 				<!--{else}-->
 					<p class="emp">{lang faq_search_nomatch}</p>
 				<!--{/if}-->
-			<!--{elseif $_GET[action] == 'plugin'}-->
+			<!--{elseif $_GET[action] == 'plugin' && !empty($_GET['id'])}-->
 				<!--{eval include(template($_GET['id']));}-->
 			<!--{/if}-->
 		</div>
@@ -77,4 +77,4 @@
 	</div>
 </div>
 
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

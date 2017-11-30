@@ -51,9 +51,9 @@
 									<!--{/if}-->
 									<!--{hook/space_album_pic_top}-->
 								</div>
-				
+
 								<div class="vw pic">
-				
+
 									<div id="photo_pic" class="c{if $pic[magicframe]} magicframe magicframe$pic[magicframe]{/if}">
 										<!--{if $pic[magicframe]}-->
 										<div class="pic_lb1">
@@ -88,7 +88,7 @@
 																	space = -(cont.offsetWidth - tar.width)/2;
 																}
 																var objpos = fetchOffset(tar);
-				
+
 																pager.style.position = 'absolute';
 																pager.style.top = '0';
 																pager.style.left = objpos['left'] + 'px';
@@ -100,13 +100,13 @@
 																pre.style.width = next.style.width = w + 'px';
 																pre.style.height = next.style.height = tar.height + 'px';
 																pre.innerHTML = next.innerHTML = '<img src="{IMGDIR}/emp.gif" width="' + w + '" height="' + tar.height + '" />';
-				
+
 																pre.onmouseover = function(){ this.style.background = 'url({IMGDIR}/pic-prev.png) no-repeat 0 100px'; }
 																pre.onclick = function(){ window.location = 'home.php?mod=space&uid=$pic[uid]&do=$do&picid=$upid&goto=up#pic_block'; }
-				
+
 																next.onmouseover = function(){ this.style.background = 'url({IMGDIR}/pic-next.png) no-repeat 100% 100px'; }
 																next.onclick = function(){ window.location = 'home.php?mod=space&uid=$pic[uid]&do=$do&picid=$nextid&goto=down#pic_block'; }
-				
+
 																//cont.style.position = 'relative';
 																cont.appendChild(pager);
 																pager.appendChild(pre);
@@ -129,11 +129,11 @@
 										</div>
 										<!--{/if}-->
 									</div>
-				
+
 									<div class="pns mlnv vm mtm cl">
 											<a href="home.php?mod=space&uid=$pic[uid]&do=$do&picid=$upid&goto=up#pic_block" class="btn" title="{lang previous_pic}"><img src="{STATICURL}image/common/pic_nv_prev.gif" alt="{lang previous_pic}"/></a><!--{loop $piclist $value}--><a href="home.php?mod=space&uid=$value[uid]&do=album&picid=$value[picid]#pic_block"><img alt="" src="$value[pic]"{if $value[picid]==$picid} class="a"{/if} /></a><!--{/loop}--><a href="home.php?mod=space&uid=$pic[uid]&do=$do&picid=$nextid&goto=down#pic_block" class="btn" title="{lang next_pic}"><img src="{STATICURL}image/common/pic_nv_next.gif" alt="{lang next_pic}"/></a>
 									</div>
-				
+
 									<div class="d bbs">
 										<p id="a_set_title" class="albim_pic_title"><!--{if $pic[title]}-->$pic[title]<!--{else}--><!--{eval echo substr($pic['filename'], 0, strrpos($pic['filename'], '.'));}--><!--{/if}--><!--{if $pic[status] == 1}--><b>({lang moderate_need})</b><!--{/if}--></p>
 										<p class="xg1 xs1">
@@ -165,20 +165,20 @@
 												<!--{/if}-->
 												<span class="pipe">|</span>
 											<!--{/if}-->
-				
+
 											<!--{/if}-->
-				
+
 											<!--{if $_G[uid] == $pic[uid] || checkperm('managealbum')}-->
 											<a href="home.php?mod=spacecp&ac=album&op=editpic&albumid=$pic[albumid]&picid=$pic[picid]">{lang manage_pic}</a><span class="pipe">|</span>
 											<a href="home.php?mod=spacecp&ac=album&op=edittitle&albumid=$pic[albumid]&picid=$pic[picid]&handlekey=edittitlehk_{$pic[picid]}" id="a_set_title" onclick="showWindow(this.id, this.href, 'get', 0);">{lang edit_description}</a>
 											<!--{/if}-->
-				
+
 											<!--{if checkperm('managealbum')}-->
-											<span class="pipe">|</span>IP: $pic[postip]
+											<span class="pipe">|</span>IP: $pic[postip]{if $pic[port]}:$pic[port]{/if}
 											<span class="pipe">|</span><a href="home.php?mod=spacecp&ac=album&picid=$pic[picid]&op=edithot&handlekey=picedithothk_{$pic[picid]}" id="a_hot_$pic[picid]" onclick="showWindow(this.id, this.href, 'get', 0);">{lang hot}</a>
 											<!--{/if}-->
 											<!--a href="home.php?mod=spacecp&ac=common&op=report&idtype=picid&id=$pic[picid]&handlekey=reportpichk_{$pic[picid]}" id="a_report" onclick="showWindow(this.id, this.href, 'get', 0);">{lang report}</a-->
-				
+
 											<span class="z">
 												<a href="$pic[pic]" target="_blank">{lang look_pic}</a>
 												<!--{if !isset($_GET['exif'])}-->
@@ -194,7 +194,7 @@
 											</span>
 										</div>
 									</div>
-				
+
 								</div>
 								<!--[diy=diyclicktop]--><div id="diyclicktop" class="area"></div><!--[/diy]-->
 								<!--{if $album[friend] != 3}-->
@@ -216,9 +216,9 @@
 											{lang current_comment}
 										</div>
 										<!--{/if}-->
-				
+
 										<div id="comment_ul" class="xld xlda">
-										<!--{loop $list $value}-->
+										<!--{loop $list $k $value}-->
 											<!--{template home/space_comment_li}-->
 										<!--{/loop}-->
 										</div>
@@ -244,9 +244,9 @@
 												<div class="pt hm">{lang login_to_comment} <a href="member.php?mod=logging&action=login" onclick="showWindow('login', this.href)" class="xi2">{lang login}</a> | <a href="member.php?mod={$_G[setting][regname]}" class="xi2">$_G['setting']['reglinkname']</a></div>
 											<!--{/if}-->
 										</div>
-				
+
 									</div>
-									<!--{if checkperm('seccode') && ($secqaacheck || $seccodecheck)}-->
+									<!--{if $secqaacheck || $seccodecheck}-->
 										<!--{block sectpl}--><sec> <span id="sec<hash>" onclick="showMenu(this.id);"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div><!--{/block}-->
 										<div class="mtm mbm sec"><!--{subtemplate common/seccheck}--></div>
 									<!--{/if}-->
@@ -264,8 +264,8 @@
 								</form>
 								<!--{/if}-->
 						</div>
-				
-				
+
+
 						<script type="text/javascript">
 							function succeedhandle_qcpic_{$picid}(url, msg, values) {
 								if(values['cid']) {
@@ -273,7 +273,7 @@
 								} else {
 									$('return_qcpic_{$picid}').innerHTML = msg;
 								}
-								<!--{if checkperm('seccode') && $sechash}-->
+								<!--{if $sechash}-->
 									<!--{if $secqaacheck}-->
 									updatesecqaa('$sechash');
 									<!--{/if}-->
@@ -283,7 +283,7 @@
 								<!--{/if}-->
 							}
 						</script>
-				
+
 						<script type="text/javascript">
 							var interval = 5000;
 							var timerId = -1;
@@ -331,19 +331,19 @@
 							playNextPic(true);
 							<!--{/if}-->
 							<!--{/if}-->
-				
+
 							function update_title() {
 								$('title_form').style.display='';
 							}
-				
+
 							var elems = selector('dd[class~=magicflicker]');
 							for(var i=0; i<elems.length; i++){
 								magicColor(elems[i]);
 							}
 						</script>
-				
+
 						<!--end bm-->
-		
+
 				<!--{if !$_G[setting][homepagestyle]}--><!--[diy=diycontentbottom]--><div id="diycontentbottom" class="area"></div><!--[/diy]--><!--{/if}-->
 				</div>
 			</div>
@@ -359,4 +359,4 @@
 		<!--[diy=diy3]--><div id="diy3" class="area"></div><!--[/diy]-->
 	</div>
 <!--{/if}-->
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

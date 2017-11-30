@@ -137,7 +137,7 @@
 									<em>$thread[dateline]</em>
 								</td>
 								<td class="num">
-									$thread[replies]<em>$thread[views]</em>
+									$thread[allreplies]<em>$thread[views]</em>
 								</td>
 								<td class="by">
 									<cite><!--{if $thread['lastposter']}--><a href="{if $thread[digest] != -2}home.php?mod=space&username=$thread[lastposterenc]{else}forum.php?mod=viewthread&tid=$thread[tid]&page={echo max(1, $thread[pages]);}{/if}">$thread[lastposter]</a></cite><!--{else}-->{lang anonymous}<!--{/if}--></cite><em><a href="{if $thread[digest] != -2}forum.php?mod=redirect&tid=$thread[tid]&goto=lastpost$highlight#lastpost{else}forum.php?mod=viewthread&tid=$thread[tid]&page={echo max(1, $thread[pages]);}{/if}">$thread[lastpost]</a></em>

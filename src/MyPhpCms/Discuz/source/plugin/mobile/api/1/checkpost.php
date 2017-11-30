@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: checkpost.php 27451 2012-02-01 05:48:47Z monkey $
+ *      $Id: checkpost.php 32489 2013-01-29 03:57:16Z monkey $
  */
 
 if(!defined('IN_MOBILE_API')) {

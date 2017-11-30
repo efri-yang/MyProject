@@ -340,6 +340,7 @@
 									</p>
 								<!--{/if}-->
 							</dd>
+							
 						</dl>
 					</div>
 				<!--{else}-->
@@ -362,7 +363,7 @@
 						<tr>
 							<th>{lang ignore_list}</th>
 							<td>
-								<textarea id="ignorelist" name="ignorelist" cols="40" rows="3" class="pt" onkeydown="ctrlEnter(event, 'ignoresubmit');">$ignorelist</textarea>
+								<textarea id="ignorelist" name="ignorelist" cols="40" rows="3" class="pt" onkeydown="ctrlEnter(event, 'ignoresubmit');">{echo htmlspecialchars($ignorelist)}</textarea>
 								<div class="d">{lang ignore_member_pm_message}</div>
 							</td>
 						</tr>
@@ -415,25 +416,7 @@
 								<!--{/loop}-->
 							<!--{/if}-->
 							<!--{loop $list $key $value}-->
-								<dl id="pmlist_$value[plid]" class="bbda cur1 cl{if $value[isnew]} newpm{/if}">
-									<dd class="y mtm pm_o">
-										<div id="pm_o_$value[plid]_menu" class="p_pop" style="display: none;">
-											<ul>
-												<!--{if $value['pmtype'] == 1}-->
-												<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_deluid[]=$value[touid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
-												<li><a href="home.php?mod=spacecp&ac=pm&op=pm_ignore&username=$value[tousername]&plid=$value[plid]&handlekey=pmignorehk_{$value[plid]}" id="a_feed_menu_$value[plid]" onclick="showWindow(this.id, this.href, 'get', 0);doane(event);" title="{lang pmignore}">{lang pmignore}</a></li>
-												<!--{elseif $value['pmtype'] == 2}-->
-													<!--{if $value['authorid'] == $_G['uid']}-->
-													<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_delplid[]=$value[plid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
-													<!--{else}-->
-													<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_quitplid[]=$value[plid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
-													<!--{/if}-->
-												<!--{/if}-->
-											</ul>
-										</div>
-										<a href="javascript:;" id="pm_o_$value[plid]" class="o" onmouseover="showMenu({'ctrlid':this.id, 'pos':'34'})">{lang menu}</a>
-										<span class="xg1">{lang pm_num}</span>
-									</dd>
+								<dl id="pmlist_$value[plid]" class="bbda cur1 cl{if $value[isnew]} newpm{/if}">									
 									<dd class="m avt">
 										<div class="newpm_avt" title="{lang new_pm}"></div>
 										<!--{if $value['pmtype'] == 1}-->
@@ -456,17 +439,38 @@
 										</div>
 										<!--{if $value['pmtype'] == 1}-->
 											<!--{if $value['lastauthorid'] == $_G['uid']}-->
-												<span class="xi2">{lang you}</span> {lang you_to} <a href="home.php?mod=space&uid=$value[touid]" target="_blank">{$value[tousername]}</a> {lang say} :
+												<span class="xi2 xw1">{lang you}</span> {lang you_to} <a href="home.php?mod=space&uid=$value[touid]" target="_blank">{$value[tousername]}</a> {lang say} :<br />
 											<!--{else}-->
-												<a href="home.php?mod=space&uid=$value[touid]" target="_blank">{$value[tousername]}</a> {lang you_to} <span class="xi2">{lang you}</span> {lang say} :
+												<a href="home.php?mod=space&uid=$value[touid]" target="_blank" class="xw1">{$value[tousername]}</a> {lang you_to} <span class="xi2">{lang you}</span> {lang say} :<br />
 											<!--{/if}-->
-											$value[lastsummary] &nbsp; 
+											$value[lastsummary] &nbsp;  <br />
 											<span class="xg1"><!--{date($value[lastdateline], 'u')}--></span> &nbsp; 
-											<a href="home.php?mod=space&do=pm&subop=view&touid=$value[touid]#last" id="pmlist_$value[plid]_a">{lang reply}</a>
+											<span class="pm_o y">
+												<div id="pm_o_$value[plid]_menu" class="p_pop" style="display: none;">
+													<ul>
+														<!--{if $value['pmtype'] == 1}-->
+														<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_deluid[]=$value[touid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
+														<li><a href="home.php?mod=spacecp&ac=pm&op=pm_ignore&username=$value[tousername]&plid=$value[plid]&handlekey=pmignorehk_{$value[plid]}" id="a_feed_menu_$value[plid]" onclick="showWindow(this.id, this.href, 'get', 0);doane(event);" title="{lang pmignore}">{lang pmignore}</a></li>
+														<!--{elseif $value['pmtype'] == 2}-->
+															<!--{if $value['authorid'] == $_G['uid']}-->
+														<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_delplid[]=$value[plid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
+															<!--{else}-->
+														<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_quitplid[]=$value[plid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
+															<!--{/if}-->
+														<!--{/if}-->
+													</ul>
+												</div>
+												<span class="xg1 z">{lang pm_num}</span>
+												<a href="javascript:;" id="pm_o_$value[plid]" class="o" onmouseover="showMenu({'ctrlid':this.id, 'pos':'34'})">{lang menu}</a>
+												 | 
+												<a href="home.php?mod=space&do=pm&subop=view&touid=$value[touid]#last" id="pmlist_$value[plid]_a">{lang reply}</a>
+											</span>
 										<!--{elseif $value['pmtype'] == 2}-->
 											<table>
 												<tr>
 													<td valign="top" width="65">$value[members] {lang pm_members_message} :</td>
+												</tr>
+												<tr>
 													<td>
 														<p><a href="home.php?mod=space&do=pm&subop=view&plid=$value[plid]&type=1&daterange=$value[daterange]#last" id="pmlist_$value[plid]_a">$value[subject]</a></p>
 														<!--{if $value[lastauthorid]}-->
@@ -480,7 +484,28 @@
 														<!--{/if}-->
 													</td>
 												</tr>
+												<tr><td><span class="xg1"><!--{date($value[lastdateline], 'u')}--></span></td></tr>
 											</table>
+											<span class="pm_o y" style="margin-top: -20px; ">
+												<div id="pm_o_$value[plid]_menu" class="p_pop" style="display: none;">
+													<ul>
+														<!--{if $value['pmtype'] == 1}-->
+														<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_deluid[]=$value[touid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
+														<li><a href="home.php?mod=spacecp&ac=pm&op=pm_ignore&username=$value[tousername]&plid=$value[plid]&handlekey=pmignorehk_{$value[plid]}" id="a_feed_menu_$value[plid]" onclick="showWindow(this.id, this.href, 'get', 0);doane(event);" title="{lang pmignore}">{lang pmignore}</a></li>
+														<!--{elseif $value['pmtype'] == 2}-->
+															<!--{if $value['authorid'] == $_G['uid']}-->
+														<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_delplid[]=$value[plid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
+															<!--{else}-->
+														<li><a href="javascript:;" onclick="ajaxget('home.php?mod=spacecp&ac=pm&op=delete&deletesubmit=1&deletepm_quitplid[]=$value[plid]', '', 'ajaxwaitid', '', 'none', '$(\'pmlist_$value[plid]\').style.display=\'none\';');">{lang delete}</a></li>
+															<!--{/if}-->
+														<!--{/if}-->
+													</ul>
+												</div>
+												<span class="xg1 z">{lang pm_num}</span>
+												<a href="javascript:;" id="pm_o_$value[plid]" class="o" onmouseover="showMenu({'ctrlid':this.id, 'pos':'34'})">{lang menu}</a>
+												 | 
+												<a href="home.php?mod=space&do=pm&subop=view&touid=$value[touid]#last" id="pmlist_$value[plid]_a">{lang reply}</a>
+											</span>
 										<!--{/if}-->
 									</dd>
 								</dl>

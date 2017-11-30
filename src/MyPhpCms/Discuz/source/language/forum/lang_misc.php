@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_misc.php 29624 2012-04-23 06:56:28Z monkey $
+ *      $Id: lang_misc.php 33974 2013-09-10 09:30:47Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -181,6 +181,8 @@ $lang = array
 	'week_5' => '星期五',
 	'week_6' => '星期六',
 
+	'y_m_d' => 'Y年m月d日',
+
 	'notice_actor' => '等 $actorcount 人',
 
 	'perms_allowvisit' => '访问论坛',
@@ -322,6 +324,13 @@ $lang = array
 	'plugin_title' => '应用更新提醒',
 	'plugin_memo' => '您有 <span class="xi1">{number}</span> 款应用有可用更新',
 	'plugin_link' => '现在更新',
+
+	'seccode' => '验证码',
+	'seccode_update' => '换一个',
+	'seccode_player' => '<span style="padding:2px"><img border="0" style="vertical-align:middle" src="static/image/common/seccodeplayer.gif" /> <a href="javascript:;" onclick="window.document.seccodeplayer_{idhash}.SetVariable(\'isPlay\', 1)">播放验证码</a></span>',
+	'secqaa' => '验证问答',
+
+	'mobileoem_creditrule' => '掌上论坛签到',
 
 );
 

@@ -49,7 +49,7 @@
 <!--{elseif $op == 'related'}-->
 
 	<!--{if $ra}-->
-	<li id="raid_li_$ra[aid]"><input type="hidden" name="raids[]" value="$ra[aid]" size="5">[ $ra[aid] ] <a href="portal.php?mod=view&aid=$ra[aid]" target="_blank">$ra[title]</a> <a href="javascript:;" onclick="raid_delete($ra[aid]);">{lang delete}</a></li>
+	<li id="raid_li_$ra[aid]"><input type="hidden" name="raids[]" value="$ra[aid]" size="5">[ $ra[aid] ] <a href="{echo fetch_article_url($ra);}" target="_blank">$ra[title]</a> <a href="javascript:;" onclick="raid_delete($ra[aid]);">{lang delete}</a></li>
 	<!--{/if}-->
 
 <!--{elseif $op == 'pushplus'}-->
@@ -59,7 +59,7 @@
 </h3>
 <form method="post" target="_blank" action="portal.php?mod=portalcp&ac=article&tid=$tid&aid=$aid">
 	<div class="c">
-		<b>$pushcount</b> {lang portalcp_article_message1}<a href="portal.php?mod=view&aid=$aid" target="_blank" class="xi2">({lang view_article})</a>
+		<b>$pushcount</b> {lang portalcp_article_message1}<a href="$article_url" target="_blank" class="xi2">({lang view_article})</a>
 		<!--{if $pushedcount}--><br />{lang portalcp_article_message2}<!--{/if}-->
 		<div id="pushplus_list">
 		<!--{loop $pids $pid}-->
@@ -85,14 +85,22 @@
 				<span class="pipe">|</span>
 				<a href="$article_add_url">{lang article_send_continue}</a>
 				<span class="pipe">|</span>
-				<a href="$viewarticleurl">{lang view_article}</a>
+				<a href="portal.php?mod=view&aid=$aid" target="_blank">{lang view_article}</a>
+				<!--{if $htmlstatus}-->
+					<span class="pipe">|</span>
+					<span id='makehtml_' mktitle="{lang article}"></span>
+				<!--{/if}-->
 			</p>
 		</div>
 	</div>
 </div>
+<script src="{STATICURL}js/makehtml.js" type="text/javascript"></script>
+<script type="text/javascript">
 <!--{if !empty($_G['cookie']['clearUserdata']) && $_G['cookie']['clearUserdata'] == 'home'}-->
-	<script type="text/javascript">saveUserdata('home', '')</script>
+	saveUserdata('home', '')
 <!--{/if}-->
+make_html('portal.php?mod=view&aid={$aid}', $('makehtml_'));
+</script>
 <!--{else}-->
 
 <div id="pt" class="bm cl">
@@ -118,7 +126,7 @@
 			<form method="post" autocomplete="off" id="articleform" action="portal.php?mod=portalcp&ac=article{if $_GET[modarticlekey]}&modarticlekey=$_GET[modarticlekey]{/if}" enctype="multipart/form-data">
 				<!--{hook/portalcp_top}-->
 				<div class="dopt cl">
-					<span class="z mtn">{lang article_title}:&nbsp;</span>
+					<span class="z mtn" style="width: 80px;">{lang article_title}:&nbsp;</span>
 					<input type="text" name="title" id="title" class="px" value="$article[title]" size="80" />
 					<input type="button" id="color_style" class="pn colorwd" title="{lang select_color}" fwin="eleStyle" onclick="change_title_color(this.id);" style="background-color:$stylecheck[0]" />
 					<input type="hidden" id="highlight_style_0" name="highlight_style[0]" value="$stylecheck[0]" />
@@ -129,10 +137,17 @@
 					<a href="javascript:;" id="highlight_op_2" onclick="switchhl(this, 2)" class="dopt_i{if $stylecheck[2]} cnt{/if}" style="text-decoration:none;font-style:italic" title="{lang e_italic}">I</a>
 					<a href="javascript:;" id="highlight_op_3" onclick="switchhl(this, 3)" class="dopt_l{if $stylecheck[3]} cnt{/if}" style="text-decoration:underline" title="{lang e_underline}">U</a>
 				</div>
-				<div id="pagetitle" class="dopt mtn cl"{if $article[contents] < 2} style="display: none"{/if}>
-					<span class="z mtn">{lang page_title}:&nbsp;</span>
+				<div id="htmlname_" class="dopt mtn cl"{if !$htmlstatus} style="display: none"{/if}>
+					<span class="z mtn" style="width: 80px;">HTML{lang filename}:</span>
+					<input type="text" name="htmlname" id="htmlname" class="px" value="$article[htmlname]" size="80" onblur="check_htmlname_exists(this)"/>.{$_G['setting']['makehtml']['extendname']}
+					<strong id="checkhtmlnamemsg"></strong>
+					<input type="hidden" name="oldhtmlname" id="oldhtmlname" value="$article[htmlname]" />
+				</div>
+				<div id="pagetitle_" class="dopt mtn cl"{if $article[contents] < 2} style="display: none"{/if}>
+					<span class="z mtn" style="width: 80px;">{lang page_title}:&nbsp;</span>
 					<input type="text" name="pagetitle" id="pagetitle" class="px" value="$article_content[title]" size="80" />
 				</div>
+
 				<div class="exfm pns cl">
 					<div class="sinf sppoll z">
 						<dl>
@@ -239,7 +254,7 @@
 
 				<!--{hook/portalcp_bottom}-->
 
-				<!--{if checkperm('seccode') && ($secqaacheck || $seccodecheck)}-->
+				<!--{if $secqaacheck || $seccodecheck}-->
 					<!--{block sectpl}--><sec> <span id="sec<hash>" onclick="showMenu(this.id)"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div><!--{/block}-->
 					<div class="exfm pns"><!--{subtemplate common/seccheck}--></div>
 				<!--{/if}-->
@@ -363,6 +378,30 @@ function deleteAttach(attachid, url) {
 <!--{if !empty($article['conver'])}-->
 setConver('$article[conver]');
 <!--{/if}-->
+function check_htmlname_exists(obj) {
+	name = obj.value;
+	var msg = $('checkhtmlnamemsg');
+	if(name && $('oldhtmlname').value != name) {
+		var catid = $('catid').value;
+		var aid = $('aid').value;
+		var x = new Ajax();
+		x.getJSON('portal.php?mod=portalcp&ac=article&op=checkhtmlname&htmlname='+name+'&catid='+catid+'&aid='+aid, function(s){
+			if(s['message'] == 'html_existed') {
+				obj.focus();
+				msg.style.color = 'red';
+				msg.style.paddingLeft = '10px';
+				msg.innerHTML = '{lang article_html_existed}';
+				$('issuance').disabled = 'disabled';
+			} else {
+				msg.innerHTML = '';
+				$('issuance').disabled = '';
+			}
+		});
+	} else {
+		msg.innerHTML = '';
+		$('issuance').disabled = '';
+	}
+}
 </script>
 
 <!--{/if}-->

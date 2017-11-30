@@ -4,12 +4,19 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: misc_initsys.php 32174 2012-11-22 09:27:28Z monkey $
+ *      $Id: misc_initsys.php 36334 2017-01-03 01:32:35Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
+
+if(file_exists(DISCUZ_ROOT.'./data/install.lock') && file_exists(DISCUZ_ROOT.'./data/update.lock')) {
+    exit('Access Denied');
+}
+
+@touch(DISCUZ_ROOT.'./data/install.lock');
+@touch(DISCUZ_ROOT.'./data/update.lock');
 
 if(!($_G['adminid'] == 1 && $_GET['formhash'] == formhash()) && $_G['setting']) {
 	exit('Access Denied');
@@ -25,29 +32,9 @@ if($_G['config']['output']['tplrefresh']) {
 	cleartemplatecache();
 }
 
-$plugins = array('qqconnect', 'cloudstat', 'soso_smilies', 'cloudsearch', 'qqgroup', 'security', 'xf_storage', 'mobile');
+$plugins = array('qqconnect', 'mobile', 'wechat');
 $opens = array('mobile');
-
-$cloudapps = array('qqconnect' => 'connect', 'cloudstat' => 'stats', 'soso_smilies' => 'smilies', 'cloudsearch' => 'search', 'qqgroup' => 'qqgroup', 'security' => 'security');
-
-$apps = C::t('common_setting')->fetch('cloud_apps', true);
-if (!$apps) {
-	$apps = array();
-}
-
-if (!is_array($apps)) {
-	$apps = dunserialize($apps);
-}
-
-unset($apps[0]);
-
-if($apps) {
-	foreach($cloudapps as $key => $appname) {
-		if($apps[$appname]['status'] == 'normal') {
-			$opens[] = $key;
-		}
-	}
-}
+$checkcloses = array('cloudcaptcha');
 
 require_once libfile('function/plugin');
 require_once libfile('function/admincp');
@@ -57,6 +44,7 @@ foreach($plugins as $pluginid) {
 	if(!file_exists($importfile)) {
 		continue;
 	}
+	$systemvalue = 2;
 	$importtxt = @implode('', file($importfile));
 	$pluginarray = getimportdata('Discuz! Plugin', $importtxt);
 	$plugin = C::t('common_plugin')->fetch_by_identifier($pluginid);
@@ -72,8 +60,8 @@ foreach($plugins as $pluginid) {
 					}
 				}
 			}
-			if($modules['system'] != 2) {
-				$modules['system'] = 2;
+			if($modules['system'] != $systemvalue) {
+				$modules['system'] = $systemvalue;
 				$modules = serialize($modules);
 				C::t('common_plugin')->update($plugin['pluginid'], array('modules' => $modules));
 			}
@@ -87,7 +75,7 @@ foreach($plugins as $pluginid) {
 	}
 
 	$pluginarray['plugin']['modules'] = unserialize(dstripslashes($pluginarray['plugin']['modules']));
-	$pluginarray['plugin']['modules']['system'] = 2;
+	$pluginarray['plugin']['modules']['system'] = $systemvalue;
 	$pluginarray['plugin']['modules'] = serialize($pluginarray['plugin']['modules']);
 	plugininstall($pluginarray, '', in_array($pluginid, $opens));
 

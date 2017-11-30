@@ -5,6 +5,7 @@ build/
 dist/
 .tmp/
 dev/
+Discuz/*
 .zip
 *.dat
 *.sass-cache

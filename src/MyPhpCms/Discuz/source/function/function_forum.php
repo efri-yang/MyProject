@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_forum.php 32127 2012-11-14 04:21:12Z zhangguosheng $
+ *      $Id: function_forum.php 36345 2017-01-12 01:55:04Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -94,7 +94,7 @@ function formulaperm($formula) {
 		foreach($a[1] as $field) {
 			switch($field) {
 				case 'regdate':
-					$formula = preg_replace("/\{(\d{4})\-(\d{1,2})\-(\d{1,2})\}/e", "'\'\\1-'.sprintf('%02d', '\\2').'-'.sprintf('%02d', '\\3').'\''", $formula);
+					$formula = preg_replace_callback("/\{(\d{4})\-(\d{1,2})\-(\d{1,2})\}/", 'formulaperm_callback_123', $formula);
 				case 'regday':
 					break;
 				case 'regip':
@@ -170,6 +170,10 @@ function formulaperm($formula) {
 	return TRUE;
 }
 
+function formulaperm_callback_123($matches) {
+	return '\''.$matches[1].'-'.sprintf('%02d', $matches[2]).'-'.sprintf('%02d', $matches[3]).'\'';
+}
+
 function medalformulaperm($formula, $type) {
 	global $_G;
 
@@ -197,7 +201,7 @@ function medalformulaperm($formula, $type) {
 		foreach($a[1] as $field) {
 			switch($field) {
 				case 'regdate':
-					$formula = preg_replace("/\{(\d{4})\-(\d{1,2})\-(\d{1,2})\}/e", "'\'\\1-'.sprintf('%02d', '\\2').'-'.sprintf('%02d', '\\3').'\''", $formula);
+					$formula = preg_replace_callback("/\{(\d{4})\-(\d{1,2})\-(\d{1,2})\}/", 'medalformulaperm_callback_123', $formula);
 				case 'regday':
 					break;
 				case 'regip':
@@ -269,6 +273,10 @@ function medalformulaperm($formula, $type) {
 		return FALSE;
 	}
 	return TRUE;
+}
+
+function medalformulaperm_callback_123($matches) {
+	return '\''.$matches[1].'-'.sprintf('%02d', $matches[2]).'-'.sprintf('%02d', $matches[3]).'\'';
 }
 
 function groupexpiry($terms) {
@@ -397,12 +405,19 @@ function showmessagenoperm($type, $fid, $formula = '') {
 	showmessage($message, NULL, array('fid' => $fid, 'permgroups' => $permgroups, 'grouptitle' => $_G['group']['grouptitle']), array('login' => 1), $custom);
 }
 
-function loadforum() {
+function loadforum($fid = null, $tid = null) {
 	global $_G;
-	$tid = intval(getgpc('tid'));
-	$fid = getgpc('fid');
-	if(!$fid && getgpc('gid')) {
-		$fid = intval(getgpc('gid'));
+	$tid = intval(isset($tid) ? $tid : getgpc('tid'));
+	if(isset($fid)) {
+		$fid = intval($fid);
+	} else {
+		$fid = getgpc('fid');
+		if(!$fid && getgpc('gid')) {
+			$fid = intval(getgpc('gid'));
+		}
+	}
+	if(isset($_G['forum']['fid']) && $_G['forum']['fid'] == $fid || isset($_G['thread']['tid']) && $_G['thread']['tid'] == $tid){
+		return null;
 	}
 	if(!empty($_GET['archiver'])) {//X1.5的Archiver兼容
 		if($fid) {
@@ -418,10 +433,10 @@ function loadforum() {
 	}
 	if($_G['setting']['forumpicstyle']) {
 		$_G['setting']['forumpicstyle'] = dunserialize($_G['setting']['forumpicstyle']);
-		empty($_G['setting']['forumpicstyle']['thumbwidth']) && $_G['setting']['forumpicstyle']['thumbwidth'] = 214;
-		empty($_G['setting']['forumpicstyle']['thumbheight']) && $_G['setting']['forumpicstyle']['thumbheight'] = 160;
+		empty($_G['setting']['forumpicstyle']['thumbwidth']) && $_G['setting']['forumpicstyle']['thumbwidth'] = 203;
+		empty($_G['setting']['forumpicstyle']['thumbheight']) && $_G['setting']['forumpicstyle']['thumbheight'] = 999;
 	} else {
-		$_G['setting']['forumpicstyle'] = array('thumbwidth' => 214, 'thumbheight' => 160);
+		$_G['setting']['forumpicstyle'] = array('thumbwidth' => 203, 'thumbheight' => 999);
 	}
 	if($fid) {
 		$fid = is_numeric($fid) ? intval($fid) : (!empty($_G['setting']['forumfids'][$fid]) ? $_G['setting']['forumfids'][$fid] : 0);
@@ -438,6 +453,7 @@ function loadforum() {
 		if(!empty ($tid)) {
 			$archiveid = !empty($_GET['archiveid']) ? intval($_GET['archiveid']) : null;
 			$_G['thread'] = get_thread_by_tid($tid, $archiveid);
+			$_G['thread']['allreplies'] = $_G['thread']['replies'] + $_G['thread']['comments'];
 			if(!$_G['forum_auditstatuson'] && !empty($_G['thread'])
 					&& !($_G['thread']['displayorder'] >= 0 || (in_array($_G['thread']['displayorder'], array(-4,-3,-2)) && $_G['uid'] && $_G['thread']['authorid'] == $_G['uid']))) {
 				$_G['thread'] = null;
@@ -509,6 +525,16 @@ function loadforum() {
 				}
 			}
 
+			if($forum['threadtypes']['types']) {
+				safefilter($forum['threadtypes']['types']);
+			}
+			if($forum['threadtypes']['options']['name']) {
+				safefilter($forum['threadtypes']['options']['name']);
+			}
+			if($forum['threadsorts']['types']) {
+				safefilter($forum['threadsorts']['types']);
+			}
+
 			if($forum['status'] == 3) {
 				$_G['isgroupuser'] = 0;
 				$_G['basescript'] = 'group';
@@ -562,6 +588,9 @@ function loadforum() {
 	$_G['forum'] = &$forum;
 	$_G['current_grouplevel'] = &$grouplevel;
 
+	if(empty($_G['uid'])) {
+		$_G['group']['allowpostactivity'] = $_G['group']['allowpostpoll'] = $_G['group']['allowvote'] = $_G['group']['allowpostreward'] = $_G['group']['allowposttrade'] = $_G['group']['allowpostdebate'] = $_G['group']['allowpostrushreply'] = 0;
+	}
 	if(!empty($_G['forum']['widthauto'])) {
 		$_G['widthauto'] = $_G['forum']['widthauto'];
 	}
@@ -598,9 +627,10 @@ function get_thread_by_tid($tid, $forcetableid = null) {
 	if(!is_array($ret)) {
 		$ret = array();
 	} elseif($_G['setting']['optimizeviews']) {
-		$row = C::t('forum_threadaddviews')->fetch($tid);
-		$ret['addviews'] = intval($row['addviews']);
-		$ret['views'] += $ret['addviews'];
+		if(($row = C::t('forum_threadaddviews')->fetch($tid))) {
+			$ret['addviews'] = intval($row['addviews']);
+			$ret['views'] += $ret['addviews'];
+		}
 	}
 
 	return $ret;
@@ -643,6 +673,20 @@ function get_post_by_pid($pid, $fields = '*', $addcondiction = '', $forcetable =
 	}
 
 	return $ret;
+}
+
+function get_post_by_tid_pid($tid, $pid) {
+	static $postlist = array();
+	if(empty($postlist[$pid])) {
+		$postlist[$pid] = C::t('forum_post')->fetch('tid:'.$tid, $pid, false);
+		if($postlist[$pid] && $postlist[$pid]['tid'] == $tid) {
+			$user = getuserbyuid($postlist[$pid]['authorid']);
+			$postlist[$pid]['adminid'] = $user['adminid'];
+		} else {
+			$postlist[$pid] = array();
+		}
+	}
+	return $postlist[$pid];
 }
 
 function set_rssauth() {
@@ -956,24 +1000,6 @@ function set_atlist_cookie($uids) {
 	dsetcookie('atlist', implode(',', $uids).($tmp ? ','.implode(',', $tmp) : ''), 86400 * 360);
 }
 
-function cloud_referer_related() {
-	global $_G;
-	$my_search_data = $_G['setting']['my_search_data'];
-	if (viewthread_is_search_referer() && $my_search_data['status']) {
-		$appService = Cloud::loadClass('Service_App');
-		if($appService->getCloudAppStatus('search')) {
-			$_params = array('s_site_gid' => $_G['groupid'],
-							'response_type' => 'js',
-							'referer' => $_SERVER['HTTP_REFERER'],
-						);
-			$utilService = Cloud::loadClass('Service_Util');
-			$signUrl = $utilService->generateSiteSignUrl($_params);
-			$my_search_se_url = 'http://search.discuz.qq.com/api/site/se?' . $signUrl . "";
-		}
-	}
-	return $my_search_se_url;
-}
-
 function viewthread_is_search_referer() {
 	$regex = "((http|https)\:\/\/)?";
 	$regex .= "([a-z]*.)?(ask.com|yahoo.com|cn.yahoo.com|bing.com|baidu.com|soso.com|google.com|google.cn)(.[a-z]{2,3})?\/";
@@ -982,4 +1008,140 @@ function viewthread_is_search_referer() {
 	}
 	return false;
 }
+
+
+function stringtopic($value, $key = '', $force = false, $rlength = 0) {
+	if($key === '') {
+		$key = $value;
+	}
+	$basedir = !getglobal('setting/attachdir') ? './data/attachment' : getglobal('setting/attachdir');
+	$url = !getglobal('setting/attachurl') ? './data/attachment/' : getglobal('setting/attachurl');
+	$subdir1 = substr(md5($key), 0, 2);
+	$subdir2 = substr(md5($key), 2, 2);
+	$target = 'temp/'.$subdir1.'/'.$subdir2.'/';
+	$targetname = substr(md5($key), 8, 16).'.png';
+	discuz_upload::check_dir_exists('temp', $subdir1, $subdir2);
+	if(!$force && file_exists($basedir.'/'.$target.$targetname)) {
+		return $url.$target.$targetname;
+	}
+	$value = str_replace("\n", '', $value);
+	$fontfile = $fontname = '';
+	$ttfenabled = false;
+	$size = 10;
+	$w = 130;
+	$rowh = 25;
+	$value = explode("\r", $value);
+	if($rlength) {
+		$temp = array();
+		foreach($value as $str) {
+			$strlen = dstrlen($str);
+			if($strlen > $rlength) {
+				for($i = 0; $i < $strlen; $i++) {
+					$sub = cutstr($str, $rlength, '');
+					$temp[] = $sub;
+					$str = substr($str, strlen($sub));
+					$strlen = $strlen - $rlength;
+				}
+			} else {
+				$temp[] = $str;
+			}
+		}
+		$value = $temp;
+		unset($temp);
+	}
+	if(function_exists('imagettftext')) {
+		$fontroot = DISCUZ_ROOT.'./static/image/seccode/font/ch/';
+		$dirs = opendir($fontroot);
+		while($entry = readdir($dirs)) {
+			if($entry != '.' && $entry != '..' && in_array(strtolower(fileext($entry)), array('ttf', 'ttc'))) {
+				$fontname = $entry;
+				break;
+			}
+		}
+		if(!empty($fontname)) {
+			$fontfile = DISCUZ_ROOT.'./static/image/seccode/font/ch/'.$fontname;
+		}
+		if($fontfile) {
+			if(strtoupper(CHARSET) != 'UTF-8') {
+				include DISCUZ_ROOT.'./source/class/class_chinese.php';
+				$cvt = new Chinese(CHARSET, 'utf8');
+				$value = $cvt->Convert(implode("\r", $value));
+				$value = explode("\r", $value);
+			}
+			$ttfenabled = true;
+		}
+	}
+
+	foreach($value as $str) {
+		if($ttfenabled) {
+			$box = imagettfbbox($size, 0, $fontfile, $str);
+			$height = max($box[1], $box[3]) - min($box[5], $box[7]);
+			$len = (max($box[2], $box[4]) - min($box[0], $box[6]));
+			$rowh = max(array($height, $rowh));
+		} else {
+			$len = strlen($str) * 12;
+		}
+		$w = max(array($len, $w));
+	}
+	$h = $rowh * count($value) + count($value) * 2;
+	$im = @imagecreate($w, $h);
+	$background_color = imagecolorallocate($im, 255, 255, 255);
+	$text_color = imagecolorallocate($im, 60, 60, 60);
+	$h = $ttfenabled ? $rowh : 4;
+	foreach($value as $str) {
+		if($ttfenabled) {
+			imagettftext($im, $size, 0, 0, $h, $text_color, $fontfile, $str);
+			$h += 2;
+		} else {
+			imagestring($im, $size, 0, $h, $str, $text_color);
+		}
+		$h += $rowh;
+	}
+	imagepng($im, $basedir.'/'.$target.$targetname);
+	imagedestroy($im);
+	return $url.$target.$targetname;
+}
+
+function getreplybg($replybg = '') {
+	global $_G;
+	$style = '';
+	if($_G['setting']['allowreplybg']) {
+		if($replybg) {
+			$bgurl = $replybg;
+			if(file_exists($_G['setting']['attachurl'].'common/'.$replybg)) {
+				$bgurl = $_G['setting']['attachurl'].'common/'.$replybg;
+			}
+		} elseif($_G['setting']['globalreplybg']) {
+			$bgurl = $_G['setting']['globalreplybg'];
+			if(file_exists($_G['setting']['attachurl'].'common/'.$_G['setting']['globalreplybg'])) {
+				$bgurl = $_G['setting']['attachurl'].'common/'.$_G['setting']['globalreplybg'];
+			}
+		}
+		if($bgurl) {
+			$style = ' style="background-image: url('.$bgurl.');"';
+		}
+	}
+	return $style;
+}
+
+function safefilter(&$data) {
+	if(is_array($data)) {
+		foreach($data as $k => $v) {
+			safefilter($data[$k]);
+		}
+	} else {
+		$data = str_replace(array(
+			'[/color]', '[b]', '[/b]', '[s]', '[/s]', '[i]', '[/i]', '[u]', '[/u]',
+			), array(
+			'</font>', '<b>', '</b>', '<strike>', '</strike>', '<i>', '</i>', '<u>', '</u>'
+			), preg_replace(array(
+			"/\[color=([#\w]+?)\]/i",
+			"/\[color=((rgb|rgba)\([\d\s,]+?\))\]/i",
+			), array(
+			"<font color=\"\\1\">",
+			"<font style=\"color:\\1\">",
+			), strip_tags($data)));
+	}
+}
+
 ?>

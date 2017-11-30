@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_nav.php 27972 2012-02-20 01:49:49Z zhengqingpeng $
+ *      $Id: table_common_nav.php 36278 2016-12-09 07:52:35Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -36,11 +36,14 @@ class table_common_nav extends discuz_table
 			$parameter[] = $navtype;
 			$wheresql = ' WHERE navtype=%d';
 		}
-		return DB::fetch_all('SELECT * FROM %t '.$wheresql.' ORDER BY displayorder', $parameter, $this->_pk);
+		return DB::fetch_all('SELECT * FROM %t '.$wheresql.' ORDER BY available DESC, displayorder', $parameter, $this->_pk);
 	}
 
 	public function fetch_all_by_navtype_parentid($navtype, $parentid) {
 		return DB::fetch_all('SELECT * FROM %t WHERE navtype=%d AND parentid=%d ORDER BY displayorder', array($this->_table, $navtype, $parentid), $this->_pk);
+	}
+	public function fetch_all_by_navtype_type($navtype, $type) {
+		return DB::fetch_all('SELECT * FROM %t WHERE navtype=%d AND type=%d', array($this->_table, $navtype, $type), $this->_pk);
 	}
 	public function fetch_all_mainnav() {
 		return DB::fetch_all('SELECT * FROM %t WHERE navtype=0 AND (available=1 OR type=0) AND parentid=0 ORDER BY displayorder', array($this->_table), $this->_pk);

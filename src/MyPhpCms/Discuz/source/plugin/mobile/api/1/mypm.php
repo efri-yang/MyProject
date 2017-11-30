@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: mypm.php 27451 2012-02-01 05:48:47Z monkey $
+ *      $Id: mypm.php 34314 2014-02-20 01:04:24Z nemohou $
  */
 
 if(!defined('IN_MOBILE_API')) {
@@ -24,13 +24,13 @@ class mobile_api {
 		global $_G;
 		$variable = array(
 			'list' => mobile_core::getvalues($GLOBALS['list'], array('/^\d+$/'), array('plid', 'isnew', 'pmnum', 'lastupdate', 'lastdateline', 'authorid', 'author', 'pmtype', 'subject', 'members', 'dateline', 'touid', 'pmid', 'lastauthorid', 'lastauthor', 'lastsummary', 'msgfromid', 'msgfrom', 'message', 'msgtoid', 'tousername')),
-                  'count' => $GLOBALS['count'],
+			'count' => $GLOBALS['count'],
 			'perpage' => $GLOBALS['perpage'],
 			'page' => intval($GLOBALS['page']),
 		);
-            if($_GET['subop']) {
-                $variable = array_merge($variable, array('pmid' => $GLOBALS['pmid']));
-            }
+		if($_GET['subop']) {
+			$variable = array_merge($variable, array('pmid' => $GLOBALS['pmid']));
+		}
 		mobile_core::result(mobile_core::variable($variable));
 	}
 

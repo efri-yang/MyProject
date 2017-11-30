@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: spacecp_doing.php 28945 2012-03-20 08:37:34Z chenmengshu $
+ *      $Id: spacecp_doing.php 33714 2013-08-07 01:42:26Z andyzheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -51,6 +51,7 @@ if(helper_access::check_module('doing')) {
 			'dateline' => $_G['timestamp'],
 			'message' => $message,
 			'ip' => $_G['clientip'],
+			'port' => $_G['remoteport'],
 			'status' => $doing_status,
 		);
 		$newdoid = C::t('home_doing')->insert($setarr, 1);
@@ -161,7 +162,7 @@ if(helper_access::check_module('doing')) {
 		C::t('home_doing')->update_replynum_by_doid(1, $updo['doid']);
 
 		if($updo['uid'] != $_G['uid']) {
-			notification_add($updo['uid'], 'doing', 'doing_reply', array(
+			notification_add($updo['uid'], 'comment', 'doing_reply', array(
 				'url'=>"home.php?mod=space&uid=$updo[uid]&do=doing&view=me&doid=$updo[doid]&highlight=$newid",
 				'from_id'=>$updo['doid'],
 				'from_idtype'=>'doid'));

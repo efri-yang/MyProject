@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_forum_thread.php 34511 2014-05-13 05:51:33Z laoguozhang $
+ *      $Id: table_forum_thread.php 36278 2016-12-09 07:52:35Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -74,7 +74,7 @@ class table_forum_thread extends discuz_table
 		$threadtableids = array('0' => 0);
 		$db = DB::object();
 		$query = $db->query("SHOW TABLES LIKE '".str_replace('_', '\_', DB::table('forum_thread').'_%')."'");
-		while($table = $db->fetch_array($query, MYSQL_NUM)) {
+		while($table = $db->fetch_array($query, $db->drivertype == 'mysqli' ? MYSQLI_NUM : MYSQL_NUM)) {
 			$tablename = $table[0];
 			$tableid = intval(substr($tablename, strrpos($tablename, '_') + 1));
 			if(empty($tableid)) {
@@ -272,8 +272,10 @@ class table_forum_thread extends discuz_table
 		$parameter = array($this->get_table_name());
 		$wherearr = array();
 		$fids = dintval($fids, true);
-		$parameter[] = $fids;
-		$wherearr[] = is_array($fids) && $fids ? 'fid IN(%n)' : 'fid=%d';
+		if(!empty($fids)) {
+			$parameter[] = $fids;
+			$wherearr[] = is_array($fids) && $fids ? 'fid IN(%n)' : 'fid=%d';
+		}
 		if($displayorder !== null) {
 			$parameter[] = $displayorder;
 			$dglue = helper_util::check_glue($dglue);
@@ -494,7 +496,7 @@ class table_forum_thread extends discuz_table
 				}
 			}
 		}
-		if(!defined('IN_MOBILE') && $defult && $conditions['sticky'] == 4 && $start == 0 && $limit && strtolower(preg_replace("/\s?/ies", '', $order)) == 'displayorderdesc,lastpostdesc' && empty($sort)) {
+		if(!defined('IN_MOBILE') && $defult && $conditions['sticky'] == 4 && $start == 0 && $limit && strtolower(preg_replace("/\s?/is", '', $order)) == 'displayorderdesc,lastpostdesc' && empty($sort)) {
 			foreach($conditions['displayorder'] as $id) {
 				if($id < 2) {
 					$firstpage = true;
@@ -788,6 +790,10 @@ class table_forum_thread extends discuz_table
 			$wherearr[] = $prefix.DB::field('highlight', 0);
 			$this->_urlparam[] = "highlight=2";
 		}
+		if($conditions['hidden'] == 1) {
+			$wherearr[] = $prefix.DB::field('hidden', 0, '>');
+			$this->_urlparam[] = "hidden=1";
+		}
 		if(!empty($conditions['special'])) {
 			$this->_urlparam[] = "special={$conditions['special']}";
 			if($conditions['specialthread'] == 1) {
@@ -941,7 +947,7 @@ class table_forum_thread extends discuz_table
 		$tids = dintval($tids, true);
 		if($tids) {
 			$wheresql = is_array($tids) && $tids ? 'tid IN(%n)' : 'tid=%d';
-			DB::query("INSERT INTO %t SELECT * FROM %t WHERE $wheresql", array($this->get_table_name($origin), $this->get_table_name($target), $tids));
+			DB::query("INSERT INTO %t SELECT * FROM %t WHERE $wheresql", array($this->get_table_name($target), $this->get_table_name($origin), $tids));
 		}
 	}
 
@@ -1049,9 +1055,13 @@ class table_forum_thread extends discuz_table
 		$tids = dintval($tids, true);
 		if($tids) {
 			$this->clear_cache($tids);
+			C::t('forum_newthread')->delete_by_tids($tids);
 			return DB::delete($this->get_table_name($tableid), DB::field('tid', $tids), $limit, $unbuffered);
 		}
 		return !$unbuffered ? 0 : false;
+	}
+	public function delete($tids, $unbuffered = false, $tableid = 0, $limit = 0) {
+		return $this->delete_by_tid($tids, $unbuffered, $tableid, $limit);
 	}
 	public function delete_by_fid($fid, $unbuffered = false, $tableid = 0, $limit = 0) {
 		$fid = dintval($fid, true);
@@ -1059,6 +1069,7 @@ class table_forum_thread extends discuz_table
 			foreach((array)$fid as $delfid) {
 				$this->clear_cache($delfid, 'forumdisplay_');
 			}
+			C::t('forum_newthread')->delete_by_tids($fid);
 			return DB::delete($this->get_table_name($tableid), DB::field('fid', $fid), $limit, $unbuffered);
 		}
 		return 0;
@@ -1067,10 +1078,10 @@ class table_forum_thread extends discuz_table
 		$tableid = intval($tableid);
 		return $tableid ? "forum_thread_$tableid" : 'forum_thread';
 	}
-	public function fetch_all_for_guide($type, $limittid, $tids = array(), $heatslimit = 3, $dateline = 0) {
+	public function fetch_all_for_guide($type, $limittid, $tids = array(), $heatslimit = 3, $dateline = 0, $start = 0, $limit = 600, $fids = 0) {
 		switch ($type) {
 			case 'hot' :
-				$addsql = ' AND heats>'.intval($heatslimit);
+				$addsql = ' AND heats>='.intval($heatslimit);
 				break;
 			case 'digest' :
 				$addsql = ' AND digest>0';
@@ -1086,11 +1097,25 @@ class table_forum_thread extends discuz_table
 			$tids = dintval($tids, true);
 			$tidsql = DB::field('tid', $tids);
 		} else {
-			$tidsql = 'tid>'.intval($limittid);
+			$limittid = intval($limittid);
+			$tidsql = 'tid>'.$limittid;
+			$fids = dintval($fids, true);
+			if($fids) {
+				$tidsql .= is_array($fids) && $fids ? ' AND fid IN('.dimplode($fids).')' : ' AND fid='.$fids;
+			}
 			if($dateline) {
 				$addsql .= ' AND dateline > '.intval($dateline);
 			}
-			$addsql .= ' AND displayorder>=0 ORDER BY lastpost DESC LIMIT 600';
+			if($type == 'newthread') {
+				$orderby = 'tid';
+			} elseif($type == 'reply') {
+				$orderby = 'lastpost';
+				$addsql .= ' AND replies > 0';
+			} else {
+				$orderby = 'lastpost';
+			}
+			$addsql .= ' AND displayorder>=0 ORDER BY '.$orderby.' DESC '.DB::limit($start, $limit);
+
 		}
 		return DB::fetch_all("SELECT * FROM ".DB::table('forum_thread')." WHERE ".$tidsql.$addsql);
 	}
@@ -1102,6 +1127,9 @@ class table_forum_thread extends discuz_table
 		$target = intval($target);
 		if($source != $target) {
 			DB::query('REPLACE INTO %t SELECT * FROM %t WHERE tid IN (%n)', array($this->get_table_name($target), $this->get_table_name($source), $tids));
+			if(!$source) {
+				C::t('forum_threadhidelog')->delete_by_tid($tids);
+			}
 			return DB::delete($this->get_table_name($source), DB::field('tid', $tids));
 		} else {
 			return false;

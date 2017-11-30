@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_menu.php 30365 2012-05-24 07:51:03Z chenmengshu $
+ *      $Id: admincp_menu.php 36284 2016-12-12 00:47:50Z nemohou $
  */
 
 global $_G;
@@ -25,6 +25,7 @@ $topmenu = array (
 	'portal' => '',
 	'forum' => '',
 	'group' => '',
+	'safe' => '',
 	'extended' => '',
 	'plugin' => $isfounder ? 'plugins' : '',
 	'tools' => '',
@@ -49,7 +50,6 @@ $menu['global'] = array(
 	array('menu_setting_home', 'setting_home'),
 	array('menu_setting_user', 'setting_permissions'),
 	array('menu_setting_credits', 'setting_credits'),
-	array('menu_setting_sec', 'setting_sec'),
 	array('menu_setting_datetime', 'setting_datetime'),
 	array('menu_setting_attachments', 'setting_attach'),
 	array('menu_setting_imgwater', 'setting_imgwater'),
@@ -58,6 +58,7 @@ $menu['global'] = array(
 	array('menu_setting_district', 'district'),
 	array('menu_setting_ranklist', 'setting_ranklist'),
 	array('menu_setting_mobile', 'setting_mobile'),
+	array('menu_setting_antitheft', 'setting_antitheft'),
 );
 
 $menu['style'] = array(
@@ -97,6 +98,7 @@ $menu['topic'] = array(
 	array(cplang('nav_home'), '', 1),
 		array('menu_maint_doing', 'doing'),
 		array('menu_maint_blog', 'blog'),
+		array('menu_maint_blog_recycle_bin', 'blogrecyclebin'),
 		array('menu_maint_feed', 'feed'),
 		array('menu_maint_album', 'album'),
 		array('menu_maint_pic', 'pic'),
@@ -137,6 +139,7 @@ $menu['portal'] = array(
 	array('menu_portalcategory', 'portalcategory'),
 	array('menu_article', 'article'),
 	array('menu_topic', 'topic'),
+	array('menu_html', 'makehtml'),
 	array('menu_diytemplate', 'diytemplate'),
 	array('menu_block', 'block'),
 	array('menu_blockstyle', 'blockstyle'),
@@ -150,6 +153,7 @@ $menu['forum'] = array(
 	array('menu_forums', 'forums'),
 	array('menu_forums_merge', 'forums_merge'),
 	array('menu_forums_infotypes', 'threadtypes'),
+	array('menu_grid', 'grid'),
 );
 
 $menu['group'] = array(
@@ -159,6 +163,13 @@ $menu['group'] = array(
 	array('menu_group_userperm', 'group_userperm'),
 	array('menu_group_level', 'group_level'),
 	array('menu_group_mod', 'group_mod'),
+);
+
+$menu['safe'] = array(
+	array('menu_safe_setting', 'setting_sec'),
+	array('menu_safe_seccheck', 'setting_seccheck'),
+	array('menu_security', 'optimizer_security'),
+	array('menu_safe_accountguard', 'setting_accountguard'),
 );
 
 $menu['extended'] = array(
@@ -206,7 +217,10 @@ if($isfounder) {
 loadcache('adminmenu');
 if(is_array($_G['cache']['adminmenu'])) {
 	foreach($_G['cache']['adminmenu'] as $row) {
-		$menu['plugin'][] = array($row['name'], $row['action']);
+		if($row['name'] == 'plugins_system') {
+			$row['name'] = cplang('plugins_system');
+		}
+		$menu['plugin'][] = array($row['name'], $row['action'], $row['sub']);
 	}
 }
 if(!$menu['plugin']) {
@@ -228,13 +242,12 @@ if($isfounder) {
 	$menu['founder'] = array(
 		array('menu_founder_perm', 'founder_perm'),
 		array('menu_setting_mail', 'setting_mail'),
-		array('menu_patch', 'patch'),
 		array('menu_setting_uc', 'setting_uc'),
 		array('menu_db', 'db_export'),
 		array('menu_membersplit', 'membersplit_check'),
 		array('menu_postsplit', 'postsplit_manage'),
 		array('menu_threadsplit', 'threadsplit_manage'),
-		array('menu_upgrade', 'upgrade'),
+		array('menu_optimizer', 'optimizer_performance'),
 	);
 
 	$menu['uc'] = array();

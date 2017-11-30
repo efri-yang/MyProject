@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 <!--{subtemplate home/spacecp_header}-->
 			<!--{hook/spacecp_privacy_top}-->
 			<ul class="tb cl">
@@ -222,9 +222,7 @@
 							<!--{loop $icons $key $icon}-->
 							<!--{eval $uid = $uids[$key];$icon_uid="$icon|$uid";}-->
 							<label>
-							<!--{if is_numeric($icon)}-->
-								<img src="http://appicon.manyou.com/icons/{$icon}" alt="" class="vm" />
-							<!--{else}-->
+							<!--{if is_numeric($icon)}-->								
 								<img src="{STATICURL}image/feed/{$icon}.gif" alt="" class="vm" />
 							<!--{/if}-->
 								<input type="checkbox" class="pc" name="privacy[filter_icon][$icon_uid]" value="1" checked="checked" /> 
@@ -283,4 +281,4 @@
 		<!--{subtemplate home/spacecp_footer}-->
 	</div>
 </div>
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

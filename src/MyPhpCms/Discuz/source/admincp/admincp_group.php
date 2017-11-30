@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_group.php 34654 2014-06-19 02:27:36Z hypowang $
+ *      $Id: admincp_group.php 34651 2014-06-18 08:27:31Z hypowang $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -647,6 +647,7 @@ var rowtypedata = [
 		 	array('allowstickthread', cplang('admingroup_edit_stick_thread'), '1'),
 		 	array('allowbumpthread', cplang('admingroup_edit_bump_thread'), '1'),
 		 	array('allowhighlightthread', cplang('admingroup_edit_highlight_thread'), '1'),
+			array('allowlivethread', cplang('admingroup_edit_live_thread'), '1'),
 		 	array('allowstampthread', cplang('admingroup_edit_stamp_thread'), '1'),
 		 	array('allowrepairthread', cplang('admingroup_edit_repair_thread'), '1'),
 		 	array('allowrefund', cplang('admingroup_edit_refund'), '1'),
@@ -694,7 +695,7 @@ var rowtypedata = [
 		showtablefooter();
 		showformfooter();
 	} else {
-		$default_perm = array('allowstickthread' => 0, 'allowbumpthread' => 0, 'allowhighlightthread' => 0, 'allowstampthread' => 0, 'allowclosethread' => 0, 'allowmergethread' => 0, 'allowsplitthread' => 0, 'allowrepairthread' => 0, 'allowrefund' => 0, 'alloweditpoll' => 0, 'allowremovereward' => 0, 'alloweditactivity' => 0, 'allowedittrade' => 0, 'allowdigestthread' => 0, 'alloweditpost' => 0, 'allowwarnpost' => 0, 'allowbanpost' => 0, 'allowdelpost' => 0, 'allowupbanner' => 0, 'disablepostctrl' => 0, 'allowviewip' => 0);
+		$default_perm = array('allowstickthread' => 0, 'allowbumpthread' => 0, 'allowhighlightthread' => 0, 'allowlivethread' => 0, 'allowstampthread' => 0, 'allowclosethread' => 0, 'allowmergethread' => 0, 'allowsplitthread' => 0, 'allowrepairthread' => 0, 'allowrefund' => 0, 'alloweditpoll' => 0, 'allowremovereward' => 0, 'alloweditactivity' => 0, 'allowedittrade' => 0, 'allowdigestthread' => 0, 'alloweditpost' => 0, 'allowwarnpost' => 0, 'allowbanpost' => 0, 'allowdelpost' => 0, 'allowupbanner' => 0, 'disablepostctrl' => 0, 'allowviewip' => 0);
 		$_GET['newgroup_userperm'] = array_merge($default_perm, $_GET['newgroup_userperm']);
 		if(serialize($_GET['newgroup_userperm']) != serialize($group_userperm)) {
 			C::t('common_setting')->update('group_userperm', $_GET['newgroup_userperm']);

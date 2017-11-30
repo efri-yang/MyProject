@@ -3,7 +3,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: home_follow.php 30281 2012-05-18 03:43:42Z liulanbo $
+ *      $Id: home_follow.php 33660 2013-07-29 07:51:05Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -98,7 +98,10 @@ if($do == 'feed') {
 		$lastviewtime = getuserprofile('lastactivity');
 	}
 	dsetcookie('lastviewtime', $_G['uid'].'|'.TIMESTAMP, 31536000);
-
+	if($_G['member']['newprompt_num']['follow']) {
+		C::t('home_notification')->delete_by_type('follow', $_G['uid']);
+		helper_notification::update_newprompt($_G['uid'], 'follow');
+	}
 	$recommend = $users = array();
 	if(helper_access::check_module('follow')) {
 		loadcache('recommend_follow');
@@ -147,8 +150,7 @@ if($do == 'feed') {
 	$navactives = array('feed' => ' class="a"');
 	$actives = array($view => ' class="a"');
 
-	$seccodecheck = ($_G['setting']['seccodestatus'] & 4) && (!$_G['setting']['seccodedata']['minposts'] || getuserprofile('posts') < $_G['setting']['seccodedata']['minposts']);
-	$secqaacheck = $_G['setting']['secqaa']['status'] & 2 && (!$_G['setting']['secqaa']['minposts'] || getuserprofile('posts') < $_G['setting']['secqaa']['minposts']);
+	list($seccodecheck, $secqaacheck) = seccheck('publish');
 
 } elseif($do == 'view') {
 	$list = getfollowfeed($uid, 'self', false, $start, $perpage);
@@ -169,6 +171,15 @@ if($do == 'feed') {
 	$secqaacheck = $_G['setting']['secqaa']['status'] & 2 && (!$_G['setting']['secqaa']['minposts'] || getuserprofile('posts') < $_G['setting']['secqaa']['minposts']);
 } elseif($do == 'follower') {
 	$count = C::t('home_follow')->count_follow_user($uid, 1);
+	if($viewself && !empty($_G['member']['newprompt_num']['follower'])) {
+		$newfollower = C::t('home_notification')->fetch_all_by_uid($uid, -1, 'follower', 0, $_G['member']['newprompt_num']['follower']);
+		$newfollower_list = array();
+		foreach($newfollower as $val) {
+			$newfollower_list[] = $val['from_id'];
+		}
+		C::t('home_notification')->delete_by_type('follower', $_G['uid']);
+		helper_notification::update_newprompt($_G['uid'], 'follower');
+	}
 	if($count) {
 		$list = C::t('home_follow')->fetch_all_follower_by_uid($uid, $start, $perpage);
 		$multi = multi($count, $perpage, $page, $theurl);

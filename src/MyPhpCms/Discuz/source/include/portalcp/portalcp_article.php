@@ -4,18 +4,17 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: portalcp_article.php 34294 2013-12-26 01:50:00Z hypowang $
+ *      $Id: portalcp_article.php 36278 2016-12-09 07:52:35Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
 
-$op = in_array($_GET['op'], array('edit', 'delete', 'related', 'batch', 'pushplus', 'verify')) ? $_GET['op'] : 'add';
+$op = in_array($_GET['op'], array('edit', 'delete', 'related', 'batch', 'pushplus', 'verify', 'checkhtmlname')) ? $_GET['op'] : 'add';
 $aid = intval($_GET['aid']);
 $catid = intval($_GET['catid']);
-$seccodecheck = $_G['setting']['seccodestatus'] & 4;
-$secqaacheck = $_G['setting']['secqaa']['status'] & 2;
+list($seccodecheck, $secqaacheck) = seccheck('publish');
 
 $article = $article_content = array();
 if($aid) {
@@ -34,6 +33,11 @@ if(empty($article) && $catid && $portalcategory[$catid]['disallowpublish']) {
 	showmessage('portal_category_disallowpublish', dreferer());
 }
 
+if(empty($catid) && $article) {
+	$catid = $article['catid'];
+}
+$htmlstatus = !empty($_G['setting']['makehtml']['flag']) && $portalcategory[$catid]['fullfoldername'];
+
 if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 
 	if($aid) {
@@ -50,6 +54,7 @@ if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 
 	$_POST['pagetitle'] = getstr(trim($_POST['pagetitle']), 60);
 	$_POST['pagetitle'] = censor($_POST['pagetitle']);
+	$htmlname = basename(trim($_POST['htmlname']));
 
 	$highlight_style = $_GET['highlight_style'];
 	$style = '';
@@ -63,12 +68,15 @@ if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 	$_GET['from'] = dhtmlspecialchars($_GET['from']);
 	$_GET['fromurl'] = str_replace('&amp;', '&', dhtmlspecialchars($_GET['fromurl']));
 	$_GET['dateline'] = !empty($_GET['dateline']) ? strtotime($_GET['dateline']) : TIMESTAMP;
+
 	if(substr($_GET['url'], 0, 7) !== 'http://') {
 		$_GET['url'] = '';
 	}
+
 	if(substr($_GET['fromurl'], 0, 7) !== 'http://') {
 		$_GET['fromurl'] = '';
 	}
+
 	if(censormod($_POST['title']) || $_G['group']['allowpostarticlemod']) {
 		$article_status = 1;
 	} else {
@@ -109,6 +117,7 @@ if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 		$setarr['uid'] = $_G['uid'];
 		$setarr['username'] = $_G['username'];
 		$setarr['id'] = intval($_POST['id']);
+		$setarr['htmlname'] = $htmlname;
 		$table = '';
 		if($setarr['id']) {
 			if($_POST['idtype']=='blogid') {
@@ -147,8 +156,17 @@ if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 		}
 		C::t('common_member_status')->update($_G['uid'], array('lastpost' => TIMESTAMP), 'UNBUFFERED');
 		C::t('portal_category')->increase($setarr['catid'], array('articles' => 1));
+		C::t('portal_category')->update($setarr['catid'], array('lastpublish' => TIMESTAMP));
 		C::t('portal_article_count')->insert(array('aid'=>$aid, 'catid'=>$setarr['catid'], 'viewnum'=>1));
 	} else {
+		if($htmlname && $article['htmlname'] !== $htmlname) {
+			$setarr['htmlname'] = $htmlname;
+			$oldarticlename = $article['htmldir'].$article['htmlname'];
+			unlink($oldarticlename.'.'.$_G['setting']['makehtml']['extendname']);
+			for($i = 1; $i < $article['contents']; $i++) {
+				unlink($oldarticlename.$i.'.'.$_G['setting']['makehtml']['extendname']);
+			}
+		}
 		C::t('portal_article_title')->update($aid, $setarr);
 	}
 
@@ -200,6 +218,8 @@ if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 		updatemoderate('aid', $aid);
 		manage_addnotify('verifyarticle');
 	}
+
+	$updatearticle = array_merge($updatearticle, portalcp_article_pre_next($catid, $aid));
 	C::t('portal_article_title')->update($aid, $updatearticle);
 
 	$newaids = array();
@@ -246,9 +266,6 @@ if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 		}
 	}
 
-
-	$viewarticleurl = $_POST['url']?"portal.php?mod=list&catid=$_POST[catid]":'portal.php?mod=view&aid='.$aid;
-
 	if(trim($_GET['from']) != '') {
 		$from_cookie = '';
 		$from_cookie_array = array();
@@ -267,6 +284,10 @@ if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 	dsetcookie('clearUserdata', 'home');
 	$op = 'add_success';
 	$article_add_url = 'portal.php?mod=portalcp&ac=article&catid='.$catid;
+
+
+	$article = C::t('portal_article_title')->fetch($aid);
+	$viewarticleurl = $_POST['url'] ? "portal.php?mod=list&catid=$_POST[catid]" : fetch_article_url($article);
 
 	include_once template("portal/portalcp_article");dexit();
 
@@ -319,13 +340,13 @@ if(submitcheck("articlesubmit", 0, $seccodecheck, $secqaacheck)) {
 	if($_POST['status'] == '0') {
 		C::t('portal_article_title')->update($aid, array('status'=>'0'));
 		updatemoderate('aid', $aid, 2);
-		$tourl = dreferer('portal.php?mod=view&aid='.$aid);
+		$tourl = dreferer(fetch_article_url($article));
 		showmessage('article_passed', $tourl);
 
 	} elseif($_POST['status'] == '2') {
 		C::t('portal_article_title')->update($aid, array('status'=>'2'));
 		updatemoderate('aid', $aid, 1);
-		$tourl = dreferer('portal.php?mod=view&aid='.$aid);
+		$tourl = dreferer(fetch_article_url($article));
 		showmessage('article_ignored', $tourl);
 
 	} elseif($_POST['status'] == '-1') {
@@ -429,6 +450,19 @@ if($op == 'delete') {
 
 	if(empty($pids)) {
 		showmessage($pushedids ? 'all_posts_pushed_already' : 'no_posts_for_pushplus');
+	}
+
+} else if($op == 'checkhtmlname') {
+	$htmlname = basename(trim($_GET['htmlname']));
+	if($htmlstatus) {
+		$_time = !empty($article) ? $article['dateline'] : TIMESTAMP;
+		if(file_exists(helper_makehtml::fetch_dir($portalcategory[$catid]['fullfoldername'], $_time).$htmlname.'.'.$_G['setting']['makehtml']['extendname'])) {
+			showmessage('html_existed');
+		} else {
+			showmessage('html_have_no_exists');
+		}
+	} else {
+		showmessage('make_html_closed');
 	}
 
 } else {
@@ -639,13 +673,13 @@ function portalcp_get_postmessage($post, $getauthorall = '') {
 
 	$msglower = strtolower($post['message']);
 	if(strpos($msglower, '[/media]') !== FALSE) {
-		$post['message'] = preg_replace("/\[media=([\w,]+)\]\s*([^\[\<\r\n]+?)\s*\[\/media\]/ies", "parsearticlemedia('\\1', '\\2')", $post['message']);
+		$post['message'] = preg_replace_callback("/\[media=([\w,]+)\]\s*([^\[\<\r\n]+?)\s*\[\/media\]/is", 'portalcp_get_postmessage_callback_parsearticlemedia_12', $post['message']);
 	}
 	if(strpos($msglower, '[/audio]') !== FALSE) {
-		$post['message'] = preg_replace("/\[audio(=1)*\]\s*([^\[\<\r\n]+?)\s*\[\/audio\]/ies", "parsearticlemedia('mid,0,0', '\\2')", $post['message']);
+		$post['message'] = preg_replace_callback("/\[audio(=1)*\]\s*([^\[\<\r\n]+?)\s*\[\/audio\]/is", 'portalcp_get_postmessage_callback_parsearticlemedia_2', $post['message']);
 	}
 	if(strpos($msglower, '[/flash]') !== FALSE) {
-		$post['message'] = preg_replace("/\[flash(=(\d+),(\d+))?\]\s*([^\[\<\r\n]+?)\s*\[\/flash\]/ies", "parsearticlemedia('swf,0,0', '\\4');", $post['message']);
+		$post['message'] = preg_replace_callback("/\[flash(=(\d+),(\d+))?\]\s*([^\[\<\r\n]+?)\s*\[\/flash\]/is", 'portalcp_get_postmessage_callback_parsearticlemedia_4', $post['message']);
 	}
 
 	$post['message'] = discuzcode($post['message'], $post['smileyoff'], $post['bbcodeoff'], $post['htmlon'] & 1, $forum['allowsmilies'], $forum['allowbbcode'], ($forum['allowimgcode'] && $_G['setting']['showimages'] ? 1 : 0), $forum['allowhtml'], 0, 0, $post['authorid'], $forum['allowmediacode'], $post['pid']);
@@ -656,6 +690,19 @@ function portalcp_get_postmessage($post, $getauthorall = '') {
 	}
 	return $post['message'].$_message;
 }
+
+function portalcp_get_postmessage_callback_parsearticlemedia_12($matches) {
+	return parsearticlemedia($matches[1], $matches[2]);
+}
+
+function portalcp_get_postmessage_callback_parsearticlemedia_2($matches) {
+	return parsearticlemedia('mid,0,0', $matches[2]);
+}
+
+function portalcp_get_postmessage_callback_parsearticlemedia_4($matches) {
+	return parsearticlemedia('swf,0,0', $matches[4]);
+}
+
 function portalcp_parse_postattch(&$post) {
 	static $allpostattchs = null;
 	if($allpostattchs === null) {
@@ -721,4 +768,20 @@ function parsearticlemedia($params, $url) {
 	}
 	return;
 }
+
+function portalcp_article_pre_next($catid, $aid) {
+	$data = array(
+		'preaid' => C::t('portal_article_title')->fetch_preaid_by_catid_aid($catid, $aid),
+		'nextaid' => C::t('portal_article_title')->fetch_nextaid_by_catid_aid($catid, $aid),
+	);
+	if($data['preaid']) {
+		C::t('portal_article_title')->update($data['preaid'], array(
+			'preaid' => C::t('portal_article_title')->fetch_preaid_by_catid_aid($catid, $data['preaid']),
+			'nextaid' => C::t('portal_article_title')->fetch_nextaid_by_catid_aid($catid, $data['preaid']),
+			)
+		);
+	}
+	return $data;
+}
+
 ?>

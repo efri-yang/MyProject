@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: portal_comment.php 26746 2011-12-22 07:17:27Z chenmengshu $
+ *      $Id: portal_comment.php 33660 2013-07-29 07:51:05Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -22,10 +22,10 @@ if($idtype == 'aid') {
 	if($csubject) {
 		$csubject = array_merge($csubject, C::t('portal_article_count')->fetch($id));
 	}
-	$url = 'portal.php?mod=view&aid='.$id;
+	$url = fetch_article_url($csubject);
 } elseif($idtype == 'topicid') {
 	$csubject = C::t('portal_topic')->fetch($id);
-	$url = 'portal.php?mod=topic&topicid='.$id;
+	$url = fetch_topic_url($csubject);
 }
 if(empty($csubject)) {
 	showmessage('comment_'.$idtype.'_no_exist');
@@ -54,8 +54,7 @@ if($csubject['commentnum']) {
 }
 
 $multi = multi($csubject['commentnum'], $perpage, $page, "portal.php?mod=comment&id=$id&idtype=$idtype");
-$seccodecheck = $_G['group']['seccode'] ? $_G['setting']['seccodestatus'] & 4 : 0;
-$secqaacheck = $_G['group']['seccode'] ? $_G['setting']['secqaa']['status'] & 2 : 0;
+list($seccodecheck, $secqaacheck) = seccheck('publish');
 include_once template("diy:portal/comment");
 
 ?>

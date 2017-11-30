@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_postsplit.php 33062 2013-04-16 09:26:31Z zhengqingpeng $
+ *      $Id: admincp_postsplit.php 33060 2013-04-16 09:00:06Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {

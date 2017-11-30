@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: collection_index.php 32194 2012-11-27 09:25:12Z chenmengshu $
+ *      $Id: collection_index.php 33200 2013-05-06 12:27:49Z laoguozhang $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -42,6 +42,9 @@ if($op == 'all' || $op == 'search') {
 	$teamworker = C::t('forum_collectionteamworker')->fetch_all_by_uid($_G['uid']);
 	$twctid = array_keys($teamworker);
 	$follow = C::t('forum_collectionfollow')->fetch_all_by_uid($_G['uid']);
+	if(empty($follow)) {
+		$follow = array();
+	}
 	$followctid = array_keys($follow);
 
 	if(!$myctid) {
@@ -69,10 +72,7 @@ if($op == 'all' || $op == 'search') {
 		loadcache('collection');
 
 		if(TIMESTAMP - $_G['cache']['collection']['dateline'] > 300) {
-			$collection = C::t('forum_collection')->range(0, 500, 10);
-			if(!$collection) {
-				$collection = C::t('forum_collection')->range(0, 500);
-			}
+			$collection = getHotCollection(500, false);
 			$collectioncache = array('dateline' => TIMESTAMP, 'data' => $collection);
 			savecache('collection', $collectioncache);
 		} else {
@@ -81,7 +81,7 @@ if($op == 'all' || $op == 'search') {
 		$count = count($collection);
 		for($i = $start; $i < $start+$cpp; $i++) {
 			if(!$collection[$i]) {
-				break;
+				continue;
 			}
 			$collectiondata[] = $collection[$i];
 		}

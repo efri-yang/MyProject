@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 <style type="text/css">
 	.xl2 { background: url({IMGDIR}/vline.png) repeat-y 50% 0; }
 		.xl2 li { width: 49.9%; }
@@ -36,19 +36,15 @@
 			<!--{if $view != 'index'}-->
 			<div id="pgt" class="bm bw0 pgs cl">
 				$multipage
-				<!--{if helper_access::check_module('guide')}-->
-				<span class="pgb y"><a href="forum.php?mod=guide">{lang guide_index}</a></span>
-				<!--{/if}-->
 				<a onclick="showWindow('nav', this.href, 'get', 0)" href="forum.php?mod=misc&amp;action=nav"><img src="{IMGDIR}/pn_post.png" alt="{lang send_posts}" /></a>
 			</div>
 			<!--{/if}-->
 			<ul id="thread_types" class="ttp bm cl">
-				<!--{if helper_access::check_module('guide')}-->
-				<li $currentview['index']><a href="forum.php?mod=guide&view=index">{lang guide_index}</a></li>
-				<!--{/if}-->
 				<li $currentview['hot']><a href="forum.php?mod=guide&view=hot">{lang guide_hot}</a></li>
 				<li $currentview['digest']><a href="forum.php?mod=guide&view=digest">{lang guide_digest}</a></li>
 				<li $currentview['new']><a href="forum.php?mod=guide&view=new">{lang guide_new}</a></li>
+				<li $currentview['newthread']><a href="forum.php?mod=guide&view=newthread">{lang guide_newthread}</a></li>
+				<li $currentview['sofa']><a href="forum.php?mod=guide&view=sofa">{lang guide_sofa}</a></li>
 				<li $currentview['my']><a id="filter_special" href="forum.php?mod=guide&view=my" onmouseover="showMenu(this.id)">{lang guide_my}</a></li>
 				<!--{hook/guide_nav_extra}-->
 			</ul>
@@ -59,7 +55,7 @@
 					<div class="bm_h">
 						<a href="forum.php?mod=guide&view=$key" class="y xi2">{lang more} &raquo;</a>
 						<h2>
-							<!--{if $key == 'hot'}-->{lang guide_hot}<!--{elseif $key == 'digest'}-->{lang guide_digest}<!--{elseif $key == 'new'}-->{lang guide_new}<!--{elseif $key == 'my'}-->{lang guide_my}<!--{/if}-->
+							<!--{if $key == 'hot'}-->{lang guide_hot}<!--{elseif $key == 'digest'}-->{lang guide_digest}<!--{elseif $key == 'newthread'}-->{lang guide_newthread}<!--{elseif $key == 'new'}-->{lang guide_new}<!--{elseif $key == 'my'}-->{lang guide_my}<!--{/if}-->
 						</h2>
 					</div>
 					 <div class="bm_c">
@@ -166,4 +162,4 @@
 		</ul>
 	</div>
 <!--{/if}-->
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

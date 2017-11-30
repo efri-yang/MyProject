@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: handlers.js 31539 2012-09-06 07:54:49Z zhengqingpeng $
+	$Id: handlers.js 31952 2012-10-25 09:20:40Z zhengqingpeng $
 */
 
 var sdCloseTime = 2;
@@ -49,6 +49,17 @@ function fileDialogStart() {
 function fileQueued(file) {
 	try {
 		var createQueue = true;
+		if(this.customSettings.uploadSource == 'forum' && this.customSettings.uploadType == 'poll') {
+			var inputObj = $(this.customSettings.progressTarget+'_aid');
+			if(inputObj && parseInt(inputObj.value)) {
+				this.addPostParam('aid', inputObj.value);
+			}
+		} else if(this.customSettings.uploadSource == 'portal') {
+			var inputObj = $('catid');
+			if(inputObj && parseInt(inputObj.value)) {
+				this.addPostParam('catid', inputObj.value);
+			}
+		}
 		var progress = new FileProgress(file, this.customSettings.progressTarget);
 		if(this.customSettings.uploadSource == 'forum') {
 			if(this.customSettings.maxAttachNum != undefined) {
@@ -76,11 +87,6 @@ function fileQueued(file) {
 				}
 			}
 
-		} else if(this.customSettings.uploadSource == 'portal') {
-			var inputObj = $('catid');
-			if(inputObj && parseInt(inputObj.value)) {
-				this.addPostParam('catid', inputObj.value);
-			}
 		}
 		if(createQueue) {
 			progress.setStatus("等待上传...");
@@ -149,15 +155,14 @@ function fileDialogComplete(numFilesSelected, numFilesQueued) {
 						$('attach_tblheader').style.display = '';
 						$('attach_notice').style.display = '';
 					}
-				} catch (ex)  {}
-
+				} catch (ex) {}
 			} else if(this.customSettings.uploadType == 'image') {
 				if(typeof switchImagebutton == "function") {
 					switchImagebutton('imgattachlist');
 				}
 				try {
 					$('imgattach_notice').style.display = '';
-				} catch (ex)  {}
+				} catch (ex) {}
 			}
 			var objId = this.customSettings.uploadType == 'attach' ? 'attachlist' : 'imgattachlist';
 			var listObj = $(objId);
@@ -179,6 +184,11 @@ function fileDialogComplete(numFilesSelected, numFilesQueued) {
 function uploadStart(file) {
 	try {
 		this.addPostParam('filetype', file.type);
+		if(this.customSettings.uploadSource == 'forum' && this.customSettings.uploadType == 'poll') {
+			var preObj = $(this.customSettings.progressTarget);
+			preObj.style.display = 'none';
+			preObj.innerHTML = '';
+		}
 		var progress = new FileProgress(file, this.customSettings.progressTarget);
 		progress.setStatus("上传中...");
 		progress.toggleCancel(true, this);
@@ -210,29 +220,61 @@ function uploadSuccess(file, serverData) {
 	try {
 		var progress = new FileProgress(file, this.customSettings.progressTarget);
 		if(this.customSettings.uploadSource == 'forum') {
-			aid = parseInt(serverData);
-			if(aid > 0) {
-				if(this.customSettings.uploadType == 'attach') {
-					ajaxget('forum.php?mod=ajax&action=attachlist&aids=' + aid + (!fid ? '' : '&fid=' + fid)+(typeof resulttype == 'undefined' ? '' : '&result=simple'), file.id);
-				} else if(this.customSettings.uploadType == 'image') {
-					var tdObj = getInsertTdId(this.customSettings.imgBoxObj, 'image_td_'+aid);
-					ajaxget('forum.php?mod=ajax&action=imagelist&type=single&pid=' + pid + '&aids=' + aid + (!fid ? '' : '&fid=' + fid), tdObj.id);
-					$(file.id).style.display = 'none';
+			if(this.customSettings.uploadType == 'poll') {
+				var data = eval('('+serverData+')');
+				if(parseInt(data.aid)) {
+					var preObj = $(this.customSettings.progressTarget);
+					preObj.innerHTML = "";
+					preObj.style.display = '';
+					var img = new Image();
+					img.src = IMGDIR + '/attachimg_2.png';//data.smallimg;
+					var imgObj = document.createElement("img");
+					imgObj.src = img.src;
+					imgObj.className = "cur1";
+					imgObj.onmouseout = function(){hideMenu('poll_img_preview_'+data.aid+'_menu');};//"hideMenu('poll_img_preview_"+data.aid+"_menu');";
+					imgObj.onmouseover = function(){showMenu({'menuid':'poll_img_preview_'+data.aid+'_menu','ctrlclass':'a','duration':2,'timeout':0,'pos':'34'});};//"showMenu({'menuid':'poll_img_preview_"+data.aid+"_menu','ctrlclass':'a','duration':2,'timeout':0,'pos':'34'});";
+					preObj.appendChild(imgObj);
+					var inputObj = document.createElement("input");
+					inputObj.type = 'hidden';
+					inputObj.name = 'pollimage[]';
+					inputObj.id = this.customSettings.progressTarget+'_aid';
+					inputObj.value= data.aid;
+					preObj.appendChild(inputObj);
+					var preImgObj = document.createElement("span");
+					preImgObj.style.display = 'none';
+					preImgObj.id = 'poll_img_preview_'+data.aid+'_menu';
+					img = new Image();
+					img.src = data.smallimg;
+					imgObj = document.createElement("img");
+					imgObj.src = img.src;
+					preImgObj.appendChild(imgObj);
+					preObj.appendChild(preImgObj);
 				}
 			} else {
-				aid = aid < -1 ? Math.abs(aid) : aid;
-				if(typeof STATUSMSG[aid] == "string") {
-					progress.setStatus(STATUSMSG[aid]);
-					showDialog(STATUSMSG[aid], 'notice', null, null, 0, null, null, null, null, sdCloseTime);
+				aid = parseInt(serverData);
+				if(aid > 0) {
+					if(this.customSettings.uploadType == 'attach') {
+						ajaxget('forum.php?mod=ajax&action=attachlist&aids=' + aid + (!fid ? '' : '&fid=' + fid)+(typeof resulttype == 'undefined' ? '' : '&result=simple'), file.id);
+					} else if(this.customSettings.uploadType == 'image') {
+						var tdObj = getInsertTdId(this.customSettings.imgBoxObj, 'image_td_'+aid);
+						ajaxget('forum.php?mod=ajax&action=imagelist&type=single&pid=' + pid + '&aids=' + aid + (!fid ? '' : '&fid=' + fid), tdObj.id);
+						$(file.id).style.display = 'none';
+					}
 				} else {
-					progress.setStatus("取消上传");
+					aid = aid < -1 ? Math.abs(aid) : aid;
+					if(typeof STATUSMSG[aid] == "string") {
+						progress.setStatus(STATUSMSG[aid]);
+						showDialog(STATUSMSG[aid], 'notice', null, null, 0, null, null, null, null, sdCloseTime);
+					} else {
+						progress.setStatus("取消上传");
+					}
+					this.cancelUpload(file.id);
+					progress.setCancelled();
+					progress.toggleCancel(true, this);
+					var stats = this.getStats();
+					var obj = {'successful_uploads':--stats.successful_uploads, 'upload_cancelled':++stats.upload_cancelled};
+					this.setStats(obj);
 				}
-				this.cancelUpload(file.id);
-				progress.setCancelled();
-				progress.toggleCancel(true, this);
-				var stats = this.getStats();
-				var obj = {'successful_uploads':--stats.successful_uploads, 'upload_cancelled':++stats.upload_cancelled};
-				this.setStats(obj);
 			}
 		} else if(this.customSettings.uploadType == 'album') {
 			var data = eval('('+serverData+')');

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: connect_config.php 32988 2013-04-02 03:19:19Z liulanbo $
+ *      $Id: connect_config.php 33543 2013-07-03 06:01:33Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -67,8 +67,6 @@ if(submitcheck('connectsubmit')) {
 				}
 			}
 
-			$connectService->connectUserUnbind();
-
 		} else { // debug 因为老用户access token等信息，所以没法通知connect，所以直接在本地解绑就行了，不fopen connect
 
 			if($_G['member']['conisregister']) {
@@ -123,7 +121,8 @@ if(submitcheck('connectsubmit')) {
 			showmessage('submit_invalid');
 		}
 
-		$connectService = Cloud::loadClass('Service_Connect');
+		require_once DISCUZ_ROOT.'/source/plugin/qqconnect/lib/Connect.php';
+		$connectService = new Cloud_Service_Connect();
 		$connectService->connectMergeMember();
 
 		if($_G['member']['conuin'] && $_G['member']['conuinsecret']) {
@@ -139,7 +138,8 @@ if(submitcheck('connectsubmit')) {
 
 			$arr['version'] = 'qzone1.0';
 
-			$utilService = Cloud::loadClass('Service_Util');
+			require_once DISCUZ_ROOT.'/source/plugin/qqconnect/lib/Util.php';
+			$utilService = new Cloud_Service_Util();
 			$result = $connectService->connectOutputPhp('http://api.discuz.qq.com/connect/getSignature?' . $utilService->httpBuildQuery($arr, '', '&'));
 			if ($result['status'] == 0) {
 				$connectService->connectAjaxOuputMessage('[wb=' . $result['result']['username'] . ']' . $result['result']['signature_url'] . '[/wb]', 0);

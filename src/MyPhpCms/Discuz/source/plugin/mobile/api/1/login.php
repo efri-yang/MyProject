@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: login.php 27451 2012-02-01 05:48:47Z monkey $
+ *      $Id: login.php 34314 2014-02-20 01:04:24Z nemohou $
  */
 
 if(!defined('IN_MOBILE_API')) {
@@ -12,7 +12,7 @@ if(!defined('IN_MOBILE_API')) {
 }
 
 $_GET['mod'] = 'logging';
-$_GET['action'] = 'login';
+$_GET['action'] = !empty($_GET['action']) ? $_GET['action'] : 'login';
 include_once 'member.php';
 
 class mobile_api {

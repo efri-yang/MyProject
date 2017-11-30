@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: spacecp_favorite.php 29721 2012-04-26 07:01:08Z zhengqingpeng $
+ *      $Id: spacecp_favorite.php 34278 2013-12-03 09:46:45Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -15,11 +15,21 @@ if($_GET['op'] == 'delete') {
 
 	if($_GET['checkall']) {
 		if($_GET['favorite']) {
-			C::t('home_favorite')->delete($_GET['favorite'], false, $_G['uid']);
-			if($_G['setting']['cloud_status']) {
-				$favoriteService = Cloud::loadClass('Service_Client_Favorite');
-				$favoriteService->remove($_G['uid'], $_GET['favorite'], TIMESTAMP);
+			$deletecounter = array();
+			$data = C::t('home_favorite')->fetch_all($_GET['favorite']);
+			foreach($data as $dataone) {
+				switch($dataone['idtype']) {
+					case 'fid':
+						$deletecounter['fids'][] = $dataone['id'];
+						break;
+					default:
+						break;
+				}
 			}
+			if($deletecounter['fids']) {
+				C::t('forum_forum')->update_forum_counter($deletecounter['fids'], 0, 0, 0, 0, -1);
+			}
+			C::t('home_favorite')->delete($_GET['favorite'], false, $_G['uid']);
 		}
 		showmessage('favorite_delete_succeed', 'home.php?mod=space&uid='.$_G['uid'].'&do=favorite&view=me&type='.$_GET['type'].'&quickforward=1');
 	} else {
@@ -30,11 +40,14 @@ if($_GET['op'] == 'delete') {
 		}
 
 		if(submitcheck('deletesubmit')) {
-			C::t('home_favorite')->delete($favid);
-			if($_G['setting']['cloud_status']) {
-				$favoriteService = Cloud::loadClass('Service_Client_Favorite');
-				$favoriteService->remove($_G['uid'], $favid);
+			switch($thevalue['idtype']) {
+				case 'fid':
+					C::t('forum_forum')->update_forum_counter($thevalue['id'], 0, 0, 0, 0, -1);
+					break;
+				default:
+					break;
 			}
+			C::t('home_favorite')->delete($favid);
 			showmessage('do_success', 'home.php?mod=space&uid='.$_G['uid'].'&do=favorite&view=me&type='.$_GET['type'].'&quickforward=1', array('favid' => $favid, 'id' => $thevalue['id']), array('showdialog'=>1, 'showmsg' => true, 'closetime' => true, 'locationtime' => 3));
 		}
 	}
@@ -58,35 +71,39 @@ if($_GET['op'] == 'delete') {
 		case 'forum':
 			$idtype = 'fid';
 			$foruminfo = C::t('forum_forum')->fetch($id);
-			$title = $foruminfo['status'] != 3 ? $foruminfo['name'] : '';
-			$icon = '<img src="static/image/feed/discuz.gif" alt="forum" class="vm" /> ';
+			loadcache('forums');
+			$forum = $_G['cache']['forums'][$id];
+			if(!$forum['viewperm'] || ($forum['viewperm'] && forumperm($forum['viewperm'])) || strstr($forum['users'], "\t$_G[uid]\t")) {
+				$title = $foruminfo['status'] != 3 ? $foruminfo['name'] : '';
+				$icon = '<img src="static/image/feed/discuz.gif" alt="forum" class="vm" /> ';
+			}
 			break;
-		case 'blog';
+		case 'blog':
 			$idtype = 'blogid';
 			$bloginfo = C::t('home_blog')->fetch($id);
 			$title = ($bloginfo['uid'] == $spaceuid) ? $bloginfo['subject'] : '';
 			$icon = '<img src="static/image/feed/blog.gif" alt="blog" class="vm" /> ';
 			break;
-		case 'group';
+		case 'group':
 			$idtype = 'gid';
 			$foruminfo = C::t('forum_forum')->fetch($id);
 			$title = $foruminfo['status'] == 3 ? $foruminfo['name'] : '';
 			$icon = '<img src="static/image/feed/group.gif" alt="group" class="vm" /> ';
 			break;
-		case 'album';
+		case 'album':
 			$idtype = 'albumid';
 			$result = C::t('home_album')->fetch($id, $spaceuid);
 			$title = $result['albumname'];
 			$icon = '<img src="static/image/feed/album.gif" alt="album" class="vm" /> ';
 			break;
-		case 'space';
+		case 'space':
 			$idtype = 'uid';
 			$_member = getuserbyuid($id);
 			$title = $_member['username'];
 			$unset($_member);
 			$icon = '<img src="static/image/feed/profile.gif" alt="space" class="vm" /> ';
 			break;
-		case 'article';
+		case 'article':
 			$idtype = 'aid';
 			$article = C::t('portal_article_title')->fetch($id);
 			$title = $article['title'];
@@ -101,11 +118,11 @@ if($_GET['op'] == 'delete') {
 	if($fav) {
 		showmessage('favorite_repeat');
 	}
-	$description = '';
+	$description = $extrajs = '';
 	$description_show = nl2br($description);
 
 	$fav_count = C::t('home_favorite')->count_by_id_idtype($id, $idtype);
-	if(submitcheck('favoritesubmit') || $type == 'forum' || $type == 'group') {
+	if(submitcheck('favoritesubmit') || ($type == 'forum' || $type == 'group' || $type == 'thread') && $_GET['formhash'] == FORMHASH) {
 		$arr = array(
 			'uid' => intval($_G['uid']),
 			'idtype' => $idtype,
@@ -116,10 +133,7 @@ if($_GET['op'] == 'delete') {
 			'dateline' => TIMESTAMP
 		);
 		$favid = C::t('home_favorite')->insert($arr, true);
-		if($_G['setting']['cloud_status']) {
-			$favoriteService = Cloud::loadClass('Service_Client_Favorite');
-			$favoriteService->add($arr['uid'], $favid, $arr['id'], $arr['idtype'], $arr['title'], $arr['description'], TIMESTAMP);
-		}
+
 		switch($type) {
 			case 'thread':
 				C::t('forum_thread')->increase($id, array('favtimes'=>1));
@@ -128,6 +142,7 @@ if($_GET['op'] == 'delete') {
 				break;
 			case 'forum':
 				C::t('forum_forum')->update_forum_counter($id, 0, 0, 0, 0, 1);
+				$extrajs = '<script type="text/javascript">$("number_favorite_num").innerHTML = parseInt($("number_favorite_num").innerHTML)+1;$("number_favorite").style.display="";</script>';
 				dsetcookie('nofavfid', '', -1);
 				break;
 			case 'blog':
@@ -146,7 +161,7 @@ if($_GET['op'] == 'delete') {
 				C::t('portal_article_count')->increase($id, array('favtimes' => 1));
 				break;
 		}
-		showmessage('favorite_do_success', dreferer(), array('id' => $id), array('showdialog' => true, 'closetime' => true));
+		showmessage('favorite_do_success', dreferer(), array('id' => $id, 'favid' => $favid), array('showdialog' => true, 'closetime' => true, 'extrajs' => $extrajs));
 	}
 }
 

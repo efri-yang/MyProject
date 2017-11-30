@@ -157,6 +157,9 @@
 					{lang youhave} <span class="xi1"> $usermoney {$_G[setting][extcredits][$_G[setting][creditstrans]][unit]}{$_G[setting][extcredits][$_G[setting][creditstrans]][title]}</span></span>
 					{lang yourusergroup}: {$_G['cache']['usergroups'][$_G[groupid]]['grouptitle']}
 				</p>
+				<!--{if $do == 'expiry'}-->
+					<div class="notice">{lang usergroup_expired}</div>
+				<!--{/if}-->
 				<!--{if $expirylist}-->
 					<table cellspacing="0" cellpadding="0" class="dt mtm mbm">
 						<tbody class="th">
@@ -194,6 +197,9 @@
 													<a href="home.php?mod=spacecp&ac=usergroup&do=exit&groupid=$groupid&handlekey=exitgrouphk" class="xw1 xi2" onclick="showWindow('group', this.href, 'get', 0);">{lang memcp_usergroups_exit}</a>
 												<!--{/if}-->
 											<!--{else}-->
+												<!--{if $_G['cache']['usergroups'][$groupid]['pubtype'] == 'buy'}-->
+													<a href="home.php?mod=spacecp&ac=usergroup&do=buy&groupid=$groupid&handlekey=buygrouphk" class="xw1 xi2" onclick="showWindow('group', this.href, 'get', 0);">{lang renew}</a>
+												<!--{/if}-->
 												{lang main_usergroup}
 											<!--{/if}-->
 										<!--{elseif $_G['cache']['usergroups'][$groupid]['pubtype'] == 'free'}-->
@@ -338,7 +344,7 @@
 function permtbody($maingroup) {
 global $_G, $bperms, $pperms, $sperms, $aperms;
 }
-<tr><td><!--{eval showstars($_G['cache']['usergroups'][$maingroup['groupid']]['stars']);}--></td></tr>
+<tr><td><!--{echo showstars($_G['cache']['usergroups'][$maingroup['groupid']]['stars']);}--></td></tr>
 <tbody class="ca">
 	<!--{loop $bperms $key $groupbperm}-->
 	<tr {if $key%2==0}class="alt"{/if}>

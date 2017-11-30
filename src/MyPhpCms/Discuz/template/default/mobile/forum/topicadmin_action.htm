@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 <!--{if in_array($_GET[action], array('delpost', 'banpost', 'warn'))}-->
 	<form id="topicadminform" method="post" autocomplete="off" action="forum.php?mod=topicadmin&action=$_GET[action]&modsubmit=yes&modclick=yes&mobile=yes" >
 		<input type="hidden" name="formhash" value="{FORMHASH}" />
@@ -33,6 +33,6 @@
 	<div class="box ban pbn">
     	<p>{lang admin_threadtopicadmin_error}</p>
     	<input type="button" onclick="javascript:history.back();return false;" value="{lang goback}" />
-    </box>
+    </div>
 <!--{/if}-->
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: forum_ajax.php 33365 2013-06-03 04:08:07Z andyzheng $
+ *      $Id: forum_ajax.php 36278 2016-12-09 07:52:35Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -276,13 +276,29 @@ if($_GET['action'] == 'checkusername') {
 		include template('common/footer_ajax');
 		exit;
 	} else {
+		$_G['forum_colorarray'] = array('', '#EE1B2E', '#EE5023', '#996600', '#3C9D40', '#2897C5', '#2B65B7', '#8F2A90', '#EC1282');
 		$query = C::t('forum_forumfield')->fetch($fid);
 		$forum_field['threadtypes'] = dunserialize($query['threadtypes']);
 		$forum_field['threadsorts'] = dunserialize($query['threadsorts']);
+
+		if($forum_field['threadtypes']['types']) {
+			safefilter($forum_field['threadtypes']['types']);
+		}
+		if($forum_field['threadtypes']['options']['name']) {
+			safefilter($forum_field['threadtypes']['options']['name']);
+		}
+		if($forum_field['threadsorts']['types']) {
+			safefilter($forum_field['threadsorts']['types']);
+		}
+
 		unset($query);
 		$forum_field = daddslashes($forum_field);
 		$todaytime = strtotime(dgmdate(TIMESTAMP, 'Ymd'));
 		foreach(C::t('forum_thread')->fetch_all_by_fid_lastpost($fid, $time, TIMESTAMP) as $thread) {
+			$thread['icontid'] = $thread['forumstick'] || !$thread['moved'] && $thread['isgroup'] != 1 ? $thread['tid'] : $thread['closed'];
+			if(!$thread['forumstick'] && ($thread['isgroup'] == 1 || $thread['fid'] != $_G['fid'])) {
+				$thread['icontid'] = $thread['closed'] > 1 ? $thread['closed'] : $thread['tid'];
+			}
 			list($thread['subject'], $thread['author'], $thread['lastposter']) = daddslashes(array($thread['subject'], $thread['author'], $thread['lastposter']));
 			$thread['dateline'] = $thread['dateline'] > $todaytime ? "<span class=\"xi1\">".dgmdate($thread['dateline'], 'd')."</span>" : "<span>".dgmdate($thread['dateline'], 'd')."</span>";
 			$thread['lastpost'] = dgmdate($thread['lastpost']);
@@ -296,10 +312,32 @@ if($_GET['action'] == 'checkusername') {
 			if($forum_field['threadsorts']['prefix']) {
 				$thread['threadsort'] = $forum_field['threadsorts']['types'][$thread['sortid']] ? '<em>[<a href="forum.php?mod=forumdisplay&fid='.$fid.'&filter=sortid&typeid='.$thread['sortid'].'">'.$forum_field['threadsorts']['types'][$thread['sortid']].'</a>]</em>' : '' ;
 			}
-			if(in_array('forum_viewthread', $_G['setting']['rewritestatus'])) {
-				$thread['threadurl'] = '<a href="'.rewriteoutput('forum_viewthread', 1, '', $thread['tid'], 1, '', '').'" class="xst" onclick="atarget(this)">'.$thread['subject'].'</a>';
+			if($thread['highlight']) {
+				$string = sprintf('%02d', $thread['highlight']);
+				$stylestr = sprintf('%03b', $string[0]);
+
+				$thread['highlight'] = ' style="';
+				$thread['highlight'] .= $stylestr[0] ? 'font-weight: bold;' : '';
+				$thread['highlight'] .= $stylestr[1] ? 'font-style: italic;' : '';
+				$thread['highlight'] .= $stylestr[2] ? 'text-decoration: underline;' : '';
+				$thread['highlight'] .= $string[1] ? 'color: '.$_G['forum_colorarray'][$string[1]].';' : '';
+				if($thread['bgcolor']) {
+					$thread['highlight'] .= "background-color: $thread[bgcolor];";
+				}
+				$thread['highlight'] .= '"';
 			} else {
-				$thread['threadurl'] = '<a href="forum.php?mod=viewthread&amp;tid='.$thread['tid'].'" class="xst" onclick="atarget(this)">'.$thread['subject'].'</a>';
+				$thread['highlight'] = '';
+			}
+			$target = $thread['isgroup'] == 1 || $thread['forumstick'] ? ' target="_blank"' : ' onclick="atarget(this)"';
+			if(in_array('forum_viewthread', $_G['setting']['rewritestatus'])) {
+				$thread['threadurl'] = '<a href="'.rewriteoutput('forum_viewthread', 1, '', $thread['tid'], 1, '', '').'"'.$thread['highlight'].$target.'class="s xst">'.$thread['subject'].'</a>';
+			} else {
+				$thread['threadurl'] = '<a href="forum.php?mod=viewthread&amp;tid='.$thread['tid'].'"'.$thread['highlight'].$target.'class="s xst">'.$thread['subject'].'</a>';
+			}
+			if(in_array($thread['displayorder'], array(1, 2, 3, 4))) {
+				$thread['id'] = 'stickthread_'.$thread['tid'];
+			} else {
+				$thread['id'] = 'normalthread_'.$thread['tid'];
 			}
 			$thread['threadurl'] = $thread['threadtype'].$thread['threadsort'].$thread['threadurl'];
 			if(in_array('home_space', $_G['setting']['rewritestatus'])) {
@@ -484,6 +522,7 @@ EOF;
 	if($_G['cookie']['visitedfid']) {
 		loadcache('forums');
 		foreach(explode('D', $_G['cookie']['visitedfid']) as $fid) {
+			$fid = intval($fid);
 			$visitedforums[$fid] = $_G['cache']['forums'][$fid]['name'];
 		}
 	}
@@ -502,16 +541,14 @@ EOF;
 					unset($list[$pid]);
 				} else {
 					$post['message'] = preg_replace($_G['cache']['smilies']['searcharray'], '', $post['message']);
-					$post['message'] = preg_replace("/\{\:soso_((e\d+)|(_\d+_\d))\:\}/e", '', $post['message']);
-					$list[$pid]['message'] = cutstr(preg_replace("/\[.+?\]/ies", '', dhtmlspecialchars($post['message'])), 300) ;
+					$post['message'] = preg_replace("/\{\:soso_((e\d+)|(_\d+_\d))\:\}/", '', $post['message']);
+					$list[$pid]['message'] = cutstr(preg_replace("/\[.+?\]/is", '', dhtmlspecialchars($post['message'])), 300) ;
 				}
 			}
 			krsort($list);
 		}
 	}
-	$seccodecheck = ($_G['setting']['seccodestatus'] & 4) && (!$_G['setting']['seccodedata']['minposts'] || getuserprofile('posts') < $_G['setting']['seccodedata']['minposts']);
-	$secqaacheck = $_G['setting']['secqaa']['status'] & 2 && (!$_G['setting']['secqaa']['minposts'] || getuserprofile('posts') < $_G['setting']['secqaa']['minposts']);
-
+	list($seccodecheck, $secqaacheck) = seccheck('post', 'reply');
 	include template('forum/ajax_quickreply');
 } elseif($_GET['action'] == 'getpost') {
 	$tid = intval($_GET['tid']);
@@ -648,20 +685,16 @@ EOF;
 		showmessage('do_success', dreferer(), array(), array('header'=>true));
 	}
 	exit;
-}
-
-function tmpiconv($s, $d, $str) {
-	if(is_array($str)) {
-		foreach($str as $k => $v) {
-			$str[$k] = tmpiconv($s, $d, $v);
-		}
-	} else {
-		$str = iconv($s, $d, $str);
+} elseif($_GET['action'] == 'checkpostrule') {
+	require_once libfile('function/post');
+	include template('common/header_ajax');
+	$_POST = array('action' => $_GET['ac']);
+	list($seccodecheck, $secqaacheck) = seccheck('post', $_GET['ac']);
+	if($seccodecheck || $secqaacheck) {
+		include template('forum/seccheck_post');
 	}
-	return $str;
-}
-function modifynav($type, $flag) {
-
+	include template('common/footer_ajax');
+	exit;
 }
 
 showmessage('succeed', '', array(), array('handle' => false));

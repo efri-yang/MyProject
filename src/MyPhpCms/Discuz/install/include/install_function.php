@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: install_function.php 29252 2012-03-31 02:03:00Z chenmengshu $
+ *      $Id: install_function.php 36362 2017-02-04 02:02:03Z nemohou $
  */
 
 if(!defined('IN_COMSENZ')) {
@@ -58,12 +58,14 @@ function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
 }
 
 function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
-	if(!function_exists('mysql_connect')) {
+	if(!function_exists('mysql_connect') && !function_exists('mysqli_connect')) {
 		show_msg('undefine_func', 'mysql_connect', 0);
 	}
-	if(!@mysql_connect($dbhost, $dbuser, $dbpw)) {
-		$errno = mysql_errno();
-		$error = mysql_error();
+	$mysqlmode = function_exists('mysql_connect') ? 'mysql' : 'mysqli';
+	$link = ($mysqlmode == 'mysql') ? @mysql_connect($dbhost, $dbuser, $dbpw) : new mysqli($dbhost, $dbuser, $dbpw);
+	if(!$link) {
+		$errno = ($mysqlmode == 'mysql') ? mysql_errno() : mysqli_errno();
+		$error = ($mysqlmode == 'mysql') ? mysql_error() : mysqli_error();
 		if($errno == 1045) {
 			show_msg('database_errno_1045', $error, 0);
 		} elseif($errno == 2003) {
@@ -72,8 +74,11 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
 			show_msg('database_connect_error', $error, 0);
 		}
 	} else {
-		if($query = @mysql_query("SHOW TABLES FROM $dbname")) {
-			while($row = mysql_fetch_row($query)) {
+		if($query = (($mysqlmode == 'mysql') ? @mysql_query("SHOW TABLES FROM $dbname") : $link->query("SHOW TABLES FROM $dbname"))) {
+			if(!$query) {
+				return false;
+			}
+			while($row = (($mysqlmode == 'mysql') ? mysql_fetch_row($query) : $query->fetch_row())) {
 				if(preg_match("/^$tablepre/", $row[0])) {
 					return false;
 				}
@@ -122,6 +127,7 @@ function dirfile_check(&$dirfile_items) {
 }
 
 function env_check(&$env_items) {
+	global $lang;
 	foreach($env_items as $key => $item) {
 		if($key == 'php') {
 			$env_items[$key]['current'] = PHP_VERSION;
@@ -133,12 +139,22 @@ function env_check(&$env_items) {
 			unset($tmp);
 		} elseif($key == 'diskspace') {
 			if(function_exists('disk_free_space')) {
-				$env_items[$key]['current'] = floor(disk_free_space(ROOT_PATH) / (1024*1024)).'M';
+				$env_items[$key]['current'] = disk_free_space(ROOT_PATH);
 			} else {
 				$env_items[$key]['current'] = 'unknow';
 			}
 		} elseif(isset($item['c'])) {
 			$env_items[$key]['current'] = constant($item['c']);
+		} elseif($key == 'opcache') {
+			$opcache_data = function_exists('opcache_get_configuration') ? opcache_get_configuration() : array();
+			$env_items[$key]['current'] = !empty($opcache_data['directives']['opcache.enable']) ? $lang['enable'] : $lang['disable'];
+		} elseif($key == 'curl') {
+			if(function_exists('curl_init') && function_exists('curl_version')){
+				$v = curl_version();
+				$env_items[$key]['current'] = $lang['enable'].' '.$v['version'];
+			}else{
+				$env_items[$key]['current'] = $lang['disable'];
+			}
 		}
 
 		$env_items[$key]['status'] = 1;
@@ -154,6 +170,23 @@ function function_check(&$func_items) {
 	}
 }
 
+function dintval($int, $allowarray = false) {
+	$ret = floatval($int);
+	if($int == $ret || !$allowarray && is_array($int)) return $ret;
+	if($allowarray && is_array($int)) {
+		foreach($int as &$v) {
+			$v = dintval($v, true);
+		}
+		return $int;
+	} elseif($int <= 0xffffffff) {
+		$l = strlen($int);
+		$m = substr($int, 0, 1) == '-' ? 1 : 0;
+		if(($l - $m) === strspn($int,'0987654321', $m)) {
+			return $int;
+		}
+	}
+	return $ret;
+}
 function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_items) {
 
 	$env_str = $file_str = $dir_str = $func_str = '';
@@ -165,8 +198,8 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
 		}
 		$status = 1;
 		if($item['r'] != 'notset') {
-			if(intval($item['current']) && intval($item['r'])) {
-				if(intval($item['current']) < intval($item['r'])) {
+			if(dintval($item['current']) && dintval($item['r'])) {
+				if(dintval($item['current']) < dintval($item['r'])) {
 					$status = 0;
 					$error_code = ENV_CHECK_ERROR;
 				}
@@ -176,6 +209,10 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
 					$error_code = ENV_CHECK_ERROR;
 				}
 			}
+		}
+		if($key == 'diskspace') {
+			$item['current'] = format_space($item['current']);
+			$item['r'] = format_space($item['r']);
 		}
 		if(VIEW_OFF) {
 			$env_str .= "\t\t<runCondition name=\"$key\" status=\"$status\" Require=\"$item[r]\" Best=\"$item[b]\" Current=\"$item[current]\"/>\n";
@@ -455,12 +492,12 @@ if(!function_exists('file_put_contents')) {
 	}
 }
 
-function createtable($sql) {
+function createtable($sql, $dbver) {
 
 	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
 	$type = in_array($type, array('MYISAM', 'HEAP', 'MEMORY')) ? $type : 'MYISAM';
 	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql).
-	(mysql_get_server_info() > '4.1' ? " ENGINE=$type DEFAULT CHARSET=".DBCHARSET : " TYPE=$type");
+	($dbver > '4.1' ? " ENGINE=$type DEFAULT CHARSET=".DBCHARSET : " TYPE=$type");
 }
 
 function dir_writeable($dir) {
@@ -533,7 +570,7 @@ EOT;
 function show_footer($quit = true) {
 
 	echo <<<EOT
-		<div class="footer">&copy;2001 - 2012 <a href="http://www.comsenz.com/">Comsenz</a> Inc.</div>
+		<div class="footer">&copy;2001 - 2017 <a href="http://www.comsenz.com/">Comsenz</a> Inc.</div>
 	</div>
 </div>
 </body>
@@ -679,7 +716,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
 function generate_key() {
 	$random = random(32);
 	$info = md5($_SERVER['SERVER_SOFTWARE'].$_SERVER['SERVER_NAME'].$_SERVER['SERVER_ADDR'].$_SERVER['SERVER_PORT'].$_SERVER['HTTP_USER_AGENT'].time());
-	$return = '';
+	$return = array();
 	for($i=0; $i<64; $i++) {
 		$p = intval($i/2);
 		$return[$i] = $i % 2 ? $random[$p] : $info[$p];
@@ -732,7 +769,7 @@ function runquery($sql) {
 			if(substr($query, 0, 12) == 'CREATE TABLE') {
 				$name = preg_replace("/CREATE TABLE ([a-z0-9_]+) .*/is", "\\1", $query);
 				showjsmessage(lang('create_table').' '.$name.' ... '.lang('succeed'));
-				$db->query(createtable($query));
+				$db->query(createtable($query, $db->version()));
 			} else {
 				$db->query($query);
 			}
@@ -767,7 +804,7 @@ function runucquery($sql, $tablepre) {
 			if(substr($query, 0, 12) == 'CREATE TABLE') {
 				$name = preg_replace("/CREATE TABLE ([a-z0-9_]+) .*/is", "\\1", $query);
 				showjsmessage(lang('create_table').' '.$name.' ... '.lang('succeed'));
-				$db->query(createtable($query));
+				$db->query(createtable($query, $db->version()));
 			} else {
 				$db->query($query);
 			}
@@ -830,7 +867,7 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
 	$scheme = $matches['scheme'];
 	$host = $matches['host'];
 	$path = $matches['path'] ? $matches['path'].($matches['query'] ? '?'.$matches['query'] : '') : '/';
-	$port = !empty($matches['port']) ? $matches['port'] : 80;
+	$port = !empty($matches['port']) ? $matches['port'] : ($matches['scheme'] == 'https' ? 443 : 80);
 
 	if(function_exists('curl_init') && $allowcurl) {
 		$ch = curl_init();
@@ -886,7 +923,7 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
 	}
 
 	$fpflag = 0;
-	if(!$fp = @fsocketopen(($ip ? $ip : $host), $port, $errno, $errstr, $timeout)) {
+	if(!$fp = @fsocketopen(($scheme == 'https' ? 'ssl' : $scheme).'://'.($scheme == 'https' ? $host : ($ip ? $ip : $host)), $port, $errno, $errstr, $timeout)) {
 		$context = array(
 			'http' => array(
 				'method' => $post ? 'POST' : 'GET',
@@ -896,7 +933,7 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
 			),
 		);
 		$context = stream_context_create($context);
-		$fp = @fopen($scheme.'://'.($ip ? $ip : $host).':'.$port.$path, 'b', false, $context);
+		$fp = @fopen($scheme.'://'.($scheme == 'https' ? $host : ($ip ? $ip : $host)).':'.$port.$path, 'b', false, $context);
 		$fpflag = 1;
 	}
 
@@ -936,7 +973,7 @@ function check_env() {
 	$errors = array('quit' => false);
 	$quit = false;
 
-	if(!function_exists('mysql_connect')) {
+	if(!function_exists('mysql_connect') && !function_exists('mysqli_connect')) {
 		$errors[] = 'mysql_unsupport';
 		$quit = true;
 	}
@@ -1146,8 +1183,8 @@ function save_uc_config($config, $file) {
 
 	list($appauthkey, $appid, $ucdbhost, $ucdbname, $ucdbuser, $ucdbpw, $ucdbcharset, $uctablepre, $uccharset, $ucapi, $ucip) = $config;
 
-	$link = mysql_connect($ucdbhost, $ucdbuser, $ucdbpw, 1);
-	$uc_connnect = $link && mysql_select_db($ucdbname, $link) ? 'mysql' : '';
+	$link = function_exists('mysql_connect') ? mysql_connect($ucdbhost, $ucdbuser, $ucdbpw, 1) : new mysqli($ucdbhost, $ucdbuser, $ucdbpw, $ucdbname);
+	$uc_connnect = $link ? 'mysql' : '';
 
 	$date = gmdate("Y-m-d H:i:s", time() + 3600 * 8);
 	$year = date('Y');
@@ -1240,7 +1277,8 @@ function install_uc_server() {
 
 	$pathinfo = pathinfo($_SERVER['PHP_SELF']);
 	$pathinfo['dirname'] = substr($pathinfo['dirname'], 0, -8);
-	$appurl = 'http://'.preg_replace("/\:\d+/", '', $_SERVER['HTTP_HOST']).($_SERVER['SERVER_PORT'] && $_SERVER['SERVER_PORT'] != 80 ? ':'.$_SERVER['SERVER_PORT'] : '').$pathinfo['dirname'];
+	$isHTTPS = ($_SERVER['HTTPS'] && strtolower($_SERVER['HTTPS']) != 'off') ? true : false;
+	$appurl = 'http'.($isHTTPS ? 's' : '').'://'.preg_replace("/\:\d+/", '', $_SERVER['HTTP_HOST']).($_SERVER['SERVER_PORT'] && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443 ? ':'.$_SERVER['SERVER_PORT'] : '').$pathinfo['dirname'];
 	$ucapi = $appurl.'/uc_server';
 	$ucip = '';
 	$app_tagtemplates = 'apptagtemplates[template]='.urlencode('<a href="{url}" target="_blank">{subject}</a>').'&'.
@@ -1712,4 +1750,14 @@ function install_extra_setting() {
 	foreach($settings as $key => $val) {
 		$db->query("REPLACE INTO {$tablepre}common_setting SET skey='$key', svalue='".addslashes(serialize($val))."'");
 	}
+}
+function format_space($space) {
+    if($space > 1048576) {
+		if($space > 1073741824) {
+			return floor($space / 1073741824).'GB';
+		} else {
+			return floor($space / 1048576).'MB';
+		}
+	}
+	return $space;
 }

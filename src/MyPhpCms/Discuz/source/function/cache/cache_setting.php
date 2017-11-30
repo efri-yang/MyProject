@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: cache_setting.php 32372 2013-01-07 04:28:23Z zhengqingpeng $
+ *      $Id: cache_setting.php 36353 2017-01-17 07:19:28Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -17,14 +17,15 @@ function build_cache_setting() {
 	$skipkeys = array('posttableids', 'mastermobile', 'masterqq', 'masteremail', 'closedreason',
 		'creditsnotify', 'backupdir', 'custombackup', 'jswizard', 'maxonlines', 'modreasons', 'newsletter',
 		'postno', 'postnocustom', 'customauthorinfo', 'domainwhitelist', 'ipregctrl',
-		'ipverifywhite', 'fastsmiley', 'defaultdoing',
+		'ipverifywhite', 'fastsmiley', 'defaultdoing', 'antitheftsetting',
 		);
 	$serialized = array('reginput', 'memory', 'search', 'creditspolicy', 'ftp', 'secqaa', 'ec_credit', 'qihoo', 'spacedata',
 		'infosidestatus', 'uc', 'indexhot', 'relatedtag', 'sitemessage', 'uchome', 'heatthread', 'recommendthread',
 		'disallowfloat', 'allowviewuserthread', 'advtype', 'click', 'card', 'rewritestatus', 'rewriterule', 'privacy', 'focus',
 		'forumkeys', 'article_tags', 'verify', 'seotitle', 'seodescription', 'seokeywords', 'domain', 'ranklist', 'my_search_data',
 		'seccodedata', 'inviteconfig', 'advexpiration', 'allowpostcomment', /*(IN_MOBILE)*/ 'mobile', 'connect', 'upgrade', 'patch', 'strongpw',
-		'posttable_info', 'threadtable_info', 'profilegroup'
+		'posttable_info', 'threadtable_info', 'profilegroup', 'antitheft', 'makehtml', 'guestviewthumb', 'grid', 'guesttipsinthread', 'accountguard',
+		'security_usergroups_white_list', 'security_forums_white_list',
 		);
 
 	$data = array();
@@ -94,6 +95,7 @@ function build_cache_setting() {
 
 	$usergroup = C::t('common_usergroup')->fetch_by_credits($data['initcredits'], '');
 	$data['newusergroupid'] = $usergroup['groupid'];
+	$data['buyusergroupexists'] = C::t('common_usergroup')->buyusergroup_exists();
 
 	if($data['srchhotkeywords']) {
 		$data['srchhotkeywords'] = explode("\n", $data['srchhotkeywords']);
@@ -227,7 +229,14 @@ function build_cache_setting() {
 	$data['domain']['defaultindex'] = isset($data['defaultindex']) && $data['defaultindex'] != '#' ? $data['defaultindex'] : '';
 	$data['domain']['holddomain'] = isset($data['holddomain']) ? $data['holddomain'] : '';
 	$data['domain']['list'] = array();
-	foreach(C::t('common_domain')->fetch_all_by_idtype(array('subarea', 'forum', 'topic', 'channel')) as $value) {
+	foreach(C::t('common_domain')->fetch_all_by_idtype(array('subarea', 'forum', 'topic', 'channel', 'plugin')) as $value) {
+		if($value['idtype'] == 'plugin') {
+			$plugin = C::t('common_plugin')->fetch($value['id']);
+			if(!$plugin || !$plugin['available']) {
+				continue;
+			}
+			$value['id'] = $plugin['identifier'];
+		}
 		$data['domain']['list'][$value['domain'].'.'.$value['domainroot']] = array('id' => $value['id'], 'idtype' => $value['idtype']);
 	}
 	writetocache('domain', getcachevars(array('domain' => $data['domain'])));
@@ -262,8 +271,8 @@ function build_cache_setting() {
 			} else {
 				$data['watermarktext']['fontpath'][$k] = 'static/image/seccode/font/'.$data['watermarktext']['fontpath'][$k];
 			}
-			$data['watermarktext']['color'][$k] = preg_replace('/#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/e', "hexdec('\\1').','.hexdec('\\2').','.hexdec('\\3')", $data['watermarktext']['color'][$k]);
-			$data['watermarktext']['shadowcolor'][$k] = preg_replace('/#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/e', "hexdec('\\1').','.hexdec('\\2').','.hexdec('\\3')", $data['watermarktext']['shadowcolor'][$k]);
+			$data['watermarktext']['color'][$k] = preg_replace_callback('/#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/', 'build_cache_setting_callback_hexdec_123', $data['watermarktext']['color'][$k]);
+			$data['watermarktext']['shadowcolor'][$k] = preg_replace_callback('/#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/', 'build_cache_setting_callback_hexdec_123', $data['watermarktext']['shadowcolor'][$k]);
 		} else {
 			$data['watermarktext']['text'][$k] = '';
 			$data['watermarktext']['fontpath'][$k] = '';
@@ -307,6 +316,7 @@ function build_cache_setting() {
 	$data['ucenterurl'] = UC_API;
 
 	foreach(C::t('common_magic')->fetch_all_data(1) as $magic) {
+		$magic['identifier'] = str_replace(':', '_', $magic['identifier']);
 		$data['magics'][$magic['identifier']] = $magic['name'];
 	}
 
@@ -334,6 +344,7 @@ function build_cache_setting() {
 	$data['spacenavs'] = get_cachedata_spacenavs();
 	$data['mynavs'] = get_cachedata_mynavs();
 	$data['topnavs'] = get_cachedata_topnav();
+	$data['profilenode'] = get_cachedata_threadprofile();
 
 	require_once DISCUZ_ROOT.'./uc_client/client.php';
 	$ucapparray = uc_app_ls();
@@ -379,6 +390,11 @@ function build_cache_setting() {
 		$data['jspath'] = 'static/js/';
 	}
 
+	if(!$data['csspathv']) {
+		$data['csspathv'] = 'data/cache/';
+	}
+	$data['csspath'] = $data['csspathv'].'style_';
+
 	if($data['cacheindexlife']) {
 		$cachedir = DISCUZ_ROOT.'./'.$data['cachethreaddir'];
 		$tidmd5 = substr(md5(0), 3);
@@ -414,7 +430,7 @@ function build_cache_setting() {
 				$domain = $defaultcurhost;
 			}
 			if($domain != '{CURHOST}') {
-				$domain = 'http://'.$domain.$_G['siteport'].'/';
+				$domain = $_G['scheme'].'://'.$domain.$_G['siteport'].'/';
 			}
 			if($repflag) {
 				$output['str']['search'][$app] = "<a href=\"{$app}.php";
@@ -432,19 +448,29 @@ function build_cache_setting() {
 		}
 		if($output['preg']) {
 			foreach($data['footernavs'] as $id => $nav) {
-				$data['footernavs'][$id]['code'] = preg_replace($output['preg']['search'], $output['preg']['replace'], $nav['code']);
+				foreach ($output['preg']['search'] as $key => $value) {
+					$data['footernavs'][$id]['code'] = preg_replace_callback($value, create_function('$matches', 'return '.$output['preg']['replace'][$key].';'), $nav['code']);
+				}
 			}
 			foreach($data['spacenavs'] as $id => $nav) {
-				$data['spacenavs'][$id]['code'] = preg_replace($output['preg']['search'], $output['preg']['replace'], $nav['code']);
+				foreach ($output['preg']['search'] as $key => $value) {
+					$data['spacenavs'][$id]['code'] = preg_replace_callback($value, create_function('$matches', 'return '.$output['preg']['replace'][$key].';'), $nav['code']);
+				}
 			}
 			foreach($data['mynavs'] as $id => $nav) {
-				$data['mynavs'][$id]['code'] = preg_replace($output['preg']['search'], $output['preg']['replace'], $nav['code']);
+				foreach ($output['preg']['search'] as $key => $value) {
+					$data['mynavs'][$id]['code'] = preg_replace_callback($value, create_function('$matches', 'return '.$output['preg']['replace'][$key].';'), $nav['code']);
+				}
 			}
 			foreach($data['topnavs'] as $id => $nav) {
-				$data['topnavs'][$id]['code'] = preg_replace($output['preg']['search'], $output['preg']['replace'], $nav['code']);
+				foreach ($output['preg']['search'] as $key => $value) {
+					$data['topnavs'][$id]['code'] = preg_replace_callback($value, create_function('$matches', 'return '.$output['preg']['replace'][$key].';'), $nav['code']);
+				}
 			}
-			foreach($data['plugins']['jsmenu'] as $key => $nav) {
-				$data['plugins']['jsmenu'][$key]['url'] = preg_replace($output['preg']['search'], $output['preg']['replace'], $nav['url']);
+			foreach($data['plugins']['jsmenu'] as $id => $nav) {
+				foreach ($output['preg']['search'] as $key => $value) {
+					$data['plugins']['jsmenu'][$id]['url'] = preg_replace_callback($value, create_function('$matches', 'return '.$output['preg']['replace'][$key].';'), $nav['url']);
+				}
 			}
 		}
 	}
@@ -453,6 +479,10 @@ function build_cache_setting() {
 
 	savecache('setting', $data);
 	$_G['setting'] = $data;
+}
+
+function build_cache_setting_callback_hexdec_123($matches) {
+	return hexdec($matches[1]).','.hexdec($matches[2]).','.hexdec($matches[3]);
 }
 
 function get_cachedata_setting_creditspolicy() {
@@ -471,7 +501,7 @@ function get_cachedata_setting_creditspolicy() {
 
 function get_cachedata_setting_plugin($method = '') {
 	global $_G;
-	$hookfuncs = array('common', 'discuzcode', 'deletemember', 'deletethread', 'deletepost', 'avatar', 'savebanlog', 'cacheuserstats', 'undeletethreads', 'recyclebinpostundelete', 'threadpubsave');
+	$hookfuncs = array('common', 'discuzcode', 'template', 'deletemember', 'deletethread', 'deletepost', 'avatar', 'savebanlog', 'cacheuserstats', 'undeletethreads', 'recyclebinpostundelete', 'threadpubsave', 'profile_node');
 	$data = $adminmenu = array();
 	$data['plugins'] = $data['pluginlinks'] = $data['hookscript'] = $data['hookscriptmobile'] = $data['threadplugins'] = $data['specialicon'] = array();
 	$data['plugins']['func'] = $data['plugins']['available'] = array();
@@ -569,6 +599,9 @@ function get_cachedata_setting_plugin($method = '') {
 								foreach($hookmethods as $funcname) {
 									if($hscript == 'global' && in_array($funcname, $hookfuncs)) {
 										$data['plugins']['func'][$k][$funcname] = true;
+										if($funcname == 'profile_node') {
+											$data['plugins']['profile_node'][$plugin['identifier']] = $script;
+										}
 									}
 									$v = explode('_', $funcname);
 									$curscript = $v[0];
@@ -612,13 +645,22 @@ function get_cachedata_setting_plugin($method = '') {
 			}
 		}
 		if($addadminmenu) {
-			$adminmenu[] = array('url' => "plugins&operation=config&do=$plugin[pluginid]", 'action' => 'plugins_config_'.$plugin['pluginid'], 'name' => $plugin['name']);
+			$adminmenu[$plugin['modules']['system'] ? 0 : 1][] = array('url' => "plugins&operation=config&do=$plugin[pluginid]", 'action' => 'plugins_config_'.$plugin['pluginid'], 'name' => $plugin['name']);
 		}
 	}
 	if(!$method) {
 		$_G['setting']['plugins']['available'] = $data['plugins']['available'];
-		savecache('adminmenu', $adminmenu);
+		if($adminmenu[0]) {
+			$adminmenu[0] = array_merge(
+				array(array('name' => 'plugins_system', 'sub' => 1)),
+				$adminmenu[0],
+				array(array('name' => 'plugins_system', 'sub' => 2))
+			);
+		}
+		savecache('adminmenu', array_merge((array)$adminmenu[0], (array)$adminmenu[1]));
 	}
+
+
 
 	$data['pluginhooks'] = array();
 	foreach(array('hookscript', 'hookscriptmobile') as $hooktype) {
@@ -707,15 +749,19 @@ function get_cachedata_mainnav() {
 		$data['navs'][$id]['available'] = $nav['available'];
 		$nav['name'] = $nav['name'].($nav['title'] ? '<span>'.$nav['title'].'</span>' : '');
 		$subnavs = '';
-		foreach(C::t('common_nav')->fetch_all_subnav($nav['id']) as $subnav) {
-			$item = "<a href=\"$subnav[url]\" hidefocus=\"true\" ".($subnav['title'] ? "title=\"$subnav[title]\" " : '').($subnav['target'] == 1 ? "target=\"_blank\" " : '').parsehighlight($subnav['highlight']).">$subnav[name]</a>";
-			$liparam = !$nav['subtype'] || !$nav['subcols'] ? '' : ' style="width:'.sprintf('%1.1f', (1 / $nav['subcols']) * 100).'%"';
-			$subnavs .= '<li'.$liparam.'>'.$item.'</li>';
+		if(!($nav['identifier'] == 5 && $nav['type'] == 0)) {
+			foreach(C::t('common_nav')->fetch_all_subnav($nav['id']) as $subnav) {
+				$item = "<a href=\"$subnav[url]\" hidefocus=\"true\" ".($subnav['title'] ? "title=\"$subnav[title]\" " : '').($subnav['target'] == 1 ? "target=\"_blank\" " : '').parsehighlight($subnav['highlight']).">$subnav[name]</a>";
+				$liparam = !$nav['subtype'] || !$nav['subcols'] ? '' : ' style="width:'.sprintf('%1.1f', (1 / $nav['subcols']) * 100).'%"';
+				$subnavs .= '<li'.$liparam.'>'.$item.'</li>';
+			}
 		}
 		list($navid) = explode('.', basename($nav['url']));
 		if($nav['type'] || $navid == 'misc' || $nav['identifier'] == 6) {
 			if($nav['type'] == 4) {
 				$navid = 'P'.$nav['identifier'];
+			} elseif($nav['type'] == 5) {
+				$navid = 'F'.$nav['identifier'];
 			} else {
 				$navid = 'N'.substr(md5(($nav['url'] != '#' ? $nav['url'] : $nav['name'])), 0, 4);
 			}
@@ -743,6 +789,11 @@ function get_cachedata_mainnav() {
 				continue;
 			}
 		}
+		if($nav['identifier'] == 5 && $nav['type'] == 0) {
+			$onmouseover = 'delayShow(this, function () {showMenu({\'ctrlid\':\'mn_userapp\',\'pos\':\'43!\',\'ctrlclass\':\'a\',\'duration\':2});showUserApp();})';
+			$data['menunavs'][] = '<div class="p_pop h_pop" id="'.$navid.'_menu" style="display: none"></div>';
+			$data['subnavs'][$navid] = '';
+		}
 
 		if($nav['logo']) {
 			$navlogo = str_replace('{STATICURL}', STATICURL, $nav['logo']);
@@ -765,13 +816,13 @@ function get_cachedata_mainnav() {
 		if($nav['type'] == 0) {
 			$domainkey = substr($purl['path'], 0, -strlen(strrchr($purl['path'], '.')));
 			if(!empty($_G['setting']['domain']['app'][$domainkey]) && !in_array(strtolower($nav['title']), array('follow', 'guide', 'collection', 'blog', 'album', 'favorite', 'friend', 'share', 'doing'))) {
-				$nav['url'] = 'http://'.$_G['setting']['domain']['app'][$domainkey];
+				$nav['url'] = $_G['scheme'].'://'.$_G['setting']['domain']['app'][$domainkey];
 			}
 		}
 
 		$data['navs'][$id]['navid'] = $navid;
 		$data['navs'][$id]['level'] = $nav['level'];
-		$data['navs'][$id]['nav'] = "id=\"$navid\" ".($onmouseover ? 'onmouseover="'.$onmouseover.'"' : '')."><a href=\"$nav[url]\" hidefocus=\"true\" ".($nav['title'] ? "title=\"$nav[title]\" " : '').($nav['target'] == 1 ? "target=\"_blank\" " : '')." $nav[style]>$nav[name]</a";
+		$data['navs'][$id]['nav'] = "id=\"$navid\" ".($onmouseover ? 'onmouseover="'.$onmouseover.'"' : '')."><a href=\"$nav[url]\" hidefocus=\"true\" ".($nav['title'] ? "title=\"$nav[title]\" " : '').($nav['target'] == 1 ? "target=\"_blank\" " : '')." $nav[style]>$nav[name]".($nav['identifier'] == 5 && $nav['type'] == 0 ? '<b class="icon_down"></b>' : '')."</a";
 	}
 	$data['menunavs'] = implode('', $data['menunavs']);
 
@@ -794,7 +845,7 @@ function get_cachedata_footernav() {
 					continue;
 				} else {
 					$domain = $_G['setting']['domain']['app']['forum'] ? $_G['setting']['domain']['app']['forum'] : ($_G['setting']['domain']['app']['default'] ? $_G['setting']['domain']['app']['default'] : '');
-					$nav['url'] = ($domain ? 'http://'.$domain.'/' : '').$nav['url'];
+					$nav['url'] = ($domain ? $_G['scheme'].'://'.$domain.'/' : '').$nav['url'];
 				}
 			}
 		}
@@ -871,15 +922,11 @@ function get_cachedata_spacenavs() {
 		}
 		$nav['subcode'] = $nav['allowsubnew'] ? '<span><a href="'.$nav['suburl'].'"'.($nav['target'] == 1 ? ' target="_blank"' : '').$nav['extra'].'>'.$nav['subname'].'</a></span>' : '';
 		if($nav['name'] != '{hr}') {
-			if(in_array($nav['name'], array('{userpanelarea1}', '{userpanelarea2}'))) {
-				$nav['code'] = str_replace(array('{', '}'), '', $nav['name']);
-			} else {
 				$nav['code'] = '<li>'.$nav['subcode'].'<a href="'.$nav['url'].'"'.($nav['title'] ? ' title="'.$nav['title'].'"' : '').($nav['target'] == 1 ? ' target="_blank"' : '').'>'.$nav['icon'].$nav['name'].'</a></li>';
-			}
 		} else {
 			$nav['code'] = '</ul><hr class="da" /><ul>';
 		}
-		$id = $nav['type'] == 0 && !in_array($nav['name'], array('{userpanelarea1}', '{userpanelarea2}')) ? $nav['identifier'] : 100 + $nav['id'];
+		$id = $nav['type'] == 0  ? $nav['identifier'] : 100 + $nav['id'];
 		$data['spacenavs'][$id] = array('available' => $nav['available'], 'navname' => $nav['name'], 'code' => $nav['code'], 'level' => $nav['level']);
 	}
 	return $data['spacenavs'];
@@ -898,7 +945,7 @@ function get_cachedata_mynavs() {
 			if(!preg_match("/^".preg_quote(STATICURL, '/')."/i", $navicon) && !(($valueparse = parse_url($navicon)) && isset($valueparse['host']))) {
 				$navicon = $_G['setting']['attachurl'].'common/'.$nav['icon'].'?'.random(6);
 			}
-			$navicon = preg_match('/^http:\/\//i', $navicon) ? $navicon : $_G['siteurl'].$navicon;
+			$navicon = preg_match('/^(https?:)?\/\//i', $navicon) ? $navicon : $_G['siteurl'].$navicon;
 			$nav['icon'] = ' style="background-image:url('.$navicon.') !important"';
 		}
 		$nav['code'] = '<a href="'.$nav['url'].'"'.($nav['title'] ? ' title="'.$nav['title'].'"' : '').($nav['target'] == 1 ? ' target="_blank"' : '').$nav['icon'].'>'.$nav['name'].'</a>';
@@ -928,6 +975,49 @@ function get_cachedata_topnav() {
 		$data['topnavs'][$nav['subtype']][$id] = array('available' => $nav['available'], 'navname' => $nav['name'], 'code' => $nav['code'], 'type' => $nav['type'], 'level' => $nav['level'], 'id' => $nav['identifier']);
 	}
 	return $data['topnavs'];
+}
+
+function get_cachedata_threadprofile() {
+	global $_G;
+	if(!helper_dbtool::isexisttable('forum_threadprofile')) {
+		return;
+	}
+	$threadprofiles = C::t('forum_threadprofile')->fetch_all();
+	$threadprofile_group = C::t('forum_threadprofile_group')->fetch_all();
+	$data = array();
+	foreach($threadprofiles as $id => $threadprofile) {
+		if($threadprofile['global']) {
+			$data['template'][0] = dunserialize($threadprofile['template']);
+		}
+	}
+	foreach($threadprofile_group as $group) {
+		if($threadprofiles[$group['tpid']]) {
+			$id = $threadprofiles[$group['tpid']]['global'] ? 0 : $group['tpid'];
+			if(!isset($data['template'][$id])) {
+				$data['template'][$id] = dunserialize($threadprofiles[$group['tpid']]['template']);
+			}
+			if($id) {
+				$data['groupid'][$group['gid']] = $id;
+			}
+		}
+	}
+	foreach($data['template'] as $id => $template) {
+		foreach($template as $type => $row) {
+			$data['template'][$id][$type] = preg_replace_callback('/\{([\w:]+)(=([^}]+?))?\}(([^}]+?)\{\*\}([^}]+?)\{\/\\1\})?/s', create_function('$matches', 'return get_cachedata_threadprofile_nodeparse('.intval($id).', \''.addslashes($type).'\', $matches[1], $matches[5], $matches[6], $matches[3]);'), $template[$type]);
+		}
+	}
+	$data['code'] = $_G['cachedata_threadprofile_code'];
+	return $data;
+}
+
+function get_cachedata_threadprofile_nodeparse($id, $type, $name, $s, $e, $extra) {
+	$s = stripslashes($s);
+	$e = stripslashes($e);
+	$extra = stripslashes($extra);
+	global $_G;
+	$hash = random(8);
+	$_G['cachedata_threadprofile_code'][$id][$type]['{'.$hash.'}'] = array($name, $s, $e, $extra);
+	return '{'.$hash.'}';
 }
 
 function writetojscache() {

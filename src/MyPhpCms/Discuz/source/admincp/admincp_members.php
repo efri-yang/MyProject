@@ -100,13 +100,14 @@ EOF;
 						}
 					}
 					$lockshow = $member['status'] == '-1' ? '<em class="lightnum">['.cplang('lock').']</em>' : '';
+					$freezeshow = $member['freeze'] ? '<em class="lightnum">['.cplang('freeze').']</em>' : '';
 					$members .= showtablerow('', array('class="td25"', '', 'title="'.implode("\n", $memberextcredits).'"'), array(
 						"<input type=\"checkbox\" name=\"uidarray[]\" value=\"$member[uid]\"".($member['adminid'] == 1 ? 'disabled' : '')." class=\"checkbox\">",
 						($_G['setting']['connect']['allow'] && $member['conisbind'] ? '<img class="vmiddle" src="static/image/common/connect_qq.gif" /> ' : '')."<a href=\"home.php?mod=space&uid=$member[uid]\" target=\"_blank\">$member[username]</a>",
 						$member['credits'],
 						$member['posts'],
 						$usergroups[$member['adminid']]['grouptitle'],
-						$usergroups[$member['groupid']]['grouptitle'].$lockshow,
+						$usergroups[$member['groupid']]['grouptitle'].$lockshow.$freezeshow,
 						"<a href=\"".ADMINSCRIPT."?action=members&operation=group&uid=$member[uid]\" class=\"act\">$lang[usergroup]</a><a href=\"".ADMINSCRIPT."?action=members&operation=access&uid=$member[uid]\" class=\"act\">$lang[members_access]</a>".
 						($_G['setting']['extcredits'] ? "<a href=\"".ADMINSCRIPT."?action=members&operation=credit&uid=$member[uid]\" class=\"act\">$lang[credits]</a>" : "<span disabled>$lang[edit]</span>").
 						"<a href=\"".ADMINSCRIPT."?action=members&operation=medal&uid=$member[uid]\" class=\"act\">$lang[medals]</a>".
@@ -375,7 +376,7 @@ EOF;
 
 		} else {
 
-			if(empty($_GET['includepost'])) {
+			if(!submitcheck('includepost')) {
 
 				require_once libfile('function/delete');
 				$numdeleted = deletemember($uids, 0);
@@ -545,7 +546,7 @@ EOF;
 
 	if(!submitcheck('newslettersubmit')) {
 		loadcache('newsletter_detail');
-        $newletter_detail = get_newsletter('newsletter_detail');
+		$newletter_detail = get_newsletter('newsletter_detail');
 		$newletter_detail = dunserialize($newletter_detail);
 		if($newletter_detail && $newletter_detail['uid'] == $_G['uid']) {
 			if($_GET['goon'] == 'yes') {
@@ -573,7 +574,7 @@ EOF;
 		}
 		showsearchform('newsletter');
 
-		if(submitcheck('submit', 1)) {
+		if(submitcheck('submit')) {
 			$dostr = '';
 			if($_GET['do'] == 'mobile') {
 				$search_condition['token_noempty'] = 'token';
@@ -1177,8 +1178,6 @@ EOF;
 
 		if($_GET['groupidnew'] != $member['groupid'] && (in_array($_GET['groupidnew'], array(4, 5)) || in_array($member['groupid'], array(4, 5)))) {
 			$my_opt = in_array($_GET['groupidnew'], array(4, 5)) ? 'banuser' : 'unbanuser';
-			$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-			$log_handler->myThreadLog($my_opt, array('uid' => $member['uid']));
 			banlog($member['username'], $member['groupid'], $_GET['groupidnew'], $groupexpirynew, $_GET['reason']);
 		}
 
@@ -1524,6 +1523,9 @@ EOF;
 			if($postcomment_cache_pid) {
 				C::t('forum_postcache')->delete($postcomment_cache_pid);
 			}
+			if(!$member['adminid']) {
+				$member_status = C::t('common_member_status')->fetch($member['uid']);
+			}
 		} elseif($member['groupid'] == 4 || $member['groupid'] == 5) {
 			if(!empty($member['groupterms']['main']['groupid'])) {
 				$groupidnew = $member['groupterms']['main']['groupid'];
@@ -1545,11 +1547,6 @@ EOF;
 				uc_user_deleteavatar($member['uid']);
 			}
 		}
-		if(!empty($my_data) && !empty($mylogtype)) {
-			$log_handler = Cloud::loadClass('Cloud_Service_SearchHelper');
-			$log_handler->myThreadLog($mylogtype, $my_data);
-		}
-
 
 		$setarr['adminid'] = $adminidnew;
 		$setarr['groupid'] = $groupidnew;
@@ -1763,8 +1760,8 @@ EOF;
 
 
 		$accessmasks = C::t('forum_access')->fetch_all_by_uid($_GET['uid']);
-		$adminuser = C::t('common_member'.$tableext)->fetch($_GET['uid']);
 		foreach ($accessmasks as $id => $access) {
+			$adminuser = C::t('common_member'.$tableext)->fetch($access['adminuser']);
 			$access['dateline'] = $access['dateline'] ? dgmdate($access['dateline']) : '';
 			$forum = $_G['cache']['forums'][$id];
 			showtablerow('', '', array(
@@ -2036,8 +2033,8 @@ EOF;
 					$fieldarr[$key] = '';
 				}
 			}
-
 		}
+
 		if($_FILES) {
 			$upload = new discuz_upload();
 
@@ -2103,112 +2100,193 @@ EOF;
 
 } elseif($operation == 'ipban') {
 
-	if(!submitcheck('ipbansubmit')) {
+	if(!$_GET['ipact']) {
+		if(!submitcheck('ipbansubmit')) {
 
-		require_once libfile('function/misc');
+			require_once libfile('function/misc');
 
-		$iptoban = explode('.', getgpc('ip'));
+			$iptoban = explode('.', getgpc('ip'));
 
-		$ipbanned = '';
-		foreach(C::t('common_banned')->fetch_all_order_dateline() as $banned) {
-			for($i = 1; $i <= 4; $i++) {
-				if($banned["ip$i"] == -1) {
-					$banned["ip$i"] = '*';
-				}
-			}
-			$disabled = $_G['adminid'] != 1 && $banned['admin'] != $_G['member']['username'] ? 'disabled' : '';
-			$banned['dateline'] = dgmdate($banned['dateline'], 'Y-m-d');
-			$banned['expiration'] = dgmdate($banned['expiration'], 'Y-m-d');
-			$theip = "$banned[ip1].$banned[ip2].$banned[ip3].$banned[ip4]";
-			$ipbanned .= showtablerow('', array('class="td25"'), array(
-				"<input class=\"checkbox\" type=\"checkbox\" name=\"delete[$banned[id]]\" value=\"$banned[id]\" $disabled />",
-				$theip,
-				convertip($theip, "./"),
-				$banned[admin],
-				$banned[dateline],
-				"<input type=\"text\" class=\"txt\" size=\"10\" name=\"expirationnew[$banned[id]]\" value=\"$banned[expiration]\" $disabled />"
-			), TRUE);
-		}
-		shownav('user', 'nav_members_ipban');
-		showsubmenu('nav_members_ipban');
-		showtips('members_ipban_tips');
-		showformheader('members&operation=ipban');
-		showtableheader();
-		showsubtitle(array('', 'ip', 'members_ipban_location', 'operator', 'start_time', 'end_time'));
-		echo $ipbanned;
-		showtablerow('', array('', 'class="td28" colspan="3"', 'class="td28" colspan="2"'), array(
-			$lang['add_new'],
-			'<input type="text" class="txt" name="ip1new" value="'.$iptoban[0].'" size="3" maxlength="3">.<input type="text" class="txt" name="ip2new" value="'.$iptoban[1].'" size="3" maxlength="3">.<input type="text" class="txt" name="ip3new" value="'.$iptoban[2].'" size="3" maxlength="3">.<input type="text" class="txt" name="ip4new" value="'.$iptoban[3].'" size="3" maxlength="3">',
-			$lang['validity'].': <input type="text" class="txt" name="validitynew" value="30" size="3"> '.$lang['days']
-		));
-		showsubmit('ipbansubmit', 'submit', 'del');
-		showtablefooter();
-		showformfooter();
-
-	} else {
-
-		if(!empty($_GET['delete'])) {
-			C::t('common_banned')->delete_by_id($_GET['delete'], $_G['adminid'], $_G['username']);
-		}
-
-		if($_GET['ip1new'] != '' && $_GET['ip2new'] != '' && $_GET['ip3new'] != '' && $_GET['ip4new'] != '') {
-			$own = 0;
-			$ip = explode('.', $_G['clientip']);
-			for($i = 1; $i <= 4; $i++) {
-				if(!is_numeric($_GET['ip'.$i.'new']) || $_GET['ip'.$i.'new'] < 0) {
-					if($_G['adminid'] != 1) {
-						cpmsg('members_ipban_nopermission', '', 'error');
-					}
-					$_GET['ip'.$i.'new'] = -1;
-					$own++;
-				} elseif($_GET['ip'.$i.'new'] == $ip[$i - 1]) {
-					$own++;
-				}
-				$_GET['ip'.$i.'new'] = intval($_GET['ip'.$i.'new']);
-			}
-
-			if($own == 4) {
-				cpmsg('members_ipban_illegal', '', 'error');
-			}
-
+			$ipbanned = '';
 			foreach(C::t('common_banned')->fetch_all_order_dateline() as $banned) {
-				$exists = 0;
 				for($i = 1; $i <= 4; $i++) {
 					if($banned["ip$i"] == -1) {
-						$exists++;
-					} elseif($banned["ip$i"] == ${"ip".$i."new"}) {
-						$exists++;
+						$banned["ip$i"] = '*';
 					}
 				}
-				if($exists == 4) {
-					cpmsg('members_ipban_invalid', '', 'error');
+				$disabled = $_G['adminid'] != 1 && $banned['admin'] != $_G['member']['username'] ? 'disabled' : '';
+				$banned['dateline'] = dgmdate($banned['dateline'], 'Y-m-d');
+				$banned['expiration'] = dgmdate($banned['expiration'], 'Y-m-d');
+				$theip = "$banned[ip1].$banned[ip2].$banned[ip3].$banned[ip4]";
+				$ipbanned .= showtablerow('', array('class="td25"'), array(
+					"<input class=\"checkbox\" type=\"checkbox\" name=\"delete[$banned[id]]\" value=\"$banned[id]\" $disabled />",
+					$theip,
+					convertip($theip, "./"),
+					$banned[admin],
+					$banned[dateline],
+					"<input type=\"text\" class=\"txt\" size=\"10\" name=\"expirationnew[$banned[id]]\" value=\"$banned[expiration]\" $disabled />"
+				), TRUE);
+			}
+			shownav('user', 'nav_members_ipban');
+			showsubmenu('nav_members_ipban', array(
+				array('nav_members_ipban', 'members&operation=ipban', 1),
+				array('nav_members_ipban_output', 'members&operation=ipban&ipact=input', 0)
+			));
+			showtips('members_ipban_tips');
+			showformheader('members&operation=ipban');
+			showtableheader();
+			showsubtitle(array('', 'ip', 'members_ipban_location', 'operator', 'start_time', 'end_time'));
+			echo $ipbanned;
+			showtablerow('', array('', 'class="td28" colspan="3"', 'class="td28" colspan="2"'), array(
+				$lang['add_new'],
+				'<input type="text" class="txt" name="ip1new" value="'.$iptoban[0].'" size="3" maxlength="3">.<input type="text" class="txt" name="ip2new" value="'.$iptoban[1].'" size="3" maxlength="3">.<input type="text" class="txt" name="ip3new" value="'.$iptoban[2].'" size="3" maxlength="3">.<input type="text" class="txt" name="ip4new" value="'.$iptoban[3].'" size="3" maxlength="3">',
+				$lang['validity'].': <input type="text" class="txt" name="validitynew" value="30" size="3"> '.$lang['days']
+			));
+			showsubmit('ipbansubmit', 'submit', 'del');
+			showtablefooter();
+			showformfooter();
+
+		} else {
+
+			if(!empty($_GET['delete'])) {
+				C::t('common_banned')->delete_by_id($_GET['delete'], $_G['adminid'], $_G['username']);
+			}
+
+			if($_GET['ip1new'] != '' && $_GET['ip2new'] != '' && $_GET['ip3new'] != '' && $_GET['ip4new'] != '') {
+				$own = 0;
+				$ip = explode('.', $_G['clientip']);
+				for($i = 1; $i <= 4; $i++) {
+					if(!is_numeric($_GET['ip'.$i.'new']) || $_GET['ip'.$i.'new'] < 0) {
+						if($_G['adminid'] != 1) {
+							cpmsg('members_ipban_nopermission', '', 'error');
+						}
+						$_GET['ip'.$i.'new'] = -1;
+						$own++;
+					} elseif($_GET['ip'.$i.'new'] == $ip[$i - 1]) {
+						$own++;
+					}
+					$_GET['ip'.$i.'new'] = intval($_GET['ip'.$i.'new']);
+				}
+
+				if($own == 4) {
+					cpmsg('members_ipban_illegal', '', 'error');
+				}
+
+				foreach(C::t('common_banned')->fetch_all_order_dateline() as $banned) {
+					$exists = 0;
+					for($i = 1; $i <= 4; $i++) {
+						if($banned["ip$i"] == -1) {
+							$exists++;
+						} elseif($banned["ip$i"] == ${"ip".$i."new"}) {
+							$exists++;
+						}
+					}
+					if($exists == 4) {
+						cpmsg('members_ipban_invalid', '', 'error');
+					}
+				}
+
+				$expiration = TIMESTAMP + $_GET['validitynew'] * 86400;
+
+				C::app()->session->update_by_ipban($_GET['ip1new'], $_GET['ip2new'], $_GET['ip3new'], $_GET['ip4new']);
+				$data = array(
+					'ip1' => $_GET['ip1new'],
+					'ip2' => $_GET['ip2new'],
+					'ip3' => $_GET['ip3new'],
+					'ip4' => $_GET['ip4new'],
+					'admin' => $_G['username'],
+					'dateline' => $_G['timestamp'],
+					'expiration' => $expiration,
+				);
+				C::t('common_banned')->insert($data);
+			}
+
+			if(is_array($_GET['expirationnew'])) {
+				foreach($_GET['expirationnew'] as $id => $expiration) {
+					C::t('common_banned')->update_expiration_by_id($id, strtotime($expiration), $_G['adminid'], $_G['username']);
 				}
 			}
 
-			$expiration = TIMESTAMP + $_GET['validitynew'] * 86400;
+			updatecache('ipbanned');
+			cpmsg('members_ipban_succeed', 'action=members&operation=ipban', 'succeed');
 
-			C::app()->session->update_by_ipban($_GET['ip1new'], $_GET['ip2new'], $_GET['ip3new'], $_GET['ip4new']);
-			$data = array(
-				'ip1' => $_GET['ip1new'],
-				'ip2' => $_GET['ip2new'],
-				'ip3' => $_GET['ip3new'],
-				'ip4' => $_GET['ip4new'],
-				'admin' => $_G['username'],
-				'dateline' => $_G['timestamp'],
-				'expiration' => $expiration,
-			);
-			C::t('common_banned')->insert($data);
 		}
+	} elseif($_GET['ipact'] == 'input') {
+		if($_G['adminid'] != 1) {
+			cpmsg('members_ipban_nopermission', '', 'error');
+		}
+		if(!submitcheck('ipbansubmit')) {
+			shownav('user', 'nav_members_ipban');
+			showsubmenu('nav_members_ipban', array(
+				array('nav_members_ipban', 'members&operation=ipban', 0),
+				array('nav_members_ipban_output', 'members&operation=ipban&ipact=input', 1)
+			));
+			showtips('members_ipban_input_tips');
+			showformheader('members&operation=ipban&ipact=input');
+			showtableheader();
+			showsetting('members_ipban_input', 'inputipbanlist', '', 'textarea');
+			showsubmit('ipbansubmit', 'submit');
+			showtablefooter();
+			showformfooter();
+		} else {
+			$iplist = explode("\n", $_GET['inputipbanlist']);
+			foreach($iplist as $banip) {
+				if(strpos($banip, ',') !== false) {
+					list($banipaddr, $expiration) = explode(',', $banip);
+					$expiration = strtotime($expiration);
+				} else {
+					list($banipaddr, $expiration) = explode(';', $banip);
+					$expiration = TIMESTAMP + ($expiration ? $expiration : 30) * 86400;
+				}
+				if(!trim($banipaddr)) {
+					continue;
+				}
 
-		if(is_array($_GET['expirationnew'])) {
-			foreach($_GET['expirationnew'] as $id => $expiration) {
-				C::t('common_banned')->update_expiration_by_id($id, strtotime($expiration), $_G['adminid'], $_G['username']);
+				$ipnew = explode('.', $banipaddr);
+				for($i = 0; $i < 4; $i++) {
+					if(strpos($ipnew[$i], '*') !== false) {
+						$ipnew[$i] = -1;
+					} else {
+						$ipnew[$i] = intval($ipnew[$i]);
+					}
+				}
+				$checkexists = C::t('common_banned')->fetch_by_ip($ipnew[0], $ipnew[1], $ipnew[2], $ipnew[3]);
+				if($checkexists) {
+					continue;
+				}
+
+				C::app()->session->update_by_ipban($ipnew[0], $ipnew[1], $ipnew[2], $ipnew[3]);
+				$data = array(
+					'ip1' => $ipnew[0],
+					'ip2' => $ipnew[1],
+					'ip3' => $ipnew[2],
+					'ip4' => $ipnew[3],
+					'admin' => $_G['username'],
+					'dateline' => $_G['timestamp'],
+					'expiration' => $expiration,
+				);
+				C::t('common_banned')->insert($data, false, true);
 			}
+
+			updatecache('ipbanned');
+			cpmsg('members_ipban_succeed', 'action=members&operation=ipban&ipact=input', 'succeed');
 		}
-
-		updatecache('ipbanned');
-		cpmsg('members_ipban_succeed', 'action=members&operation=ipban', 'succeed');
-
+	} elseif($_GET['ipact'] == 'output') {
+		ob_end_clean();
+		dheader('Cache-control: max-age=0');
+		dheader('Expires: '.gmdate('D, d M Y H:i:s', TIMESTAMP - 31536000).' GMT');
+		dheader('Content-Encoding: none');
+		dheader('Content-Disposition: attachment; filename=IPBan.csv');
+		dheader('Content-Type: text/plain');
+		foreach(C::t('common_banned')->fetch_all_order_dateline() as $banned) {
+			for($i = 1; $i <= 4; $i++) {
+				$banned['ip'.$i] = $banned['ip'.$i] < 0 ? '*' : $banned['ip'.$i];
+			}
+			$banned['expiration'] = dgmdate($banned['expiration']);
+			echo "$banned[ip1].$banned[ip2].$banned[ip3].$banned[ip4],$banned[expiration]\n";
+		}
+		define('FOOTERDISABLED' , 1);
+		exit();
 	}
 
 } elseif($operation == 'profile') {
@@ -2429,7 +2507,7 @@ EOF;
 			$current = array($_GET['anchor'] => 1);
 			$profilenav = array(
 					array('members_profile_list', 'members&operation=profile', $current['members']),
-					array('members_profile_group', 'setting&operation=profile', $current['setting'])
+					array('members_profile_group', 'setting&operation=profile', $current['setting']),
 				);
 			showsubmenu($lang['members_profile'], $profilenav);
 			showtips('members_profile_tips');
@@ -2720,6 +2798,10 @@ function showsearchform($operation = '') {
 		array(-1, $lang['yes']),
 		array(0, $lang['no']),
 	), 1), $_GET['status'], 'mradio');
+	showsetting('members_search_freezestatus', array('freeze', array(
+		array(1, $lang['yes']),
+		array(0, $lang['no']),
+	), 1), $_GET['freeze'], 'mradio');
 	showsetting('members_search_emailstatus', array('emailstatus', array(
 		array(1, $lang['yes']),
 		array(0, $lang['no']),
@@ -2959,6 +3041,7 @@ function notifymembers($operation, $variable) {
 			if(!empty($setarr)) {
 				$limit = 2000;
 				set_time_limit(0);
+				$i = 0;
 				while(true) {
 					$uids = searchmembers($search_condition, $limit, $i*$limit);
 					$allcount = C::t('common_member_count')->fetch_all($uids);
@@ -2972,6 +3055,7 @@ function notifymembers($operation, $variable) {
 						C::t('common_member_count')->clear_extcredits($uids, $setarr);
 					}
 					if(count($uids) < $limit) break;
+					$i++;
 				}
 			} else {
 				cpmsg('members_reward_invalid', '', 'error');
@@ -3094,7 +3178,7 @@ function notifymembers($operation, $variable) {
 	if(!function_exists('sendmail')) {
 		include libfile('function/mail');
 	}
-	if($_GET['notifymember'] && in_array($_GET['notifymembers'], array('pm', 'notice', 'email', 'mobile'))) {
+	if($_GET['notifymember'] && in_array($_GET['notifymembers'], array('pm', 'notice', 'email'))) {
 		$uids = searchmembers($search_condition, $pertask, $current);
 
 		require_once libfile('function/discuzcode');
@@ -3116,64 +3200,50 @@ function notifymembers($operation, $variable) {
 			$urladd .= '&gpmid='.$gpmid;
 		}
 		$members = C::t('common_member')->fetch_all($uids);
-		if($_GET['notifymembers'] == 'mobile') {
-			$toUids = array_keys($members);
-			if($_G['setting']['cloud_status'] && !empty($toUids)) {
-				try {
-					$noticeService = Cloud::loadClass('Service_Client_Notification');
-					$fromType = $_GET['system'] ? 1 : 2;
-					$noticeService->addSiteMasterUserNotify($toUids, $subject, $message, $_G['uid'], $_G['username'], $fromType, TIMESTAMP);
-				} catch (Cloud_Service_Client_RestfulException $e) {
-					cpmsg('['.$e->getCode().']'.$e->getMessage(), '', 'error');
+		foreach($members as $member) {
+			if($_GET['notifymembers'] == 'pm') {
+				C::t('common_member_grouppm')->insert(array(
+					'uid' => $member['uid'],
+					'gpmid' => $gpmid,
+					'status' => 0
+				), false, true);
+				$newpm = setstatus(2, 1, $member['newpm']);
+				C::t('common_member')->update($member['uid'], array('newpm'=>$newpm));
+			} elseif($_GET['notifymembers'] == 'notice') {
+				notification_add($member['uid'], 'system', 'system_notice', array('subject' => $subject, 'message' => $message.$addmsg, 'from_id' => 0, 'from_idtype' => 'sendnotice'), 1);
+			} elseif($_GET['notifymembers'] == 'email') {
+				if(!sendmail("$member[username] <$member[email]>", $subject, $message.$addmsg)) {
+					runlog('sendmail', "$member[email] sendmail failed.");
 				}
-
 			}
-		} else {
-			foreach($members as $member) {
-				if($_GET['notifymembers'] == 'pm') {
-					C::t('common_member_grouppm')->insert(array(
-						'uid' => $member['uid'],
-						'gpmid' => $gpmid,
-						'status' => 0
-					), false, true);
-					$newpm = setstatus(2, 1, $member['newpm']);
-					C::t('common_member')->update($member['uid'], array('newpm'=>$newpm));
-				} elseif($_GET['notifymembers'] == 'notice') {
-					notification_add($member['uid'], 'system', 'system_notice', array('subject' => $subject, 'message' => $message.$addmsg, 'from_id' => 0, 'from_idtype' => 'sendnotice'), 1);
-				} elseif($_GET['notifymembers'] == 'email') {
-					if(!sendmail("$member[username] <$member[email]>", $subject, $message.$addmsg)) {
-						runlog('sendmail', "$member[email] sendmail failed.");
+
+			$log = array();
+			if($_GET['updatecredittype'] == 0) {
+				foreach($setarr as $key => $val) {
+					if(empty($val)) continue;
+					$val = intval($val);
+					$id = intval($key);
+					$id = !$id && substr($key, 0, -1) == 'extcredits' ? intval(substr($key, -1, 1)) : $id;
+					if(0 < $id && $id < 9) {
+							$log['extcredits'.$id] = $val;
 					}
 				}
-
-				$log = array();
-				if($_GET['updatecredittype'] == 0) {
-					foreach($setarr as $key => $val) {
-						if(empty($val)) continue;
-						$val = intval($val);
-						$id = intval($key);
-						$id = !$id && substr($key, 0, -1) == 'extcredits' ? intval(substr($key, -1, 1)) : $id;
-						if(0 < $id && $id < 9) {
-								$log['extcredits'.$id] = $val;
-						}
+				$logtype = 'RPR';
+			} else {
+				foreach($setarr as $val) {
+					if(empty($val)) continue;
+					$id = intval($val);
+					$id = !$id && substr($val, 0, -1) == 'extcredits' ? intval(substr($val, -1, 1)) : $id;
+					if(0 < $id && $id < 9) {
+						$log['extcredits'.$id] = '-1';
 					}
-					$logtype = 'RPR';
-				} else {
-					foreach($setarr as $val) {
-						if(empty($val)) continue;
-						$id = intval($val);
-						$id = !$id && substr($val, 0, -1) == 'extcredits' ? intval(substr($val, -1, 1)) : $id;
-						if(0 < $id && $id < 9) {
-							$log['extcredits'.$id] = '-1';
-						}
-					}
-					$logtype = 'RPZ';
 				}
-				include_once libfile('function/credit');
-				credit_log($member['uid'], $logtype, $member['uid'], $log);
-
-				$continue = TRUE;
+				$logtype = 'RPZ';
 			}
+			include_once libfile('function/credit');
+			credit_log($member['uid'], $logtype, $member['uid'], $log);
+
+			$continue = TRUE;
 		}
 	}
 
@@ -3216,14 +3286,6 @@ function notifymembers($operation, $variable) {
 function banlog($username, $origgroupid, $newgroupid, $expiration, $reason, $status = 0) {
 	global $_G, $_POST;
 	$cloud_apps = dunserialize($_G['setting']['cloud_apps']);
-	if (isset($_POST['bannew']) && $_POST['formhash'] && $cloud_apps['security']['status'] == 'normal') {
-		$securityService = Cloud::loadClass('Service_Security');
-		if ($_POST['bannew']) {
-			$securityService->logBannedMember($username, $reason);
-		} else {
-			$securityService->updateMemberRecover($username);
-		}
-    }
 	writelog('banlog', dhtmlspecialchars("$_G[timestamp]\t{$_G[member][username]}\t$_G[groupid]\t$_G[clientip]\t$username\t$origgroupid\t$newgroupid\t$expiration\t$reason\t$status"));
 }
 
@@ -3253,8 +3315,6 @@ function connectunbind($member) {
 		return;
 	}
 	$_G['member'] = array_merge($_G['member'], $member);
-	$connectService = Cloud::loadClass('Service_Connect');
-	$connectService->connectUserUnbind();
 
 	C::t('#qqconnect#connect_memberbindlog')->insert(array('uid' => $member['uid'], 'uin' => $member['conopenid'], 'type' => '2', 'dateline' => $_G['timestamp']));
 	C::t('common_member')->update($member['uid'], array('conisbind'=>0));

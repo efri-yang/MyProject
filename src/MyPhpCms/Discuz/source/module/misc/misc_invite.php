@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: misc_invite.php 33106 2013-04-26 03:39:42Z andyzheng $
+ *      $Id: misc_invite.php 33107 2013-04-26 03:43:21Z andyzheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -12,6 +12,7 @@ if(!defined('IN_DISCUZ')) {
 }
 
 require_once libfile('function/friend');
+
 $_GET['action'] = dhtmlspecialchars(preg_replace("/[^\[A-Za-z0-9_\]]/", '', $_GET['action']));
 $friendgrouplist = friend_group_list();
 if($_GET['action'] == 'group') {
@@ -144,17 +145,19 @@ if($_GET['action'] == 'group') {
 	if(!submitcheck('invitesubmit')) {
 		$inviteduids = '';
 	} else {
+		require_once libfile('function/portal');
+		$article_url = fetch_article_url($article);
 		$uids = $_GET['uids'];
 		if($uids) {
 			if(count($uids) > 20) {
 				showmessage('group_choose_friends_max');
 			}
 			foreach(C::t('common_member')->fetch_all($uids, false, 0) as $uid => $user) {
-				notification_add($uid, 'article', 'article_invite', array('subject' => $article['title'], 'aid' => $id, 'from_id' => $id, 'from_idtype' => 'invite_article'));
+				notification_add($uid, 'article', 'article_invite', array('subject' => $article['title'], 'url' => $article_url, 'from_id' => $id, 'from_idtype' => 'invite_article'));
 			}
-			showmessage('group_invite_succeed', "portal.php?mod=view&aid=$id");
+			showmessage('group_invite_succeed', $article_url);
 		} else {
-			showmessage('group_invite_choose_member', "portal.php?mod=view&aid=$id");
+			showmessage('group_invite_choose_member', $article_url);
 		}
 	}
 }

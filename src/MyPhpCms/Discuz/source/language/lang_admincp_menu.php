@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_admincp_menu.php 29721 2012-04-26 07:01:08Z zhengqingpeng $
+ *      $Id: lang_admincp_menu.php 34034 2013-09-24 01:23:05Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -31,6 +31,7 @@ $lang = array
 	'header_bbs' => '站点首页',
 	'header_portal' => '门户',
 	'header_group' => '群组',
+	'header_safe' => '防灌水',
 	'header_founder' => '站长',
 	'header_cloudaddons' => '应用中心',
 
@@ -62,12 +63,14 @@ $lang = array
 	'menu_setting_ranklist' => '排行榜设置',
 	'menu_setting_mobile' => '手机版访问设置',
 	'menu_setting_tag' => '标签管理',
+	'menu_setting_antitheft' => '防采集设置',
 
 	'menu_forums' => '版块管理',
 	'menu_forums_merge' => '版块合并',
 	'menu_forums_threadtypes' => '主题分类',
 	'menu_forums_infotypes' => '分类信息',
 	'menu_forums_infooption' => '分类信息选项',
+	'menu_grid' => '首页四格',
 
 	'menu_members_add' => '添加用户',
 	'menu_members_edit' => '用户管理',
@@ -81,7 +84,7 @@ $lang = array
 	'menu_members_profile_group' => '用户栏目分组',
 	'menu_members_verify_setting' => '认证设置',
 	'menu_members_stat' => '资料统计',
-	'menu_moderate_modmembers' => '审核新用户',
+	'menu_moderate_modmembers' => '审核用户',
 	'menu_profilefields' => '用户栏目定制',
 	'menu_admingroups' => '管理组',
 	'menu_usergroups' => '用户组',
@@ -111,6 +114,7 @@ $lang = array
 	'menu_postcomment' => '帖子点评管理',
 	'menu_maint_doing' => '记录管理',
 	'menu_maint_blog' => '日志管理',
+	'menu_maint_blog_recycle_bin' => '日志回收站',
 	'menu_maint_feed' => '动态管理',
 	'menu_maint_album' => '相册管理',
 	'menu_maint_pic' => '图片管理',
@@ -129,6 +133,8 @@ $lang = array
 
 	'menu_patch' => '安全中心',
 	'menu_upgrade' => '在线升级',
+	'menu_optimizer' => '优化大师',
+	'menu_security' => '安全大师',
 
 	'menu_addons' => '应用中心',
 	'menu_plugins' => '插件',
@@ -182,6 +188,7 @@ $lang = array
 	'menu_portalpermission' => '权限列表',
 	'menu_blockxml' => '第三方模块',
 	'menu_topic' => '专题管理',
+	'menu_html' => 'HTML管理',
 	'menu_diytemplate' => '页面管理',
 
 	'menu_group_setting' => '群组设置',
@@ -191,8 +198,15 @@ $lang = array
 	'menu_group_level' => '群组等级',
 	'menu_group_mod' => '审核群组',
 
+	'menu_safe_setting' => '基本设置',
+	'menu_safe_security' => '防水墙',
+	'menu_safe_seccheck' => '验证设置',
+	'menu_safe_accountguard' => '帐号保镖',
+
 	'menu_setting_manyou' => 'Manyou 设置',
 	'menu_setting_qqconnect' => 'QQ 绑定设置',
+
+	'menu_cloud_doctor' => '诊断工具',
 
 	'admincp_title' => $_G['setting']['bbname'].' 管理中心',
 

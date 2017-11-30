@@ -359,9 +359,9 @@ function setCaret() {
 	if(gIsIE){
 		window.frames["HtmlEditor"].focus();
 		var range = window.frames["HtmlEditor"].document.body.createTextRange();
-		range.moveToBookmark(pos);
-		range.select();
-		pos = null;
+        range.moveToBookmark(pos);
+        range.select();
+        pos = null;
 	}
 }
 

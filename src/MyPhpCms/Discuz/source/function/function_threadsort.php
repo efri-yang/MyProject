@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_threadsort.php 31822 2012-10-12 06:24:42Z zhangjie $
+ *      $Id: function_threadsort.php 36284 2016-12-12 00:47:50Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -274,11 +274,11 @@ function showsorttemplate($sortid, $fid, $sortoptionarray, $templatearray, $thre
 		foreach($sortoptionarray as $sortid => $optionarray) {
 			foreach($optionarray as $option) {
 				if($option['subjectshow']) {
-					$searchtitle[$sortid][] = '/{('.$option['identifier'].')}/e';
-					$searchvalue[$sortid][] = '/\[('.$option['identifier'].')value\]/e';
-					$searchvalue[$sortid][] = '/{('.$option['identifier'].')_value}/e';
-					$searchunit[$sortid][] = '/\[('.$option['identifier'].')unit\]/e';
-					$searchunit[$sortid][] = '/{('.$option['identifier'].')_unit}/e';
+					$searchtitle[$sortid][] = '/{('.$option['identifier'].')}/';
+					$searchvalue[$sortid][] = '/\[('.$option['identifier'].')value\]/';
+					$searchvalue[$sortid][] = '/{('.$option['identifier'].')_value}/';
+					$searchunit[$sortid][] = '/\[('.$option['identifier'].')unit\]/';
+					$searchunit[$sortid][] = '/{('.$option['identifier'].')_unit}/';
 				}
 			}
 		}
@@ -294,9 +294,9 @@ function showsorttemplate($sortid, $fid, $sortoptionarray, $templatearray, $thre
 								$sortdata[$tid]['subject'],
 								"<a href=\"forum.php?mod=viewthread&tid=$tid\">\\1</a>"
 							), stripslashes($templatearray[$sortid]));
-			$stemplate[$sortid][$tid] = preg_replace($searchtitle[$sortid], "showlistoption('\\1', 'title', '$tid', '$sortid')", $stemplate[$sortid][$tid]);
-			$stemplate[$sortid][$tid] = preg_replace($searchvalue[$sortid], "showlistoption('\\1', 'value', '$tid', '$sortid')", $stemplate[$sortid][$tid]);
-			$stemplate[$sortid][$tid] = preg_replace($searchunit[$sortid], "showlistoption('\\1', 'unit', '$tid', '$sortid')", $stemplate[$sortid][$tid]);
+			$stemplate[$sortid][$tid] = preg_replace_callback($searchtitle[$sortid], create_function('$matches', 'return showlistoption($matches[1], \'title\', '.intval($tid).', '.intval($sortid).');'), $stemplate[$sortid][$tid]);
+			$stemplate[$sortid][$tid] = preg_replace_callback($searchvalue[$sortid], create_function('$matches', 'return showlistoption($matches[1], \'value\', '.intval($tid).', '.intval($sortid).');'), $stemplate[$sortid][$tid]);
+			$stemplate[$sortid][$tid] = preg_replace_callback($searchunit[$sortid], create_function('$matches', 'return showlistoption($matches[1], \'unit\', '.intval($tid).', '.intval($sortid).');'), $stemplate[$sortid][$tid]);
 		}
 	}
 
@@ -404,7 +404,7 @@ function threadsortshow($sortid, $tid) {
 							if(!defined('IN_MOBILE')) {
 								$_G['forum_option'][$option['identifier']]['value'] = $imgoptiondata['url'] ? "<img src=\"".$imgoptiondata['url']."\" onload=\"thumbImg(this)\" $maxwidth $maxheight border=\"0\">" : '';
 							} else {
-								$_G['forum_option'][$option['identifier']]['value'] = $imgoptiondata['url'] ? "<a href=\"".$imgoptiondata['url']."\" target=\"_blank\">".lang('mobile/template', 'viewimg')."</a>" : '';
+								$_G['forum_option'][$option['identifier']]['value'] = $imgoptiondata['url'] ? "<a href=\"".$imgoptiondata['url']."\" target=\"_blank\">".lang('forum/misc', 'click_view')."</a>" : '';
 							}
 						} else {
 							$_G['forum_option'][$option['identifier']]['value'] = $imgoptiondata['url'] ? $imgoptiondata['url'] : './static/image/common/nophoto.gif';
@@ -415,12 +415,12 @@ function threadsortshow($sortid, $tid) {
 						$_G['forum_option'][$option['identifier']]['value'] = $optiondata[$optionid]['value'];
 					} else {
 						if($option['protect']['status'] && $optiondata[$optionid]['value']) {
-							$optiondata[$optionid]['value'] = $option['protect']['mode'] == 1 ? '<image src="'.makevaluepic($optiondata[$optionid]['value']).'">' : (!defined('IN_MOBILE') ? '<span id="sortmessage_'.$option['identifier'].'"><a href="###" onclick="ajaxget(\'forum.php?mod=misc&action=protectsort&tid='.$tid.'&optionid='.$optionid.'\', \'sortmessage_'.$option['identifier'].'\');return false;">'.lang('forum/misc', 'click_view').'</a></span>' : $optiondata[$optionid]['value']);
+							$optiondata[$optionid]['value'] = $option['protect']['mode'] == 1 ? '<image src="'.stringtopic($optiondata[$optionid]['value']).'">' : (!defined('IN_MOBILE') ? '<span id="sortmessage_'.$option['identifier'].'"><a href="###" onclick="ajaxget(\'forum.php?mod=misc&action=protectsort&tid='.$tid.'&optionid='.$optionid.'\', \'sortmessage_'.$option['identifier'].'\');return false;">'.lang('forum/misc', 'click_view').'</a></span>' : $optiondata[$optionid]['value']);
 							$_G['forum_option'][$option['identifier']]['value'] = $optiondata[$optionid]['value'] ? $optiondata[$optionid]['value'] : $option['defaultvalue'];
 						} elseif($option['type'] == 'textarea') {
-							$_G['forum_option'][$option['identifier']]['value'] = $optiondata[$optionid]['value'] ? nl2br($optiondata[$optionid]['value']) : '';
+							$_G['forum_option'][$option['identifier']]['value'] = $optiondata[$optionid]['value'] != '' ? nl2br($optiondata[$optionid]['value']) : '';
 						} else {
-							$_G['forum_option'][$option['identifier']]['value'] = $optiondata[$optionid]['value'] ? $optiondata[$optionid]['value'] : $option['defaultvalue'];
+							$_G['forum_option'][$option['identifier']]['value'] = $optiondata[$optionid]['value'] != '' ? $optiondata[$optionid]['value'] : $option['defaultvalue'];
 						}
 					}
 				} else {
@@ -439,18 +439,18 @@ function threadsortshow($sortid, $tid) {
 		$typetemplate = '';
 		if($templatearray['viewthread']) {
 			foreach($sortoptionarray as $option) {
-				$searchtitle[] = '/{('.$option['identifier'].')}/e';
-				$searchvalue[] = '/\[('.$option['identifier'].')value\]/e';
-				$searchvalue[] = '/{('.$option['identifier'].')_value}/e';
-				$searchunit[] = '/\[('.$option['identifier'].')unit\]/e';
-				$searchunit[] = '/{('.$option['identifier'].')_unit}/e';
+				$searchtitle[] = '/{('.$option['identifier'].')}/';
+				$searchvalue[] = '/\[('.$option['identifier'].')value\]/';
+				$searchvalue[] = '/{('.$option['identifier'].')_value}/';
+				$searchunit[] = '/\[('.$option['identifier'].')unit\]/';
+				$searchunit[] = '/{('.$option['identifier'].')_unit}/';
 			}
 
 			$threadexpiration = $sortdataexpiration ? dgmdate($sortdataexpiration) : lang('forum/misc', 'never_expired');
 			$typetemplate = preg_replace(array("/\{expiration\}/i"), array($threadexpiration), stripslashes($templatearray['viewthread']));
-			$typetemplate = preg_replace($searchtitle, "showoption('\\1', 'title')", $typetemplate);
-			$typetemplate = preg_replace($searchvalue, "showoption('\\1', 'value')", $typetemplate);
-			$typetemplate = preg_replace($searchunit, "showoption('\\1', 'unit')", $typetemplate);
+			$typetemplate = preg_replace_callback($searchtitle, "threadsortshow_callback_showoption_title1", $typetemplate);
+			$typetemplate = preg_replace_callback($searchvalue, "threadsortshow_callback_showoption_value1", $typetemplate);
+			$typetemplate = preg_replace_callback($searchunit, "threadsortshow_callback_showoption_unit1", $typetemplate);
 		}
 	}
 
@@ -461,9 +461,21 @@ function threadsortshow($sortid, $tid) {
 	return $threadsortshow;
 }
 
+function threadsortshow_callback_showoption_title1($matches) {
+	return showoption($matches[1], 'title');
+}
+
+function threadsortshow_callback_showoption_value1($matches) {
+	return showoption($matches[1], 'value');
+}
+
+function threadsortshow_callback_showoption_unit1($matches) {
+	return showoption($matches[1], 'unit');
+}
+
 function showoption($var, $type) {
 	global $_G;
-	if($_G['forum_option'][$var][$type]) {
+	if($_G['forum_option'][$var][$type] != '') {
 		return $_G['forum_option'][$var][$type];
 	} else {
 		return '';
@@ -630,24 +642,24 @@ function threadsort_optiondata($pid, $sortid, $sortoptionarray, $templatearray) 
 			$showoption = gettypetemplate($option, $_G['forum_optionlist'][$optionid], $optionid);
 			$_G['forum_option'][$option['identifier']]['value'] = $showoption[$option['identifier']]['value'];
 
-			$searchcontent['title'][] = '/{('.$option['identifier'].')}/e';
-			$searchcontent['value'][] = '/\[('.$option['identifier'].')value\]/e';
-			$searchcontent['value'][] = '/{('.$option['identifier'].')_value}/e';
-			$searchcontent['unit'][] = '/\[('.$option['identifier'].')unit\]/e';
-			$searchcontent['unit'][] = '/{('.$option['identifier'].')_unit}/e';
-			$searchcontent['description'][] = '/\[('.$option['identifier'].')description\]/e';
-			$searchcontent['description'][] = '/{('.$option['identifier'].')_description}/e';
-			$searchcontent['required'][] = '/\[('.$option['identifier'].')required\]/e';
-			$searchcontent['required'][] = '/{('.$option['identifier'].')_required}/e';
-			$searchcontent['tips'][] = '/\[('.$option['identifier'].')tips\]/e';
-			$searchcontent['tips'][] = '/{('.$option['identifier'].')_tips}/e';
+			$searchcontent['title'][] = '/{('.$option['identifier'].')}/';
+			$searchcontent['value'][] = '/\[('.$option['identifier'].')value\]/';
+			$searchcontent['value'][] = '/{('.$option['identifier'].')_value}/';
+			$searchcontent['unit'][] = '/\[('.$option['identifier'].')unit\]/';
+			$searchcontent['unit'][] = '/{('.$option['identifier'].')_unit}/';
+			$searchcontent['description'][] = '/\[('.$option['identifier'].')description\]/';
+			$searchcontent['description'][] = '/{('.$option['identifier'].')_description}/';
+			$searchcontent['required'][] = '/\[('.$option['identifier'].')required\]/';
+			$searchcontent['required'][] = '/{('.$option['identifier'].')_required}/';
+			$searchcontent['tips'][] = '/\[('.$option['identifier'].')tips\]/';
+			$searchcontent['tips'][] = '/{('.$option['identifier'].')_tips}/';
 		}
 	}
 
 	if($templatearray['post']) {
 		$typetemplate = $templatearray['post'];
 		foreach($searchcontent as $key => $content) {
-			$typetemplate = preg_replace($searchcontent[$key], "showoption('\\1', '$key')", stripslashes($typetemplate));
+			$typetemplate = preg_replace_callback($searchcontent[$key], create_function('$matches', 'return showoption($matches[1], \''.addslashes($key).'\');'), stripslashes($typetemplate));
 		}
 
 		$_G['forum_typetemplate'] = $typetemplate;
@@ -731,77 +743,6 @@ function optionlistxml($input, $pre = '') {
 		}
 	}
 	return $str;
-}
-
-
-function makevaluepic($value) {
-	$basedir = !getglobal('setting/attachdir') ? './data/attachment' : getglobal('setting/attachdir');
-	$url = !getglobal('setting/attachurl') ? './data/attachment/' : getglobal('setting/attachurl');
-	$subdir1 = substr(md5($value), 0, 2);
-	$subdir2 = substr(md5($value), 2, 2);
-	$target = 'temp/'.$subdir1.'/'.$subdir2.'/';
-	$targetname = substr(md5($value), 8, 16).'.png';
-	discuz_upload::check_dir_exists('temp', $subdir1, $subdir2);
-	if(file_exists($basedir.'/'.$target.$targetname)) {
-		return $url.$target.$targetname;
-	}
-	$value = str_replace("\n", '', $value);
-	$fontfile = $fontname = '';
-	$ttfenabled = false;
-	$size = 4;
-	$w = 130;
-	$rowh = 25;
-	if(function_exists('imagettftext')) {
-		$fontroot = DISCUZ_ROOT.'./static/image/seccode/font/ch/';
-		$dirs = opendir($fontroot);
-		while($entry = readdir($dirs)) {
-			if($entry != '.' && $entry != '..' && in_array(strtolower(fileext($entry)), array('ttf', 'ttc'))) {
-				$fontname = $entry;
-				break;
-			}
-		}
-		if(!empty($fontname)) {
-			$fontfile = DISCUZ_ROOT.'./static/image/seccode/font/ch/'.$fontname;
-		}
-		if($fontfile) {
-			if(strtoupper(CHARSET) != 'UTF-8') {
-				include DISCUZ_ROOT.'./source/class/class_chinese.php';
-				$cvt = new Chinese(CHARSET, 'utf8');
-				$value = $cvt->Convert($value);
-			}
-			$size = 9;
-			$ttfenabled = true;
-		}
-	}
-	$value = explode("\r", $value);
-	foreach($value as $str) {
-		if($ttfenabled) {
-			$box = imagettfbbox($size, 0, $fontfile, $str);
-			$height = max($box[1], $box[3]) - min($box[5], $box[7]);
-			$len = (max($box[2], $box[4]) - min($box[0], $box[6]));
-			$rowh = max(array($height, $strh));
-		} else {
-			$len = strlen($str) * 9;
-		}
-		$w = max(array($len, $w));
-	}
-	$h = $rowh * count($value) + count($value) * 2;
-	$im = @imagecreate($w, $h);
-	$background_color = imagecolorallocate($im, 255, 255, 255);
-	$text_color = imagecolorallocate($im, 23, 14, 91);
-	$h = $ttfenabled ? $rowh : 4;
-	foreach($value as $str) {
-		if($ttfenabled) {
-			imagettftext($im, $size, 0, 0, $h, $text_color, $fontfile, $str);
-			$h += 2;
-		} else {
-			imagestring($im, $size, 0, $h, $str, $text_color);
-		}
-		$h += $rowh;
-	}
-	imagepng($im, $basedir.'/'.$target.$targetname);
-	imagedestroy($im);
-	return $url.$target.$targetname;
 }
 
 ?>

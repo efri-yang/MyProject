@@ -3,7 +3,7 @@
 Main CSS file for Discuz! X
 (C) Comsenz Inc.
 http://www.comsenz.com
-Created & Modified by Lushnis, Pony, Dfox & DragonLee.
+Created & Modified by Lushnis, Pony, Alice, Dfox & DragonLee.
 
 ----------------------------------
 
@@ -118,7 +118,6 @@ CSS 写作注意事项：
 	Last Modify:	lushnis
 */
 	.cl:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; } .cl { zoom: 1; }
-
 /*
 	元素获取焦点时隐藏外边框
 */
@@ -225,7 +224,9 @@ CSS 写作注意事项：
 	Last Modify:	lushnis
 */
 	.bbda { border-bottom: 1px dashed {COMMONBORDER}; }
+	.btda { border-top: 1px dashed {COMMONBORDER}; }
 	.bbs { border-bottom: 1px solid {COMMONBORDER} !important; }
+	.bts { border-top: 1px dashed {COMMONBORDER} !important; }
 /*
 	Name:			mod_border_reset
 	Level:			Global
@@ -576,17 +577,14 @@ CSS 写作注意事项：
 /* 通用容器，定义页面宽度 */ .wp { margin: 0 auto; width: 960px; } #wp .wp { width: auto; }
 
 /* 页头 */
-	#toptb { line-height: 24px; }
-		#toptb a { float: left; padding: 0 4px; height: 24px; }
+	#toptb { min-width: 960px; border-bottom: 1px solid {COMMONBORDER}; background: {COMMONBG}; line-height: 28px; }
+		#toptb a { float: left; padding: 0 4px; height: 28px; }
 		#toptb a.showmenu { padding-right: 15px; }
 		#toptb a.hover { background-color: #FFF; }
 		#toptb .pipe { float: left; display: none; }
+
 	#hd { border-bottom: {HEADERBORDER} solid {SPECIALBORDER}; {HEADERBGCODE} }
 		#hd .wp { padding: 10px 0 0; }
-			#diy-tg { float: right; width: 55px; background: url({STATICURL}image/diy/panel-toggle.png) no-repeat 100% 1px; text-indent: -9999px; overflow: hidden; }
-				#diy-tg_menu { position: absolute; margin: -2px 0 0 -1px; padding: 6px 0; width: 72px; height: 48px; background: url({STATICURL}image/diy/panel-toggle-drop.png) no-repeat 0 0; text-align: center; }
-				#diy-tg_menu a { float: none !important; }
-			#toptb #diy-tg_menu { margin: -6px 0 0 -10px; }
 
 			.hdc { min-height: 70px; }
 				.ie6 .hdc { height: 70px; }
@@ -594,20 +592,21 @@ CSS 写作注意事项：
 				#space #hd h2 { margin-top: 0; }
 			#hd .fastlg { padding-top: 10px; }
 
-			#scbar { height: 44px; border: solid {SPECIALBG}; border-width: 0 1px 1px; background: url({IMGDIR}/search.png) repeat-x 0 0; line-height: 44px; overflow: hidden; }
-				.scbar_icon_td { width: 50px; background: url({IMGDIR}/search.png) no-repeat 0 -74px; }
-				.scbar_txt_td, .scbar_type_td { background: url({IMGDIR}/search.png) repeat-x 0 -222px; }
-					#scbar_txt { width: 400px; border: 1px solid #FFF; outline: none; font-size: 14px; }
+			#scbar { overflow: hidden; height: 42px; line-height: 42px; border-top: 1px solid #FFF; border-bottom: 1px solid #E9EFF5; background: #E8EFF5; }
+				.scbar_icon_td { width: 21px; background: url({IMGDIR}/search.png) no-repeat 0 -50px; }
+				.scbar_txt_td, .scbar_type_td { background: url({IMGDIR}/search.png) repeat-x 0 -93px; }
+					#scbar_txt { width: 400px; border: 1px solid #FFF; outline: none; }
 					.scbar_narrow #scbar_txt { width: 260px; }
-				.scbar_btn_td { width: 67px; background: url({IMGDIR}/search.png) no-repeat 0 -296px; text-align: center; }
-					#scbar_btn { margin: 0; padding: 0; border: none; background: transparent none; }
-				.scbar_type_td { background: url({IMGDIR}/search.png) no-repeat 0 -370px; }
-					#scbar_type { display: block; padding-left: 5px; text-align: left; text-decoration: none; }
+				.scbar_btn_td { width: 38px; background: url({IMGDIR}/search.png) no-repeat 8px -142px; }
+					#scbar_btn { margin: 0; padding: 0; border: none; background: transparent none; box-shadow: none; }
+						#scbar_btn strong { line-height: 84px; }
+				.scbar_type_td { width: 61px; background: url({IMGDIR}/search.png) no-repeat 0 -193px; }
+					#scbar_type { display: block; padding-left: 10px; text-align: left; text-decoration: none; }
 						#scbar_type_menu { margin-top: -8px; }
 				#scbar_hot { padding-left: 8px; height: 45px; overflow: hidden; }
 					#scbar_hot strong, #scbar_hot a { float: left; margin-right: 8px; white-space: nowrap; }
 
-			#nv { overflow: hidden; padding-left: 3px; height: 33px; {MENUBGCODE}; }
+			#nv { overflow: hidden; height: 33px; {MENUBGCODE}; }
 				#nv li { float: left; padding-right: 1px; height: 33px; line-height: 33px; background: url({IMGDIR}/nv_a.png) no-repeat 100% 0; font-weight: 700; font-size: 14px; }
 					.ie_all #nv li { line-height: 36px; }
 					.ie6 #nv li { line-height: 33px; }
@@ -638,19 +637,57 @@ CSS 写作注意事项：
 					#task_ntc { background-image: url({STATICURL}image/feed/task.gif); }
 				#um .pipe { margin: 0 5px 0 0; }
 
-				#extcreditmenu { margin-right: 2px !important; padding-top: 3px; padding-bottom: 3px; padding-left: 10px; }
-					#extcreditmenu.a { position: relative; z-index: 302; margin-right: 1px !important; border: 1px solid; border-color: {DROPMENUBORDER}; border-bottom: none; background-color: {WRAPBG}; }
-					#extcreditmenu_menu { margin-top: -1px; width: auto; }
-						#extcreditmenu_menu li { float: none; display: block; padding-left: 10px !important; padding-right: 3em !important; }
+				#extcreditmenu, #g_upmine { margin-right: 2px !important; padding-top: 3px; padding-bottom: 3px; padding-left: 10px; }
+					#g_upmine { margin-right: 1px !important; border: 1px solid transparent; }
+						.ie6 #g_upmine { border: 0; }
+					#extcreditmenu.a, #g_upmine.a { position: relative; z-index: 302; margin-right: 1px !important; border: 1px solid; border-color: {DROPMENUBORDER}; border-bottom: none; background-color: {WRAPBG}; }
+					#extcreditmenu_menu, #g_upmine_menu { margin-top: -1px; width: auto; }
+						#extcreditmenu_menu li { float: none; display: block; padding-left: 5px !important; padding-right: 1em !important; }
+					#g_upmine_menu li { float: none; display: block; padding-left: 5px !important; }
+					#g_upmine_menu ul.extg li { padding-left: 0px !important; }
 
-				#qmenu { float: right; display: inline; margin: 3px 4px 0; padding: 0 12px 0 0; width: 83px; height: 26px; background: url({IMGDIR}/qmenu.png) no-repeat 0 0; line-height: 26px; text-align: center; color: {HIGHLIGHTLINK}; font-weight: 700; text-shadow: 0 1px 0 #FFF; overflow: hidden; }
+				#qmenu { float: right; display: inline; margin: 5px 8px 0; padding-right: 10px; width: 103px; height: 24px; background: url({IMGDIR}/qmenu.png) no-repeat 0 0; line-height: 24px; text-align: center; color: {HIGHLIGHTLINK}; font-weight: 700; overflow: hidden; }
 					#qmenu:hover { text-decoration: none; }
-					#qmenu.a { position: relative; z-index: 302; background-position: 0 -30px; }
-					.ie8 #qmenu { line-height: 30px; }
-				#qmenu_menu { margin-top: -1px; padding: 20px 5px 10px; width: 180px; border-color: #9A9A9A; }
-					#qmenu_menu ul li { float: left; }
-					#qmenu_menu ul a { margin-bottom: 10px; padding: 47px 0 0; width: 60px; border: none; border-radius: 4px; background: url({IMGDIR}/noicon.gif) no-repeat 50% 5px; text-align: center; }
-						#qmenu_menu ul a:hover { background-color: {SPECIALBG}; color: {HIGHLIGHTLINK}; text-shadow: none; }
+					#qmenu.a { position: relative; z-index: 302; background-position: 0 -27px; }
+				#qmenu_menu { margin-top: -2px; padding: 20px 5px 10px; width: 610px; border-color: #DCE4EB; }
+					#qmenu_menu ul.nav li { float: left; }
+						.ie6 #qmenu_menu ul.nav li { clear: none !important; width: auto !important; }
+					#qmenu_menu ul.nav a { margin-bottom: 10px; padding: 47px 0 0; width: 60px; border: none; border-radius: 4px; background: url({IMGDIR}/noicon.gif) no-repeat 50% 5px; text-align: center; }
+						#qmenu_menu ul.nav a:hover { background-color: {SPECIALBG}; color: {HIGHLIGHTLINK}; text-shadow: none; }
+				#shortcut { position: relative; display: none; height: 30px; line-height: 30px; background-color: #3A83F1; color: white; text-align: center; }
+					#shortcuttip { padding: 2px 8px; background: url({IMGDIR}/search.gif) repeat-x 0 -1px; border-radius: 3px; color: #3A83F1; font-weight: 700; }
+					#shortcutcloseid { position: absolute; right: 8px; top: 8px; display: block; width: 12px; height: 12px; background: url({IMGDIR}/close.gif) no-repeat 0 -12px; text-indent: -999em; }
+
+/*
+	Name:			mn_userapp_menu
+	Level:			Global
+	Explain:		用户应用导航
+	Last Modify:	alice 2013021313
+*/
+#mn_userapp .icon_down {background: url({IMGDIR}/arr_w.gif) no-repeat 50% 50%; display:inline-block; width:12px; height:12px; overflow:hidden; margin-left:3px; }
+.ie6 #mn_userapp .icon_down {height:24px;vertical-align: middle;}
+#nv li.a .icon_down {background: url({IMGDIR}/arr_w.gif) no-repeat  50% 50%; display:inline-block; width:12px; height:12px; overflow:hidden; margin-left:3px; }
+.ie6 #nv li.a .icon_down {height:24px;vertical-align: middle;}
+#mn_userapp_menu { clear: left; min-height: 210px; min-width: 630px; }
+.ie6 #mn_userapp_menu { height: 210px; width: 630px; }
+	#mn_userapp_menu ul.mrec{ float:left; width:182px; padding-right:5px; border-right:1px dotted {DROPMENUBORDER}; }
+	#mn_userapp_menu ul.uused { float:left; width:273px; }
+	.ie6 #mn_userapp_menu ul.mrec, .ie7 #mn_userapp_menu ul.mrec { width:182px; padding:0 5px 0 0; }
+		#mn_userapp_menu ul.mrec li, #mn_userapp_menu ul.uused li { float:left; display:inline; padding:3px; width:85px; text-align: center; overflow:hidden; }
+		.ie6 #mn_userapp_menu ul.mrec li,.ie6 #mn_userapp_menu ul.uused li { float:left !important; clear:none; }
+			#mn_userapp_menu ul.mrec li img, #mn_userapp_menu ul.uused li img { width:75px; height:75px;  }
+			#mn_userapp_menu ul.mrec li a, #mn_userapp_menu ul.uused li a { border-bottom:0; }
+	#mn_userapp_menu ul.adv { position: absolute; top: 0; right: 0;	padding: 10px; height: 198px; width:140px; border-left: 1px solid #EBEBEB; background: #F5F5F5; text-align: left; zoom: 1; }
+	#mn_userapp_menu ul.mrec li { position:relative; }
+	.ie6 #mn_userapp_menu ul.adv li { clear:none; }
+	#mn_userapp_menu .icon_hotapp { position:absolute; right:8px; bottom:25px; display:inline-block; width:16px; height:16px; background:#F00; color:#FFF;  }
+	#mn_userapp_menu .icon_myapp a{ float:left; display:inline-block; border-bottom:0; padding:0; margin-bottom:10px; width:66px; height:51px; background: url({STATICURL}image/common/app.png) no-repeat 0 0; line-height:2000px; overflow:hidden; clear:none; }
+	#mn_userapp_menu .icon_appcenter a { float:right; margin-left:7px; background-position: 0 -51px; }
+	.ie6 #mn_userapp_menu .icon_myapp a { margin-bottom:0px; }
+	.ie6 #mn_userapp_menu .icon_myapp,.ie6 #mn_userapp_menu .icon_appcenter { float:left; width:66px; }
+	#mn_userapp_menu .ad_img img { width:140px; height:100px; }
+	#mn_userapp_menu .ad_img a { padding:0; line-height:26px; border-bottom:0; }
+	#mn_userapp_menu .ad_img a:hover { background:none; }
 
 /* 页面主区域 */
 	#ct { min-height: 300px; }
@@ -683,8 +720,19 @@ CSS 写作注意事项：
 	#ft { padding: 10px 0 50px; border-top: 1px solid {COMMONBORDER}; line-height: 1.8; color: {FOOTERTEXT}; }
 		#flk { text-align: right; }
 			#flk img { vertical-align: middle; }
-			#scrolltop { visibility: hidden; position: fixed; bottom: 100px; display: block; margin: -30px 0 0; width: 26px; height: 50px; background: url({IMGDIR}/scrolltop.png) no-repeat 50% 0; line-height: 999px; overflow: hidden; cursor: pointer; }
+		#scrolltop { visibility: hidden; position: fixed; bottom: 100px; display: block; margin: -30px 0 0 2px; width: 40px; background: #f4f4f4; border: 1px #cdcdcd solid; border-radius: 3px; border-top: 0; cursor: pointer; }
+			#scrolltop:hover { text-decoration: none; }
 		.ie6 #scrolltop { position: absolute; bottom: auto; }
+			#scrolltop a { display: block; width: 30px; height: 24px; padding: 3px 5px; line-height: 12px; text-align: center; color: #787878; text-decoration: none; background: url({IMGDIR}/scrolltop.png) no-repeat 0 0; border-top: 1px #cdcdcd solid; }
+					a.scrolltopa:hover { background-position: -40px 0px !important;}
+				a.replyfast { background-position: 0 -30px !important; }
+					a.replyfast:hover { background-position: -40px -30px !important;}
+				a.returnlist,a.returnboard { background-position: 0 -60px !important; }
+					a.returnlist:hover,a.returnboard:hover { background-position: -40px -60px !important;}
+					#scrolltop a b { visibility: hidden; font-weight: normal; }
+
+		/*	#scrolltop span { visibility: hidden; }*/
+
 		#nv_home #ft, .pg_announcement #ft, .pg_modcp #ft, .pg_portalcp #ft, .pg_ranklist #ft, #nv_userapp #ft { border-top: none; }
 
 /* 通用的区域块 */
@@ -700,7 +748,7 @@ CSS 写作注意事项：
 			.bm_c { padding: 10px; }
 		.drag {}
 		.bm_h .o { float: right; width: 30px; }
-			.bm_h .o img { float: right; margin-top: 11px; cursor: pointer; }
+			.bm_h .o img { float: right; margin-top: 8px; cursor: pointer; }
 		.bm_h .i { padding-left: 10px; }
 		.bm_h .pn { margin-top: 4px; }
 		.bm_h { padding: 0 10px; height: 31px; border-top: 1px solid #FFF; border-bottom: 1px solid {CONTENTSEPARATE}; background: {COMMONBG}; line-height: 31px; white-space: nowrap; overflow: hidden; }
@@ -732,10 +780,10 @@ CSS 写作注意事项：
 		#pt .z { padding-right: 10px; }
 		#pt .z a, #pt .z em, #pt .z span { float: left; height: 29px; }
 		#pt .z em { width: 20px; background: url({IMGDIR}/pt_item.png) no-repeat 3px 10px; line-height: 200px; overflow: hidden; }
-		.nvhm { width: 16px; background: url({IMGDIR}/search.png) no-repeat -8px -119px; line-height: 200px; overflow: hidden; }
+		.nvhm { width: 16px; background: url({IMGDIR}/search.png) no-repeat 0 0; line-height: 200px; overflow: hidden; }
 			/* XP 或 Windows 7，IE 最高版本为 8 或 9，这几种组合情况对字体的渲染存在差异，所以需要对背景进行微调，以适应更多情况 by Pony 11050511 */
 			.ie_all #pt .z em { background-position: 3px 9px; }
-			.ie_all .nvhm { background-position: -8px -120px; }
+			.ie_all .nvhm { background-position: 0 -1px; }
 /*
 	Name:			mod_userheader
 	Level:			Global
@@ -864,7 +912,7 @@ CSS 写作注意事项：
 	.xl label, .xl label a { color: #C00; }
 	.xl1 li { height: 1.5em; overflow: hidden; }
 		.xl1_elp { float: left; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-	.xl2 li { float: left; margin: 2px 0; padding: 0; width: 48.6%; height: 1.5em; overflow: hidden; }
+	.xl2 li { float: left; margin: 2px 0; padding: 0; width: 50%; height: 1.5em; overflow: hidden; }
 	.xl ol, ol.xl { background: url({IMGDIR}/sortnum.png) no-repeat 0 3px; line-height: 21px; }
 		.xl ol li, ol.xl li { background: none; padding-left: 20px; }
 		.xl ol li, ol.xl li { height: 21px; }
@@ -912,10 +960,11 @@ CSS 写作注意事项：
 		.mlp img { padding: 2px; max-width: 120px; max-height: 120px; border: 1px solid #CCC; background: {WRAPBG}; }
 		* html .mlp img { width: expression(this.width > 120 && this.width>=this.height ? 120 : true); height: expression(this.height > 120 && this.width<=this.height ? 120 : true); }
 
-/* 用户头像列表时，各种状态图标。.gm -> 管理员; .gs -> 明星会员 ; .gol -> 在线会员; */
-.gm, .gs, .gol { position: absolute; overflow: hidden; margin: -3px 0 0 -3px; width: 60px; height: 18px; background: url({IMGDIR}/gst.gif) no-repeat 0 0; display: block;/* ie6 */ }
+/* 用户头像列表时，各种状态图标。.gm -> 管理员; .gs -> 明星会员 ; .gol -> 在线会员; .god -> 删除标记 */
+.gm, .gs, .gol, .god { position: absolute; overflow: hidden; margin: -3px 0 0 -3px; width: 60px; height: 18px; background: url({IMGDIR}/gst.gif) no-repeat 0 0; display: block;/* ie6 */ }
 .gs { background-position: 0 -18px; }
 .gol { background-position: 0 -36px; }
+.god { margin: -5px 0px 0px 45px;background: url({IMGDIR}/access_disallow.gif) no-repeat 0 0;}
 
 /* 应用列表*/
 	.appl ul { margin: 3px 0; }
@@ -936,6 +985,14 @@ CSS 写作注意事项：
 			.tbn li.a { margin: -1px 0 0; padding: 0 10px 0 9px; border-top: 1px solid {COMMONBORDER}; border-bottom-style: solid; background: {WRAPBG}; }
 		.tbn ul a { display: block; height: 33px; line-height: 33px; }
 		.tbn .mt { padding: 10px; }
+
+		.notice_pm, .notice_mypost, .notice_interactive, .notice_system, .notice_manage, .notice_app { float: left; width: 18px; height: 14px; background-image: url({IMGDIR}/ico_notice.png); margin: 11px 5px 5px 0;}
+		.notice_pm { background-position:  0 0;}
+		.notice_mypost { background-position:  0 -33px; }
+		.notice_interactive { background-position:  0 -68px; }
+		.notice_system { background-position:  0 -101px; }
+		.notice_manage { background-position:  0 -135px; }
+		.notice_app { background-position:  0 -169px; }
 
 /* 道具 magic */
 .mg_img { padding: 10px; width: 76px; height: 76px; background: url({IMGDIR}/magic_imgbg.gif) no-repeat 0 0; }
@@ -985,13 +1042,26 @@ CSS 写作注意事项：
 	.ie6 .slg, .ie7 .slg { width: expression(this.parentNode.offsetWidth); }
 
 /*
-	Name:			mod_style_selector
+	Name:			mod_diy_button
 	Level:			Fuction
-	Dependent:		mod_popupmenu
-	Explain:		风格切换菜单
-	Last Modify:	lushnis
+	Explain:		页面头部的 DIY 按钮
+	Last Modify:	Pony 1207021442
 */
-	#toptb a#sslct, #toptb a.switchblind { width: 10px; background: url({IMGDIR}/style_switch.png) no-repeat 50% 50%; text-indent: -9999px; overflow: hidden; }
+	#diy-tg { float: right; padding: 0 !important; width: 56px; background: url({STATICURL}image/diy/panel-toggle.png) no-repeat 100% 4px; text-indent: -9999px; overflow: hidden; }
+		#diy-tg_menu { position: absolute; margin: -2px 0 0 -1px; padding: 6px 0; width: 72px; height: 48px; line-height: 24px; background: url({STATICURL}image/diy/panel-toggle-drop.png) no-repeat 0 0; text-align: center; }
+			#diy-tg_menu a { float: none !important; }
+	#toptb #diy-tg_menu { margin: -7px 0 0 -17px; }
+
+/*
+	Name:			mod_switch_button
+	Level:			Fuction
+	Dependent:		sslct_menu 需要 class mod_popupmenu
+	Explain:		风格/宽窄切换菜单
+	Last Modify:	Pony 1207021458
+*/
+	#toptb a#sslct, .switchwidth, #toptb a.switchblind { margin-top: 5px; padding: 0 !important; width: 23px; height: 18px !important; background: url({IMGDIR}/switch_style.png) no-repeat 100% 0; text-indent: -9999px; overflow: hidden; }
+	.switchwidth { background-image: url({IMGDIR}/switch_width.png); }
+	.switchwidth:hover{ background: url({IMGDIR}/switch_width.png) no-repeat 100% -36px; }
 	#sslct_menu { padding: 6px 10px 10px; }
 		 .sslct_btn { float: left; margin: 4px 4px 0 0; width: 12px; height: 12px; border: 1px solid {COMMONBORDER}; cursor: pointer; }
 			.sslct_btn i { float: left; display: inline; margin: 1px; width: 10px; height: 10px; background: #2E80D1; overflow: hidden; font-style: normal; }
@@ -1005,8 +1075,19 @@ CSS 写作注意事项：
 		.p_pop li { display: inline; }
 		.p_pop a { display: block; padding: 3px 5px; border-bottom: 1px solid {SPECIALBG}; white-space: nowrap; }
 			.p_pop li:last-child a { border: none; }
+			.ie6 .p_pop li { zoom: 1; clear: both; width: 100%; }
 			.ie6 .p_pop a { position: relative; }
 			.p_pop a:hover, .p_pop a.a, #sctype_menu .sca { background-color: {SPECIALBG}; color: {HIGHLIGHTLINK}; text-decoration: none; }
+			.prompt_news, .prompt_follower,.prompt_news_0, .prompt_follower_0, .ignore_notice, .prompt_concern { float: left; width: 18px; height: 14px; margin: 3px 3px 5px 0; display: inline; background: url({IMGDIR}/ico_notice.png) no-repeat 0 0; }
+			.prompt_follower_0 { background-position: 0 -225px; }
+			.prompt_news { background-image: url({IMGDIR}/new_pm.gif); }
+			.prompt_follower { background-position: 0 -191px; }
+			.prompt_concern { background-position: 0 -258px; }
+			.ignore_notice { background: url({IMGDIR}/close.gif) no-repeat 0 0; position:absolute; right:0; top:0; width:12px; height:12px; overflow:hidden; }
+			.p_pop .ignore_noticeli a,.p_pop .ignore_noticeli a:hover,.p_pop .ignore_noticeli a.a { background:none; border-bottom:0; }
+			.p_pop .notice_interactive, .p_pop .notice_system, .p_pop .notice_manage, .p_pop .notice_app, .p_pop .notice_mypost { margin: 3px 2px 5px 0;}
+			.ie6 .ignore_notice { display: none; }
+
 		/* .blk -> block 内容较为复杂的弹出层使用 .blk 的 class，内部的 a 标签重新定义 */
 		.blk a, .inlinelist a { display: inline; padding: 0; border: none; }
 			.blk a:hover { background: none; color: {LINK}; text-shadow: none; text-decoration: underline; }
@@ -1015,7 +1096,7 @@ CSS 写作注意事项：
 	.h_pop { min-width: 120px; border-top: none; }
 /* .txt 和 .textarea 属于旧的命名规范，待整理 by lushnis */.p_opt .txt, .p_opt .txtarea { margin: 5px 0; }
 
-	.p_pop .flbc, .p_pof .flbc{margin-right: 8px;margin-top: 4px;}
+	.p_pop .flbc, .p_pof .flbc { margin-right: 8px; margin-top: 4px; }
 
 /* 弹出层 以下 class 都可以分开写，单独定义，以便个性化 */
 	/* 四条边、四个角的公用样式 */
@@ -1093,6 +1174,14 @@ CSS 写作注意事项：
 /*弹窗 编辑器 颜色框 colorbox*/
 .colorbox{ width: 130px !important; }
 .colorbox input { float: left; margin: 2px; padding: 0; width: 12px; height: 12px; border: 0; cursor: pointer; }
+
+/*弹窗 编辑器 分割线选择 hrbox*/
+.hrbox{ width: 500px !important; }
+.hrbox input { float: left; margin: 2px; padding: 0; width: 495px; height: 25px; border: 0; cursor: pointer;background: #FFFFFF; }
+
+/*弹窗 编辑器 背景选择 postbgbox*/
+.postbgbox{ width: 325px !important; }
+.postbgbox input { float: left; margin: 2px; padding: 0; width: 50px; height: 50px; border: 1px solid; border-color: #F7F7F7 #EFEFEF #EFEFEF #F7F7F7; cursor: pointer;background: #FFFFFF; }
 
 /* 短消息对话框 .pm -> personal_message (window) by Pony */
 	.pm { overflow: hidden; width: 400px; }
@@ -1318,13 +1407,19 @@ CSS 写作注意事项：
 			.pc_btn img { opacity: 0.5; }
 				.pc_btn:hover img { opacity: 1; }
 	.pc_r { background-position: -30px 0; }
+	
+/* 用于文字提示等弹出层提示 */
+	.popuptext .pc_l,.popuptext .pc_c,.popuptext .pc_inner,.popuptext .pc_r { background: url({IMGDIR}/popuptext_bg.gif) no-repeat 0 0; }
+	.popuptext .pc_c { width: 200px; background-position: 0 -56px; background-repeat: repeat-x; }
+		.popuptext .pc_inner { white-space: nowrap; text-align: center; width: auto; background-position: 50% -112px; }
+	.popuptext .pc_r { background-position: -30px 0; }
 
 /* 快速跳转菜单 */
-#fjump_menu { padding: 7px 0 10px 10px; background: {COMMONBG}; }
-	.ie6 #fjump_menu { width: expression(this.getElementsByTagName('li')[2] ? '600px' : (this.getElementsByTagName('li')[1] ? '400px' : '200px')); }
+#fjump_menu { padding: 7px 0 10px 10px; }
 	#fjump_menu .sch { position: absolute; top: 6px; right: 10px; }
 .jump_bdl { overflow: hidden; }
 	.jump_bdl li { float: left; overflow-x: hidden; overflow-y: auto; margin-right: 10px; padding: 5px; width: 178px; height: 300px; border: 1px solid {WRAPBORDERCOLOR}; background: {WRAPBG}; }
+		.ie6 .jump_bdl li { clear: none !important; float: left !important; width: 178px !important; }
 	.bdl_title li { float: left; margin-right: 9px; padding: 0 1px; width: 189px; height: 33px; line-height: 23px; font-weight: 700; }
 		.bdl_title .px { width: 80px; }
 	.jump_bdl p { overflow: hidden; height: 25px; line-height: 25px; }
@@ -1359,13 +1454,14 @@ CSS 写作注意事项：
 	Name:			mod_reason_select
 	Level:			Global
 	Explain:		类似评分窗口中的评分原因选择的样式
-	Last Modify:	Pony
+	Last Modify:	Alice
 */
 .reason_slct {}
 	.reason_slct .reasonselect { height: 4.3em; overflow: scroll !important; overflow-x: auto !important; }
 		.reason_slct .reasonselect li { white-space: nowrap; }
 	.reason_slct .pt, .reason_slct .px { width: 25.2em !important; }
 	.reasonarea { height: 5.8em; }
+	.reason_slct .reasonselect:hover { height:auto; }
 
 /*
 	Name:			mod_filebtn
@@ -1404,7 +1500,6 @@ CSS 写作注意事项：
 a.progressCancel { display: block; float: right; width: 14px; height: 14px; background: url({IMGDIR}/cancelbutton.gif) no-repeat -14px 0; font-size: 0; }
 	a.progressCancel:hover { background-position: 0 0; }
 .swfupload { vertical-align: top; }
-
 
 /* ------------------------------------------------------------------------ 拖拽及页面 DIY */
 .frame, .frame-tab { margin-bottom: 10px; border: 1px solid {WRAPBORDERCOLOR}; background: {WRAPBG}; }
@@ -1624,6 +1719,9 @@ em.hot { position: absolute; left: -2px; top: -2px; text-indent: -9999px; overfl
 		.ie_all .card .o a { padding: 3px 0 0; }
 	.card .mgc, .card .f { padding: 0 10px 5px; }
 		.card .f li { display: block; }
+		.card_gender_0 { background: #efefef url({IMGDIR}/nosexbg.png) no-repeat bottom right; }
+		.card_gender_1 { background: #bbebf9 url({IMGDIR}/gentlemanbg.png) no-repeat bottom right; }
+		.card_gender_2 { background: #fce0df url({IMGDIR}/ladybg.png) no-repeat bottom right; }
 
 /*
 	Name:			mod_BIUC
@@ -1664,5 +1762,20 @@ DIY图片幻灯片未加载时隐藏,模块标识隐藏
 		.patchdate { width: 70px; }
 		.patchstat { width: 55px; }
 	.unfixed { color: #F26C4F; }
-.plugin { width: 300px; }
+.plugin { width: 270px; }
 	.plugin .bm_h { border-color: {COMMONBORDER}; color: {TABLETEXT}; background: {COMMONBG}; }
+
+/* 瀑布流布局 by Alice 1303191756 */
+.waterfall { position: relative; margin-top: 15px; }
+	.waterfall li { margin: 0 10px 10px 0; padding: 0 0 3px; text-align: left; border-width: 1px 0 0; border-top: 1px solid #EAEAEA; background: url({IMGDIR}/bg_waterfall.png) no-repeat 100% 100%; }
+	.waterfall .c, .waterfall h3 { padding: 10px; border: solid #EAEAEA; border-width: 0 1px; background-color: #F8F8F8; }
+		.waterfall .c { overflow: hidden; padding-bottom: 0; max-height: 800px; }
+		.waterfall .c .nopic { display: block; background:{WRAPBG} url({IMGDIR}/nophototiny.png) no-repeat 50% 50%; cursor: pointer; }
+	.waterfall .auth { padding: 0 10px 10px; border-width: 0 1px 1px; border-style: solid; border-color: transparent #EAEAEA #B9B9B9; background: #F8F8F8; }
+		.waterfall .auth img { display: inline-block; margin: 0 1px; }
+		
+/* 大分页按钮 by theo */
+.pgbtn { margin: 5px 0 10px; }
+	.pgbtn a { display: block; height: 40px; line-height: 40px; letter-spacing: 5px; text-align: center; border: 1px solid #DCDCDC; font-size: 14px; outline: none; border-radius: 5px; box-shadow: 0 1px 0 #F5F5F5; }
+		.pgbtn a:hover { border-color: #BABABA; text-decoration: none; }
+		.pgbtn a:active { background: #EEE; border-color: #D0D0D0; box-shadow: none; }

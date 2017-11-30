@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: topicadmin_stickreply.php 35236 2015-03-19 06:29:00Z nemohou $
+ *      $Id: topicadmin_stickreply.php 35235 2015-03-19 06:27:54Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -41,6 +41,10 @@ if(!submitcheck('modsubmit')) {
 
 	if($_GET['stickreply']) {
 		foreach($sticktopiclist as $pid => $postnum) {
+			$post = C::t('forum_post')->fetch_all_by_pid('tid:'.$_G['tid'], $pid, false);
+			if($post[$pid]['tid'] != $_G['tid']) {
+				continue;
+			}
 			C::t('forum_poststick')->insert(array(
 				'tid' => $_G['tid'],
 				'pid' => $pid,
@@ -66,7 +70,7 @@ if(!submitcheck('modsubmit')) {
 
 	$resultarray = array(
 	'redirect'	=> "forum.php?mod=viewthread&tid=$_G[tid]&page=$page",
-	'reasonpm'	=> ($sendreasonpm ? array('data' => array(array('authorid' => $post['authorid'])), 'var' => 'post', 'item' => $_GET['stickreply'] ? 'reason_stickreply': 'reason_stickdeletereply') : array()),
+	'reasonpm'	=> ($sendreasonpm ? array('data' => array(array('authorid' => $post['authorid'])), 'var' => 'post', 'notictype' => 'post', 'item' => $_GET['stickreply'] ? 'reason_stickreply': 'reason_stickdeletereply') : array()),
 	'reasonvar'	=> array('tid' => $thread['tid'], 'subject' => $thread['subject'], 'modaction' => $modaction, 'reason' => $reason),
 	'modlog'	=> $thread
 	);

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: secure.php 28691 2012-03-08 05:07:45Z monkey $
+ *      $Id: secure.php 34397 2014-04-14 06:53:24Z nemohou $
  */
 
 if(!defined('IN_MOBILE_API')) {

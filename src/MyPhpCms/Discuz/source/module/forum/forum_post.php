@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: forum_post.php 32368 2013-01-07 02:31:01Z liulanbo $
+ *      $Id: forum_post.php 36293 2016-12-14 02:50:56Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -16,12 +16,16 @@ cknewuser();
 
 require_once libfile('class/credit');
 require_once libfile('function/post');
+require_once libfile('function/forumlist');
 
 
 $pid = intval(getgpc('pid'));
 $sortid = intval(getgpc('sortid'));
 $typeid = intval(getgpc('typeid'));
 $special = intval(getgpc('special'));
+
+parse_str($_GET['extra'], $_GET['extra']);
+$_GET['extra'] = http_build_query($_GET['extra']);
 
 $postinfo = array('subject' => '');
 $thread = array('readperm' => '', 'pricedisplay' => '', 'hiddenreplies' => '');
@@ -105,6 +109,9 @@ if($_GET['action'] == 'edit' || $_GET['action'] == 'reply') {
 
 	if($thread['closed'] == 1 && !$_G['forum']['ismoderator']) {
 		showmessage('post_thread_closed');
+	}
+	if(!$thread['isgroup'] && $post_autoclose = checkautoclose($thread)) {
+		showmessage($post_autoclose, '', array('autoclose' => $_G['forum']['autoclose']));
 	}
 }
 
@@ -203,25 +210,14 @@ $polloptions = isset($polloptions) ? censor(trim($polloptions)) : '';
 $readperm = isset($_GET['readperm']) ? intval($_GET['readperm']) : 0;
 $price = isset($_GET['price']) ? intval($_GET['price']) : 0;
 
-if(empty($bbcodeoff) && !$_G['group']['allowhidecode'] && !empty($message) && preg_match("/\[hide=?\d*\].*?\[\/hide\]/is", preg_replace("/(\[code\](.+?)\[\/code\])/is", ' ', $message))) {
+if(empty($bbcodeoff) && !$_G['group']['allowhidecode'] && !empty($message) && preg_match("/\[hide=?d?\d*,?\d*\].*?\[\/hide\]/is", preg_replace("/(\[code\](.+?)\[\/code\])/is", ' ', $message))) {
 	showmessage('post_hide_nopermission');
 }
 
-$modnewthreads = $modnewreplies = 0;
-if(($subject || $message) && empty($_GET['save'])) {
-	$extramessage = ($special == 5 ? "\t".$_GET['affirmpoint']."\t".$_GET['negapoint'] : '').
-					($special == 4 ? "\t".$_GET['activityplace']."\t".$_GET['activitycity']."\t".$_GET['activityclass'] : '').
-					($special == 2 ? "\t".$_GET['item_name']."\t".$_GET['item_locus'] : '').
-					($_GET['typeoption'] ? "\t".implode("\t", $_GET['typeoption']) : '').
-					($_GET['polloptions'] || $_GET['polloption'] ? ("\t".implode("\t", $_GET['tpolloption'] == 2 ? explode("\n", $_GET['polloptions']) : $_GET['polloption'])) : '');
-	list($modnewthreads, $modnewreplies) = threadmodstatus($subject."\t".$message.$extramessage);
-	unset($extramessage);
-}
 
 $urloffcheck = $usesigcheck = $smileyoffcheck = $codeoffcheck = $htmloncheck = $emailcheck = '';
 
-$seccodecheck = ($_G['setting']['seccodestatus'] & 4) && (!$_G['setting']['seccodedata']['minposts'] || getuserprofile('posts') < $_G['setting']['seccodedata']['minposts']);
-$secqaacheck = $_G['setting']['secqaa']['status'] & 2 && (!$_G['setting']['secqaa']['minposts'] || getuserprofile('posts') < $_G['setting']['secqaa']['minposts']);
+list($seccodecheck, $secqaacheck) = seccheck('post', $_GET['action']);
 
 $_G['group']['allowpostpoll'] = $_G['group']['allowpost'] && $_G['group']['allowpostpoll'] && ($_G['forum']['allowpostspecial'] & 1);
 $_G['group']['allowposttrade'] = $_G['group']['allowpost'] && $_G['group']['allowposttrade'] && ($_G['forum']['allowpostspecial'] & 2);
@@ -230,6 +226,7 @@ $_G['group']['allowpostactivity'] = $_G['group']['allowpost'] && $_G['group']['a
 $_G['group']['allowpostdebate'] = $_G['group']['allowpost'] && $_G['group']['allowpostdebate'] && ($_G['forum']['allowpostspecial'] & 16);
 $usesigcheck = $_G['uid'] && $_G['group']['maxsigsize'] ? 'checked="checked"' : '';
 $ordertypecheck = !empty($thread['tid']) && getstatus($thread['status'], 4) ? 'checked="checked"' : '';
+$imgcontentcheck = !empty($thread['tid']) && getstatus($thread['status'], 15) ? 'checked="checked"' : '';
 $specialextra = !empty($_GET['specialextra']) ? $_GET['specialextra'] : '';
 $_G['forum']['threadplugin'] = dunserialize($_G['forum']['threadplugin']);
 
@@ -342,7 +339,7 @@ if(helper_access::check_module('album') && $_G['group']['allowupload'] && $_G['s
 }
 $navtitle = lang('core', 'title_'.$_GET['action'].'_post');
 
-if($_GET['action'] == 'newthread') {
+if($_GET['action'] == 'newthread' || $_GET['action'] == 'newtrade') {
 	loadcache('groupreadaccess');
 	$navtitle .= ' - '.$_G['forum']['name'];
 	require_once libfile('post/newthread', 'include');
@@ -353,9 +350,6 @@ if($_GET['action'] == 'newthread') {
 	loadcache('groupreadaccess');
 	$navtitle .= ' - '.$thread['subject'].' - '.$_G['forum']['name'];
 	require_once libfile('post/editpost', 'include');
-} elseif($_GET['action'] == 'newtrade') {
-	$navtitle .= ' - '.$_G['forum']['name'];
-	require_once libfile('post/newtrade', 'include');
 }
 
 function check_allow_action($action = 'allowpost') {

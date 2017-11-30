@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <root>
 	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
-	<item id="Version"><![CDATA[X2.5]]></item>
 	<item id="Data">
 		<item id="plugin">
 			<item id="available"><![CDATA[1]]></item>
@@ -12,10 +11,11 @@
 			<item id="datatables"><![CDATA[]]></item>
 			<item id="directory"><![CDATA[qqconnect/]]></item>
 			<item id="copyright"><![CDATA[Comsenz Inc.]]></item>
-			<item id="version"><![CDATA[1.17]]></item>
+			<item id="version"><![CDATA[2.0]]></item>
 			<item id="__modules">
 				<item id="0">
 					<item id="name"><![CDATA[connect]]></item>
+					<item id="param"><![CDATA[]]></item>
 					<item id="menu"><![CDATA[]]></item>
 					<item id="url"><![CDATA[]]></item>
 					<item id="type"><![CDATA[11]]></item>
@@ -27,31 +27,8 @@
 					<item id="navsuburl"><![CDATA[]]></item>
 				</item>
 				<item id="1">
-					<item id="name"><![CDATA[spacecp]]></item>
-					<item id="menu"><![CDATA[QQ绑定]]></item>
-					<item id="url"><![CDATA[]]></item>
-					<item id="type"><![CDATA[7]]></item>
-					<item id="adminid"><![CDATA[0]]></item>
-					<item id="displayorder"><![CDATA[1]]></item>
-					<item id="navtitle"><![CDATA[]]></item>
-					<item id="navicon"><![CDATA[]]></item>
-					<item id="navsubname"><![CDATA[]]></item>
-					<item id="navsuburl"><![CDATA[]]></item>
-				</item>
-				<item id="2">
-					<item id="name"><![CDATA[qqshow]]></item>
-					<item id="menu"><![CDATA[QQ秀]]></item>
-					<item id="url"><![CDATA[]]></item>
-					<item id="type"><![CDATA[7]]></item>
-					<item id="adminid"><![CDATA[0]]></item>
-					<item id="displayorder"><![CDATA[2]]></item>
-					<item id="navtitle"><![CDATA[]]></item>
-					<item id="navicon"><![CDATA[]]></item>
-					<item id="navsubname"><![CDATA[]]></item>
-					<item id="navsuburl"><![CDATA[]]></item>
-				</item>
-				<item id="3">
 					<item id="name"><![CDATA[connect]]></item>
+					<item id="param"><![CDATA[]]></item>
 					<item id="menu"><![CDATA[]]></item>
 					<item id="url"><![CDATA[]]></item>
 					<item id="type"><![CDATA[28]]></item>
@@ -62,14 +39,41 @@
 					<item id="navsubname"><![CDATA[]]></item>
 					<item id="navsuburl"><![CDATA[]]></item>
 				</item>
+				<item id="2">
+					<item id="name"><![CDATA[admincp]]></item>
+					<item id="param"><![CDATA[ac=setting]]></item>
+					<item id="menu"><![CDATA[设置]]></item>
+					<item id="url"><![CDATA[]]></item>
+					<item id="type"><![CDATA[3]]></item>
+					<item id="adminid"><![CDATA[0]]></item>
+					<item id="displayorder"><![CDATA[0]]></item>
+					<item id="navtitle"><![CDATA[]]></item>
+					<item id="navicon"><![CDATA[]]></item>
+					<item id="navsubname"><![CDATA[]]></item>
+					<item id="navsuburl"><![CDATA[]]></item>
+				</item>
+				<item id="3">
+					<item id="name"><![CDATA[spacecp]]></item>
+					<item id="param"><![CDATA[]]></item>
+					<item id="menu"><![CDATA[QQ绑定]]></item>
+					<item id="url"><![CDATA[]]></item>
+					<item id="type"><![CDATA[7]]></item>
+					<item id="adminid"><![CDATA[0]]></item>
+					<item id="displayorder"><![CDATA[1]]></item>
+					<item id="navtitle"><![CDATA[]]></item>
+					<item id="navicon"><![CDATA[]]></item>
+					<item id="navsubname"><![CDATA[]]></item>
+					<item id="navsuburl"><![CDATA[]]></item>
+				</item>
 			</item>
 		</item>
-		<item id="version"><![CDATA[X2.5]]></item>
+		<item id="version"><![CDATA[X3.2,X3.3,X3.4]]></item>
 		<item id="installfile"><![CDATA[install.php]]></item>
-		<item id="upgradefile"><![CDATA[upgrade.php]]></item>
+		<item id="upgradefile"><![CDATA[upgrade.php]]></item>		
 		<item id="language">
 			<item id="scriptlang">
 				<item id="qqconnect_closed"><![CDATA[抱歉，QQ互联功能尚未开启]]></item>
+				<item id="connect_appid_desc"><![CDATA[请填写在QQ互联(connect.qq.com)申请的 appid 和 appkey]]></item>
 				<item id="connect_app_invalid"><![CDATA[抱歉，QQ互联功能暂时不可用]]></item>
 				<item id="connect_register_bind_already"><![CDATA[抱歉，该用户已绑定过另一个QQ用户，无法再次绑定]]></item>
 				<item id="connect_register_uinlimit"><![CDATA[抱歉，每个QQ帐号只能注册 {limit} 个帐号]]></item>
@@ -134,6 +138,7 @@
 				<item id="connect_feed_published_thread"><![CDATA[发表了《{subject}》：]]></item>
 				<item id="connect_feed_published_post"><![CDATA[参与了《{subject}》的讨论：]]></item>
 				<item id="connect_spacecp_share_a_post"><![CDATA[分享一个好帖#{bbname}#《{subject}》：{message}]]></item>
+				<item id="connect_spacecp_share_qq_default"><![CDATA[看看这个吧，还不错哦，也许你会喜欢^_^]]></item>
 				<item id="connect_post_sync_method"><![CDATA[将此回复同步到]]></item>
 			</item>
 			<item id="templatelang">
@@ -161,6 +166,7 @@
 				<item id="connect_register_sex_secret"><![CDATA[保密]]></item>
 				<item id="connect_register_public_email"><![CDATA[公开邮箱地址]]></item>
 				<item id="connect_register_use_qzone_avatar"><![CDATA[使用QQ头像]]></item>
+				<item id="connect_register_use_qzone_avatar_qqshow"><![CDATA[使用QQ头像和QQ秀]]></item>
 				<item id="connect_register_use_qqshow"><![CDATA[<span title="QQ秀将展示在论坛帖子左侧和个人空间首页">使用QQ秀形象</span>]]></item>
 				<item id="connect_register_agree"><![CDATA[同意服务条款]]></item>
 				<item id="connect_register_must_agree"><![CDATA[您必须同意服务条款后才能注册]]></item>
@@ -234,14 +240,15 @@
 				<item id="connect_post_sync_not_bind_desc"><![CDATA[马上绑定QQ账号，您将可以发表主题时同步到QQ空间和腾讯微博，第一时间和大家分享您在论坛中的新鲜事儿。]]></item>
 				<item id="connect_viewthread_share_to_qzone"><![CDATA[QQ空间]]></item>
 				<item id="connect_viewthread_share_to_t"><![CDATA[腾讯微博]]></item>
+				<item id="connect_viewthread_share_to_qq"><![CDATA[QQ好友和群]]></item>
 				<item id="connect_viewthread_share_to_pengyou"><![CDATA[腾讯朋友]]></item>
 				<item id="connect_createpassword"><![CDATA[<b>创建密码</b>]]></item>
 				<item id="connect_uin_limit"><![CDATA[您的QQ帐号在本站注册的帐号数量达到上限，请绑定已有帐号，或<a href="{$change_qq_url}">更换其他QQ账号</a>]]></item>
 				<item id="connect_thread_id_miss"><![CDATA[帖子id不存在]]></item>
 				<item id="connect_get_request_token_failed"><![CDATA[服务器繁忙，请稍后再试。]]></item>
 				<item id="connect_get_access_token_failed"><![CDATA[服务器繁忙，请稍后再试。]]></item>
-				<item id="connect_spacecp_qzone_to"><![CDATA[分享到QQ空间和腾讯朋友]]></item>
-				<item id="connect_spacecp_pengyou_to"><![CDATA[分享到腾讯朋友和QQ空间]]></item>
+				<item id="connect_spacecp_qzone_to"><![CDATA[分享到QQ空间]]></item>
+				<item id="connect_spacecp_pengyou_to"><![CDATA[分享到腾讯朋友]]></item>
 				<item id="connect_spacecp_qzone_subject"><![CDATA[分享标题]]></item>
 				<item id="connect_spacecp_qzone_reason"><![CDATA[分享理由]]></item>
 				<item id="connect_spacecp_qzone_picture"><![CDATA[分享图片]]></item>

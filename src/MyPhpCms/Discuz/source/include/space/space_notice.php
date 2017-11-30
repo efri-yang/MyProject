@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: space_notice.php 30269 2012-05-18 01:58:22Z liulanbo $
+ *      $Id: space_notice.php 34047 2013-09-25 04:41:45Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -24,41 +24,14 @@ $list = array();
 $mynotice = $count = 0;
 $multi = '';
 
-$view = (!empty($_GET['view']) && in_array($_GET['view'], array('userapp')))?$_GET['view']:'notice';
+if(empty($_G['member']['category_num']['manage']) && !in_array($_G['adminid'], array(1,2,3))) {
+	unset($_G['notice_structure']['manage']);
+}
+$view = (!empty($_GET['view']) && (isset($_G['notice_structure'][$_GET[view]]) || in_array($_GET['view'], array('userapp'))))?$_GET['view']:'mypost';
 $actives = array($view=>' class="a"');
-$opactives['notice'] = 'class="a"';
-
+$opactives[$view] = 'class="a"';
+$categorynum = $newprompt = array();
 if($view == 'userapp') {
-
-	space_merge($space, 'status');
-
-	if($_GET['op'] == 'del') {
-		$appid = intval($_GET['appid']);
-		C::t('common_myinvite')->delete_by_appid_touid($appid, $_G['uid']);
-		showmessage('do_success', "home.php?mod=space&do=notice&view=userapp&quickforward=1");
-	}
-
-	$filtrate = 0;
-	$count = 0;
-	$apparr = array();
-	$type = intval($_GET['type']);
-	foreach(C::t('common_myinvite')->fetch_all_by_touid($_G['uid']) as $value) {
-		$count++;
-		$key = md5($value['typename'].$value['type']);
-		$apparr[$key][] = $value;
-		if($filtrate) {
-			$filtrate--;
-		} else {
-			if($count < $perpage) {
-				if($type && $value['appid'] == $type) {
-					$list[$key][] = $value;
-				} elseif(!$type) {
-					$list[$key][] = $value;
-				}
-			}
-		}
-	}
-	$mynotice = $count;
 
 } else {
 
@@ -71,24 +44,39 @@ if($view == 'userapp') {
 	}
 
 	$isread = in_array($_GET['isread'], array(0, 1)) ? intval($_GET['isread']) : 0;
-	$type = trim($_GET['type']);
+	$category = $type = '';
+	if(isset($_G['notice_structure'][$view])) {
+		if(!in_array($view, array('mypost', 'interactive'))) {
+			$category = $view;
+		} else {
+			$deftype = $_G['notice_structure'][$view][0];
+			if($_G['member']['newprompt_num']) {
+				foreach($_G['notice_structure'][$view] as $subtype) {
+					if($_G['member']['newprompt_num'][$subtype]) {
+						$deftype = $subtype;
+						break;
+					}
+				}
+			}
+			$type = in_array($_GET['type'], $_G['notice_structure'][$view]) ? trim($_GET['type']) : $deftype;
+		}
+	}
 	$wherearr = array();
+	$new = -1;
 	if(!empty($type)) {
 		$wherearr[] = "`type`='$type'";
 	}
-	$new = !$isread;
-	$wherearr[] = "`new`='$new'";
 
 	$sql = ' AND '.implode(' AND ', $wherearr);
 
 
 	$newnotify = false;
-	$count = C::t('home_notification')->count_by_uid($_G['uid'], $new, $type);
+	$count = C::t('home_notification')->count_by_uid($_G['uid'], $new, $type, $category);
 	if($count) {
-		if($new && $perpage == 30) {
+		if($new == 1 && $perpage == 30) {
 			$perpage = 200;
 		}
-		foreach(C::t('home_notification')->fetch_all_by_uid($_G['uid'], $new, $type, $start, $perpage) as $value) {
+		foreach(C::t('home_notification')->fetch_all_by_uid($_G['uid'], $new, $type, $start, $perpage, $category) as $value) {
 			if($value['new']) {
 				$newnotify = true;
 				$value['style'] = 'color:#000;font-weight:bold;';
@@ -104,27 +92,28 @@ if($view == 'userapp') {
 		}
 
 		$multi = '';
-		if($isread) {
-			$multi = multi($count, $perpage, $page, "home.php?mod=space&do=$do&isread=1");
-		}
+		$multi = multi($count, $perpage, $page, "home.php?mod=space&do=$do&isread=1");
 	}
 
 	if($newnotify) {
-		C::t('home_notification')->ignore($_G['uid'], true, true);
-		if($_G['setting']['cloud_status']) {
-			$noticeService = Cloud::loadClass('Service_Client_Notification');
-			$noticeService->setNoticeFlag($_G['uid'], TIMESTAMP);
-		}
+		C::t('home_notification')->ignore($_G['uid'], $type, $category, true, true);
 	}
-
-	if($space['newprompt']) {
-		C::t('common_member')->update($_G['uid'], array('newprompt'=>0));
-	}
+	helper_notification::update_newprompt($_G['uid'], ($type ? $type : $category));
 	if($_G['setting']['my_app_status']) {
 		$mynotice = C::t('common_myinvite')->count_by_touid($_G['uid']);
 	}
+	if($_G['member']['newprompt']) {
+		$recountprompt = 0;
+		foreach($_G['member']['category_num'] as $promptnum) {
+			$recountprompt += $promptnum;
+		}
+		$recountprompt += $mynotice;
+		if($recountprompt == 0) {
+			C::t('common_member')->update($_G['uid'], array('newprompt' => 0));
+		}
+	}
 
-	$readtag = array($isread => ' class="a"');
+	$readtag = array($type => ' class="a"');
 
 
 }

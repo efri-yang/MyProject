@@ -4,14 +4,15 @@
  *	  [Discuz!] (C)2001-2009 Comsenz Inc.
  *	  This is NOT a freeware, use is subject to license terms
  *
- *	  $Id: connect_check.php 31304 2012-08-09 06:31:09Z liudongdong $
+ *	  $Id: connect_check.php 31305 2012-08-09 06:36:16Z liudongdong $
  */
 
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
 
-$utilService = Cloud::loadClass('Service_Util');
+require_once DISCUZ_ROOT.'/source/plugin/qqconnect/lib/Util.php';
+$utilService = new Cloud_Service_Util();
 
 $op = !empty($_GET['op']) ? $_GET['op'] : '';
 if (!in_array($op, array('cookie'))) {

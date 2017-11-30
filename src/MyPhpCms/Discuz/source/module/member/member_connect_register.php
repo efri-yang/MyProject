@@ -4,7 +4,7 @@
  *	  [Discuz!] (C)2001-2099 Comsenz Inc.
  *	  This is NOT a freeware, use is subject to license terms
  *
- *	  $Id: member_connect_register.php 33178 2013-05-06 03:15:51Z theoliu $
+ *	  $Id: member_connect_register.php 33538 2013-07-02 05:01:37Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -28,7 +28,7 @@ if(empty($_POST)) {
 		showmessage('qqconnect:connect_login_first', $referer);
 	}
 
-	$_G['qc']['connect_is_feed'] = true;
+	$_G['qc']['connect_is_feed'] = false;
 
 	$_G['qc']['connect_app_id'] = $_G['setting']['connectappid'];
 	$_G['qc']['connect_openid'] = $conopenid;
@@ -58,13 +58,14 @@ if(empty($_POST)) {
 
 	$conuin = $this->connect_guest['conuin'];
 	$conuinsecret = $this->connect_guest['conuinsecret'];
+	$conuintoken = $this->connect_guest['conuintoken'];
 	$conopenid = $this->connect_guest['conopenid'];
 
 	$cookie_expires = 2592000;
 	dsetcookie('client_created', TIMESTAMP, $cookie_expires);
 	dsetcookie('client_token', 1, $cookie_expires);
 
-	if (!$conuin || !$conuinsecret || !$conopenid) {
+	if (!$conuintoken || !$conopenid) {
 		showmessage('qqconnect:connect_get_request_token_failed');
 	}
 
@@ -72,25 +73,25 @@ if(empty($_POST)) {
 		showmessage('qqconnect:connect_register_bind_uin_already');
 	}
 
-	$conispublishfeed = $conispublisht = 0;
+	$conispublishfeed = 0;
+	$conispublisht = 0;
 
-	$is_qzone_avatar = !empty($_GET['use_qzone_avatar']) ? 1 : 0;
-	$is_use_qqshow = !empty($_GET['use_qqshow']) ? 1 : 0;
 	$userdata = array();
-	$userdata['avatarstatus'] = $is_qzone_avatar;
+	$userdata['avatarstatus'] = 0;
 	$userdata['conisbind'] = 1;
 
 	C::t('#qqconnect#common_member_connect')->insert(array(
 		'uid' => $uid,
 		'conuin' => $conuin,
 		'conuinsecret' => $conuinsecret,
+		'conuintoken' => $conuintoken,
 		'conopenid' => $conopenid,
 		'conispublishfeed' => $conispublishfeed,
 		'conispublisht' => $conispublisht,
 		'conisregister' => '1',
-		'conisqzoneavatar' => $is_qzone_avatar,
+		'conisqzoneavatar' => '0',
 		'conisfeed' => '1',
-		'conisqqshow' => $is_use_qqshow,
+		'conisqqshow' => '0',
 	));
 
 	dsetcookie('connect_js_name', 'user_bind', 86400);

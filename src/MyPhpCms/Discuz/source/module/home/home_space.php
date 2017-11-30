@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: home_space.php 32383 2013-01-07 11:00:48Z zhangguosheng $
+ *      $Id: home_space.php 36337 2017-01-05 06:34:27Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -93,6 +93,8 @@ if(empty($space)) {
 		$_GET['do'] = $do = 'profile';
 	}
 
+	$encodeusername = rawurlencode($space['username']);
+
 	if($do != 'profile' && $do != 'index' && !ckprivacy($do, 'view')) {
 		$_G['privacy'] = 1;
 		require_once libfile('space/profile', 'include');
@@ -109,8 +111,7 @@ if(empty($space)) {
 
 $diymode = 0;
 
-$seccodecheck = $_G['setting']['seccodestatus'] & 4;
-$secqaacheck = $_G['setting']['secqaa']['status'] & 2;
+list($seccodecheck, $secqaacheck) = seccheck('publish');
 if($do != 'index') {
 	$_G['disabledwidthauto'] = 0;
 }

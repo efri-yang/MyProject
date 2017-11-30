@@ -8,9 +8,9 @@ body { background: #FCFAF0 url(bgimg.jpg) no-repeat 50% 0; }
 #nv { background-color: #FE9500; background-image: url(nv.png); }
 	#nv li, #nv li a:hover, #nv li.hover a, #nv li.hover a:hover { background-image: url(nv_a.png) !important; }
 	#nv li.a { background-color: #DF3200; }
-	#qmenu { background-image: url(../t1/qmenu.png); }
-#scbar, #scbar_form, .scbar_icon_td, .scbar_txt_td, .scbar_type_td, .scbar_btn_td { background-image: url(search.png); }
-#scbar { border-color: #FC6; }
+
+#scbar { background-image: url(search.png); border-color: #FC6; }
+.scbar_icon_td { background: url(search.png) 0 -451px; }
 
 .bm_h, .tl th, .tl td { border-bottom-color: #CDCDCD; }
 .fl .bm_h { border-color: #FC6; background: #FCF6E6 url(titlebg.png) repeat-x 0 0; }

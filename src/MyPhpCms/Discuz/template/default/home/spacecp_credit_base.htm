@@ -1,4 +1,4 @@
-<!--{subtemplate common/header}-->
+<!--{template common/header}-->
 	<!--{subtemplate home/spacecp_header}-->
 		<!--{hook/spacecp_credit_top}-->
 		<!--{subtemplate home/spacecp_credit_header}-->
@@ -41,9 +41,9 @@
 				<!--{loop $loglist $value}-->
 				<!--{eval $value = makecreditlog($value, $otherinfo);}-->
 				<tr>
-					<td><a href="home.php?mod=spacecp&ac=credit&op=log&optype=$value['operation']">$value['optype']</a></td>
+					<td><!--{if $value['operation']}--><a href="home.php?mod=spacecp&ac=credit&op=log&optype=$value['operation']">$value['optype']</a><!--{else}-->$value['title']<!--{/if}--></td>
 					<td>$value['credit']</td>
-					<td>$value['opinfo']</td>
+					<td><!--{if $value['operation']}-->$value['opinfo']<!--{else}-->$value['text']<!--{/if}--></td>
 					<td>$value['dateline']</td>
 				</tr>
 				<!--{/loop}-->
@@ -111,9 +111,11 @@
 								<input type="text" class="px" id="cardid" name="cardid" />
 							</td>
 						</tr>
-						<!--{if $_G['setting']['seccodestatus'] & 16}-->
-							<!--{block sectpl}--><tr><th><sec></th><td colspan="2"><span id="sec<hash>" onclick="showMenu({'ctrlid':this.id,'win':'{$_GET[handlekey]}'})"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div></td></tr><!--{/block}-->
-							<tbody id="card_box_sec" style="{if $_G[setting][card][open] && $ecchecked}display:;{else}display:none;{/if}"><!--{subtemplate common/seccheck}--></tbody>
+						<!--{if $seccodecheck}-->
+							</table>
+							<!--{block sectpl}--><table id="card_box_sec" style="{if $_G[setting][card][open] && $ecchecked}display:;{else}display:none;{/if}" cellspacing="0" cellpadding="0" class="tfm mtn"><tr><th><sec></th><td colspan="2"><span id="sec<hash>" onclick="showMenu({'ctrlid':this.id,'win':'{$_GET[handlekey]}'})"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div></td></tr></table><!--{/block}-->
+							<!--{subtemplate common/seccheck}-->
+							<table cellspacing="0" cellpadding="0" class="tfm mtn">
 						<!--{/if}-->
 					<!--{/if}-->
 					<tr>
@@ -351,4 +353,4 @@
 		<!--{subtemplate home/spacecp_footer}-->
 	</div>
 </div>
-<!--{subtemplate common/footer}-->
+<!--{template common/footer}-->

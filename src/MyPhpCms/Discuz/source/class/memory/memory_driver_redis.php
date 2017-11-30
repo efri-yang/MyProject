@@ -4,27 +4,44 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: memory_driver_redis.php 27685 2012-02-09 09:10:16Z zhangguosheng $
+ *      $Id: memory_driver_redis.php 33336 2013-05-29 02:05:10Z andyzheng $
  */
+if (!defined('IN_DISCUZ')) {
+	exit('Access Denied');
+}
 
-class memory_driver_redis
-{
+class memory_driver_redis {
+
+	public $cacheName = 'Redis';
 	var $enable;
 	var $obj;
 
+	public function env() {
+		return extension_loaded('redis');
+	}
+
 	function init($config) {
-		if(!empty($config['server'])) {
+		if(!$this->env()) {
+			$this->enable = false;
+			return;
+		}
+
+		if (!empty($config['server'])) {
 			try {
 				$this->obj = new Redis();
-				if($config['pconnect']) {
+				if ($config['pconnect']) {
 					$connect = @$this->obj->pconnect($config['server'], $config['port']);
 				} else {
 					$connect = @$this->obj->connect($config['server'], $config['port']);
 				}
 			} catch (RedisException $e) {
+
 			}
 			$this->enable = $connect ? true : false;
-			if($this->enable) {
+			if ($this->enable) {
+				if ($config['requirepass']) {
+					$this->obj->auth($config['requirepass']);
+				}
 				@$this->obj->setOption(Redis::OPT_SERIALIZER, $config['serializer']);
 			}
 		}
@@ -32,7 +49,7 @@ class memory_driver_redis
 
 	function &instance() {
 		static $object;
-		if(empty($object)) {
+		if (empty($object)) {
 			$object = new memory_driver_redis();
 			$object->init(getglobal('config/memory/redis'));
 		}
@@ -40,7 +57,7 @@ class memory_driver_redis
 	}
 
 	function get($key) {
-		if(is_array($key)) {
+		if (is_array($key)) {
 			return $this->getMulti($key);
 		}
 		return $this->obj->get($key);
@@ -50,8 +67,8 @@ class memory_driver_redis
 		$result = $this->obj->getMultiple($keys);
 		$newresult = array();
 		$index = 0;
-		foreach($keys as $key) {
-			if($result[$index] !== false) {
+		foreach ($keys as $key) {
+			if ($result[$index] !== false) {
 				$newresult[$key] = $result[$index];
 			}
 			$index++;
@@ -60,12 +77,12 @@ class memory_driver_redis
 		return $newresult;
 	}
 
-	function select($db=0) {
+	function select($db = 0) {
 		return $this->obj->select($db);
 	}
 
 	function set($key, $value, $ttl = 0) {
-		if($ttl) {
+		if ($ttl) {
 			return $this->obj->setex($key, $ttl, $value);
 		} else {
 			return $this->obj->set($key, $value);
@@ -76,11 +93,11 @@ class memory_driver_redis
 		return $this->obj->delete($key);
 	}
 
-	function setMulti($arr, $ttl=0) {
-		if(!is_array($arr)) {
+	function setMulti($arr, $ttl = 0) {
+		if (!is_array($arr)) {
 			return FALSE;
 		}
-		foreach($arr as $key => $v) {
+		foreach ($arr as $key => $v) {
 			$this->set($key, $v, $ttl);
 		}
 		return TRUE;
@@ -118,7 +135,7 @@ class memory_driver_redis
 		return $this->obj->keys($key);
 	}
 
-	function expire($key, $second){
+	function expire($key, $second) {
 		return $this->obj->expire($key, $second);
 	}
 
@@ -142,7 +159,7 @@ class memory_driver_redis
 		return $this->obj->hVals($key);
 	}
 
-	function hIncrBy($key, $field, $incr){
+	function hIncrBy($key, $field, $incr) {
 		return $this->obj->hIncrBy($key, $field, $incr);
 	}
 
@@ -161,6 +178,7 @@ class memory_driver_redis
 	function clear() {
 		return $this->obj->flushAll();
 	}
+
 }
 
 ?>

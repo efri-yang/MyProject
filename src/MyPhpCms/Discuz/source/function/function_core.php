@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_core.php 35297 2015-06-05 03:28:45Z hypowang $
+ *      $Id: function_core.php 36342 2017-01-09 01:15:30Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -93,7 +93,7 @@ function getuserprofile($field) {
 		return $_G['member'][$field];
 	}
 	static $tablefields = array(
-		'count'		=> array('extcredits1','extcredits2','extcredits3','extcredits4','extcredits5','extcredits6','extcredits7','extcredits8','friends','posts','threads','digestposts','doings','blogs','albums','sharings','attachsize','views','oltime','todayattachs','todayattachsize', 'follower', 'following', 'newfollower'),
+		'count'		=> array('extcredits1','extcredits2','extcredits3','extcredits4','extcredits5','extcredits6','extcredits7','extcredits8','friends','posts','threads','digestposts','doings','blogs','albums','sharings','attachsize','views','oltime','todayattachs','todayattachsize', 'follower', 'following', 'newfollower', 'blacklist'),
 		'status'	=> array('regip','lastip','lastvisit','lastactivity','lastpost','lastsendmail','invisible','buyercredit','sellercredit','favtimes','sharetimes','profileprogress'),
 		'field_forum'	=> array('publishfeed','customshow','customstatus','medals','sightml','groupterms','authstr','groups','attentiongroup'),
 		'field_home'	=> array('videophoto','spacename','spacedescription','domain','addsize','addfriend','menunum','theme','spacecss','blockposition','recentnote','spacenote','privacy','feedfriend','acceptemail','magicgift','stickblogs'),
@@ -196,9 +196,9 @@ function fsocketopen($hostname, $port = 80, &$errno, &$errstr, $timeout = 15) {
 	return $fp;
 }
 
-function dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $ip = '', $timeout = 15, $block = TRUE, $encodetype  = 'URLENCODE', $allowcurl = TRUE, $position = 0) {
+function dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $ip = '', $timeout = 15, $block = TRUE, $encodetype  = 'URLENCODE', $allowcurl = TRUE, $position = 0, $files = array()) {
 	require_once libfile('function/filesock');
-	return _dfsockopen($url, $limit, $post, $cookie, $bysocket, $ip, $timeout, $block, $encodetype, $allowcurl, $position);
+	return _dfsockopen($url, $limit, $post, $cookie, $bysocket, $ip, $timeout, $block, $encodetype, $allowcurl, $position, $files);
 }
 
 function dhtmlspecialchars($string, $flags = null) {
@@ -238,13 +238,13 @@ function dheader($string, $replace = true, $http_response_code = 0) {
 	$islocation = substr(strtolower(trim($string)), 0, 8) == 'location';
 	if(defined('IN_MOBILE') && strpos($string, 'mobile') === false && $islocation) {
 		if (strpos($string, '?') === false) {
-			$string = $string.'?mobile=yes';
+			$string = $string.'?mobile='.IN_MOBILE;
 		} else {
 			if(strpos($string, '#') === false) {
-				$string = $string.'&mobile=yes';
+				$string = $string.'&mobile='.IN_MOBILE;
 			} else {
 				$str_arr = explode('#', $string);
-				$str_arr[0] = $str_arr[0].'&mobile=yes';
+				$str_arr[0] = $str_arr[0].'&mobile='.IN_MOBILE;
 				$string = implode('#', $str_arr);
 			}
 		}
@@ -310,43 +310,51 @@ function checkrobot($useragent = '') {
 	static $kw_browsers = array('msie', 'netscape', 'opera', 'konqueror', 'mozilla');
 
 	$useragent = strtolower(empty($useragent) ? $_SERVER['HTTP_USER_AGENT'] : $useragent);
-	if(strpos($useragent, 'http://') === false && dstrpos($useragent, $kw_browsers)) return false;
 	if(dstrpos($useragent, $kw_spiders)) return true;
+	if(strpos($useragent, 'http://') === false && dstrpos($useragent, $kw_browsers)) return false;
 	return false;
 }
 function checkmobile() {
 	global $_G;
 	$mobile = array();
-	static $mobilebrowser_list =array('iphone', 'android', 'phone', 'mobile', 'wap', 'netfront', 'java', 'opera mobi', 'opera mini',
+	static $touchbrowser_list =array('iphone', 'android', 'phone', 'mobile', 'wap', 'netfront', 'java', 'opera mobi', 'opera mini',
 				'ucweb', 'windows ce', 'symbian', 'series', 'webos', 'sony', 'blackberry', 'dopod', 'nokia', 'samsung',
 				'palmsource', 'xda', 'pieplus', 'meizu', 'midp', 'cldc', 'motorola', 'foma', 'docomo', 'up.browser',
 				'up.link', 'blazer', 'helio', 'hosin', 'huawei', 'novarra', 'coolpad', 'webos', 'techfaith', 'palmsource',
 				'alcatel', 'amoi', 'ktouch', 'nexian', 'ericsson', 'philips', 'sagem', 'wellcom', 'bunjalloo', 'maui', 'smartphone',
 				'iemobile', 'spice', 'bird', 'zte-', 'longcos', 'pantech', 'gionee', 'portalmmm', 'jig browser', 'hiptop',
-				'benq', 'haier', '^lct', '320x320', '240x320', '176x220');
-	$pad_list = array('ipad');
+				'benq', 'haier', '^lct', '320x320', '240x320', '176x220', 'windows phone');
+	static $wmlbrowser_list = array('cect', 'compal', 'ctl', 'lg', 'nec', 'tcl', 'alcatel', 'ericsson', 'bird', 'daxian', 'dbtel', 'eastcom',
+			'pantech', 'dopod', 'philips', 'haier', 'konka', 'kejian', 'lenovo', 'benq', 'mot', 'soutec', 'nokia', 'sagem', 'sgh',
+			'sed', 'capitel', 'panasonic', 'sonyericsson', 'sharp', 'amoi', 'panda', 'zte');
+
+	static $pad_list = array('ipad');
 
 	$useragent = strtolower($_SERVER['HTTP_USER_AGENT']);
 
 	if(dstrpos($useragent, $pad_list)) {
 		return false;
 	}
-	if(($v = dstrpos($useragent, $mobilebrowser_list, true))) {
+	if(($v = dstrpos($useragent, $touchbrowser_list, true))){
 		$_G['mobile'] = $v;
-		return true;
+		return '2';
+	}
+	if(($v = dstrpos($useragent, $wmlbrowser_list))) {
+		$_G['mobile'] = $v;
+		return '3'; //wml版
 	}
 	$brower = array('mozilla', 'chrome', 'safari', 'opera', 'm3gate', 'winwap', 'openwave', 'myop');
 	if(dstrpos($useragent, $brower)) return false;
 
 	$_G['mobile'] = 'unknown';
-	if($_GET['mobile'] === 'yes') {
+	if(isset($_G['mobiletpl'][$_GET['mobile']])) {
 		return true;
 	} else {
 		return false;
 	}
 }
 
-function dstrpos($string, &$arr, $returnvalue = false) {
+function dstrpos($string, $arr, $returnvalue = false) {
 	if(empty($string)) return false;
 	foreach((array)$arr as $v) {
 		if(strpos($string, $v) !== false) {
@@ -404,7 +412,7 @@ function avatar($uid, $size = 'middle', $returnsrc = FALSE, $real = FALSE, $stat
 	$size = in_array($size, array('big', 'middle', 'small')) ? $size : 'middle';
 	$uid = abs(intval($uid));
 	if(!$staticavatar && !$static) {
-		return $returnsrc ? $ucenterurl.'/avatar.php?uid='.$uid.'&size='.$size : '<img src="'.$ucenterurl.'/avatar.php?uid='.$uid.'&size='.$size.($real ? '&type=real' : '').'" />';
+		return $returnsrc ? $ucenterurl.'/avatar.php?uid='.$uid.'&size='.$size.($real ? '&type=real' : '') : '<img src="'.$ucenterurl.'/avatar.php?uid='.$uid.'&size='.$size.($real ? '&type=real' : '').'" />';
 	} else {
 		$uid = sprintf("%09d", $uid);
 		$dir1 = substr($uid, 0, 3);
@@ -417,10 +425,15 @@ function avatar($uid, $size = 'middle', $returnsrc = FALSE, $real = FALSE, $stat
 
 function lang($file, $langvar = null, $vars = array(), $default = null) {
 	global $_G;
+	$fileinput = $file;
 	list($path, $file) = explode('/', $file);
 	if(!$file) {
 		$file = $path;
 		$path = '';
+	}
+	if(strpos($file, ':') !== false) {
+		$path = 'plugin';
+		list($file) = explode(':', $file);
 	}
 
 	if($path != 'plugin') {
@@ -432,6 +445,15 @@ function lang($file, $langvar = null, $vars = array(), $default = null) {
 		if(defined('IN_MOBILE') && !defined('TPL_DEFAULT')) {
 			include DISCUZ_ROOT.'./source/language/mobile/lang_template.php';
 			$_G['lang'][$key] = array_merge($_G['lang'][$key], $lang);
+		}
+		if($file != 'error' && !isset($_G['cache']['pluginlanguage_system'])) {
+			loadcache('pluginlanguage_system');
+		}
+		if(!isset($_G['hooklang'][$fileinput])) {
+			if(isset($_G['cache']['pluginlanguage_system'][$fileinput]) && is_array($_G['cache']['pluginlanguage_system'][$fileinput])) {
+				$_G['lang'][$key] = array_merge($_G['lang'][$key], $_G['cache']['pluginlanguage_system'][$fileinput]);
+			}
+			$_G['hooklang'][$fileinput] = true;
 		}
 		$returnvalue = &$_G['lang'];
 	} else {
@@ -496,6 +518,14 @@ function checktplrefresh($maintpl, $subtpl, $timecompare, $templateid, $cachefil
 
 function template($file, $templateid = 0, $tpldir = '', $gettplfile = 0, $primaltpl='') {
 	global $_G;
+
+	if($_G['setting']['plugins']['func'][HOOKTYPE]['template']) {
+		$param = func_get_args();
+		$hookreturn = hookscript('template', 'global', 'funcs', array('param' => $param, 'caller' => 'template'), 'template');
+		if($hookreturn) {
+			return $hookreturn;
+		}
+	}
 
 	static $_init_style = false;
 	if($_init_style === false) {
@@ -566,8 +596,11 @@ function template($file, $templateid = 0, $tpldir = '', $gettplfile = 0, $primal
 	$templateid = $templateid ? $templateid : (defined('TEMPLATEID') ? TEMPLATEID : '');
 	$filebak = $file;
 
-	if(defined('IN_MOBILE') && !defined('TPL_DEFAULT') && strpos($file, 'mobile/') === false || (isset($_G['forcemobilemessage']) && $_G['forcemobilemessage'])) {
-		$file = 'mobile/'.$oldfile;
+	if(defined('IN_MOBILE') && !defined('TPL_DEFAULT') && strpos($file, $_G['mobiletpl'][IN_MOBILE].'/') === false || (isset($_G['forcemobilemessage']) && $_G['forcemobilemessage'])) {
+		if(IN_MOBILE == 2) {
+			$oldfile .= !empty($_G['inajax']) && ($oldfile == 'common/header' || $oldfile == 'common/footer') ? '_ajax' : '';
+		}
+		$file = $_G['mobiletpl'][IN_MOBILE].'/'.$oldfile;
 	}
 
 	if(!$tpldir) {
@@ -580,7 +613,8 @@ function template($file, $templateid = 0, $tpldir = '', $gettplfile = 0, $primal
 	if(defined('IN_MOBILE') && !defined('TPL_DEFAULT')) {
 		if(strpos($tpldir, 'plugin')) {
 			if(!file_exists(DISCUZ_ROOT.$tpldir.'/'.$file.'.htm') && !file_exists(DISCUZ_ROOT.$tpldir.'/'.$file.'.php')) {
-				discuz_error::template_error('template_notfound', $tpldir.'/'.$file.'.htm');
+				$url = $_SERVER['REQUEST_URI'].(strexists($_SERVER['REQUEST_URI'], '?') ? '&' : '?').'mobile=no';
+				showmessage('mobile_template_no_found', '', array('url' => $url));
 			} else {
 				$mobiletplfile = $tpldir.'/'.$file.'.htm';
 			}
@@ -589,10 +623,10 @@ function template($file, $templateid = 0, $tpldir = '', $gettplfile = 0, $primal
 		if(strpos($tpldir, 'plugin') && (file_exists(DISCUZ_ROOT.$mobiletplfile) || file_exists(substr(DISCUZ_ROOT.$mobiletplfile, 0, -4).'.php'))) {
 			$tplfile = $mobiletplfile;
 		} elseif(!file_exists(DISCUZ_ROOT.TPLDIR.'/'.$mobiletplfile) && !file_exists(substr(DISCUZ_ROOT.TPLDIR.'/'.$mobiletplfile, 0, -4).'.php')) {
-			$mobiletplfile = './template/default/'.$mobiletplfile;
+			$mobiletplfile = './template/default/'.$file.'.htm';
 			if(!file_exists(DISCUZ_ROOT.$mobiletplfile) && !$_G['forcemobilemessage']) {
-				$tplfile = str_replace('mobile/', '', $tplfile);
-				$file = str_replace('mobile/', '', $file);
+				$tplfile = str_replace($_G['mobiletpl'][IN_MOBILE].'/', '', $tplfile);
+				$file = str_replace($_G['mobiletpl'][IN_MOBILE].'/', '', $file);
 				define('TPL_DEFAULT', true);
 			} else {
 				$tplfile = $mobiletplfile;
@@ -620,8 +654,7 @@ function dsign($str, $length = 16){
 }
 
 function modauthkey($id) {
-	global $_G;
-	return md5($_G['username'].$_G['uid'].$_G['authkey'].substr(TIMESTAMP, 0, -7).$id);
+	return md5(getglobal('username').getglobal('uid').getglobal('authkey').substr(TIMESTAMP, 0, -7).$id);
 }
 
 function getcurrentnav() {
@@ -644,7 +677,7 @@ function getcurrentnav() {
 	}
 	if(!$mnid && isset($_G['setting']['navdms'])) {
 		foreach($_G['setting']['navdms'] as $navdm => $navid) {
-			if(strpos(strtolower($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), $navdm) !== false) {
+			if(strpos(strtolower($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']), $navdm) !== false && strpos(strtolower($_SERVER['HTTP_HOST']), $navdm) === false) {
 				$mnid = $navid;
 				break;
 			}
@@ -701,6 +734,8 @@ function dgmdate($timestamp, $format = 'dt', $timeoffset = '9999', $uformat = ''
 		$tformat = getglobal('setting/timeformat');
 		$dtformat = $dformat.' '.$tformat;
 		$offset = getglobal('member/timeoffset');
+		$sysoffset = getglobal('setting/timeoffset');
+		$offset = $offset == 9999 ? ($sysoffset ? $sysoffset : 0) : $offset;
 		$lang = lang('core', 'date');
 	}
 	$timeoffset = $timeoffset == 9999 ? $offset : $timeoffset;
@@ -712,29 +747,36 @@ function dgmdate($timestamp, $format = 'dt', $timeoffset = '9999', $uformat = ''
 		$time = TIMESTAMP + $timeoffset * 3600 - $timestamp;
 		if($timestamp >= $todaytimestamp) {
 			if($time > 3600) {
-				return '<span title="'.$s.'">'.intval($time / 3600).'&nbsp;'.$lang['hour'].$lang['before'].'</span>';
+				$return = intval($time / 3600).'&nbsp;'.$lang['hour'].$lang['before'];
 			} elseif($time > 1800) {
-				return '<span title="'.$s.'">'.$lang['half'].$lang['hour'].$lang['before'].'</span>';
+				$return = $lang['half'].$lang['hour'].$lang['before'];
 			} elseif($time > 60) {
-				return '<span title="'.$s.'">'.intval($time / 60).'&nbsp;'.$lang['min'].$lang['before'].'</span>';
+				$return = intval($time / 60).'&nbsp;'.$lang['min'].$lang['before'];
 			} elseif($time > 0) {
-				return '<span title="'.$s.'">'.$time.'&nbsp;'.$lang['sec'].$lang['before'].'</span>';
+				$return = $time.'&nbsp;'.$lang['sec'].$lang['before'];
 			} elseif($time == 0) {
-				return '<span title="'.$s.'">'.$lang['now'].'</span>';
+				$return = $lang['now'];
 			} else {
-				return $s;
+				$return = $s;
+			}
+			if($time >=0 && !defined('IN_MOBILE')) {
+				$return = '<span title="'.$s.'">'.$return.'</span>';
 			}
 		} elseif(($days = intval(($todaytimestamp - $timestamp) / 86400)) >= 0 && $days < 7) {
 			if($days == 0) {
-				return '<span title="'.$s.'">'.$lang['yday'].'&nbsp;'.gmdate($tformat, $timestamp).'</span>';
+				$return = $lang['yday'].'&nbsp;'.gmdate($tformat, $timestamp);
 			} elseif($days == 1) {
-				return '<span title="'.$s.'">'.$lang['byday'].'&nbsp;'.gmdate($tformat, $timestamp).'</span>';
+				$return = $lang['byday'].'&nbsp;'.gmdate($tformat, $timestamp);
 			} else {
-				return '<span title="'.$s.'">'.($days + 1).'&nbsp;'.$lang['day'].$lang['before'].'</span>';
+				$return = ($days + 1).'&nbsp;'.$lang['day'].$lang['before'];
+			}
+			if(!defined('IN_MOBILE')) {
+				$return = '<span title="'.$s.'">'.$return.'</span>';
 			}
 		} else {
-			return $s;
+			$return = $s;
 		}
+		return $return;
 	} else {
 		return gmdate($format, $timestamp);
 	}
@@ -852,8 +894,13 @@ function cutstr($string, $length, $dot = ' ...') {
 		$strcut = substr($string, 0, $n);
 
 	} else {
+		$_length = $length - 1;
 		for($i = 0; $i < $length; $i++) {
-			$strcut .= ord($string[$i]) > 127 ? $string[$i].$string[++$i] : $string[$i];
+			if(ord($string[$i]) <= 127) {
+				$strcut .= $string[$i];
+			} else if($i < $_length) {
+				$strcut .= $string[$i].$string[++$i];
+			}
 		}
 	}
 
@@ -991,10 +1038,6 @@ function output() {
 	if(defined('IN_MOBILE')) {
 		mobileoutput();
 	}
-	if(!defined('IN_MOBILE') && !defined('IN_ARCHIVER')) {
-		$tipsService = Cloud::loadClass('Service_DiscuzTips');
-		$tipsService->show();
-	}
 	$havedomain = implode('', $_G['setting']['domain']['app']);
 	if($_G['setting']['rewritestatus'] || !empty($havedomain)) {
 		$content = ob_get_contents();
@@ -1006,6 +1049,11 @@ function output() {
 
 		echo $content;
 	}
+
+	if(isset($_G['makehtml'])) {
+		helper_makehtml::make_html();
+	}
+
 	if($_G['setting']['ftp']['connid']) {
 		@ftp_close($_G['setting']['ftp']['connid']);
 	}
@@ -1036,13 +1084,15 @@ function output_replace($content) {
 		}
 		$content = str_replace($_G['setting']['output']['str']['search'], $_G['setting']['output']['str']['replace'], $content);
 	}
-	if(!empty($_G['setting']['output']['preg']['search'])) {
+	if(!empty($_G['setting']['output']['preg']['search']) && (empty($_G['setting']['rewriteguest']) || empty($_G['uid']))) {
 		if(empty($_G['setting']['domain']['app']['default'])) {
 			$_G['setting']['output']['preg']['search'] = str_replace('\{CURHOST\}', preg_quote($_G['siteurl'], '/'), $_G['setting']['output']['preg']['search']);
 			$_G['setting']['output']['preg']['replace'] = str_replace('{CURHOST}', $_G['siteurl'], $_G['setting']['output']['preg']['replace']);
 		}
 
-		$content = preg_replace($_G['setting']['output']['preg']['search'], $_G['setting']['output']['preg']['replace'], $content);
+		foreach($_G['setting']['output']['preg']['search'] as $key => $value) {
+			$content = preg_replace_callback($value, create_function('$matches', 'return '.$_G['setting']['output']['preg']['replace'][$key].';'), $content);
+		}
 	}
 
 	return $content;
@@ -1063,7 +1113,6 @@ function output_ajax() {
 	}
 	return $s;
 }
-
 
 function runhooks($scriptextra = '') {
 	if(!defined('HOOKTYPE')) {
@@ -1097,6 +1146,9 @@ function hookscript($script, $hscript, $type = 'funcs', $param = array(), $func 
 		loadcache('plugin');
 	}
 	foreach((array)$_G['setting'][HOOKTYPE][$hscript][$script]['module'] as $identifier => $include) {
+		if($_G['pluginrunlist'] && !in_array($identifier, $_G['pluginrunlist'])) {
+			continue;
+		}
 		$hooksadminid[$identifier] = !$_G['setting'][HOOKTYPE][$hscript][$script]['adminid'][$identifier] || ($_G['setting'][HOOKTYPE][$hscript][$script]['adminid'][$identifier] && $_G['adminid'] > 0 && $_G['setting']['hookscript'][$hscript][$script]['adminid'][$identifier] >= $_G['adminid']);
 		if($hooksadminid[$identifier]) {
 			@include_once DISCUZ_ROOT.'./source/plugin/'.$include.'.class.php';
@@ -1118,12 +1170,20 @@ function hookscript($script, $hscript, $type = 'funcs', $param = array(), $func 
 					if(!method_exists($pluginclasses[$classkey], $hookfunc[1])) {
 						continue;
 					}
-					$return = $pluginclasses[$classkey]->$hookfunc[1]($param);
+					$return = call_user_func(array($pluginclasses[$classkey], $hookfunc[1]), $param);
+
+					if(substr($hookkey, -7) == '_extend' && !empty($_G['setting']['pluginhooks'][$hookkey])) {
+						continue;
+					}
 
 					if(is_array($return)) {
 						if(!isset($_G['setting']['pluginhooks'][$hookkey]) || is_array($_G['setting']['pluginhooks'][$hookkey])) {
 							foreach($return as $k => $v) {
 								$_G['setting']['pluginhooks'][$hookkey][$k] .= $v;
+							}
+						} else {
+							foreach($return as $k => $v) {
+								$_G['setting']['pluginhooks'][$hookkey][$k] = $v;
 							}
 						}
 					} else {
@@ -1148,11 +1208,11 @@ function hookscriptoutput($tplfile) {
 		return;
 	}
 	hookscript('global', 'global');
+	$_G['hookscriptoutput'] = true;
 	if(defined('CURMODULE')) {
 		$param = array('template' => $tplfile, 'message' => $_G['hookscriptmessage'], 'values' => $_G['hookscriptvalues']);
 		hookscript(CURMODULE, $_G['basescript'], 'outputfuncs', $param);
 	}
-	$_G['hookscriptoutput'] = true;
 }
 
 function pluginmodule($pluginid, $type) {
@@ -1201,10 +1261,10 @@ function batchupdatecredit($action, $uids = 0, $extrasql = array(), $coef = 1, $
 }
 
 
-function updatemembercount($uids, $dataarr = array(), $checkgroup = true, $operation = '', $relatedid = 0, $ruletxt = '') {
+function updatemembercount($uids, $dataarr = array(), $checkgroup = true, $operation = '', $relatedid = 0, $ruletxt = '', $customtitle = '', $custommemo = '') {
 	if(!empty($uids) && (is_array($dataarr) && $dataarr)) {
 		require_once libfile('function/credit');
-		return _updatemembercount($uids, $dataarr, $checkgroup, $operation, $relatedid, $ruletxt);
+		return _updatemembercount($uids, $dataarr, $checkgroup, $operation, $relatedid, $ruletxt, $customtitle, $custommemo);
 	}
 	return true;
 }
@@ -1283,17 +1343,29 @@ function getfocus_rand($module) {
 	return $focusid;
 }
 
-function check_seccode($value, $idhash) {
-	return helper_form::check_seccode($value, $idhash);
+function check_seccode($value, $idhash, $fromjs = 0, $modid = '') {
+	return helper_seccheck::check_seccode($value, $idhash, $fromjs, $modid);
 }
 
 function check_secqaa($value, $idhash) {
-	return helper_form::check_secqaa($value, $idhash);
+	return helper_seccheck::check_secqaa($value, $idhash);
+}
+
+function seccheck($rule, $param = array()) {
+	return helper_seccheck::seccheck($rule, $param);
+}
+
+function make_seccode($seccode = '') {
+	return helper_seccheck::make_seccode($seccode);
+}
+
+function make_secqaa() {
+	return helper_seccheck::make_secqaa();
 }
 
 function adshow($parameter) {
 	global $_G;
-	if($_G['inajax']) {
+	if($_G['inajax'] || $_G['group']['closead']) {
 		return;
 	}
 	if(isset($_G['config']['plugindeveloper']) && $_G['config']['plugindeveloper'] == 2) {
@@ -1429,15 +1501,14 @@ function dmkdir($dir, $mode = 0777, $makeindex = TRUE){
 function dreferer($default = '') {
 	global $_G;
 
-	$default = empty($default) ? $GLOBALS['_t_curapp'] : '';
+	$default = empty($default) && $_ENV['curapp'] ? $_ENV['curapp'].'.php' : '';
 	$_G['referer'] = !empty($_GET['referer']) ? $_GET['referer'] : $_SERVER['HTTP_REFERER'];
 	$_G['referer'] = substr($_G['referer'], -1) == '?' ? substr($_G['referer'], 0, -1) : $_G['referer'];
 
 	if(strpos($_G['referer'], 'member.php?mod=logging')) {
 		$_G['referer'] = $default;
 	}
-	$_G['referer'] = dhtmlspecialchars($_G['referer'], ENT_QUOTES);
-	$_G['referer'] = str_replace('&amp;', '&', $_G['referer']);
+
 	$reurl = parse_url($_G['referer']);
 
 	if(!$reurl || (isset($reurl['scheme']) && !in_array(strtolower($reurl['scheme']), array('http', 'https')))) {
@@ -1455,7 +1526,8 @@ function dreferer($default = '') {
 		$_G['referer'] = $_G['siteurl'].'./'.$_G['referer'];
 	}
 
-	return strip_tags($_G['referer']);
+	$_G['referer'] = durlencode($_G['referer']);
+	return $_G['referer'];
 }
 
 function ftpcmd($cmd, $arg1 = '') {
@@ -1795,7 +1867,6 @@ function cknewuser($return=0) {
 }
 
 function manyoulog($logtype, $uids, $action, $fid = '') {
-	helper_manyou::manyoulog($logtype, $uids, $action, $fid);
 }
 
 function useractionlog($uid, $action) {
@@ -1807,11 +1878,11 @@ function getuseraction($var) {
 }
 
 function getuserapp($panel = 0) {
-	return helper_manyou::getuserapp($panel);
+	return '';
 }
 
 function getmyappiconpath($appid, $iconstatus=0) {
-	return helper_manyou::getmyappiconpath($appid, $iconstatus);
+	return '';
 }
 
 function getexpiration() {
@@ -1905,19 +1976,10 @@ function updatemoderate($idtype, $ids, $status = 0) {
 }
 
 function userappprompt() {
-	global $_G;
-
-	if($_G['setting']['my_app_status'] && $_G['setting']['my_openappprompt'] && empty($_G['cookie']['userappprompt'])) {
-		$sid = $_G['setting']['my_siteid'];
-		$ts = $_G['timestamp'];
-		$key = md5($sid.$ts.$_G['setting']['my_sitekey']);
-		$uchId = $_G['uid'] ? $_G['uid'] : 0;
-		echo '<script type="text/javascript" src="http://notice.uchome.manyou.com/notice/userNotice?sId='.$sid.'&ts='.$ts.'&key='.$key.'&uchId='.$uchId.'" charset="UTF-8"></script>';
-	}
 }
 
 function dintval($int, $allowarray = false) {
-	$ret = intval($int);
+	$ret = floatval($int);
 	if($int == $ret || !$allowarray && is_array($int)) return $ret;
 	if($allowarray && is_array($int)) {
 		foreach($int as &$v) {
@@ -1936,7 +1998,7 @@ function dintval($int, $allowarray = false) {
 
 
 function makeSearchSignUrl() {
-	return getglobal('setting/my_search_data/status') ? helper_manyou::makeSearchSignUrl() : array();
+	return array();
 }
 
 function get_related_link($extent) {
@@ -1964,7 +2026,7 @@ function check_diy_perm($topic = array(), $flag = '') {
 function strhash($string, $operation = 'DECODE', $key = '') {
 	$key = md5($key != '' ? $key : getglobal('authkey'));
 	if($operation == 'DECODE') {
-		$hashcode = gzuncompress(base64_decode(($string)));
+		$hashcode = gzuncompress(base64_decode($string));
 		$string = substr($hashcode, 0, -16);
 		$hash = substr($hashcode, -16);
 		unset($hashcode);
@@ -2025,6 +2087,17 @@ function currentlang() {
 		return '';
 	}
 }
+if(PHP_VERSION < '7.0.0') {
+	function dpreg_replace($pattern, $replacement, $subject, $limit = -1, &$count) {
+		return preg_replace($pattern, $replacement, $subject, $limit, $count);
+	}
+} else {
+	function dpreg_replace($pattern, $replacement, $subject, $limit = -1, &$count) {
+		require_once libfile('function/preg');
+		return _dpreg_replace($pattern, $replacement, $subject, $limit, $count);
+	}
+}
+
 
 
 ?>

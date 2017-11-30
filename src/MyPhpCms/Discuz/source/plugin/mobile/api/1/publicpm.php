@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: publicpm.php 27451 2012-02-01 05:48:47Z monkey $
+ *      $Id: publicpm.php 34314 2014-02-20 01:04:24Z nemohou $
  */
 
 if(!defined('IN_MOBILE_API')) {
@@ -27,7 +27,7 @@ class mobile_api {
 			'list' => mobile_core::getvalues($GLOBALS['grouppms'], array('/^\d+$/'), array('id', 'authorid', 'author', 'dateline', 'message')),
 			'count' => count($GLOBALS['grouppms']),
 			'perpage' => $GLOBALS['perpage'],
-                  'page' => $GLOBALS['page'],
+			'page' => $GLOBALS['page'],
 		);
 		mobile_core::result(mobile_core::variable($variable));
 	}

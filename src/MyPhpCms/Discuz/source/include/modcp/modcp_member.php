@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: modcp_member.php 33000 2013-04-03 07:22:20Z zhengqingpeng $
+ *      $Id: modcp_member.php 33701 2013-08-06 05:04:36Z nemohou $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_MODCP')) {
@@ -71,6 +71,10 @@ if($op == 'edit') {
 	include_once libfile('function/member');
 	$clist = crime('getactionlist', $member['uid']);
 
+	if(($member['type'] == 'system' && in_array($member['groupid'], array(1, 2, 3, 6, 7, 8))) || $member['type'] == 'special') {
+		acpmsg('modcp_member_ban_illegal');
+	}
+
 	if($member && submitcheck('bansubmit') && !$error) {
 		$setarr = array();
 		$reason = dhtmlspecialchars(trim($_GET['reason']));
@@ -92,6 +96,9 @@ if($op == 'edit') {
 				$setarr['groupexpiry'] = groupexpiry($member['groupterms']);
 			} else {
 				$setarr['groupexpiry'] = 0;
+			}
+			if(!$member['adminid']) {
+				$member_status = C::t('common_member_status')->fetch($member['uid']);
 			}
 			$adminidnew = -1;
 			C::t('forum_postcomment')->delete_by_authorid($member['uid'], false, true);

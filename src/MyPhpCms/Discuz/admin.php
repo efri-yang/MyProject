@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admin.php 34296 2013-12-26 03:17:17Z hypowang $
+ *      $Id: admin.php 34285 2013-12-13 03:39:35Z hypowang $
  */
 
 define('IN_ADMINCP', TRUE);
@@ -22,6 +22,7 @@ require './source/function/function_admincp.php';
 require './source/function/function_cache.php';
 
 $discuz = C::app();
+$discuz->init_cron = false;
 $discuz->init();
 
 $admincp = new discuz_admincp();
@@ -29,14 +30,14 @@ $admincp->core  = & $discuz;
 $admincp->init();
 
 
-$admincp_actions_founder = array('templates', 'db', 'founder', 'postsplit', 'threadsplit', 'cloudaddons', 'upgrade', 'patch');
+$admincp_actions_founder = array('templates', 'db', 'founder', 'postsplit', 'threadsplit', 'cloudaddons', 'upgrade', 'patch', 'optimizer');
 $admincp_actions_normal = array('index', 'setting', 'members', 'admingroup', 'usergroups', 'usertag',
-	'forums', 'threadtypes', 'threads', 'moderate', 'attach', 'smilies', 'recyclebin', 'recyclebinpost', 'prune',
+	'forums', 'threadtypes', 'threads', 'moderate', 'attach', 'smilies', 'recyclebin', 'recyclebinpost', 'prune', 'grid',
 	'styles', 'addons', 'plugins', 'tasks', 'magics', 'medals', 'google', 'announce', 'faq', 'ec',
-	'tradelog', 'jswizard', 'project', 'counter', 'misc', 'adv', 'logs', 'tools', 'portalperm',
+	'tradelog', 'jswizard', 'project', 'counter', 'misc', 'adv', 'logs', 'tools', 'portalperm', 'blogrecyclebin',
 	'checktools', 'search', 'article', 'block', 'blockstyle', 'blockxml', 'portalcategory', 'blogcategory', 'albumcategory', 'topic', 'credits',
 	'doing', 'group', 'blog', 'feed', 'album', 'pic', 'comment', 'share', 'click', 'specialuser', 'postsplit', 'threadsplit', 'report',
-	'district', 'diytemplate', 'verify', 'nav', 'domain', 'postcomment', 'tag', 'connect', 'card', 'portalpermission', 'collection', 'membersplit');
+	'district', 'diytemplate', 'verify', 'nav', 'domain', 'postcomment', 'tag', 'connect', 'card', 'portalpermission', 'collection', 'membersplit', 'makehtml');
 
 $action = preg_replace('/[^\[A-Za-z0-9_\]]/', '', getgpc('action'));
 $operation = preg_replace('/[^\[A-Za-z0-9_\]]/', '', getgpc('operation'));

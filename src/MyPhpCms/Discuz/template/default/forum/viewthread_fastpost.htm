@@ -10,7 +10,7 @@ var disablepostctrl = parseInt('{$_G['group']['disablepostctrl']}');
 	<table cellspacing="0" cellpadding="0">
 		<tr>
 			<td class="pls">
-				<!--{if $_G['uid']}--><div class="avatar"><!--{echo avatar($_G['uid'])}--></div><!--{/if}-->
+				<!--{if $_G['uid']}--><div class="avatar avtm"><!--{echo avatar($_G['uid'])}--></div><!--{/if}-->
 				<!--{hook/viewthread_fastpost_side}-->
 			</td>
 			<td class="plc">
@@ -42,13 +42,13 @@ var disablepostctrl = parseInt('{$_G['group']['disablepostctrl']}');
 						<!--{hook/viewthread_fastpost_func_extra}-->
 						<a href="forum.php?mod=post&action=reply&fid=$_G[fid]&tid=$_G[tid]{if $_GET[from]}&from=$_GET[from]{/if}" onclick="return switchAdvanceMode(this.href)">{lang post_advancemode}</a>
 					</span>
-					<!--{eval $seditor = array('fastpost', array('at', 'bold', 'color', 'img', 'link', 'quote', 'code', 'smilies'), !$allowfastpost ? 1 : 0, $allowpostattach && $allowfastpost ? '<span class="pipe z">|</span><span id="spanButtonPlaceholder">'.lang('template', 'upload').'</span>' : '');}-->
+					<!--{eval $seditor = array('fastpost', array('at', 'bold', 'color', 'img', 'link', 'quote', 'code', 'smilies'), !$allowfastpost ? 1 : 0, $allowpostattach && $_GET['from'] != 'preview' && $allowfastpost ? '<span class="pipe z">|</span><span id="spanButtonPlaceholder">'.lang('template', 'upload').'</span>' : '');}-->
 					<!--{hook/viewthread_fastpost_ctrl_extra}-->
 					<!--{subtemplate common/seditor}-->
 				</div>
 				<div class="area">
 					<!--{if $allowfastpost}-->
-						<textarea rows="6" cols="80" name="message" id="fastpostmessage" onKeyDown="seditor_ctlent(event, {if $_GET['ordertype'] != 1}'fastpostvalidate($(\'fastpostform\'))'{else}'$(\'fastpostform\').submit()'{/if});" tabindex="4" class="pt"></textarea>
+						<textarea rows="6" cols="80" name="message" id="fastpostmessage" onKeyDown="seditor_ctlent(event, {if $_GET['ordertype'] != 1}'fastpostvalidate($(\'fastpostform\'))'{else}'$(\'fastpostform\').submit()'{/if});" tabindex="4" class="pt"{eval echo getreplybg($_G['forum']['replybg']);}></textarea>
 					<!--{else}-->
 						<div class="pt hm">
 							<!--{if !$_G['uid']}-->
@@ -67,21 +67,17 @@ var disablepostctrl = parseInt('{$_G['group']['disablepostctrl']}');
 			</div>
 		</div>
 	</div>
-	<!--{if $allowpostreply && checkperm('seccode') && ($secqaacheck || $seccodecheck)}-->
-		<!--{block sectpl}--><sec> <span id="sec<hash>" onclick="showMenu(this.id)"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div><!--{/block}-->
-		<div class="mtm sec"><!--{subtemplate common/seccheck}--></div>
-	<!--{/if}-->
+	<div id="seccheck_fastpost">
+		<!--{if $allowpostreply && ($secqaacheck || $seccodecheck)}-->
+			<!--{subtemplate forum/seccheck_post}-->
+		<!--{/if}-->
+	</div>
 
-	<!--{if $allowpostattach}-->
+	<!--{if $allowpostattach && $_GET['from'] != 'preview'}-->
 		<script type="text/javascript">
 		var editorid = '';
 		var ATTACHNUM = {'imageused':0,'imageunused':0,'attachused':0,'attachunused':0}, ATTACHUNUSEDAID = new Array(), IMGUNUSEDAID = new Array();
 		</script>
-
-		<script type="text/javascript" src="{$_G[setting][jspath]}swfupload.js?{VERHASH}"></script>
-		<script type="text/javascript" src="{$_G[setting][jspath]}swfupload.queue.js?{VERHASH}"></script>
-		<script type="text/javascript" src="{$_G[setting][jspath]}handlers.js?{VERHASH}"></script>
-		<script type="text/javascript" src="{$_G[setting][jspath]}fileprogress.js?{VERHASH}"></script>
 
 		<input type="hidden" name="posttime" id="posttime" value="{TIMESTAMP}" />
 		<div class="upfl{if empty($_GET[from]) && $_G[setting][fastsmilies]} hasfsl{/if}">
@@ -100,17 +96,17 @@ var disablepostctrl = parseInt('{$_G['group']['disablepostctrl']}');
 				</tr>
 			</table>
 			<div class="fieldset flash" id="attachlist"></div>
-			<script type="text/javascript">
+			<!--{if empty($_G['setting']['pluginhooks']['viewthread_fastpost_upload_extend'])}-->
+				<!--{subtemplate common/upload}-->
+				<script type="text/javascript">
 					var upload = new SWFUpload({
-						upload_url: "{$_G[siteurl]}misc.php?mod=swfupload&action=swfupload&operation=upload&fid=$fid",
+						upload_url: "{$_G[siteurl]}misc.php?mod=swfupload&action=swfupload&operation=upload&fid=$_G[fid]",
 						post_params: {"uid" : "$_G[uid]", "hash":"$swfconfig[hash]"},
-
 						file_size_limit : "$swfconfig[max]",
 						file_types : "$swfconfig[attachexts][ext]",
 						file_types_description : "$swfconfig[attachexts][depict]",
 						file_upload_limit : $swfconfig['limit'],
 						file_queue_limit : 0,
-
 						swfupload_preload_handler : preLoad,
 						swfupload_load_failed_handler : loadFailed,
 						file_dialog_start_handler : fileDialogStart,
@@ -122,14 +118,12 @@ var disablepostctrl = parseInt('{$_G['group']['disablepostctrl']}');
 						upload_error_handler : uploadError,
 						upload_success_handler : uploadSuccess,
 						upload_complete_handler : uploadComplete,
-
 						button_image_url : "{IMGDIR}/uploadbutton_small.png",
 						button_placeholder_id : "spanButtonPlaceholder",
 						button_width: 17,
 						button_height: 25,
 						button_cursor:SWFUpload.CURSOR.HAND,
 						button_window_mode: "transparent",
-
 						custom_settings : {
 							progressTarget : "attachlist",
 							uploadSource: 'forum',
@@ -144,10 +138,10 @@ var disablepostctrl = parseInt('{$_G['group']['disablepostctrl']}');
 						},
 						debug: false
 					});
-
 				</script>
-
-
+			<!--{else}-->
+				<!--{hook/viewthread_fastpost_upload_extend}-->
+			<!--{/if}-->
 		</div>
 	<!--{/if}-->
 
@@ -155,7 +149,8 @@ var disablepostctrl = parseInt('{$_G['group']['disablepostctrl']}');
 	<input type="hidden" name="usesig" value="$usesigcheck" />
 	<input type="hidden" name="subject" value="  " />
 	<p class="ptm pnpost">
-		<button {if $allowpostreply}type="submit" {elseif !$_G['uid']}type="button" onclick="showWindow('login', 'member.php?mod=logging&action=login&guestmessage=yes')" {/if}name="replysubmit" id="fastpostsubmit" class="pn pnc vm" value="replysubmit" tabindex="5"><strong>{lang post_newreply}</strong></button>
+		<a href="home.php?mod=spacecp&ac=credit&op=rule&fid=$_G[fid]" class="y" target="_blank">{lang post_credits_rule}</a>
+		<button {if $allowpostreply}type="submit" {elseif !$_G['uid']}type="button" onclick="showWindow('login', 'member.php?mod=logging&action=login&guestmessage=yes')" {/if}{if !$seccodecheck && !$secqaacheck} onmouseover="checkpostrule('seccheck_fastpost', 'ac=reply');this.onmouseover=null" {/if}name="replysubmit" id="fastpostsubmit" class="pn pnc vm" value="replysubmit" tabindex="5"><strong>{lang post_newreply}</strong></button>
 		<!--{hook/viewthread_fastpost_btn_extra}-->
 		<!--{if helper_access::check_module('follow')}-->
 		<label class="lb"><input type="checkbox" name="adddynamic" class="pc" value="1" />{lang post_reply_relay}</label>

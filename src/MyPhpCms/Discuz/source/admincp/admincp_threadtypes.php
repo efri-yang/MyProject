@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_threadtypes.php 32161 2012-11-20 02:37:41Z zhangjie $
+ *      $Id: admincp_threadtypes.php 36345 2017-01-12 01:55:04Z nemohou $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -47,7 +47,7 @@ if(!$operation) {
 		$query = C::t('forum_threadtype')->fetch_all_for_order();
 		foreach($query as $type) {
 			$tmpstr = "<a href=\"".ADMINSCRIPT."?action=threadtypes&operation=export&sortid=$type[typeid]\" class=\"act nowrap\">$lang[export]</a>";
-			$threadtypes .= showtablerow('', array('class="td25"', 'class="td28"', '', 'class="td29"', 'title="'.cplang('forums_threadtypes_forums_comment').'"'), array(
+			$threadtypes .= showtablerow('', array('class="td25"', 'class="td28"', 'class="td29"', 'class="td29"', 'title="'.cplang('forums_threadtypes_forums_comment').'"'), array(
 				"<input class=\"checkbox\" type=\"checkbox\" name=\"delete[]\" value=\"$type[typeid]\">",
 				"<input type=\"text\" class=\"txt\" size=\"2\" name=\"displayordernew[$type[typeid]]\" value=\"$type[displayorder]\">",
 				"<input type=\"text\" class=\"txt\" size=\"15\" name=\"namenew[$type[typeid]]\" value=\"".dhtmlspecialchars($type['name'])."\">",
@@ -65,7 +65,7 @@ var rowtypedata = [
 	[
 		[1, '', 'td25'],
 		[1, '<input type="text" class="txt" name="newdisplayorder[]" size="2" value="">', 'td28'],
-		[1, '<input type="text" class="txt" name="newname[]" size="15">'],
+		[1, '<input type="text" class="txt" name="newname[]" size="15">', 'td29'],
 		[1, '<input type="text" class="txt" name="newdescription[]" size="30" value="">', 'td29'],
 		[2, '']
 	],
@@ -81,7 +81,7 @@ var rowtypedata = [
 
 		showformheader("threadtypes&", 'enctype', 'threadtypeform');
 		showtableheader('');
-		showsubtitle(array('', 'display_order', 'name', 'description', 'forums_relation', '', ''), 'header', array('', 'width="60"', 'width="110"', 'width="210"', '', 'width="90"', 'width="60"'));
+		showsubtitle(array('', 'display_order', cplang('name').' '.cplang('tiny_bbcode_support'), 'description', 'forums_relation', '', ''), 'header', array('', 'width="60"', 'width="110"', 'width="210"', '', 'width="90"', 'width="60"'));
 		echo $threadtypes;
 		echo '<tr><td class="td25"></td><td colspan="5"><div>'.'<span class="filebtn"><input type="hidden" name="importtype" value="file" /><input type="file" name="importfile" class="pf" size="1" onchange="uploadthreadtypexml($(\'threadtypeform\'), \''.ADMINSCRIPT.'?action=threadtypes&operation=import\');" /><a class="addtr" href="JavaScript:;">'.$lang['import'].'</a></span>'.'<a href="###" onclick="addrow(this, 0)" class="addtr">'.$lang['threadtype_infotypes_add'].'</a></div></td>';
 
@@ -95,7 +95,7 @@ var rowtypedata = [
 
 		if(is_array($_GET['delete'])) {
 
-			if($deleteids = dimplode($_GET['delete'])) {
+			if($_GET['delete']) {
 				C::t('forum_typeoptionvar')->delete_by_sortid($_GET['delete']);
 				C::t('forum_typevar')->delete($_GET['delete']);
 				$affected_rows = C::t('forum_threadtype')->delete($_GET['delete']);
@@ -105,8 +105,8 @@ var rowtypedata = [
 				C::t('forum_optionvalue')->drop($_GET['sortid']);
 			}
 
-			if($deleteids && $affected_rows) {
-				C::t('forum_thread')->update_sortid_by_sortid(0, $deleteids);
+			if($_GET['delete'] && $affected_rows) {
+				C::t('forum_thread')->update_sortid_by_sortid(0, $_GET['delete']);
 				foreach($_GET['delete'] as $id) {
 					if(is_array($_GET['namenew']) && isset($_GET['namenew'][$id])) {
 						unset($_GET['namenew'][$id]);
@@ -791,25 +791,25 @@ EOT;
 		echo '<div id="ttype">'.
 			$showoption.
 			'<div id="ttype_tip"></div>'.
-			'<br /><textarea cols="100" rows="15" id="ttypetemplate" name="typetemplate" style="width: 95%;" onkeyup="textareasize(this)">'.dhtmlspecialchars($threadtype['template']).'</textarea>'.
+			'<br /><textarea cols="100" rows="15" id="ttypetemplate" name="typetemplate" style="width: 95%;" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)">'.dhtmlspecialchars($threadtype['template']).'</textarea>'.
 			'</div>';
 
 		echo '<div id="stype" style="display:none">'.
 			'<button onclick="settip(this, \'subject\', \'subject/'.$lang['threadtype_template_threadtitle'].'|subject_url/'.$lang['threadtype_template_threadurl'].'|tid/'.$lang['threadtype_template_threadid'].'\')" type="button">'.$lang['threadtype_template_threadtitle'].'</button>&nbsp;&nbsp;'.
-			'<textarea id="subject_sample" style="display:none"><a href="{subject_url}">{subject}</a></textarea>'.
+			'<textarea id="subject_sample" style="display:none" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)"><a href="{subject_url}">{subject}</a></textarea>'.
 			'<button onclick="settip(this, \'\', \'dateline/'.$lang['threadtype_template_dateline'].'\')" type="button">'.$lang['threadtype_template_dateline'].'</button>&nbsp;&nbsp;'.
 			'<button onclick="settip(this, \'author\', \'author/'.$lang['threadtype_template_author'].'|authorid/'.$lang['threadtype_template_authorid'].'|author_url/'.$lang['threadtype_template_authorurl'].'|avatar_small/'.$lang['threadtype_template_authoravatar'].'|author_verify/'.$lang['threadtype_template_authorverify'].'\')" type="button">'.$lang['threadtype_template_threadauthor'].'</button>&nbsp;&nbsp;'.
-			'<textarea id="author_sample" style="display:none"><a href="{author_url}">{author}</a></textarea>'.
+			'<textarea id="author_sample" style="display:none" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)"><a href="{author_url}">{author}</a></textarea>'.
 			'<button onclick="settip(this, \'\', \'views/'.$lang['threadtype_template_threadviews'].'\')" type="button">'.$lang['threadtype_template_threadviews'].'</button>&nbsp;&nbsp;'.
 			'<button onclick="settip(this, \'\', \'replies/'.$lang['threadtype_template_threadreplies'].'\')" type="button">'.$lang['threadtype_template_threadreplies'].'</button>&nbsp;&nbsp;'.
 			'<button onclick="settip(this, \'lastpost\', \'lastpost/'.$lang['threadtype_template_lastpostdateline'].'|lastpost_url/'.$lang['threadtype_template_lastposturl'].'|lastposter/'.$lang['threadtype_template_lastpostuser'].'|lastposter_url/'.$lang['threadtype_template_lastpostuserurl'].'\')" type="button">'.$lang['threadtype_template_lastpost'].'</button>&nbsp;&nbsp;'.
-			'<textarea id="lastpost_sample" style="display:none"><a href="{lastpost_url}">{lastpost}</a> by <a href="{lastposter_url}">{lastposter}</a></textarea>'.
+			'<textarea id="lastpost_sample" style="display:none" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)"><a href="{lastpost_url}">{lastpost}</a> by <a href="{lastposter_url}">{lastposter}</a></textarea>'.
 			'<button onclick="settip(this, \'typename\', \'typename/'.$lang['threadtype_template_threadtypename'].'|typename_url/'.$lang['threadtype_template_threadtypeurl'].'\')" type="button">'.$lang['threadtype_template_threadtype'].'</button>&nbsp;&nbsp;'.
-			'<textarea id="typename_sample" style="display:none"><a href="{typename_url}">{typename}</a></textarea>'.
+			'<textarea id="typename_sample" style="display:none" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)"><a href="{typename_url}">{typename}</a></textarea>'.
 			'<button onclick="settip(this, \'\', \'attachment/'.$lang['threadtype_template_attachmentexist'].'\')" type="button">'.$lang['threadtype_template_attachment'].'</button>&nbsp;&nbsp'.
 			'<button onclick="settip(this, \'\', \'modcheck/'.$lang['threadtype_template_modcheck'].'\')" type="button">'.$lang['threadtype_template_threadmod'].'</button>&nbsp;&nbsp'.
 			'<button onclick="settip(this, \'loop\', \'/'.$lang['threadtype_template_loop'].'\')" type="button">[loop]...[/loop]</button>&nbsp;&nbsp;'.
-			'<textarea id="loop_sample" style="display:none">
+			'<textarea id="loop_sample" style="display:none" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)">
 <table><tr><td>'.$lang['threadtype_template_title'].'</td></tr>
 [loop]<tr><td><a href="{subject_url}">{subject}</a></td></tr>[/loop]
 </table>
@@ -817,13 +817,13 @@ EOT;
 			'<br />'.
 			$showoption.
 			'<div id="stype_tip"></div>'.
-			'<br /><textarea cols="100" rows="15" id="stypetemplate" name="stypetemplate" style="width: 95%;" onkeyup="textareasize(this)">'.dhtmlspecialchars($threadtype['stemplate']).'</textarea>'.
+			'<br /><textarea cols="100" rows="15" id="stypetemplate" name="stypetemplate" style="width: 95%;" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)">'.dhtmlspecialchars($threadtype['stemplate']).'</textarea>'.
 			'</div>';
 
 		echo '<div id="ptype" style="display:none">'.
 			$showoption.
 			'<div id="ptype_tip"></div>'.
-			'<br /><textarea cols="100" rows="15" id="ptypetemplate" name="ptypetemplate" style="width: 95%;" onkeyup="textareasize(this)">'.dhtmlspecialchars($threadtype['ptemplate']).'</textarea>'.
+			'<br /><textarea cols="100" rows="15" id="ptypetemplate" name="ptypetemplate" style="width: 95%;" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)">'.dhtmlspecialchars($threadtype['ptemplate']).'</textarea>'.
 			'</div>';
 
 		echo '<div id="btype" style="display:none">'.
@@ -839,7 +839,7 @@ EOT;
 			'<br />'.
 			$showoption.
 			'<div id="btype_tip"></div>'.
-			'<br /><textarea cols="100" rows="15" id="btypetemplate" name="btypetemplate" style="width: 95%;" onkeyup="textareasize(this)">'.dhtmlspecialchars($threadtype['btemplate']).'</textarea>'.
+			'<br /><textarea cols="100" rows="15" id="btypetemplate" name="btypetemplate" style="width: 95%;" onkeyup="textareasize(this)" onkeydown="textareakey(this, event)">'.dhtmlspecialchars($threadtype['btemplate']).'</textarea>'.
 			'</div>'.
 			'<input type="submit" class="btn" name="sorttemplatesubmit" value="'.$lang['submit'].'"></form>';
 

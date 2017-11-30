@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: space_pm.php 30277 2012-05-18 02:57:25Z monkey $
+ *      $Id: space_pm.php 33421 2013-06-09 03:30:16Z jeffjzhang $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -19,6 +19,10 @@ $plid = empty($_GET['plid'])?0:intval($_GET['plid']);
 $daterange = empty($_GET['daterange'])?0:intval($_GET['daterange']);
 $touid = empty($_GET['touid'])?0:intval($_GET['touid']);
 $opactives['pm'] = 'class="a"';
+
+if(empty($_G['member']['category_num']['manage']) && !in_array($_G['adminid'], array(1,2,3))) {
+	unset($_G['notice_structure']['manage']);
+}
 
 if($_GET['subop'] == 'view') {
 	$type = $_GET['type'];
@@ -67,12 +71,13 @@ if($_GET['subop'] == 'view') {
 				$perpage = 50;
 			}
 			$perpage = mob_perpage($perpage);
+			$count = uc_pm_view_num($_G['uid'], $plid, 1);
 			if(!$daterange) {
-				$count = uc_pm_view_num($_G['uid'], $plid, 1);
 				if(!$page) {
 					$page = ceil($count/$perpage);
 				}
 				$list = uc_pm_view($_G['uid'], 0, $plid, 5, ceil($count/$perpage)-$page+1, $perpage, $type, 1);
+				$multi = pmmulti($count, $perpage, $page, "home.php?mod=space&do=pm&subop=view&plid=$plid&type=$type");
 			} else {
 				$list = uc_pm_view($_G['uid'], 0, $plid, 5, ceil($count/$perpage)-$page+1, $perpage, $type, 1);
 				$chatpmmember = uc_pm_chatpmmemberlist($_G['uid'], $plid);
@@ -91,7 +96,6 @@ if($_GET['subop'] == 'view') {
 				$membernum = count($chatpmmemberlist);
 				$subject = $list[0]['subject'];
 				$refreshtime = $_G['setting']['chatpmrefreshtime'];
-				$multi = pmmulti($count, $perpage, $page, "home.php?mod=space&do=pm&subop=view&plid=$plid&type=$type");
 
 			}
 		}
@@ -167,10 +171,6 @@ if($_GET['subop'] == 'view') {
 	}
 	$newpmcount = $newpm + $announcepm;
 	if($_G['member']['newpm']) {
-		if($newpm && $_G['setting']['cloud_status']) {
-			$msgService = Cloud::loadClass('Cloud_Service_Client_Message');
-			$msgService->setMsgFlag($_G['uid'], $_G['timestamp']);
-		}
 		C::t('common_member')->update($_G['uid'], array('newpm' => 0));
 		uc_pm_ignore($_G['uid']);
 	}
@@ -196,7 +196,6 @@ if(!empty($list)) {
 		$list[$key] = $value;
 	}
 }
-
 include_once template("diy:home/space_pm");
 
 function pmmulti($count, $perpage, $curpage, $mpurl) {

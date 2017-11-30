@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: forum.js 31416 2012-08-27 07:50:15Z zhangguosheng $
+	$Id: forum.js 33824 2013-08-19 08:26:11Z nemohou $
 */
 
 function saveData(ignoreempty) {
@@ -236,6 +236,13 @@ function fastpostvalidate(theform, noajaxpost) {
 	}
 }
 
+function checkpostrule(showid, extra) {
+	var x = new Ajax();
+	x.get('forum.php?mod=ajax&action=checkpostrule&inajax=yes&' + extra, function(s) {
+		ajaxinnerhtml($(showid), s);evalscript(s);
+	});
+}
+
 function updatefastpostattach(aid, url) {
 	ajaxget('forum.php?mod=ajax&action=attachlist&posttime=' + $('posttime').value + (!fid ? '' : '&fid=' + fid), 'attachlist');
 	$('attach_tblheader').style.display = '';
@@ -396,7 +403,23 @@ function checkForumnew_btn(fid) {
 	lasttime = parseInt(Date.parse(new Date()) / 1000);
 }
 
-function addtbodyrow (table, insertID, changename, separatorid, jsonval) {
+function display_blocked_thread() {
+	var table = $('threadlisttableid');
+	if(!table) {
+		return;
+	}
+	var tbodys = table.getElementsByTagName('tbody');
+	for(i = 0;i < tbodys.length;i++) {
+		var tbody = tbodys[i];
+		if(tbody.style.display == 'none') {
+			table.appendChild(tbody);
+			tbody.style.display = '';
+		}
+	}
+	$('hiddenthread').style.display = 'none';
+}
+
+function addtbodyrow(table, insertID, changename, separatorid, jsonval) {
 	if(isUndefined(table) || isUndefined(insertID[0])) {
 		return;
 	}
@@ -451,4 +474,237 @@ function leftside(id) {
 	if(id == 'lf_fav') {
 		setcookie('leftsidefav', $(id).className == 'a' ? 0 : 1, 2592000);
 	}
+}
+var DTimers = new Array();
+var DItemIDs = new Array();
+var DTimers_exists = false;
+function settimer(timer, itemid) {
+	if(timer && itemid) {
+		DTimers.push(timer);
+		DItemIDs.push(itemid);
+	}
+	if(!DTimers_exists) {
+		setTimeout("showtime()", 1000);
+		DTimers_exists = true;
+	}
+}
+function showtime() {
+	for(i=0; i<=DTimers.length; i++) {
+		if(DItemIDs[i]) {
+			if(DTimers[i] == 0) {
+				$(DItemIDs[i]).innerHTML = '已结束';
+				DItemIDs[i] = '';
+				continue;
+			}
+			var timestr = '';
+			var timer_day = Math.floor(DTimers[i] / 86400);
+			var timer_hour = Math.floor((DTimers[i] % 86400) / 3600);
+			var timer_minute = Math.floor(((DTimers[i] % 86400) % 3600) / 60);
+			var timer_second = (((DTimers[i] % 86400) % 3600) % 60);
+			if(timer_day > 0) {
+				timestr += timer_day + '天';
+			}
+			if(timer_hour > 0) {
+				timestr += timer_hour + '小时'
+			}
+			if(timer_minute > 0) {
+				timestr += timer_minute + '分'
+			}
+			if(timer_second > 0) {
+				timestr += timer_second + '秒'
+			}
+			DTimers[i] = DTimers[i] - 1;
+			$(DItemIDs[i]).innerHTML = timestr;
+		}
+	}
+	setTimeout("showtime()", 1000);
+}
+function fixed_top_nv(eleid, disbind) {
+	this.nv = eleid && $(eleid) || $('nv');
+	this.openflag = this.nv && BROWSER.ie != 6;
+	this.nvdata = {};
+	this.init = function (disattachevent) {
+		if(this.openflag) {
+			if(!disattachevent) {
+				var obj = this;
+				_attachEvent(window, 'resize', function(){obj.reset();obj.init(1);obj.run();});
+				var switchwidth = $('switchwidth');
+				if(switchwidth) {
+					_attachEvent(switchwidth, 'click', function(){obj.reset();obj.openflag=false;});
+				}
+			}
+
+			var next = this.nv;
+			try {
+				while((next = next.nextSibling).nodeType != 1 || next.style.display === 'none') {}
+				this.nvdata.next = next;
+				this.nvdata.height = parseInt(this.nv.offsetHeight, 10);
+				this.nvdata.width = parseInt(this.nv.offsetWidth, 10);
+				this.nvdata.left = this.nv.getBoundingClientRect().left - document.documentElement.clientLeft;
+				this.nvdata.position = this.nv.style.position;
+				this.nvdata.opacity = this.nv.style.opacity;
+			} catch (e) {
+				this.nvdata.next = null;
+			}
+		}
+	};
+
+	this.run = function () {
+		var fixedheight = 0;
+		if(this.openflag && this.nvdata.next){
+			var nvnexttop = document.body.scrollTop || document.documentElement.scrollTop;
+			var dofixed = nvnexttop !== 0 && document.documentElement.clientHeight >= 15 && this.nvdata.next.getBoundingClientRect().top - this.nvdata.height < 0;
+			if(dofixed) {
+				if(this.nv.style.position != 'fixed') {
+					this.nv.style.borderLeftWidth = '0';
+					this.nv.style.borderRightWidth = '0';
+					this.nv.style.height = this.nvdata.height + 'px';
+					this.nv.style.width = this.nvdata.width + 'px';
+					this.nv.style.top = '0';
+					this.nv.style.left = this.nvdata.left + 'px';
+					this.nv.style.position = 'fixed';
+					this.nv.style.zIndex = '199';
+					this.nv.style.opacity = 0.85;
+				}
+			} else {
+				if(this.nv.style.position != this.nvdata.position) {
+					this.reset();
+				}
+			}
+			if(this.nv.style.position == 'fixed') {
+				fixedheight = this.nvdata.height;
+			}
+		}
+		return fixedheight;
+	};
+	this.reset = function () {
+		if(this.nv) {
+			this.nv.style.position = this.nvdata.position;
+			this.nv.style.borderLeftWidth = '';
+			this.nv.style.borderRightWidth = '';
+			this.nv.style.height = '';
+			this.nv.style.width = '';
+			this.nv.style.opacity = this.nvdata.opacity;
+		}
+	};
+	if(!disbind && this.openflag) {
+		this.init();
+		_attachEvent(window, 'scroll', this.run);
+	}
+}
+var previewTbody = null, previewTid = null, previewDiv = null;
+function previewThread(tid, tbody) {
+	if(!$('threadPreviewTR_'+tid)) {
+		appendscript(JSPATH + 'forum_viewthread.js?' + VERHASH);
+
+		newTr = document.createElement('tr');
+		newTr.id = 'threadPreviewTR_'+tid;
+		newTr.className = 'threadpre';
+		$(tbody).appendChild(newTr);
+		newTd = document.createElement('td');
+		newTd.colSpan = listcolspan;
+		newTd.className = 'threadpretd';
+		newTr.appendChild(newTd);
+		newTr.style.display = 'none';
+
+		previewTbody = tbody;
+		previewTid = tid;
+
+		if(BROWSER.ie) {
+			previewDiv = document.createElement('div');
+			previewDiv.id = 'threadPreview_'+tid;
+			previewDiv.style.id = 'none';
+			var x = Ajax();
+			x.get('forum.php?mod=viewthread&tid='+tid+'&inajax=1&from=preview', function(ret) {
+				var evaled = false;
+				if(ret.indexOf('ajaxerror') != -1) {
+					evalscript(ret);
+					evaled = true;
+				}
+				previewDiv.innerHTML = ret;
+				newTd.appendChild(previewDiv);
+				if(!evaled) evalscript(ret);
+				newTr.style.display = '';
+			});
+		} else {
+			newTd.innerHTML += '<div id="threadPreview_'+tid+'"></div>';
+			ajaxget('forum.php?mod=viewthread&tid='+tid+'&from=preview', 'threadPreview_'+tid, null, null, null, function() {newTr.style.display = '';});
+		}
+	} else {
+		$(tbody).removeChild($('threadPreviewTR_'+tid));
+		previewTbody = previewTid = null;
+	}
+}
+
+function hideStickThread(tid) {
+	var pre = 'stickthread_';
+	var tids = (new Function("return ("+(loadUserdata('sticktids') || '[]')+")"))();
+	var format = function (data) {
+		var str = '{';
+		for (var i in data) {
+			if(data[i] instanceof Array) {
+				str += i + ':' + '[';
+				for (var j = data[i].length - 1; j >= 0; j--) {
+					str += data[i][j] + ',';
+				};
+				str = str.substr(0, str.length -1);
+				str += '],';
+			}
+		}
+		str = str.substr(0, str.length -1);
+		str += '}';
+		return str;
+	};
+	if(!tid) {
+		if(tids.length > 0) {
+			for (var i = tids.length - 1; i >= 0; i--) {
+				var ele = $(pre+tids[i]);
+				if(ele) {
+					ele.parentNode.removeChild(ele);
+				}
+			};
+		}
+	} else {
+		var eletbody = $(pre+tid);
+		if(eletbody) {
+			eletbody.parentNode.removeChild(eletbody);
+			tids.push(tid);
+			saveUserdata('sticktids', '['+tids.join(',')+']');
+		}
+	}
+	var clearstickthread = $('clearstickthread');
+	if(clearstickthread) {
+		if(tids.length > 0) {
+			$('clearstickthread').style.display = '';
+		} else {
+			$('clearstickthread').style.display = 'none';
+		}
+	}
+	var separatorline = $('separatorline');
+	if(separatorline) {
+		try {
+			if(typeof separatorline.previousElementSibling === 'undefined') {
+				var findele = separatorline.previousSibling;
+				while(findele && findele.nodeType != 1){
+					findele = findele.previousSibling;
+				}
+				if(findele === null) {
+					separatorline.parentNode.removeChild(separatorline);
+				}
+			} else {
+				if(separatorline.previousElementSibling === null) {
+					separatorline.parentNode.removeChild(separatorline);
+				}
+			}
+		} catch(e) {
+		}
+	}
+}
+function viewhot() {
+	var obj = $('hottime');
+	window.location.href = "forum.php?mod=forumdisplay&filter=hot&fid="+obj.getAttribute('fid')+"&time="+obj.value;
+}
+function clearStickThread () {
+	saveUserdata('sticktids', '[]');
+	location.reload();
 }

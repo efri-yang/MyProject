@@ -82,7 +82,7 @@
 					</tr>
 					<tr>
 						<th>{lang pay_author_income}</th>
-						<td>$payment[netincome] {$_G[setting][extcredits][$_G['setting']['creditstransextra'][1]][unit]}{$_G[setting][extcredits][$_G['setting']['creditstransextra'][1]][title]}</td>
+						<td>$payment[income] {$_G[setting][extcredits][$_G['setting']['creditstransextra'][1]][unit]}{$_G[setting][extcredits][$_G['setting']['creditstransextra'][1]][title]}</td>
 					</tr>
 				</table>
 			<!--{elseif $_GET[action] == 'split'}-->
@@ -98,6 +98,20 @@
 					</tr>
 					<tr>
 						<td><textarea name="split" id="split" class="pt" style="width: 212px; height:120px" /></textarea></td>
+					</tr>
+				</table>
+			<!--{elseif $_GET[action] == 'live'}-->
+				<table cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td>
+							<ul class="llst">
+								<li><label><input type="radio" name="live" class="pr" value="1" <!--{if $_G[forum][livetid] != $_G[tid]}-->checked<!--{/if}-->/>{lang admin_live}</label></li>
+								<li><label><input type="radio" name="live" class="pr" value="0" <!--{if $_G[forum][livetid] == $_G[tid]}-->checked<!--{/if}-->/>{lang admin_live_cancle}</label></li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td><br>{lang admin_live_tips}</td>
 					</tr>
 				</table>
 			<!--{elseif $_GET[action] == 'stamp'}-->
@@ -173,6 +187,19 @@
 				<ul id="reasonselect" style="display: none"><!--{echo modreasonselect()}--></ul>
 			</div>
 		</div>
+	    <!--{if $_GET[action] == 'delpost' && $_G['group']['allowbanuser']}-->
+	        <div class="c">
+	            <div class="tpclg">
+		            <h4 class="cl">
+		                <p class="y">
+		                    <label for="userban"><input type="checkbox" name="banuser" id="userban" class="pc" />{lang topicadmin_banuser}</label>
+		                    <label for="userdelpost"><input type="checkbox" name="userdelpost" id="userdelpost" class="pc" />{lang topicadmin_userdelpost}</label>
+		                </p>
+		                <span>{lang topicadmin_useropt}:</span>
+		            </h4>
+		        </div>
+	        </div>
+	    <!--{/if}-->
 		<div class="o pns">
 			<!--{if $_GET[action] == 'delpost'}-->
 			<label for="crimerecord"><input type="checkbox" name="crimerecord" id="crimerecord" class="pc" />{lang crimerecord}</label>

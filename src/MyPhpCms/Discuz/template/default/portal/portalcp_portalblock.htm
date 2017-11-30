@@ -122,7 +122,8 @@
 				<!--{if $blockdata}-->
 					<!--{if $op === 'verifieddata'}-->
 						<tr>
-							<th width="40">{lang select}</th>
+							<th width="40">{lang delete}</th>
+							<th>{lang display_order}</th>
 							<th>{lang title}</th>
 							<th>{lang block_page}</th>
 							<th>{lang block_id}</th>
@@ -133,6 +134,8 @@
 						<!--{loop $blockdata $value}-->
 						<tr>
 							<td><input type="checkbox" class="pc" name="ids[]" value="$value[dataid]" /></td>
+							<td><input type="hidden" name="olddisplayorder[{$value[dataid]}]" value="$value[displayorder]" />
+								<input type="input" class="px" name="displayorder[{$value[dataid]}]" value="$value[displayorder]" size="2" maxlength="4" /></td>
 							<td><a href="$value[url]" target="_blank">$value['title']</a></td>
 							<!--{eval $page = empty($blocks[$value[bid]]['page']) ? '{lang unused}' : implode('<br/>' ,$blocks[$value[bid]]['page']);}-->
 							<td>$page</td>
@@ -145,12 +148,12 @@
 						</tr>
 						<!--{/loop}-->
 						<tr>
-							<td colspan="7">
+							<td colspan="8">
 								<label for="chkall" onclick="checkall(this.form, 'ids')"><input type="checkbox" name="chkall" id="chkall" class="pc" />{lang select_all}</label>
 								<input type="hidden" name="handlekey" value="$_GET['handlekey']" />
 								<input type="hidden" name="verifieddatasubmit" value="true" />
 								<input type="hidden" name="formhash" value="{FORMHASH}" />
-								<button type="submit" class="pn pnc"><strong>{lang delete}</strong></button>
+								<button type="submit" class="pn pnc"><strong>{lang confirms}</strong></button>
 							</td>
 						</tr>
 					<!--{elseif $op === 'verifydata'}-->

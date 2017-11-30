@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: common_extra.js 32996 2013-04-03 03:58:19Z zhengqingpeng $
+	$Id: common_extra.js 35187 2015-01-19 04:22:13Z nemohou $
 */
 
 function _relatedlinks(rlinkmsgid) {
@@ -55,46 +55,56 @@ function _relatedlinks(rlinkmsgid) {
 	$(rlinkmsgid).innerHTML = msg;
 }
 
-function _updatesecqaa(idhash) {
+var seccheck_tpl = new Array();
+
+function _updatesecqaa(idhash, tpl) {
 	if($('secqaa_' + idhash)) {
-		$('secqaaverify_' + idhash).value = '';
-		if(secST['qaa_' + idhash]) {
-			clearTimeout(secST['qaa_' + idhash]);
+		if(tpl) {
+			seccheck_tpl[idhash] = tpl;
 		}
-		$('checksecqaaverify_' + idhash).innerHTML = '<img src="'+ IMGDIR + '/none.gif" width="16" height="16" class="vm" />';
-		ajaxget('misc.php?mod=secqaa&action=update&idhash=' + idhash, 'secqaa_' + idhash, null, '', '', function() {
-			secST['qaa_' + idhash] = setTimeout(function() {$('secqaa_' + idhash).innerHTML = '<span class="xi2 cur1" onclick="updatesecqaa(\''+idhash+'\')">刷新验证问答</span>';}, 180000);
-		});
+		var id = 'seqaajs_' + idhash;
+		var src = 'misc.php?mod=secqaa&action=update&idhash=' + idhash + '&' + Math.random();
+		if($(id)) {
+			document.getElementsByTagName('head')[0].appendChild($(id));
+		}
+		var scriptNode = document.createElement("script");
+		scriptNode.type = "text/javascript";
+		scriptNode.id = id;
+		scriptNode.src = src;
+		document.getElementsByTagName('head')[0].appendChild(scriptNode);
 	}
 }
 
-function _updateseccode(idhash, play) {
-	if(isUndefined(play)) {
-		if($('seccode_' + idhash)) {
-			$('seccodeverify_' + idhash).value = '';
-			if(secST['code_' + idhash]) {
-				clearTimeout(secST['code_' + idhash]);
-			}
-			$('checkseccodeverify_' + idhash).innerHTML = '<img src="'+ IMGDIR + '/none.gif" width="16" height="16" class="vm" />';
-			ajaxget('misc.php?mod=seccode&action=update&idhash=' + idhash, 'seccode_' + idhash, null, '', '', function() {
-				secST['code_' + idhash] = setTimeout(function() {$('seccode_' + idhash).innerHTML = '<span class="xi2 cur1" onclick="updateseccode(\''+idhash+'\')">刷新验证码</span>';}, 180000);
-			});
-		}
-	} else {
-		eval('window.document.seccodeplayer_' + idhash + '.SetVariable("isPlay", "1")');
+function _updateseccode(idhash, tpl, modid) {
+	if(!$('seccode_' + idhash)) {
+		return;
 	}
+	if(tpl) {
+		seccheck_tpl[idhash] = tpl;
+	}
+	var id = 'seccodejs_' + idhash;
+	var src = 'misc.php?mod=seccode&action=update&idhash=' + idhash + '&' + Math.random() + '&modid=' + modid;
+	if($(id)) {
+		document.getElementsByTagName('head')[0].appendChild($(id));
+	}
+	var scriptNode = document.createElement("script");
+	scriptNode.type = "text/javascript";
+	scriptNode.id = id;
+	scriptNode.src = src;
+	document.getElementsByTagName('head')[0].appendChild(scriptNode);
 }
 
-function _checksec(type, idhash, showmsg, recall) {
+function _checksec(type, idhash, showmsg, recall, modid) {
 	var showmsg = !showmsg ? 0 : showmsg;
 	var secverify = $('sec' + type + 'verify_' + idhash).value;
 	if(!secverify) {
 		return;
 	}
+	var modid = !modid ? '' : modid;
 	var x = new Ajax('XML', 'checksec' + type + 'verify_' + idhash);
 	x.loading = '';
 	$('checksec' + type + 'verify_' + idhash).innerHTML = '<img src="'+ IMGDIR + '/loading.gif" width="16" height="16" class="vm" />';
-	x.get('misc.php?mod=sec' + type + '&action=check&inajax=1&&idhash=' + idhash + '&secverify=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(secverify) : secverify), function(s){
+	x.get('misc.php?mod=sec' + type + '&action=check&inajax=1&modid=' + modid + '&idhash=' + idhash + '&secverify=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(secverify) : secverify), function(s){
 		var obj = $('checksec' + type + 'verify_' + idhash);
 		obj.style.display = '';
 		if(s.substr(0, 7) == 'succeed') {
@@ -360,7 +370,10 @@ function _zoom(obj, zimg, nocover, pn, showexif) {
 		mheight = h + 63;
 		menu.style.height = mheight + 'px';
 		$(menuid + '_zoomlayer').style.height = (mheight < 120 ? 120 : mheight) + 'px';
-		$(menuid + '_img').innerHTML = '<img id="' + zoomid + '" src="' + zimg + '" width="' + w + '" height="' + h + '" w="' + imgw + '" h="' + imgh + '" />' + imgtitle;
+		$(menuid + '_img').innerHTML = '<img id="' + zoomid + '" w="' + imgw + '" h="' + imgh + '">' + imgtitle;
+		$(zoomid).src = zimg;
+		$(zoomid).width = w;
+		$(zoomid).height = h;
 		if($(menuid + '_imglink')) {
 			$(menuid + '_imglink').href = zimg;
 		}
@@ -916,7 +929,6 @@ function _runslideshow() {
 		new slideshow(slideshows[i]);
 	}
 }
-
 function _showTip(ctrlobj) {
 	if(!ctrlobj.id) {
 		ctrlobj.id = 'tip_' + Math.random();
@@ -934,7 +946,7 @@ function _showTip(ctrlobj) {
 	showMenu({'mtype':'prompt','ctrlid':ctrlobj.id,'pos':'12!','duration':2,'zindex':JSMENU['zIndex']['prompt']});
 }
 
-function _showPrompt(ctrlid, evt, msg, timeout) {
+function _showPrompt(ctrlid, evt, msg, timeout, classname) {
 	var menuid = ctrlid ? ctrlid + '_pmenu' : 'ntcwin';
 	var duration = timeout ? 0 : 3;
 	if($(menuid)) {
@@ -942,7 +954,7 @@ function _showPrompt(ctrlid, evt, msg, timeout) {
 	}
 	var div = document.createElement('div');
 	div.id = menuid;
-	div.className = ctrlid ? 'tip tip_js' : 'ntcwin';
+	div.className = !classname ? (ctrlid ? 'tip tip_js' : 'ntcwin') : classname;
 	div.style.display = 'none';
 	$('append_parent').appendChild(div);
 	if(ctrlid) {
@@ -1105,6 +1117,7 @@ function _extstyle(css) {
 }
 
 function _widthauto(obj) {
+	var strs = ['切换到宽版', '切换到窄版'];
 	if($('css_widthauto')) {
 		CSSLOADED['widthauto'] = 1;
 	}
@@ -1116,12 +1129,14 @@ function _widthauto(obj) {
 		}
 		HTMLNODE.className += ' widthauto';
 		setcookie('widthauto', 1, 86400 * 30);
-		obj.innerHTML = '切换到窄版';
+		obj.innerHTML = strs[1];
+		obj.title = strs[1];
 	} else {
 		$('css_widthauto').disabled = true;
 		HTMLNODE.className = HTMLNODE.className.replace(' widthauto', '');
 		setcookie('widthauto', -1, 86400 * 30);
-		obj.innerHTML = '切换到宽版';
+		obj.innerHTML = strs[0];
+		obj.title = strs[0];
 	}
 	hideMenu();
 }
@@ -1136,21 +1151,33 @@ function _showCreditmenu() {
 		$('append_parent').appendChild(menu);
 		ajaxget($('extcreditmenu').href, 'extcreditmenu_menu', 'ajaxwaitid');
 	}
-	showMenu({'ctrlid':'extcreditmenu','ctrlclass':'a','duration':1});
+	showMenu({'ctrlid':'extcreditmenu','ctrlclass':'a','duration':2});
 }
 
-function _showForummenu(fid) {
-	if(!$('fjump_menu')) {
-		fid = !fid ? 0 : fid;
+function _showUpgradeinfo() {
+	if(!$('g_upmine_menu')) {
 		menu = document.createElement('div');
-		menu.id = 'fjump_menu';
+		menu.id = 'g_upmine_menu';
 		menu.style.display = 'none';
 		menu.className = 'p_pop';
 		menu.innerHTML = '<div class="p_opt"><img src="'+ IMGDIR + '/loading.gif" width="16" height="16" class="vm" /> 请稍候...</div>';
 		$('append_parent').appendChild(menu);
+		ajaxget('home.php?mod=spacecp&ac=usergroup&showextgroups=1', 'g_upmine_menu', 'ajaxwaitid');
+	}
+	showMenu({'ctrlid':'g_upmine','ctrlclass':'a','duration':2});
+}
+
+function _showForummenu(fid) {
+	if($('fjump_menu') && !$('fjump_menu').innerHTML) {
 		ajaxget('forum.php?mod=ajax&action=forumjump&jfid=' + fid, 'fjump_menu', 'ajaxwaitid');
 	}
-	showMenu({'ctrlid':'fjump','ctrlclass':'a','duration':2});
+}
+
+function _showUserApp(fid) {
+	var menu = $('mn_userapp_menu');
+	if(menu && !menu.innerHTML) {
+		ajaxget('misc.php?mod=manyou&action=menu', 'mn_userapp_menu', 'ajaxwaitid');
+	}
 }
 
 function _imageRotate(imgid, direct) {
@@ -1218,8 +1245,41 @@ function _createPalette(colorid, id, func) {
 		$('append_parent').appendChild(dom);
 	}
 	func = !func ? '' : '|' + func;
-	window.frames["c"+colorid+"_frame"].location.href = SITEURL+STATICURL+"image/admincp/getcolor.htm?c"+colorid+"|"+id+func;
+	var url = /(?:https?:)?\/\//.test(STATICURL) ? STATICURL : SITEURL+STATICURL;
+	window.frames["c"+colorid+"_frame"].location.href = url+"image/admincp/getcolor.htm?c"+colorid+"|"+id+func;
 	showMenu({'ctrlid':'c'+colorid});
 	var iframeid = "c"+colorid+"_menu";
 	_attachEvent(window, 'scroll', function(){hideMenu(iframeid);});
+}
+
+function _setShortcut() {
+	$('shortcuttip').onclick = function() {
+		var msg = '1、点击"' + '<a href="javascript:;" class="xi2 xw1" ';
+		msg += 'onclick="this.href = \'forum.php?mod=misc&action=shortcut\';this.click();saveUserdata(\'setshortcut\', 1);"';
+		msg += '>下载桌面快捷</a>' + '"，下载完成后，可移动文件到系统桌面<br />';
+		msg += '2、点击"' + '<a href="forum.php?mod=misc&action=shortcut&type=ico" class="xi2 xw1">';
+		msg += '下载ICO图标</a>' + '"，下载完成后，右击桌面快捷文件->属性->更改图标，选择已下载的ICO图标即可';
+		showDialog(msg, 'notice', '添加桌面快捷');
+	};
+
+	$('shortcutcloseid').onclick = function() {
+		$('shortcut').style.display = 'none';
+		saveUserdata('setshortcut', 2);
+	};
+
+	this.height = 0;
+	this.shortcut = $('shortcut');
+	this.shortcut.style.overflow = 'hidden';
+	this.shortcut.style.display = 'block';
+	this.autozoomin = function() {
+		var maxheight = 30;
+		this.height += 5;
+		if(this.height >= maxheight) {
+			this.shortcut.style.height = maxheight + 'px';
+			return;
+		}
+		this.shortcut.style.height = this.height + 'px';
+		setTimeout(this.autozoomin, 50);
+	};
+	this.autozoomin();
 }

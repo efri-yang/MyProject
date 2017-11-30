@@ -60,7 +60,7 @@
 				<!--{if $_GET[action] != 'reply'}-->
 					<span><input name="subject" id="subject" class="px" value="$postinfo[subject]" tabindex="21" style="width: 25em" /></span>
 				<!--{else}-->
-					<span id="subjecthide" class="z">RE: $thread[subject] [<a href="javascript:;" onclick="display('subjecthide');display('subjectbox');$('subject').value='RE: {echo dhtmlspecialchars(str_replace('\'', '\\\'', $thread[subject]))}'">{lang modify}</a>]</span>
+					<span id="subjecthide" class="z">RE: $thread[subject] [<a href="javascript:;" onclick="display('subjecthide');display('subjectbox');">{lang modify}</a>]</span>
 					<span id="subjectbox" style="display:none"><input name="subject" id="subject" class="px" value="" tabindex="21" style="width: 25em" /></span>
 				<!--{/if}-->
 			</div>
@@ -93,18 +93,20 @@
 				<textarea rows="7" cols="80" name="message" id="postmessage" onKeyDown="seditor_ctlent(event, '$(\'postsubmit\').click();')" tabindex="22" class="pt">$message</textarea>
 				</div>
 			</div>
-			<!--{if checkperm('seccode') && ($secqaacheck || $seccodecheck)}-->
-				<!--{block sectpl}--><sec> <span id="sec<hash>" onclick="showMenu({'ctrlid':this.id,'win':'{$_GET[handlekey]}'})"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div><!--{/block}-->
-				<div class="mtm"><!--{subtemplate common/seccheck}--></div>
-			<!--{/if}-->
+			<div id="seccheck_$_GET[action]">
+				<!--{if $secqaacheck || $seccodecheck}-->
+					<!--{subtemplate forum/seccheck_post}-->					
+				<!--{/if}-->
+			</div>
 		</div>
 	</div>
 	<!--{hook/post_infloat_middle}-->
 	<div class="o pns" id="moreconf">
 		<!--{if $_GET[action] == 'newthread' && $_G['setting']['sitemessage'][newthread] || $_GET[action] == 'reply' && $_G['setting']['sitemessage'][reply]}-->
-			<a href="javascript:;" id="custominfo" class="y"><img src="{IMGDIR}/info_small.gif" alt="{lang faq}" /></a>
+			<a href="javascript:;" id="custominfo" class="y" style="margin-left:5px"><img src="{IMGDIR}/info_small.gif" alt="{lang faq}" /></a>
 		<!--{/if}-->
-		<button type="submit" id="postsubmit" class="pn pnc z" value="true" name="{if $_GET[action] == 'newthread'}topicsubmit{elseif $_GET[action] == 'reply'}replysubmit{/if}" tabindex="23"><span><!--{if $_GET[action] == 'newthread'}-->{lang post_newthread}<!--{elseif $_GET[action] == 'reply'}-->{lang join_thread}<!--{/if}--></span></button>
+		<a href="home.php?mod=spacecp&ac=credit&op=rule&fid=$_G[fid]" class="y" target="_blank">{lang post_credits_rule}</a>
+		<button type="submit" id="postsubmit" class="pn pnc z" value="true"{if !$seccodecheck && !$secqaacheck} onmouseover="checkpostrule('seccheck_$_GET[action]', 'ac=$_GET[action]&infloat=yes&handlekey=$_GET[handlekey]');this.onmouseover=null"{/if} name="{if $_GET[action] == 'newthread'}topicsubmit{elseif $_GET[action] == 'reply'}replysubmit{/if}" tabindex="23"><span><!--{if $_GET[action] == 'newthread'}-->{lang post_newthread}<!--{elseif $_GET[action] == 'reply'}-->{lang join_thread}<!--{/if}--></span></button>
 		<!--{hook/post_infloat_btn_extra}-->
 	</div>
 </form>

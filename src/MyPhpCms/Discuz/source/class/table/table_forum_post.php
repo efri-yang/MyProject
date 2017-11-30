@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_forum_post.php 30707 2012-06-13 03:40:15Z liulanbo $
+ *      $Id: table_forum_post.php 30080 2012-05-09 08:19:20Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -19,7 +19,8 @@ class table_forum_post extends discuz_table
 
 		$this->_table = 'forum_post';
 		$this->_pk    = 'pid';
-
+		$this->_pre_cache_key = 'forum_post_';
+		$this->_cache_ttl = 0;
 		parent::__construct();
 	}
 

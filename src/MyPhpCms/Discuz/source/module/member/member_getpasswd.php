@@ -35,7 +35,29 @@ if($_GET['uid'] && $_GET['id'] && $_GET['sign'] === make_getpws_sign($_GET['uid'
 		if($_GET['newpasswd1'] != addslashes($_GET['newpasswd1'])) {
 			showmessage('profile_passwd_illegal');
 		}
-
+		if($_G['setting']['pwlength']) {
+			if(strlen($_GET['newpasswd1']) < $_G['setting']['pwlength']) {
+				showmessage('profile_password_tooshort', '', array('pwlength' => $_G['setting']['pwlength']));
+			}
+		}
+		if($_G['setting']['strongpw']) {
+			$strongpw_str = array();
+			if(in_array(1, $_G['setting']['strongpw']) && !preg_match("/\d+/", $_GET['newpasswd1'])) {
+				$strongpw_str[] = lang('member/template', 'strongpw_1');
+			}
+			if(in_array(2, $_G['setting']['strongpw']) && !preg_match("/[a-z]+/", $_GET['newpasswd1'])) {
+				$strongpw_str[] = lang('member/template', 'strongpw_2');
+			}
+			if(in_array(3, $_G['setting']['strongpw']) && !preg_match("/[A-Z]+/", $_GET['newpasswd1'])) {
+				$strongpw_str[] = lang('member/template', 'strongpw_3');
+			}
+			if(in_array(4, $_G['setting']['strongpw']) && !preg_match("/[^a-zA-z0-9]+/", $_GET['newpasswd1'])) {
+				$strongpw_str[] = lang('member/template', 'strongpw_4');
+			}
+			if($strongpw_str) {
+				showmessage(lang('member/template', 'password_weak').implode(',', $strongpw_str));
+			}
+		}
 		loaducenter();
 		uc_user_edit(addslashes($member['username']), $_GET['newpasswd1'], $_GET['newpasswd1'], addslashes($member['email']), 1, 0);
 		$password = md5(random(10));
@@ -48,5 +70,7 @@ if($_GET['uid'] && $_GET['id'] && $_GET['sign'] === make_getpws_sign($_GET['uid'
 		showmessage('getpasswd_succeed', 'index.php', array(), array('login' => 1));
 	}
 
+} else {
+	showmessage('parameters_error');
 }
 ?>

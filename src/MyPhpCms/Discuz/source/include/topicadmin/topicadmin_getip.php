@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: topicadmin_getip.php 25756 2011-11-22 02:47:45Z zhangguosheng $
+ *      $Id: topicadmin_getip.php 33709 2013-08-06 09:06:56Z andyzheng $
  */
 
 if(!defined('IN_DISCUZ')) {

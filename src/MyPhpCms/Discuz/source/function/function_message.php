@@ -54,16 +54,19 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 	$handlekey = $leftmsg = '';
 
 	if(defined('IN_MOBILE')) {
-		$_G['inajax'] = 0;
-		if(!$url_forward && dreferer()) {
+		unset($extraparam['showdialog']);
+		unset($extraparam['closetime']);
+		unset($extraparam['extrajs']);
+
+		if(!$url_forward && dreferer() && IN_MOBILE == 1) {
 			$url_forward = $referer = dreferer();
 		}
 		if(!empty($url_forward) && strpos($url_forward, 'mobile') === false) {
 			$url_forward_arr = explode("#", $url_forward);
 			if(strpos($url_forward_arr[0], '?') !== false) {
-				$url_forward_arr[0] = $url_forward_arr[0].'&mobile=yes';
+				$url_forward_arr[0] = $url_forward_arr[0].'&mobile='.IN_MOBILE;
 			} else {
-				$url_forward_arr[0] = $url_forward_arr[0].'?mobile=yes';
+				$url_forward_arr[0] = $url_forward_arr[0].'?mobile='.IN_MOBILE;
 			}
 			$url_forward = implode("#", $url_forward_arr);
 		}
@@ -77,8 +80,6 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 	if(!empty($_G['inajax'])) {
 		$handlekey = $_GET['handlekey'] = !empty($_GET['handlekey']) ? dhtmlspecialchars($_GET['handlekey']) : '';
 		$param['handle'] = true;
-	}
-	if(!empty($_G['inajax'])) {
 		$param['msgtype'] = empty($_GET['ajaxmenu']) && (empty($_POST) || !empty($_GET['nopost'])) ? 2 : 3;
 	}
 	if($url_forward) {
@@ -114,6 +115,10 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 
 	$param['header'] = $url_forward && $param['header'] ? true : false;
 
+	if($_GET['ajaxdata'] === 'json') {
+		$param['header'] = '';
+	}
+
 	if($param['header']) {
 		header("HTTP/1.1 301 Moved Permanently");
 		dheader("location: ".str_replace('&amp;', '&', $url_forward));
@@ -134,6 +139,15 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 	} else {
 		$show_message = lang('message', $message, $values);
 	}
+
+	if(isset($_GET['ajaxdata'])) {
+		if($_GET['ajaxdata'] === 'json') {
+			helper_output::json(array('message' => $show_message, 'data' => $values));
+		} else if($_GET['ajaxdata'] === 'html') {
+			helper_output::html($show_message);
+		}
+	}
+
 	if($_G['connectguest']) {
 		$param['login'] = false;
 		$param['alert'] = 'info';
@@ -205,6 +219,9 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 			$extra .= 'hideWindow(\''.$handlekey.'\');showDialog(\''.$show_jsmessage.'\', \''.$modes[$alerttype].'\', null, '.($param['locationtime'] !== null ? 'function () { window.location.href =\''.$url_forward_js.'\'; }' : 'null').', 0, null, null, null, null, '.($param['closetime'] ? $param['closetime'] : 'null').', '.($param['locationtime'] ? $param['locationtime'] : 'null').');';
 			$param['closetime'] = null;
 			$st = '';
+			if($param['showmsg']) {
+				$show_message = '';
+			}
 		}
 		if($param['closetime'] !== null) {
 			$extra .= 'setTimeout("hideWindow(\''.$handlekey.'\')", '.($param['closetime'] * 1000).');';

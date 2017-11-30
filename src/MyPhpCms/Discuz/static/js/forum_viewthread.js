@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: forum_viewthread.js 35220 2015-02-27 08:23:59Z nemohou $
+	$Id: forum_viewthread.js 35221 2015-02-27 08:24:39Z nemohou $
 */
 
 var replyreload = '', attachimgST = new Array(), zoomgroup = new Array(), zoomgroupinit = new Array();
@@ -214,15 +214,13 @@ function fastpostappendreply() {
 	} else {
 		editdoc.body.innerHTML = BROWSER.firefox ? '<br />' : '';
 	}
-	if($('secanswer3')) {
-		$('checksecanswer3').innerHTML = '<img src="' + STATICURL + 'image/common/none.gif" width="17" height="17">';
-		$('secanswer3').value = '';
-		secclick3['secanswer3'] = 0;
+	if($('fastpostform').seccodehash){
+		updateseccode($('fastpostform').seccodehash.value);
+		$('fastpostform').seccodeverify.value = '';
 	}
-	if($('seccodeverify3')) {
-		$('checkseccodeverify3').innerHTML = '<img src="' + STATICURL + 'image/common/none.gif" width="17" height="17">';
-		$('seccodeverify3').value = '';
-		secclick3['seccodeverify3'] = 0;
+	if($('fastpostform').secqaahash){
+		updatesecqaa($('fastpostform').secqaahash.value);
+		$('fastpostform').secanswer.value = '';
 	}
 	showCreditPrompt();
 }
@@ -236,7 +234,7 @@ function succeedhandle_fastpost(locationhref, message, param) {
 		if(replyreload) {
 			var reloadpids = replyreload.split(',');
 			for(var i = 1;i < reloadpids.length;i++) {
-				ajaxget('forum.php?mod=viewthread&tid=' + tid + '&viewpid=' + reloadpids[i] + '&from=' + from, 'post_' + reloadpids[i]);
+				ajaxget('forum.php?mod=viewthread&tid=' + tid + '&viewpid=' + reloadpids[i] + '&from=' + from, 'post_' + reloadpids[i], 'ajaxwaitid');
 			}
 		}
 		$('fastpostreturn').className = '';
@@ -270,13 +268,14 @@ function succeedhandle_comment(locationhref, message, param) {
 }
 
 function succeedhandle_postappend(locationhref, message, param) {
-	ajaxget('forum.php?mod=viewthread&tid=' + param['tid'] + '&viewpid=' + param['pid'], 'post_' + param['pid']);
+	ajaxget('forum.php?mod=viewthread&tid=' + param['tid'] + '&viewpid=' + param['pid'], 'post_' + param['pid'], 'ajaxwaitid');
 	hideWindow('postappend');
 }
 
 function recommendupdate(n) {
 	if(getcookie('recommend')) {
 		var objv = n > 0 ? $('recommendv_add') : $('recommendv_subtract');
+		objv.style.display = '';
 		objv.innerHTML = parseInt(objv.innerHTML) + 1;
 		setTimeout(function () {
 			$('recommentc').innerHTML = parseInt($('recommentc').innerHTML) + n;
@@ -286,17 +285,14 @@ function recommendupdate(n) {
 	}
 }
 
-function favoriteupdate() {
-	var obj = $('favoritenumber');
-	obj.innerHTML = parseInt(obj.innerHTML) + 1;
-}
-function relayupdate() {
-	var obj = $('relaynumber');
-	obj.innerHTML = parseInt(obj.innerHTML) + 1;
+function postreviewupdate(pid, n) {
+	var objv = n > 0 ? $('review_support_'+pid) : $('review_against_'+pid);
+	objv.innerHTML = parseInt(objv.innerHTML ? objv.innerHTML : 0) + 1;
 }
 
-function shareupdate() {
-	var obj = $('sharenumber');
+function favoriteupdate() {
+	var obj = $('favoritenumber');
+	obj.style.display = '';
 	obj.innerHTML = parseInt(obj.innerHTML) + 1;
 }
 
@@ -387,8 +383,9 @@ function toggleRatelogCollapse(tarId, ctrlObj) {
 	}
 }
 
-function copyThreadUrl(obj) {
-	setCopy($('thread_subject').innerHTML.replace(/&amp;/g, '&') + '\n' + obj.href + '\n', '帖子地址已经复制到剪贴板');
+function copyThreadUrl(obj, bbname) {
+	bbname = bbname || SITEURL;
+	setCopy($('thread_subject').innerHTML.replace(/&amp;/g, '&') + '\n' + obj.href + '\n' + '(出处: '+bbname+')' + '\n', '帖子地址已经复制到剪贴板');
 	return false;
 }
 
@@ -470,6 +467,7 @@ function lazyload(className) {
 					if(this.getOffset(imgs[j]) > document.documentElement.clientHeight) {
 						lazyload.imgs.push(imgs[j]);
 					} else {
+						imgs[j].onload = function(){thumbImg(this);};
 						imgs[j].setAttribute('src', imgs[j].getAttribute('file'));
 						imgs[j].setAttribute('lazyloaded', 'true');
 					}
@@ -491,7 +489,16 @@ function lazyload(className) {
 				var height = img.getAttribute('height') ? img.getAttribute('height') : 100;
 				dom.innerHTML = '<div style="width: '+width+'px; height: '+height+'px;background: url('+IMGDIR + '/loading.gif) no-repeat center center;"></div>';
 				img.parentNode.insertBefore(dom.childNodes[0], img);
-				img.onload = function () {if(!this.getAttribute('_load')) {this.setAttribute('_load', 1);this.style.width = this.style.height = '';this.parentNode.removeChild(this.previousSibling);}};
+				img.onload = function () {
+					if(!this.getAttribute('_load')) {
+						this.setAttribute('_load', 1);
+						this.style.width = this.style.height = '';
+						this.parentNode.removeChild(this.previousSibling);
+						if(this.getAttribute('lazyloadthumb')) {
+							thumbImg(this);
+						}
+					}
+				};
 				img.style.width = img.style.height = '1px';
 				img.setAttribute('src', img.getAttribute('file') ? img.getAttribute('file') : img.getAttribute('src'));
 				img.setAttribute('lazyloaded', true);
@@ -506,6 +513,306 @@ function lazyload(className) {
 	_attachEvent(window, 'scroll', function(){obj.showImage();});
 }
 function update_collection(){
+	var obj = $('collectionnumber');
 	sum = 1;
-    $('collectionnumber').innerText = parseInt($('collectionnumber').innerText)+sum;
+	obj.style.display = '';
+	obj.innerText = parseInt(obj.innerText)+sum;
+}
+function display_blocked_post() {
+	var movehiddendiv = (!$('hiddenposts').innerHTML) ? true : false;
+	for (var i = 0; i < blockedPIDs.length; i++) {
+		if(movehiddendiv) {
+			$('hiddenposts').appendChild($("post_"+blockedPIDs[i]));
+		}
+		display("post_"+blockedPIDs[i]);
+	}
+	var postlistreply = $('postlistreply').innerHTML;
+	$('hiddenpoststip').parentNode.removeChild($('postlistreply'));
+	$('hiddenpoststip').parentNode.removeChild($('hiddenpoststip'));
+	$('hiddenposts').innerHTML+='<div id="postlistreply" class="pl">'+postlistreply+'</div>';
+}
+
+function show_threadpage(pid, current, maxpage, ispreview) {
+	if(!$('threadpage') || typeof tid == 'undefined') {
+		return;
+	};
+	var clickvalue = function (page) {
+		return 'ajaxget(\'forum.php?mod=viewthread&tid=' + tid + '&viewpid=' + pid + '&cp=' + page + (ispreview ? '&from=preview' : '') + '\', \'post_' + pid + '\', \'ajaxwaitid\');';
+	};
+	var pstart = current - 1;
+	pstart = pstart < 1 ? 1 : pstart;
+	var pend = current + 1;
+	pend = pend > maxpage ? maxpage : pend;
+	var s = '<div class="cm pgs mtm mbm cl"><div class="pg">';
+	if(pstart > 1) {
+		s += '<a href="javascript:;" onclick="' + clickvalue(1) + '">1 ...</a>';
+	}
+	for(i = pstart;i <= pend;i++) {
+		s += i == current ? '<strong>' + i + '</strong>' : '<a href="javascript:;" onclick="' + clickvalue(i)+ '">' + i + '</a>';
+	}
+	if(pend < maxpage) {
+		s += '<a href="javascript:;" onclick="' + clickvalue(maxpage)+ '">... ' + maxpage + '</a>';
+	}
+	if(current < maxpage) {
+		s += '<a href="javascript:;" onclick="' + clickvalue(current + 1) + '" class="nxt">下一页</a>';
+	}
+	s += '<a href="javascript:;" onclick="' + clickvalue('all') + '">查看所有</a>';
+	s += '</div></div>';
+	$('threadpage').innerHTML = s;
+}
+
+var show_threadindex_data = '';
+function show_threadindex(pid, ispreview) {
+	if(!show_threadindex_data) {
+		var s = '<div class="tindex"><h3>目录</h3><ul>';
+		for(i in $('threadindex').childNodes) {
+			o = $('threadindex').childNodes[i];
+			if(o.tagName == 'A') {
+				var sub = o.getAttribute('sub').length * 2;
+				o.href = "javascript:;";
+				if(o.getAttribute('page')) {
+					s += '<li style="margin-left:' + sub + 'em" onclick="ajaxget(\'forum.php?mod=viewthread&threadindex=yes&tid=' + tid + '&viewpid=' + pid + '&cp=' + o.getAttribute('page') + (ispreview ? '&from=preview' : '') + '\', \'post_' + pid + '\', \'ajaxwaitid\')">' + o.innerHTML + '</li>';
+				} else if(o.getAttribute('tid') && o.getAttribute('pid')) {
+					s += '<li style="margin-left:' + sub + 'em" onclick="ajaxget(\'forum.php?mod=viewthread&threadindex=yes&tid=' + o.getAttribute('tid') + '&viewpid=' + o.getAttribute('pid') + (ispreview ? '&from=preview' : '') + '\', \'post_' + pid + '\', \'ajaxwaitid\')">' + o.innerHTML + '</li>';
+				}
+			}
+		}
+		s += '</ul></div>';
+		$('threadindex').innerHTML = s;
+		show_threadindex_data = s;
+	} else {
+		$('threadindex').innerHTML = show_threadindex_data;
+	}
+}
+function ctrlLeftInfo(sli_staticnum) {
+	var sli = $('scrollleftinfo');
+	var postlist_bottom = parseInt($('postlist').getBoundingClientRect().bottom);
+	var sli_bottom = parseInt(sli.getBoundingClientRect().bottom);
+	if(postlist_bottom < sli_staticnum && postlist_bottom != sli_bottom) {
+		sli.style.top = (postlist_bottom - sli.offsetHeight - 5)+'px';
+	} else{
+		sli.style.top = 'auto';
+	}
+}
+
+function fixed_avatar(pids, fixednv) {
+	var fixedtopnv = fixednv ? new fixed_top_nv('nv', true) : false;
+	if(fixednv) {
+		fixedtopnv.init();
+	}
+	function fixedavatar(e) {
+		var avatartop = fixednv ? fixedtopnv.run() : 0;
+		for(var i = 0; i < pids.length; i++) {
+			var pid = pids[i];
+			var posttable = $('pid'+pid);
+			var postavatar = $('favatar'+pid);
+			if(!$('favatar'+pid)) {
+				return;
+			}
+			var nextpost = $('_postposition'+pid);
+			if(!postavatar || !nextpost || posttable.offsetHeight - 100 < postavatar.offsetHeight) {
+				if(postavatar.style.position == 'fixed') {
+					postavatar.style.position = '';
+				}
+				continue;
+			}
+			var avatarstyle = postavatar.style;
+			posttabletop = parseInt(posttable.getBoundingClientRect().top);
+			nextposttop = parseInt(nextpost.getBoundingClientRect().top);
+			if(nextposttop > 0 && nextposttop <= postavatar.offsetHeight) {
+				if(BROWSER.firefox) {
+					if(avatarstyle.position != 'fixed') {
+						avatarstyle.position = 'fixed';
+					}
+					avatarstyle.top = -(postavatar.offsetHeight - nextposttop)+'px';
+				} else {
+					postavatar.parentNode.style.position = 'relative';
+					avatarstyle.top = '';
+					avatarstyle.bottom = '0px';
+					avatarstyle.position = 'absolute';
+				}
+			} else if(posttabletop < 0 && nextposttop > 0) {
+					if(postavatar.parentNode.style.position != '') {
+						postavatar.parentNode.style.position = '';
+					}
+					if(avatarstyle.position != 'fixed' || parseInt(avatarstyle.top) != avatartop) {
+						avatarstyle.bottom = '';
+						avatarstyle.top = avatartop + 'px';
+						avatarstyle.position = 'fixed';
+					}
+			} else if(avatarstyle.position != '') {
+				avatarstyle.position = '';
+			}
+		}
+	}
+	if(!(BROWSER.ie && BROWSER.ie < 7)) {
+		_attachEvent(window, 'load', function(){_attachEvent(window, 'scroll', fixedavatar);});
+	}
+}
+
+function submitpostpw(pid, tid) {
+	var obj = $('postpw_' + pid);
+	appendscript(JSPATH + 'md5.js?' + VERHASH);
+	safescript('md5_js', function () {
+		setcookie('postpw_' + pid, hex_md5(obj.value));
+		if(!tid) {
+			location.href = location.href;
+		} else {
+			location.href = 'forum.php?mod=viewthread&tid='+tid;
+		}
+	}, 100, 50);
+}
+
+function threadbegindisplay(type, w, h, s) {
+
+	$('begincloseid').onclick = function() {
+		$('threadbeginid').style.display = 'none';
+	};
+	var imgobj = $('threadbeginid');
+	imgobj.style.left = (document.body.clientWidth - w)/2 + 'px';
+	imgobj.style.top = (document.body.clientHeight - h)/2 + 'px';
+	if(type == 1) {
+		autozoom(w, h, s);
+	} else if(type == 2) {
+		autofade(w, h, s);
+	} else {
+		setTimeout(function() {
+			$('threadbeginid').style.display = 'none';
+		}, s);
+	}
+}
+
+function autofade(w, h, s) {
+	this.imgobj = $('threadbeginid');
+	this.opacity = 0;
+	this.fadein = function() {
+		if(BROWSER.ie) {
+			this.imgobj.filters.alpha.opacity = this.opacity;
+		} else {
+			this.imgobj.style.opacity = this.opacity/100;
+		}
+		if(this.opacity >= 100) {
+			setTimeout(this.fadeout, s);
+			return;
+		}
+		this.opacity++;
+		setTimeout(this.fadein, 50);
+	};
+	this.fadeout = function() {
+		if(BROWSER.ie) {
+			this.imgobj.filters.alpha.opacity = this.opacity;
+		} else {
+			this.imgobj.style.opacity = this.opacity/100;
+		}
+		if(this.opacity <= 0) {
+			this.imgobj.style.display = 'none';
+			return;
+		}
+		this.opacity--;
+		setTimeout(this.fadeout, 50);
+	};
+	this.fadein();
+}
+
+function autozoom(w, h, s) {
+	this.height = 0;
+	this.imgobj = $('threadbeginid');
+	this.imgobj.style.overflow = 'hidden';
+	this.imgobj.style.display = '';
+	this.autozoomin = function() {
+		this.height += 5;
+		if(this.height >= h) {
+			this.imgobj.style.height = h + 'px';
+			setTimeout(this.autozoomout, s);
+			return;
+		}
+		this.imgobj.style.height = this.height + 'px';
+		setTimeout(this.autozoomin, 50);
+	};
+	this.autozoomout = function() {
+		this.height -= 5;
+		if(this.height <= 0) {
+			this.imgobj.style.height = 0 + 'px';
+			this.imgobj.style.display = 'none';
+			return;
+		}
+		this.imgobj.style.height = this.height + 'px';
+		setTimeout(this.autozoomout, 50);
+	};
+	this.autozoomin();
+}
+
+function readmode(title, pid) {
+
+	var imagelist = '';
+	if(aimgcount[pid]) {
+		for(var i = 0; i < aimgcount[pid].length;i++) {
+			var aimgObj = $('aimg_'+aimgcount[pid][i]);
+			if(aimgObj.parentElement.className!="mbn") {
+				var src = aimgObj.getAttribute('file');
+				imagelist += '<div class="mbn"><img src="' + src + '" width="600" /></div>';
+			}
+		}
+	}
+	msg = $('postmessage_'+pid).innerHTML+imagelist;
+	msg = '<div style="width:800px;max-height:500px; overflow-y:auto; padding: 10px;" class="pcb">'+msg+'</div>';
+	showDialog(msg, 'info', title, null, 1);
+	var coverObj = $('fwin_dialog_cover');
+	coverObj.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(opacity=90)';
+	coverObj.style.opacity = 0.9;
+}
+
+function changecontentdivid(tid) {
+	if($('postlistreply')) {
+		objtid = $('postlistreply').getAttribute('tid');
+		if(objtid == tid) {
+			return;
+		}
+		$('postlistreply').id = 'postlistreply_'+objtid;
+		postnewdiv = $('postlistreply_'+objtid).childNodes;
+		postnewdiv[postnewdiv.length-1].id = 'post_new_'+objtid;
+	}
+	$('postlistreply_'+tid).id = 'postlistreply';
+	postnewdiv = $('postlistreply').childNodes;
+	postnewdiv[postnewdiv.length-1].id = 'post_new';
+}
+
+function showmobilebbs(obj) {
+	var content = '<h3 class="flb" style="cursor:move;"><em>下载掌上论坛</em><span><a href="javascript:;" class="flbc" onclick="hideWindow(\'mobilebbs\')" title="{lang close}">{lang close}</a></span></h3><div class="c"><h4>Andriod版本，扫描二维码可以直接下载到手机</h4><p class="mtm mbm vm"><span class="code_bg"><img src="'+ STATICURL +'image/common/zslt_andriod.png" alt="" /></span><img src="'+ STATICURL +'image/common/andriod.png" alt="适用于装有安卓系统的三星/HTC/小米等手机" /></p><h4>iPhone版本，扫描二维码可以直接下载到手机</h4><p class="mtm mbm vm"><span class="code_bg"><img src="'+ STATICURL +'image/common/zslt_ios.png" alt="" /></span><img src="'+ STATICURL +'image/common/ios.png" alt="适用于苹果手机" /></p></div>';
+	showWindow('mobilebbs', content, 'html');
+}
+
+function succeedhandle_vfastpost(url, message, param) {
+	$('vmessage').value = '';
+	succeedhandle_fastpost(url, message, param);
+	showCreditPrompt();
+}
+
+function vmessage() {
+	var vf_tips = '#在这里快速回复#';
+	$('vmessage').value = vf_tips;
+	$('vmessage').style.color = '#CDCDCD';
+	$('vmessage').onclick = function() {
+		if($('vmessage').value==vf_tips) {
+			$('vmessage').value='';
+			$('vmessage').style.color="#000";
+		}
+	};
+	$('vmessage').onblur = function() {
+		if(!$('vmessage').value) {
+			$('vmessage').value=vf_tips;
+			$('vmessage').style.color="#CDCDCD";
+		}
+	};
+	$('vreplysubmit').onclick = function() {
+		if($('vmessage').value == vf_tips) {
+			return false;
+		}
+	};
+	$('vreplysubmit').onmouseover = function() {
+		if($('vmessage').value != vf_tips) {
+			ajaxget('forum.php?mod=ajax&action=checkpostrule&ac=reply', 'vfastpostseccheck');
+			$('vreplysubmit').onmouseover = null;
+		}
+	};
 }

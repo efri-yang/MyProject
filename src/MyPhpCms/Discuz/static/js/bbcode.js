@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: bbcode.js 35332 2015-06-15 07:05:10Z nemohou $
+	$Id: bbcode.js 36359 2017-01-20 05:06:45Z nemohou $
 */
 
 var re, DISCUZCODE = [];
@@ -80,6 +80,13 @@ function bbcode2html(str) {
 		str = str.replace(/\[url=((https?|ftp|gopher|news|telnet|rtsp|mms|callto|bctp|thunder|qqdl|synacast){1}:\/\/|www\.|mailto:)?([^\r\n\[\"']+?)\]([\s\S]+?)\[\/url\]/ig, '<a href="$1$3" target="_blank">$4</a>');
 		str = str.replace(/\[email\](.[^\\=[]*)\[\/email\]/ig, '<a href="mailto:$1">$1</a>');
 		str = str.replace(/\[email=(.[^\\=[]*)\](.*?)\[\/email\]/ig, '<a href="mailto:$1" target="_blank">$2</a>');
+		str = str.replace(/\[postbg\]\s*([^\[\<\r\n;'\"\?\(\)]+?)\s*\[\/postbg\]/ig, function($1, $2) {
+			addCSS = '';
+			if(in_array($2, postimg_type["postbg"])) {
+				addCSS = '<style type="text/css" name="editorpostbg">body{background-image:url("'+STATICURL+'image/postbg/'+$2+'");}</style>';
+			}
+			return addCSS;
+		});
 		str = str.replace(/\[color=([\w#\(\),\s]+?)\]/ig, '<font color="$1">');
 		str = str.replace(/\[backcolor=([\w#\(\),\s]+?)\]/ig, '<font style="background-color:$1">');
 		str = str.replace(/\[size=(\d+?)\]/ig, '<font size="$1">');
@@ -309,11 +316,30 @@ function html2bbcode(str) {
 
 	str = str.replace(/<div\sclass=["']?blockcode["']?>[\s\S]*?<blockquote>([\s\S]+?)<\/blockquote>[\s\S]*?<\/div>/ig, function($1, $2) {return codetag($2);});
 
+	if(!fetchCheckbox('bbcodeoff') && allowbbcode) {
+		var postbg = '';
+		str = str.replace(/<style[^>]+name="editorpostbg"[^>]*>body{background-image:url\("([^\[\<\r\n;'\"\?\(\)]+?)"\);}<\/style>/ig, function($1, $4) {
+			$4 = $4.replace(STATICURL+'image/postbg/', '');
+			return '[postbg]'+$4+'[/postbg]';
+		});
+		str = str.replace(/\[postbg\]\s*([^\[\<\r\n;'\"\?\(\)]+?)\s*\[\/postbg\]/ig, function($1, $2) {
+			postbg = $2;
+			return '';
+		});
+		if(postbg) {
+			str = '[postbg]'+postbg+'[/postbg]' + str;
+		}
+	}
+
 	str = preg_replace(['<style.*?>[\\\s\\\S]*?<\/style>', '<script.*?>[\\\s\\\S]*?<\/script>', '<noscript.*?>[\\\s\\\S]*?<\/noscript>', '<select.*?>[\s\S]*?<\/select>', '<object.*?>[\s\S]*?<\/object>', '<!--[\\\s\\\S]*?-->', ' on[a-zA-Z]{3,16}\\\s?=\\\s?"[\\\s\\\S]*?"'], '', str);
 
 	str= str.replace(/(\r\n|\n|\r)/ig, '');
 
 	str= str.replace(/&((#(32|127|160|173))|shy|nbsp);/ig, ' ');
+
+	if(fetchCheckbox('allowimgurl')) {
+		str = str.replace(/([^>=\]"'\/]|^)((((https?|ftp):\/\/)|www\.)([\w\-]+\.)*[\w\-\u4e00-\u9fa5]+\.([\.a-zA-Z0-9]+|\u4E2D\u56FD|\u7F51\u7EDC|\u516C\u53F8)((\?|\/|:)+[\w\.\/=\?%\-&~`@':+!]*)+\.(jpg|gif|png|bmp))/ig, '$1[img]$2[/img]');
+	}
 
 	if(!fetchCheckbox('parseurloff')) {
 		str = parseurl(str, 'bbcode', false);
@@ -360,7 +386,7 @@ function html2bbcode(str) {
 			'[/b]'
 		], str);
 
-		str = str.replace(/<h([0-9]+)[^>]*>(.*)<\/h\\1>/ig, "[size=$1]$2[/size]\n\n");
+		str = str.replace(/<h([0-9]+)[^>]*>([\s\S]*?)<\/h\1>/ig, function($1, $2, $3) {return "[size=" + (7 - $2) + "]" + $3 + "[/size]\n\n";});
 		str = str.replace(/<hr[^>]*>/ig, "[hr]");
 		str = str.replace(/<img[^>]+smilieid=(["']?)(\d+)(\1)[^>]*>/ig, function($1, $2, $3) {return smileycode($3);});
 		str = str.replace(/<img([^>]*src[^>]*)>/ig, function($1, $2) {return imgtag($2);});
@@ -385,10 +411,6 @@ function html2bbcode(str) {
 	}
 
 	str = str.replace(/<[\/\!]*?[^<>]*?>/ig, '');
-
-	if(fetchCheckbox('allowimgurl')) {
-		str = str.replace(/([^>=\]"'\/]|^)((((https?|ftp):\/\/)|www\.)([\w\-]+\.)*[\w\-\u4e00-\u9fa5]+\.([\.a-zA-Z0-9]+|\u4E2D\u56FD|\u7F51\u7EDC|\u516C\u53F8)((\?|\/|:)+[\w\.\/=\?%\-&~`@':+!]*)+\.(jpg|gif|png|bmp))/ig, '$1[img]$2[/img]');
-	}
 
 	for(var i = 0; i <= DISCUZCODE['num']; i++) {
 		str = str.replace("[\tDISCUZ_CODE_" + i + "\t]", DISCUZCODE['html'][i]);

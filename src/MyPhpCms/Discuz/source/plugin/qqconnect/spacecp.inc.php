@@ -4,7 +4,7 @@
  *	  [Discuz! X] (C)2001-2099 Comsenz Inc.
  *	  This is NOT a freeware, use is subject to license terms
  *
- *	  $Id: spacecp.inc.php 32450 2013-01-17 09:12:39Z liulanbo $
+ *	  $Id: spacecp.inc.php 33645 2013-07-25 01:32:20Z nemohou $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -21,7 +21,8 @@ if (!in_array($pluginop, array('config', 'share', 'new', 'sync_tthread'))) {
 }
 $sh_type = trim(intval($_GET['sh_type']));
 $tid = trim(intval($_GET['thread_id']));
-$connectService = Cloud::loadClass('Service_Connect');
+require_once DISCUZ_ROOT.'/source/plugin/qqconnect/lib/Connect.php';
+$connectService = new Cloud_Service_Connect();
 if ($pluginop == 'config') {
 
 	$connectService->connectMergeMember();
@@ -48,20 +49,8 @@ if ($pluginop == 'config') {
 
 	$post = C::t('forum_post')->fetch_threadpost_by_tid_invisible($tid, 0);
 	$thread = C::t('forum_thread')->fetch_by_tid_displayorder($tid, 0);
-	$msglower = strtolower($post['message']);
-	if(strpos($msglower, '[/quote]') !== FALSE) {
-		$post['message'] = preg_replace('/\[quote\].*\[\/quote\](\r\n|\n|\r){0,}/is', '', $post['message']);
-	}
-	if(strpos($msglower, '[/media]') !== FALSE) {
-		$post['message'] = preg_replace("/\[media=([\w,]+)\]\s*([^\[\<\r\n]+?)\s*\[\/media\]/ies", '', $post['message']);
-	}
-	if(strpos($msglower, '[/flash]') !== FALSE) {
-		$post['message'] = preg_replace("/\[flash(=(\d+),(\d+))?\]\s*([^\[\<\r\n]+?)\s*\[\/flash\]/ies", '', $post['message']);
-	}
-
-	if(strpos($msglower, '[/hide]') !== FALSE) {
-		$post['message'] = preg_replace("/\[hide[=]?(d\d+)?[,]?(\d+)?\]\s*(.*?)\s*\[\/hide\]/is", '', $post['message']);
-	}
+	require_once libfile('function/post');
+	$post['message'] = messagesafeclear($post['message']);
 	$html_content = $connectService->connectParseBbcode($post['message'], $thread['fid'], $post['pid'], $post['htmlon'], $attach_images);
 	if ($_G['group']['allowgetimage'] && $thread['price'] == 0 && $post['pid']) {
 		if ($attach_images && is_array($attach_images)) {
@@ -75,8 +64,32 @@ if ($pluginop == 'config') {
 			unset($attach_images);
 		}
 	}
-	$share_message = lang('plugin/qqconnect', 'connect_spacecp_share_a_post', array('bbname' => cutstr($_G['setting']['bbname'], 20,''), 'subject' => cutstr($thread['subject'], 120), 'message' => cutstr(strip_tags(str_replace('&nbsp;', ' ', $html_content)), 80)));
-	$share_message = str_replace(array('\'', "\r\n", "\r", "\n"), array('"', '', '', ''), $share_message);
+
+	if($_GET['sh_type'] == 4){
+		if($_G['setting']['rewritestatus'] && in_array('forum_viewthread', $_G['setting']['rewritestatus'])) {
+			$url = rewriteoutput('forum_viewthread', 1, $_G['siteurl'], $tid);
+		} else {
+			$url = $_G['siteurl'].'forum.php?mod=viewthread&tid='.$tid;
+		}
+		$shareqq_params = array(
+			'url' => $url,
+			'title' => diconv($thread['subject'], CHARSET, 'UTF-8'),
+			'summary' => diconv(cutstr(strip_tags(str_replace('&nbsp;', ' ', $html_content)), 80), CHARSET, 'UTF-8'),
+			'desc' => diconv(lang('plugin/qqconnect', 'connect_spacecp_share_qq_default'), CHARSET, 'UTF-8'),
+			'site' => 'discuz|',
+			'style' => '103',
+			'width' => 50,
+			'height' => 16
+		);
+		$s = '';
+		foreach($shareqq_params as $key => $val) {
+			$s .= ($s ? '&' : '').$key.'='.urlencode($val);
+		}
+		header('Location: http://connect.qq.com/widget/shareqq/index.html?'.$s);
+	} else {
+		$share_message = lang('plugin/qqconnect', 'connect_spacecp_share_a_post', array('bbname' => cutstr($_G['setting']['bbname'], 20,''), 'subject' => cutstr($thread['subject'], 120), 'message' => cutstr(strip_tags(str_replace('&nbsp;', ' ', $html_content)), 80)));
+		$share_message = str_replace(array('\'', "\r\n", "\r", "\n"), array('"', '', '', ''), $share_message);
+	}
 } elseif ($pluginop == 'new') {
 	if (trim($_GET['formhash']) != formhash()) {
 		showmessage('submit_invalid');
@@ -94,24 +107,15 @@ if ($pluginop == 'config') {
 		$url = $_G['siteurl'].'forum.php?mod=viewthread&tid='.$tid;
 	}
 
-	$connectOAuthClient = Cloud::loadClass('Service_Client_ConnectOAuth');
-	$connectService = Cloud::loadClass('Service_Connect');
-	if($sh_type == 1 || $sh_type == 3) {
+	require_once DISCUZ_ROOT.'/source/plugin/qqconnect/lib/ConnectOAuth.php';
+	$connectOAuthClient = new Cloud_Service_Client_ConnectOAuth();
+	require_once DISCUZ_ROOT.'/source/plugin/qqconnect/lib/Connect.php';
+	$connectService = new Cloud_Service_Connect();
+	if($sh_type == 3) {
 
 		$firstpost = C::t('forum_post')->fetch_threadpost_by_tid_invisible($tid, 0);
-		$msglower = strtolower($firstpost['message']);
-		if(strpos($msglower, '[/quote]') !== FALSE) {
-			$firstpost['message'] = preg_replace('/\[quote\].*\[\/quote\](\r\n|\n|\r){0,}/is', '', $firstpost['message']);
-		}
-		if(strpos($msglower, '[/media]') !== FALSE) {
-			$firstpost['message'] = preg_replace("/\[media=([\w,]+)\]\s*([^\[\<\r\n]+?)\s*\[\/media\]/ies", '', $firstpost['message']);
-		}
-		if(strpos($msglower, '[/flash]') !== FALSE) {
-			$firstpost['message'] = preg_replace("/\[flash(=(\d+),(\d+))?\]\s*([^\[\<\r\n]+?)\s*\[\/flash\]/ies", '', $firstpost['message']);
-		}
-		if(strpos($msglower, '[/hide]') !== FALSE) {
-			$firstpost['message'] = preg_replace("/\[hide[=]?(d\d+)?[,]?(\d+)?\]\s*(.*?)\s*\[\/hide\]/is", '', $firstpost['message']);
-		}
+		require_once libfile('function/post');
+		$firstpost['message'] = messagesafeclear($firstpost['message']);
 		$summary = $connectService->connectParseBbcode($firstpost['message'], $firstpost['fid'], $firstpost['pid'], $firstpost['htmlon'], $attach_images);
 
 		$qzone_params = array(
@@ -123,10 +127,18 @@ if ($pluginop == 'config') {
 			'nswb' => '1',
 		);
 
-		try {
-			$response = $connectOAuthClient->connectAddShare($_G['member']['conopenid'], $_G['member']['conuin'], $_G['member']['conuinsecret'], $qzone_params);
-		} catch(Exception $e) {
-			$errorCode = $e->getCode();
+		if(!$_G['setting']['connect']['oauth2'] || !$_G['member']['conuintoken']) {
+			try {
+				$response = $connectOAuthClient->connectAddShare($_G['member']['conopenid'], $_G['member']['conuin'], $_G['member']['conuinsecret'], $qzone_params);
+			} catch(Exception $e) {
+				$errorCode = $e->getCode();
+			}
+		} else {
+			try {
+				$response = $connectOAuthClient->connectAddShare_V2($_G['member']['conopenid'], $_G['member']['conuintoken'], $qzone_params);
+			} catch(Exception $e) {
+				$errorCode = $e->getCode();
+			}
 		}
 
 		if($errorCode) {
@@ -166,10 +178,19 @@ if ($pluginop == 'config') {
 			$method = 'connectAddT';
 		}
 
-		try {
-			$response = $connectOAuthClient->$method($_G['member']['conopenid'], $_G['member']['conuin'], $_G['member']['conuinsecret'], $t_params);
-		} catch(Exception $e) {
-			$errorCode = $e->getCode();
+		if(!$_G['setting']['connect']['oauth2'] || !$_G['member']['conuintoken']) {
+			try {
+				$response = $connectOAuthClient->$method($_G['member']['conopenid'], $_G['member']['conuin'], $_G['member']['conuinsecret'], $t_params);
+			} catch(Exception $e) {
+				$errorCode = $e->getCode();
+			}
+		} else {
+			try {
+				$method = $method.'_V2';
+				$response = $connectOAuthClient->$method($_G['member']['conopenid'], $_G['member']['conuintoken'], $t_params);
+			} catch(Exception $e) {
+				$errorCode = $e->getCode();
+			}
 		}
 
 		if($errorCode) {
@@ -207,7 +228,7 @@ if ($pluginop == 'config') {
 			}
 			$code = $response['ret'];
 			$message = lang('plugin/qqconnect', 'connect_broadcast_success');
-    	}
+		}
 	}
 } elseif($pluginop == 'sync_tthread') {
 	if (trim($_GET['formhash']) != formhash()) {
@@ -238,7 +259,8 @@ if ($pluginop == 'config') {
 		exit;
 	}
 
-	$connectOAuthClient = Cloud::loadClass('Service_Client_ConnectOAuth');
+	require_once DISCUZ_ROOT.'/source/plugin/qqconnect/lib/ConnectOAuth.php';
+	$connectOAuthClient = new Cloud_Service_Client_ConnectOAuth();
 	$connectmember = C::t('#qqconnect#common_member_connect')->fetch_fields_by_openid($tthread['conopenid']);
 	$param = array();
 	$param['format'] = 'xml';

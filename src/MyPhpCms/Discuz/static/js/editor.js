@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: editor.js 33348 2013-05-30 08:55:20Z laoguozhang $
+	$Id: editor.js 34614 2014-06-12 02:48:35Z nemohou $
 */
 
 var editorcurrentheight = 400, editorminheight = 400, savedataInterval = 30, editbox = null, editwin = null, editdoc = null, editcss = null, savedatat = null, savedatac = 0, autosave = 1, framemObj = null, cursor = -1, stack = [], initialized = false, postSubmited = false, editorcontroltop = false, editorcontrolwidth = false, editorcontrolheight = false, editorisfull = 0, fulloldheight = 0, savesimplodemode = null;
@@ -14,7 +14,7 @@ var EXTRASELECTION = '', EXTRASEL = null;
 
 function newEditor(mode, initialtext) {
 	wysiwyg = parseInt(mode);
-	if(!(BROWSER.ie || BROWSER.firefox || (BROWSER.opera >= 9))) {
+	if(!(BROWSER.ie || BROWSER.firefox || (BROWSER.opera >= 9 || BROWSER.rv))) {
 		allowswitcheditor = wysiwyg = 0;
 	}
 	if(!allowswitcheditor) {
@@ -58,6 +58,7 @@ function initEditor() {
 		return;
 	}
 	var buttons = $(editorid + '_controls').getElementsByTagName('a');
+	initesbar();
 	for(var i = 0; i < buttons.length; i++) {
 		if(buttons[i].id.indexOf(editorid + '_') != -1) {
 			buttons[i].href = 'javascript:;';
@@ -105,36 +106,40 @@ function initEditor() {
 		savedataTime();
 		savedatat = setInterval("savedataTime()", 10000);
 	}
-	initcstbar();
 	checkFocus();
 }
 
-function initcstbar() {
-	if(!$(editorid + '_cst')) {
+function initesbar() {
+	if(!$(editorid + '_adv_s3')) {
 		return;
 	}
-	$(editorid + '_cst').style.position = 'static';
-	$(editorid + '_cst').style.width = '44px';
-	$(editorid + '_cst').style.display = '';
-	$(editorid + '_cst').style.overflow = 'hidden';
-	$(editorid + '_cst').onmouseover = function () {
-		$(editorid + '_cst').hs = $(editorid + '_cst').style.height;
-		$(editorid + '_cst').style.height = 'auto';
-		if($(editorid + '_cst').offsetHeight < 50) {
-			return;
+	var buttons = $(editorid + '_adv_s3').getElementsByTagName('A');
+	var s = '';
+	for(i = 0;i < buttons.length;i++) {
+		if(i/2 == parseInt(i/2)) {
+			s += '<p>';
 		}
-		pos = fetchOffset($(editorid + '_cst'), 1);
-		$(editorid + '_cst').style.position = 'absolute';
-		$(editorid + '_cst').style.left = pos.left + 'px';
-		$(editorid + '_cst').style.top = pos.top + 'px';
-		$(editorid + '_cst').style.overflow = 'visible';
-		$(editorid + '_cst').className = 'b2r cst';
-	};
-	$(editorid + '_cst').onmouseout = function () {
-		$(editorid + '_cst').style.height = $(editorid + '_cst').hs;
-		$(editorid + '_cst').style.overflow = 'hidden';
-		$(editorid + '_cst').className = 'b2r cst nbb';
-	};
+		s += buttons[i].outerHTML;
+	}
+	$(editorid + '_adv_s3').innerHTML = s;
+	for(var i = 0; i < buttons.length; i++) {
+		if(buttons[i].id.indexOf(editorid + '_') != -1) {
+			buttons[i].href = 'javascript:;';
+			if(buttons[i].id.substr(buttons[i].id.indexOf('_') + 1) == 'fullswitcher') {
+			} else if(buttons[i].id.substr(buttons[i].id.indexOf('_') + 1) == 'simple') {
+			} else {
+				_attachEvent(buttons[i], 'mouseover', function(e) {setEditorTip(BROWSER.ie ? window.event.srcElement.title : e.target.title);});
+				if(buttons[i].id.substr(buttons[i].id.indexOf('_') + 1) == 'url') {
+					buttons[i].onclick = function(e) {discuzcode('unlink');discuzcode('url');doane();};
+				} else {
+					if(!buttons[i].getAttribute('init')) {
+						buttons[i].onclick = function(e) {discuzcode(this.id.substr(this.id.indexOf('_') + 1));doane();};
+					}
+				}
+			}
+			buttons[i].onmouseout = function(e) {setEditorTip('');};
+		}
+	}
 }
 
 function savedataTime() {
@@ -315,7 +320,7 @@ function editorfull(op) {
 		editorcontrolpos();
 	}
 	$(editorid + '_fullswitcher').innerHTML = editorisfull ? '返回' : '全屏';
-	initcstbar();
+	initesbar();
 }
 
 function editorsimple() {
@@ -328,6 +333,7 @@ function editorsimple() {
 		if(allowswitcheditor) {
 			$(editorid + '_switcher').style.display = 'none';
 		}
+		$(editorid + '_adv_s3').className = 'b2r esbs';
 		simplodemode = 1;
 	} else {
 		v = '';
@@ -338,6 +344,7 @@ function editorsimple() {
 		if(allowswitcheditor) {
 			$(editorid + '_switcher').style.display = '';
 		}
+		$(editorid + '_adv_s3').className = 'b2r esb';
 		simplodemode = 0;
 	}
 	setcookie('editormode_' + editorid, simplodemode ? 1 : -1, 2592000);
@@ -346,7 +353,12 @@ function editorsimple() {
 			$(editorid + '_adv_' + i).style.display = v;
 		}
 	}
-	initcstbar();
+	var btns = $(editorid + '_adv_s3').getElementsByTagName('A');
+	for(i = 0;i < btns.length;i++) {
+		if(btns[i].getAttribute('adv')) {
+			btns[i].style.display = v;
+		}
+	}
 }
 
 function pasteWord(str) {
@@ -401,16 +413,10 @@ function ctlent(event) {
 		editorform.submit();
 		return;
 	}
-	if(ctlent_enable[13] && event.keyCode == 13 && wysiwyg && $(editorid + '_insertorderedlist').className != 'hover' && $(editorid + '_insertunorderedlist').className != 'hover') {
-		if(!BROWSER.opera) {
-			insertText('<br>*', 5, 0);
-                } else {
-			insertText('<br> ', 5, 0);
-		}
-		keyBackspace();
-		doane(event);
-	}
 	if(ctlent_enable[9] && event.keyCode == 9) {
+		if(!wysiwyg) {
+			insertText('\t', 1, 0);
+		}
 		doane(event);
 	}
 	if(ctlent_enable[8] && event.keyCode == 8 && wysiwyg) {
@@ -466,6 +472,9 @@ function keyMenu(code, func) {
 
 function checkFocus() {
 	if(wysiwyg) {
+		if(BROWSER.rv) {
+			return;
+		}
 		try {
 			editwin.focus();
 		} catch(e) {
@@ -505,7 +514,7 @@ function writeEditorContents(text) {
 			text = '<!DOCTYPE html PUBLIC "-/' + '/W3C/' + '/DTD XHTML 1.0 Transitional/' + '/EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
 				'<html><head id="editorheader"><meta http-equiv="Content-Type" content="text/html; charset=' + charset + '" />' +
 				(BROWSER.ie && BROWSER.ie > 7 ? '<meta http-equiv="X-UA-Compatible" content="IE=7" />' : '' ) +
-				'<link rel="stylesheet" type="text/css" href="data/cache/style_' + STYLEID + '_wysiwyg.css?' + VERHASH + '" />' +
+				'<link rel="stylesheet" type="text/css" href="misc.php?css=' + STYLEID + '_wysiwyg&' + VERHASH + '" />' +
 				(BROWSER.ie ? '<script>window.onerror = function() { return true; }</script>' : '') +
 				'</head><body>' + text + '</body></html>';
 			editdoc.designMode = allowhtml ? 'on' : 'off';
@@ -524,6 +533,13 @@ function writeEditorContents(text) {
 			initialized = true;
 			if(BROWSER.safari) {
 				editdoc.onclick = safariSel;
+			}
+		}
+		if(BROWSER.ie && BROWSER.ie <= 8) {
+			checkpostbg = /<style[^>]+name="editorpostbg"[^>]*>body{background-image:url\("([^\[\<\r\n;'\"\?\(\)]+?)"\);}<\/style>/ig;
+			var matches = checkpostbg.exec(text);
+			if(matches != null) {
+				editdoc.body.innerHTML += '<style type="text/css" name="editorpostbg">body{background-image:url("'+matches[1]+'");}</style>';
 			}
 		}
 	} else {
@@ -585,9 +601,9 @@ function setEditorEvents() {
 		editwin.addEventListener('keydown', function(e) {keyDown(e)}, true);
 	} else if(editdoc.attachEvent) {
 		try{
-			editdoc.body.attachEvent('onmouseup', mouseUp);
-			editdoc.body.attachEvent('onkeyup', keyUp);
-			editdoc.body.attachEvent('onkeydown', keyDown);
+			editdoc.attachEvent('onmouseup', mouseUp);
+			editdoc.attachEvent('onkeyup', keyUp);
+			editdoc.attachEvent('onkeydown', keyDown);
 		} catch(e) {}
 	}
 }
@@ -684,35 +700,6 @@ function applyFormat(cmd, dialog, argument) {
 	}
 }
 
-function getCaret() {
-	if(wysiwyg) {
-		var obj = editdoc.body;
-		var s = document.selection.createRange();
-		s.setEndPoint('StartToStart', obj.createTextRange());
-		var matches1 = s.htmlText.match(/<\/p>/ig);
-		var matches2 = s.htmlText.match(/<br[^\>]*>/ig);
-		var fix = (matches1 ? matches1.length - 1 : 0) + (matches2 ? matches2.length : 0);
-		var pos = s.text.replace(/\r?\n/g, ' ').length;
-		if(matches3 = s.htmlText.match(/<img[^\>]*>/ig)) pos += matches3.length;
-		if(matches4 = s.htmlText.match(/<\/tr|table>/ig)) pos += matches4.length;
-		return [pos, fix];
-	} else {
-		checkFocus();
-		var sel = document.selection.createRange();
-		editbox.sel = sel;
-		editdoc._selectionStart = editdoc.selectionStart;
-		editdoc._selectionEnd = editdoc.selectionEnd;
-	}
-}
-
-function setCaret(pos) {
-	var obj = wysiwyg ? editdoc.body : editbox;
-	var r = obj.createTextRange();
-	r.moveStart('character', pos);
-	r.collapse(true);
-	r.select();
-}
-
 function isEmail(email) {
 	return email.length > 6 && /^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/.test(email);
 }
@@ -755,14 +742,19 @@ function discuzcode(cmd, arg) {
 
 	checkFocus();
 
-	if(in_array(cmd, ['sml', 'url', 'quote', 'code', 'free', 'hide', 'aud', 'vid', 'fls', 'attach', 'image', 'pasteword']) || typeof EXTRAFUNC['showEditorMenu'][cmd] != 'undefined' || cmd == 'tbl' || in_array(cmd, ['fontname', 'fontsize', 'forecolor', 'backcolor']) && !arg) {
+	if(in_array(cmd, ['sml', 'inserthorizontalrule', 'url', 'quote', 'code', 'free', 'hide', 'aud', 'vid', 'fls', 'beginning', 'attach', 'image', 'pasteword', 'index', 'postbg', 'password']) || typeof EXTRAFUNC['showEditorMenu'][cmd] != 'undefined' || cmd == 'tbl' || in_array(cmd, ['fontname', 'fontsize', 'forecolor', 'backcolor']) && !arg) {
 		showEditorMenu(cmd);
 		return;
 	} else if(cmd.substr(0, 3) == 'cst') {
 		showEditorMenu(cmd.substr(5), cmd.substr(3, 1));
 		return;
-	} else if(wysiwyg && cmd == 'inserthorizontalrule') {
-		insertText('<hr class="l">', 14);
+	} else if(cmd == 'page') {
+		if(wysiwyg) {
+			str = '<br /><p>[page]</p>';
+		} else {
+			str = '\n\n[page]';
+		}
+		insertText(str, strlen(str), 0);
 	} else if(cmd == 'autotypeset') {
 		autoTypeset();
 		return;
@@ -862,7 +854,7 @@ function discuzcode(cmd, arg) {
 		var oldValidate = editorform.onsubmit;
 		var oldAction = editorform.action;
 		editorform.onsubmit = '';
-		editorform.action = 'forum.php?mod=ajax&action=downremoteimg&fid='+fid+'&wysiwyg='+(wysiwyg ? 1 : 0);
+		editorform.action = 'forum.php?mod=ajax&action=downremoteimg&inajax=1&fid='+fid+'&wysiwyg='+(wysiwyg ? 1 : 0);
 		editorform.target = "ajaxpostframe";
 		editorform.message.value = message;
 		editorform.submit();
@@ -884,7 +876,7 @@ function discuzcode(cmd, arg) {
 	if(wysiwyg) {
 		setContext(cmd);
 	}
-	if(in_array(cmd, ['bold', 'italic', 'underline', 'strikethrough', 'inserthorizontalrule', 'fontname', 'fontsize', 'forecolor', 'backcolor', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', 'floatleft', 'floatright', 'removeformat', 'unlink', 'undo', 'redo'])) {
+	if(in_array(cmd, ['bold', 'italic', 'underline', 'strikethrough', 'fontname', 'fontsize', 'forecolor', 'backcolor', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist', 'insertunorderedlist', 'floatleft', 'floatright', 'removeformat', 'unlink', 'undo', 'redo'])) {
 		hideMenu();
 	}
 	doane();
@@ -1005,12 +997,17 @@ function showEditorMenu(tag, params) {
 	var menupos = '43!';
 	var menutype = 'menu';
 
-	if(BROWSER.ie) {
-		sel = wysiwyg ? editdoc.selection.createRange() : document.selection.createRange();
-		pos = getCaret();
-	}
+	try {
+		sel = wysiwyg ? (editdoc.selection.createRange() ? editdoc.selection.createRange() : editdoc.getSelection().getRangeAt(0)) : document.selection.createRange();
+	} catch(e) {}
 
 	selection = sel ? (wysiwyg ? sel.htmlText : sel.text) : getSel();
+
+	if(BROWSER.rv) {
+		selection = editdoc.getSelection();
+		sel = selection.getRangeAt(0);
+		selection = readNodes(sel.cloneContents(), false);
+	}
 
 	if(menu) {
 		if($(ctrlid).getAttribute('menupos') !== null) {
@@ -1043,6 +1040,15 @@ function showEditorMenu(tag, params) {
 			case 'backcolor':
 				showColorBox(ctrlid, 1, '', 1);
 				return;
+			case 'inserthorizontalrule':
+				showHrBox(ctrlid);
+				break;
+			case 'postbg':
+				showHrBox(ctrlid, 'postbg');
+				break;
+			case 'password':
+				str = '<p class="pbn">请输入帖子密码: <input type="text" id="' + ctrlid + '_param_1" size="10" value="" class="px" /></p>';
+				break;
 			case 'code':
 				if(wysiwyg) {
 					opentag = '<div class="blockcode"><blockquote>';
@@ -1075,12 +1081,31 @@ function showEditorMenu(tag, params) {
 			case 'fls':
 				str = '<p class="pbn">请输入 Flash 文件地址:</p><p class="pbn"><input type="text" id="' + ctrlid + '_param_1" class="px" value="" style="width: 220px;" /></p><p class="pbn">宽: <input id="' + ctrlid + '_param_2" size="5" value="" class="px" /> &nbsp; 高: <input id="' + ctrlid + '_param_3" size="5" value="" class="px" /></p><p class="xg2 pbn">支持 swf flv 等 Flash 网址<br />示例: http://server/flash.swf</p>';
 				break;
+			case 'beginning':
+				str = '<p class="pbn">请输入开头动画 Flash 或 图片 地址:</p><p class="pbn"><input type="text" id="' + ctrlid + '_param_1" class="px" value="" style="width: 220px;" /></p>';
+				str += '<p class="pbn">点击链接地址:</p><p class="pbn"><input type="text" id="' + ctrlid + '_param_2" class="px" value="" style="width: 220px;" /></p>';
+				str += '<p class="pbn">宽: <input id="' + ctrlid + '_param_3" size="5" value="" class="px" /> &nbsp; 高: <input id="' + ctrlid + '_param_4" size="5" value="" class="px" /></p>';
+				str += '<p class="pbn">停留秒数: <input id="' + ctrlid + '_param_8" size="5" value="" class="px" /></p>';
+				str += '<p class="pbn">载入、消失的效果: </p><p class="pbn"><input id="' + ctrlid + '_param_7" type="radio" name="effect" checked />无 &nbsp; <input id="' + ctrlid + '_param_5" type="radio" name="effect" />淡入淡出 &nbsp; <input id="' + ctrlid + '_param_6" type="radio" name="effect" />展开闭合</p>';
+				str += '<p class="xg2 pbn">支持 swf flv jpg gif png 网址<br />宽高范围: 宽400~1024 高300~640<br />示例: http://server/flash.swf</p>';
+				break;
 			case 'pasteword':
 				stitle = '从 Word 粘贴内容';
 				str = '<p class="px" style="height:300px"><iframe id="' + ctrlid + '_param_1" frameborder="0" style="width:100%;height:100%" onload="this.contentWindow.document.body.style.width=\'550px\';this.contentWindow.document.body.contentEditable=true;this.contentWindow.document.body.focus();this.onload=null"></iframe></p><p class="xg2 pbn">请通过快捷键(Ctrl+V)把 Word 文件中的内容粘贴到上方</p>';
 				menuwidth = 600;
 				menupos = '00';
 				menutype = 'win';
+				break;
+			case 'index':
+				stitle = '创建帖子目录';
+				str = '<p class="pbn">[index]<br />\n\
+					[#<span class="xi1">页码</span>]<span class="xi1">标题</span> &nbsp;&nbsp;<span class="xg1">跳转到指定的页</span><br />\n\
+					<span class="xi1">*</span>[#<span class="xi1">tid,pid</span>]<span class="xi1">标题</span> &nbsp;&nbsp;<span class="xg1">跳转到指定的帖子</span><br />\n\
+					[/index]<br />\n\
+					<br />\n\
+					<span class="xi1">页码</span> &nbsp;&nbsp;<span class="xg1">用 [page] 对当前帖子分页后的页码</span><br />\n\
+					<span class="xi1">tid,pid</span> &nbsp;&nbsp;<span class="xg1">帖子的 TID 和 PID</span><br />\n\
+					<span class="xi1">*</span> &nbsp;&nbsp;<span class="xg1">添加行首缩进</span></p>';
 				break;
 			default:
 				for(i in EXTRAFUNC['showEditorMenu']) {
@@ -1146,9 +1171,6 @@ function showEditorMenu(tag, params) {
 	}
 	if($(ctrlid + '_submit')) $(ctrlid + '_submit').onclick = function() {
 		checkFocus();
-		if(BROWSER.ie && wysiwyg) {
-			setCaret(pos[0]);
-		}
 		switch(tag) {
 			case 'url':
 				var href = $(ctrlid + '_param_1').value;
@@ -1156,8 +1178,11 @@ function showEditorMenu(tag, params) {
 				if(href != '') {
 					var v = selection ? selection : ($(ctrlid + '_param_2').value ? $(ctrlid + '_param_2').value : href);
 					str = wysiwyg ? ('<a href="' + href + '">' + v + '</a>') : '[url=' + squarestrip(href) + ']' + v + '[/url]';
-					if(wysiwyg) insertText(str, str.length - v.length, 0, (selection ? true : false), sel);
-					else insertText(str, str.length - v.length - 6, 6, (selection ? true : false), sel);
+					if(wysiwyg) {
+						insertText(str, str.length - v.length, 0, (selection ? true : false), sel);
+					} else {
+						insertText(str, str.length - v.length - 6, 6, (selection ? true : false), sel);
+					}
 				}
 				break;
 			case 'code':
@@ -1199,6 +1224,11 @@ function showEditorMenu(tag, params) {
 					str = preg_replace(['<', '>'], ['&lt;', '&gt;'], str);
 					str = str.replace(/\r?\n/g, '<br />');
 				}
+				str = opentag + str + closetag;
+				insertText(str, strlen(opentag), strlen(closetag), false, sel);
+				break;
+			case 'password':
+				str = $(ctrlid + '_param_1') && $(ctrlid + '_param_1').value ? $(ctrlid + '_param_1').value : (selection ? selection : '');
 				str = opentag + str + closetag;
 				insertText(str, strlen(opentag), strlen(closetag), false, sel);
 				break;
@@ -1244,6 +1274,16 @@ function showEditorMenu(tag, params) {
 					insertText('[flash]' + squarestrip($(ctrlid + '_param_1').value) + '[/flash]', 7, 8, false, sel);
 				}
 				break;
+			case 'beginning':
+				if($(ctrlid + '_param_1').value) {
+					insertText('[begin=' + squarestrip($(ctrlid + '_param_2').value) + ',' +
+						($(ctrlid + '_param_3').value ? parseInt($(ctrlid + '_param_3').value) : 0) + ',' +
+						($(ctrlid + '_param_4').value ? parseInt($(ctrlid + '_param_4').value) : 0) + ',' +
+						($(ctrlid + '_param_5').checked ? 2 : ($(ctrlid + '_param_6').checked ? 1 : 0)) + ',' +
+						($(ctrlid + '_param_8').value ? parseInt($(ctrlid + '_param_8').value) : 0) + ']' +
+						squarestrip($(ctrlid + '_param_1').value) + '[/begin]', 7, 8, false, sel);
+				}
+				break;
 			case 'vid':
 				var mediaUrl = $(ctrlid + '_param_1').value;
 				var auto = '';
@@ -1268,7 +1308,7 @@ function showEditorMenu(tag, params) {
 				var style = '';
 				if(wysiwyg) {
 					style += width ? ' width=' + width : '';
-					style += height ? ' height=' + height : '';
+					style += height ? ' _height=' + height : '';
 					var str = '<img src=' + src + style + ' border=0 />';
 					insertText(str, str.length, 0, false, sel);
 				} else {
@@ -1280,6 +1320,15 @@ function showEditorMenu(tag, params) {
 				break;
 			case 'pasteword':
 				pasteWord($(ctrlid + '_param_1').contentWindow.document.body.innerHTML);
+				hideMenu('', 'win');
+				break;
+			case 'index':
+				if(wysiwyg) {
+					str = '[index]<br />[#]<br />[#]<br />[/index]';
+				} else {
+					str = '[index]\n[#]\n[#]\n[/index]';
+				}
+				insertText(str, str.length, 0, false, sel);
 				hideMenu('', 'win');
 				break;
 			default:
@@ -1367,29 +1416,40 @@ function insertText(text, movestart, moveend, select, sel) {
 	checkFocus();
 	if(wysiwyg) {
 		try {
-			editdoc.execCommand('insertHTML', false, text);
+			if(!editdoc.execCommand('insertHTML', false, text)) {
+				throw 'insertHTML Err';
+			}
 		} catch(e) {
-			if(!isUndefined(editdoc.selection) && editdoc.selection.type != 'Text' && editdoc.selection.type != 'None') {
-				movestart = false;
-				editdoc.selection.clear();
-			}
-
-			if(isUndefined(sel)) {
-				sel = editdoc.selection.createRange();
-			}
-
-			sel.pasteHTML(text);
-
-			if(text.indexOf('\n') == -1) {
-				if(!isUndefined(movestart)) {
-					sel.moveStart('character', -strlen(text) + movestart);
-					sel.moveEnd('character', -moveend);
-				} else if(movestart != false) {
-					sel.moveStart('character', -strlen(text));
+			try {
+				if(!isUndefined(editdoc.selection) && editdoc.selection.type != 'Text' && editdoc.selection.type != 'None') {
+					movestart = false;
+					editdoc.selection.clear();
 				}
-				if(!isUndefined(select) && select) {
-					sel.select();
+				range = isUndefined(sel) ? editdoc.selection.createRange() : sel;
+				range.pasteHTML(text);
+				if(text.indexOf('\n') == -1) {
+					if(!isUndefined(movestart)) {
+						range.moveStart('character', -strlen(text) + movestart);
+						range.moveEnd('character', -moveend);
+					} else if(movestart != false) {
+						range.moveStart('character', -strlen(text));
+					}
+					if(!isUndefined(select) && select) {
+						range.select();
+					}
 				}
+			} catch(e) {
+				if(!sel) {
+					var sel = editdoc.getSelection();
+					var range = sel.getRangeAt(0);
+				} else {
+					var range = sel;
+				}
+				if(range && range.insertNode) {
+					range.deleteContents();
+				}
+				var frag = range.createContextualFragment(text);
+				range.insertNode(frag);
 			}
 		}
 	} else {
@@ -1618,6 +1678,101 @@ function loadimgsize(imgurl, editor, p) {
 		}
 	};
 	s.loadCheck();
+}
+
+function showHrBox(ctrlid, boxtype) {
+	if(typeof postimg_type == 'undefined') {
+		var scriptNode = document.createElement("script");
+		scriptNode.type = "text/javascript";
+		scriptNode.charset = charset ? charset : (BROWSER.firefox ? document.characterSet : document.charset);
+		scriptNode.src = 'data/cache/common_postimg.js?' + VERHASH;
+		$('append_parent').appendChild(scriptNode);
+		if(BROWSER.ie) {
+			scriptNode.onreadystatechange = function() {
+				_initHrBox(ctrlid, boxtype);
+			};
+		} else {
+			scriptNode.onload = function() {
+				_initHrBox(ctrlid, boxtype);
+			};
+		}
+	} else {
+		_initHrBox(ctrlid, boxtype);
+	}
+}
+function _initHrBox(ctrlid, boxtype) {
+	if(!$(ctrlid + '_menu')) {
+		var menu = document.createElement('div');
+		menu.id = ctrlid + '_menu';
+		menu.unselectable = true;
+		menu.style.display = 'none';
+		if(boxtype == 'postbg') {
+			menu.className = 'p_pop postbgbox';
+			var imglist = postimg_type['postbg'];
+			var str = '';
+			for(var i = 0; i < imglist.length; i++) {
+				str += '<input type="button" style="background-image: url(\''+ STATICURL+'image/postbg/'+imglist[i]+ '\');"' +  ' onclick="'
+				+ 'insertPostBackground(\''+imglist[i]+'\');'
+				+ '" />' ;
+			}
+		} else {
+			menu.className = 'p_pop hrbox';
+			var hrimglist = postimg_type['hrline'];
+			var str = '';
+			for(var i = 0; i < hrimglist.length; i++) {
+				inserturl = (hrimglist[i] != '0.gif') ? "'"+STATICURL+'image/hrline/'+hrimglist[i]+"'" : 'false';
+				str += '<input type="button" style="background-image: url(\'' + STATICURL+'image/hrline/'+hrimglist[i]+ '\');"' +  ' onclick="'
+				+ 'insertHrImage('+inserturl+');'
+				+ '" />' ;
+			}
+		}
+		menu.innerHTML = str;
+		$('append_parent').appendChild(menu);
+	}
+}
+function insertHrImage(url) {
+	checkFocus();
+	if(wysiwyg) {
+		if(url !== false) {
+			insertText('<br><img src="' + url + '" border="0" alt="" /><br><br>', false);
+		} else {
+			insertText('<hr class="l">', 14);
+		}
+	} else {
+		if(url !== false) {
+			code = '\n[img]'+url+'[/img]\n';
+		} else {
+			code = '[hr]';
+		}
+		insertText(code, strlen(code), 0);
+	}
+	hideMenu();
+}
+function insertPostBackground(img) {
+	checkFocus();
+	if(img != '0.gif') {
+		code = '[postbg]'+img+'[/postbg]';
+		if(wysiwyg) {
+			postbgElement = !BROWSER.ie ? editdoc.getElementsByName('editorpostbg') : editdoc.getElementsByTagName('style');
+			for(var i = 0; i < postbgElement.length; i++) {
+				postbgElement[i].parentNode.removeChild(postbgElement[i]);
+			}
+			editdoc.body.innerHTML += '<style type="text/css" name="editorpostbg">body{background-image:url("'+STATICURL+'image/postbg/'+img+'");}</style>';
+		} else {
+			editdoc.value = editdoc.value.replace(/\[postbg\]\s*([^\[\<\r\n;'\"\?\(\)]+?)\s*\[\/postbg\]/ig, '');
+			editdoc.value = editdoc.value+code;
+		}
+	} else {
+		if(wysiwyg) {
+			postbgElement = !BROWSER.ie ? editdoc.getElementsByName('editorpostbg') : editdoc.getElementsByTagName('style');
+			for(var i = 0; i < postbgElement.length; i++) {
+				postbgElement[i].parentNode.removeChild(postbgElement[i]);
+			}
+		} else {
+			editdoc.value = editdoc.value.replace(/\[postbg\]\s*([^\[\<\r\n;'\"\?\(\)]+?)\s*\[\/postbg\]/ig, '');
+		}
+	}
+	hideMenu();
 }
 
 if(typeof jsloaded == 'function') {

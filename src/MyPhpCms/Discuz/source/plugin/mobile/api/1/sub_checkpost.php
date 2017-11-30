@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: sub_checkpost.php 28400 2012-02-29 03:07:57Z monkey $
+ *      $Id: sub_checkpost.php 32489 2013-01-29 03:57:16Z monkey $
  */
 
 if(!defined('IN_MOBILE_API')) {
@@ -13,7 +13,7 @@ if(!defined('IN_MOBILE_API')) {
 
 class mobile_api_sub {
 
-	function getvariable() {
+	public static function getvariable() {
 		global $_G;
 		if(empty($_G['forum'])) {
 			$allowpost = 0;

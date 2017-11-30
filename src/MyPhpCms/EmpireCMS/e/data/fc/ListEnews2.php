@@ -3,4 +3,4 @@ if(!defined('InEmpireCMS'))
 {
 	exit();
 }
-?><table border=0 cellspacing=0 cellpadding=0><tr><td id="pr2" class="menu1" onclick="chengstate('2')"><a onmouseout=chft(this,0,2) onmouseover=chft(this,1,2) oncontextmenu=ShRM(this,0,2,'',0)>新闻中心</a></td></tr><tr id="item2" style="display:none"><td class="list"><table border=0 cellspacing=0 cellpadding=0><tr><td id="pr34" class="file" onclick=""><a onclick=tourl(2,34) onmouseout=chft(this,0,34) onmouseover=chft(this,1,34) oncontextmenu=ShRM(this,2,34,'',1)>国内新闻</a></td></tr><tr><td id="pr35" class="file" onclick=""><a onclick=tourl(2,35) onmouseout=chft(this,0,35) onmouseover=chft(this,1,35) oncontextmenu=ShRM(this,2,35,'',1)>国际新闻</a></td></tr><tr><td id="pr36" class="file" onclick=""><a onclick=tourl(2,36) onmouseout=chft(this,0,36) onmouseover=chft(this,1,36) oncontextmenu=ShRM(this,2,36,'',1)>娱乐新闻</a></td></tr><tr><td id="pr37" class="file" onclick=""><a onclick=tourl(2,37) onmouseout=chft(this,0,37) onmouseover=chft(this,1,37) oncontextmenu=ShRM(this,2,37,'',1)>体育新闻</a></td></tr></table></td></tr></table>
+?><table border=0 cellspacing=0 cellpadding=0></table>
