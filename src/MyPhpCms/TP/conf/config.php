@@ -8,28 +8,97 @@
 	// ]
 	
 	return [
-		'default_return_type'    => 'html',
-		'template'               => [
-	        // 模板引擎类型 支持 php think 支持扩展
-	        'type'         => 'Think',
-	        // 视图基础目录，配置目录为所有模块的视图起始目录
-	        'view_base'    => '',
-	        // 当前模板的视图目录 留空为自动获取
-	        'view_path'    => '',
-	        // 模板后缀
-	        'view_suffix'  => 'html',
-	        // 模板文件名分隔符
-	        'view_depr'    => DS,
-	        // 模板引擎普通标签开始标记
-	        'tpl_begin'    => '{',
-	        // 模板引擎普通标签结束标记
-	        'tpl_end'      => '}',
-	        // 标签库标签开始标记
-	        'taglib_begin' => '{',
-	        // 标签库标签结束标记
-	        'taglib_end'   => '}',
-	        // 'layout_on'=>'true',
-	        // 'layout_name'=>"layout"
+		'nav_set'=>[
+	        [
+
+	            'name'=>'用户管理',
+	            // 'url' =>url('/index/index/login'),
+	            // 'other'=>[url('/index/index/login')],
+	            'icon'=>'fa fa-user-md',
+	            'style'=>'color: white',
+	            'state'=>0,
+	            'hasSub'=>0
+	        ],
+	        // [
+	        //     'name'=>'开仓平仓',
+	        //     'url' =>url('/admin/Warehouse/getAllWarehouse'),
+	        //     'icon'=>'gi gi-airplane',
+	        //     'style'=>'color: white',
+	        //     'state'=>0,
+	        //     'hasSub'=>0
+	        // ],
+	        // [
+	        //     'name'=>'盈利播报',
+	        //     'url' =>url('/admin/ProfitBroadcast/profitBroad'),
+	        //     'icon'=>'fa fa-bullhorn',
+	        //     'style'=>'color: white',
+	        //     'state'=>0,
+	        //     'hasSub'=>0
+	        // ],
+	        // [
+	        //     'name'=>'产品管理',
+	        //     'url' =>url('/admin/Product/getAllProduct'),
+	        //     'icon'=>'fa fa-product-hunt',
+	        //     'style'=>'color: white',
+	        //     'state'=>0,
+	        //     'hasSub'=>0
+	        // ],
+	        // [
+	        //     'name'=>'所有订单',
+	        //     'url' =>url('/admin/Product/getAllProduct'),
+	        //     'icon'=>'fa fa-gavel',
+	        //     'style'=>'color: white',
+	        //     'state'=>0,
+	        //     'hasSub'=>0
+	        // ],
+	        // [
+	        //     'name'=>'财务管理',
+	        //     'url' =>url('/admin/Finance/financeInfo'),
+	        //     'icon'=>'fa fa-money',
+	        //     'style'=>'color: white',
+	        //     'state'=>0,
+	        //     'hasSub'=>0
+	        // ],
+	        // [
+	        //     'name'=>'编辑规则',
+	        //     'url' =>url('/admin/EditRule/edit'),
+	        //     'icon'=>'fa fa-pencil-square-o',
+	        //     'style'=>'color: white',
+	        //     'state'=>0,
+	        //     'hasSub'=>0
+	        // ],
+
+	        // [
+	        //     'name'=>'系统设置',
+	        //     'icon'=>'fa fa-gear',
+	        //     'style'=>'color: white',
+	        //     'state'=>0,
+	        //     'hasSub'=>1,
+	        //     'sub'=>[
+	        //         [
+	        //             'name'=>'提成设置',
+	        //             'url' =>url('/admin/SystemSetting/commission'),
+	        //             'icon'=>'',
+	        //             'style'=>'color: white',
+	        //             'state'=>0,
+	        //         ],
+	        //         [
+	        //             'name'=>'金额设置',
+	        //             'url' =>url('/admin/SystemSetting/money'),
+	        //             'icon'=>'',
+	        //             'style'=>'color: white',
+	        //             'state'=>0,
+	        //         ],
+	        //     ]
+	        // ],
+	        // [
+	        //     'name'=>'账号设置',
+	        //     'url' =>url('/admin/AccountSetting/index'),
+	        //     'icon'=>'gi gi-user',
+	        //     'style'=>'color: white',
+	        //     'state'=>0,
+	        //     'hasSub'=>0
+	        // ],
 	    ]
 	];
 ?>

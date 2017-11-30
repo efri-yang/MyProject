@@ -17,7 +17,8 @@
 
 		
 		 public function index(){
-		 	return $this->fetch();
+		 	dump(Config("nav_set"));
+		 	// return $this->fetch();
 		 }
 
 		  public function login(){
