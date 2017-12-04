@@ -7,7 +7,7 @@ const sass = require('gulp-sass');
 const autoprefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
 
-const rev = require('gulp-rev');  
+var rev = require('gulp-rev');  
 
 const debug=require('gulp-debug');
 const changed = require('gulp-changed');
@@ -29,18 +29,18 @@ const server=require("./server.js");
  */
 function DevStyles(){
 	var compress=conf.compress==true || conf.compress=="css";
-	return gulp.src(conf.src + conf.mod + '/**/*.{scss,sass,css}')
-		.pipe(rev())
+	return gulp.src(conf.src +'/'+conf.staticDev+conf.mod + '/**/*.{scss,sass,css}')
 		.pipe(sourcemaps.init({sourcemap:true}))
 		.pipe(sass().on('error', sass.logError))
 		.pipe(sourcemaps.write({includeContent: false}))
 		.pipe(autoprefixer({
 			browsers: ['> 1%', 'IE 7']
 		}))
+		.pipe(rev())
 		.pipe(gulpif(compress,cleanCSS()))
-		.pipe(gulp.dest(conf.dev + conf.mod))
+		.pipe(gulp.dest(conf.dev +'/'+conf.staticDev+ conf.mod))
 		.pipe(rev.manifest())
-		.pipe(gulp.dest('rev/css'))
+		.pipe(gulp.dest(conf.revSrc+ conf.mod))
 		.pipe(server.reload({stream:true}));
 }
 

@@ -9,8 +9,10 @@ const changed = require('gulp-changed');
 const gulpif=require("gulp-if");
 
 var conf=require("./config.js");
-const server=require("./server.js");
-const revCollector = require('gulp-rev-collector');
+
+
+var server=require("./server.js");
+var revCollector = require('gulp-rev-collector');
 
 
 
@@ -20,39 +22,30 @@ const revCollector = require('gulp-rev-collector');
  */
 
 function DevHtmls(){
-	return gulp.src(["rev/**/*.json",conf.src + conf.mod + '/**/*.html',"!" + conf.src + conf.mod + '/**/_*.html'])
-            .pipe( revCollector({
-                // replaceReved: true,
-                dirReplacements: {
-                    "static/":"xsdfsadfsxx/"
-                }
-            }))
+	return gulp.src([conf.revSrc+"**/*.json",conf.src + conf.mod + '/**/*.html',"!" + conf.src + conf.mod + '/**/_*.html'])
+           
 		  	.pipe(fileInclude({
             	prefix: '@@',
             	basepath: '@file'
         	}))
+            .pipe(revCollector({
+               
+                replaceReved: true,
+                dirReplacements: {
+                    'FontEndSrc': function (manifest_value) {
+                        return "xxx";
+                    },
+                },
+                
+            }))
             .pipe(debug({title: 'htmls-------------'}))
         	.pipe(gulp.dest(conf.dev + conf.mod));
             
 }
 
-function cHtmls(){
-	return gulp.src([conf.src + conf.commonFile + '/**/*.html',"!" + conf.src + conf.commonFile + '/**/_*.html'])
-		  	.pipe(fileInclude({
-            	prefix: '@@',
-            	basepath: '@file'
-        	}))
-            .pipe(debug({title: 'htmls-------------'}))
-        	.pipe(gulp.dest(conf.dest + conf.commonFile));
-}
-
-
-
-
 
 
 
 module.exports={
-	DevHtmls:DevHtmls,
-	cHtml:cHtmls
+	DevHtmls:DevHtmls
 };

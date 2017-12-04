@@ -19,6 +19,8 @@ options.src=cpaths.src;
 options.dev=cpaths.dev;
 options.htmlDist=cpaths.htmlDist;
 options.staticDist=cpaths.staticDist;
+options.staticDev=cpaths.staticDev;
+options.revSrc=cpaths.revSrc;
 //打包过个模块的时候
 options.mod=options.mod ? ((options.mod==="all") ? "" :"/"+options.mod) :"";
 options.compress=!!options.compress  ? options.compress.toLowerCase() :"";

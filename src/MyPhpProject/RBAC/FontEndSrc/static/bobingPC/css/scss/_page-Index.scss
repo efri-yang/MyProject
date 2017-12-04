@@ -1,11 +1,15 @@
 @import "./_funVar.scss";
 
+
+.test{
+    background:#000; 
+}
 /**
  * 首页
  */
 
 .home-banner {
-    height: 976px;
+    height: 1200px;
     background: url("../images/home_banner.jpg") no-repeat top center;
 }
 
