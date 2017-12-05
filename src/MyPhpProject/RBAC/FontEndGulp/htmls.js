@@ -22,24 +22,24 @@ var revCollector = require('gulp-rev-collector');
  */
 
 function DevHtmls(){
-	return gulp.src([conf.revSrc+"**/*.json",conf.src + conf.mod + '/**/*.html',"!" + conf.src + conf.mod + '/**/_*.html'])
+	return gulp.src([conf.revSrc+"/**/*.json",conf.src + conf.mod + '/**/*.html',"!" + conf.src + conf.mod + '/**/_*.html'])
            
 		  	.pipe(fileInclude({
             	prefix: '@@',
             	basepath: '@file'
         	}))
-            .pipe(revCollector({
-               
+             .pipe(revCollector({
                 replaceReved: true,
-                dirReplacements: {
-                    '..':function (manifest_value) {
-                        return "xxx";
-                    },
-                }
-                
+                // dirReplacements: {
+                //      'static': function(manifest_value) {
+                       
+                //      }
+                // }
+               
             }))
             .pipe(debug({title: 'htmls-------------'}))
-        	.pipe(gulp.dest(conf.dev + conf.mod));
+        	.pipe(gulp.dest(conf.dev + conf.mod))
+           
             
 }
 

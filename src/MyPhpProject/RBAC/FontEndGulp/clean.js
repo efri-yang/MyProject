@@ -11,7 +11,7 @@ var delHtmlDist=conf.htmlDist + conf.mod;
 var delStaticDist=conf.staticDist + conf.mod;
 
 function DevClean(){
-	return del(conf.dev);
+	return del([conf.dev,conf.revSrc]);
 }
 
 function DistClean(){
