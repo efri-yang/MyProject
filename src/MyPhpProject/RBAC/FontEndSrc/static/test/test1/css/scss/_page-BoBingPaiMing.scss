@@ -1,0 +1,221 @@
+@import "./_funVar.scss";
+/**
+ * 博饼排名
+ */
+.date-picker-type1 {
+    background: #fff;
+    width: 162px;
+    height: 33px;
+    margin-top:12px;
+    border-radius: 30px;
+    position: relative;
+    
+    float:left;
+    .datetimer {
+        height: 33px;
+        line-height: 33px;
+        color: #888888;
+        font-size: 16px;
+        width: 97px;
+        display: block;
+        padding: 0 45px 0px 20px;
+        cursor: pointer;
+    }
+    .ipt-text {
+        visibility: hidden;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    .arrow {
+        position: absolute;
+        width: 12px;
+        height: 8px;
+        background: url("../images/arrow_888.png") no-repeat center center;
+        top: 50%;
+        right: 25px;
+        margin-top: -4px;
+    }
+}
+.score-today-box {
+    border: 1px solid #efefef;
+}
+
+.score-rank-today {
+    width: 480px;
+    float: left;
+    .tit-type-3{
+        padding-left:80px;
+        .lab{
+            float:left;
+            margin-right:10px;
+        }
+    }
+    .soma-hd {
+        text-align: center;
+        height: 54px;
+        line-height: 54px;
+        background: #f52d44;
+        color: #ffffff;
+        font-size: 20px;
+        border: 1px solid #efefef;
+        .lab {
+            font-weight: bold;
+        }
+    }
+}
+
+.score-total-box {
+    width: 480px;
+    float: right;
+    .soma-hd {
+        text-align: center;
+        height: 54px;
+        line-height: 54px;
+        background: #f52d44;
+        color: #ffffff;
+        font-size: 20px;
+        .lab {
+            font-weight: bold;
+        }
+    }
+}
+.today-tbody-scroller,.total-tbody-scroller{
+    height: 230px;
+    overflow:hidden;
+}
+.score-rank-ftbl {
+    text-align: center;
+    color: #666666;
+    .item {
+        float: left;
+        height: 45px;
+        line-height: 45px;
+    }
+    .detail {
+        width: 84px;
+        height: 25px;
+        line-height: 25px;
+        color: #f52d44;
+        border: 1px solid #f52d44;
+        border-radius: 20px;
+        font-size: 14px;
+        margin: 8px auto 0;
+        display: inline-block;
+        transition: all 0.25s ease-out;
+
+        &:hover {
+            background: #f52d44;
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+    .item-1 {
+        width: 65px;
+        border-right: 1px solid #efefef;
+    }
+    .item-2 {
+        width: 150px;
+        padding: 0 10px;
+        @extend %text-overflow;
+        border-right: 1px solid #efefef;
+    }
+    .item-3 {
+        width: 120px;
+        border-right: 1px solid #efefef;
+    }
+    .item-4 {
+        width: 115px;
+    }
+    &.thead {
+        li {
+            float: left;
+            height: 45px;
+            line-height: 45px;
+        }
+        background:#fbfbfb;
+        border:1px solid #efefef;
+    }
+    &.tbody {
+        border-left: 1px solid #efefef;
+        border-right: 1px solid #efefef;
+        height: 230px;
+        overflow: hidden;
+        .rk-item {
+            border-bottom: 1px solid #efefef;
+            &:hover {
+                .detail {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+        }
+        .num {
+            display: inline-block;
+            width: 35px;
+            height: 15px;
+            line-height: 15px;
+            font-size: 12px;
+            vertical-align: middle;
+            background-repeat: no-repeat;
+            background-position: center center;
+            &.num-1 {
+                background-image: url("../images/score_rank_1.png");
+                padding-top: 10px;
+            }
+            &.num-2 {
+                background-image: url("../images/score_rank_2.png");
+                padding-top: 10px;
+            }
+            &.num-3 {
+                background-image: url("../images/score_rank_3.png");
+                padding-top: 10px;
+            }
+        }
+        .detail {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+    &.tfoot {
+        border-left: 1px solid #efefef;
+        border-right: 1px solid #efefef;
+        background: #fff3f5;
+        li {
+            border-bottom: 1px solid #efefef;
+        }
+    }
+}
+
+.prize-rank-table {
+    width: 100%;
+    table-layout: fixed;
+    color: #666666;
+    th,
+    td {
+        border: 1px solid #efefef;
+        padding: 10px 8px;
+    }
+    td {
+        span {
+            margin: 0 8px;
+            line-height: 20px;
+            display: inline-block;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+    }
+    thead {
+        th {
+            background: #fbfbfb;
+            font-size: 14px;
+        }
+    }
+    tbody {
+        tr {
+            &:nth-child(even) {
+                background: #fbfbfb;
+            }
+        }
+    }
+}

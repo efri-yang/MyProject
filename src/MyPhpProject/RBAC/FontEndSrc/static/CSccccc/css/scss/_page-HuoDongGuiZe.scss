@@ -1,0 +1,53 @@
+@import "./_funVar.scss";
+/**
+ * 活动规则
+ */
+.aside-hdgz-list {
+    &.scrollFixed {
+        position: fixed;
+        left: 50%;
+        top: 76px;
+        margin-left: -490px;
+        width: 258px;
+    }
+    li {
+        a {
+            display: block;
+            height: 65px;
+            line-height: 65px;
+            padding: 0 8px 0 12px;
+            color: #333333;
+            position: relative;
+            margin-left: -1px;
+            span {
+                display: block;
+                font-size: 16px;
+                border-bottom: 1px solid #e5e5e5;
+                padding: 0 8px;
+            }
+            &:hover {
+                text-decoration: none;
+                background: #ffe6e7;
+                border-left: 4px solid #f52d44;
+                padding-left: 8px;
+                span {
+                    color: #f52d44;
+                    border-bottom: none;
+                    padding-bottom: 1px;
+                }
+            }
+        }
+        &.active {
+            a {
+                background: #ffe6e7;
+                border-left: 4px solid #f52d44;
+                padding-left: 8px;
+                span {
+                    border-bottom: none;
+                    padding-bottom: 1px;
+                    color: #f52d44;
+                }
+            }
+        }
+    }
+}

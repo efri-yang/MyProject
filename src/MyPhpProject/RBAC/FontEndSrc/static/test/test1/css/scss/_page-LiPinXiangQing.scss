@@ -1,0 +1,302 @@
+@import "./_funVar.scss";
+/**
+ * 礼品详情
+ */
+.layui-layer-title{
+    font-size:20px !important;
+}
+
+.lpxq-banner {
+    width: 383px;
+    height: 285px;
+    overflow: hidden;
+    float: left;
+}
+
+.lpxq-banner .dir-btn {
+    height: 32px;
+    width: 20px;
+    position: absolute;
+    top: 50%;
+    margin-top: -16px;
+    background-image: url("../images/bb_jp_detail_arrow.png");
+    background-repeat: no-repeat;
+}
+
+.lpxq-banner .banner-ui-prev {
+    left: 10px;
+    background-position: 0 0
+}
+
+.lpxq-banner .banner-ui-prev:hover {
+    background-position: 0 -64px;
+}
+
+.lpxq-banner .banner-ui-next {
+    right: 10px;
+    background-position: 0 -32px
+}
+
+.lpxq-banner .banner-ui-next:hover {
+    background-position: 0 -96px;
+}
+
+.lpxq-banner .banner-numlist {
+    bottom: 10px;
+    text-align: center;
+    width: 100%;
+    z-index: 30;
+}
+
+.lpxq-banner .banner-numlist li {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #8d8484;
+    margin: 0 5px;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.lpxq-banner .banner-numlist li span {
+    text-indent: -9999px;
+    display: inline-block
+}
+
+.lpxq-banner .banner-numlist li.oncurr {
+    background: #fff
+}
+
+.lpxq-handle {
+    float: right;
+    width: 560px;
+    .name {
+        font-size: 22px;
+        color: #444444;
+    }
+    .para-box {
+        background: #fafafa;
+        padding: 18px;
+        border: 1px solid #f5f5f5;
+        color: #888888;
+        margin-top: 20px;
+        .item {
+            line-height: 25px;
+            padding: 3px 0;
+        }
+        .score {
+            color: #f52d44;
+            font-weight: normal;
+        }
+        .money {
+            color: #ff7e00;
+            font-weight: normal;
+        }
+        .remain {
+            color: #4ebd9c;
+            font-weight: normal;
+        }
+    }
+    .handle-btn {
+        text-align: left;
+        margin-top: 30px;
+        a {
+            margin-right: 20px;
+        }
+    }
+}
+
+.dia-ljdh-box{
+    
+    background:#fff;
+    padding:15px 25px 30px;
+    z-index:30;
+    display:none;
+    .tjsl-hd-tit{
+        color:#333333;
+        font-size: 18px; 
+        margin-bottom: 15px;
+    }
+    .item{
+        .ipt-submit{
+            padding-left:60px;
+            padding-right:60px;
+            text-align:center;
+            padding-top:10px;
+            padding-bottom:10px;
+        }
+        .lab{
+            float:left;
+            color:#666666;
+            font-size:16px;
+            line-height:40px;
+            .score{
+                color:#28b28b;
+                font-weight:normal;
+            }
+        }
+        .para-val{
+            float:left;
+            .tip{
+                color:#aaaaaa;
+                float:left;
+                line-height:40px;
+                margin-left:12px;
+            }
+
+        }
+        .ipt-text{
+             width:94px;
+             border:1px solid #e5e5e5;
+             height:18px;
+             line-height:16px;
+             padding:11px 5px;
+             float:left;
+             margin:0 12px;
+             text-align:center;
+        }
+        .reduce{
+            width:26px;
+            height:26px;
+            float:left;
+            margin-top:7px;
+            overflow:hidden;
+            cursor:pointer;
+            background:url("../images/reduce.jpg") no-repeat;
+        }
+        .plus{
+            width:26px;
+            height:26px;
+            float:left;
+            cursor:pointer;
+            margin-top:7px;
+            overflow:hidden;
+            background:url("../images/plus.jpg") no-repeat;
+        }
+    }
+}
+
+.dia-gmdj-box{
+    display:none;
+    padding:10px 35px 30px;
+    background:#fff;
+    
+    
+    .handle-btn{
+        clear:both;
+        text-align:center;
+        padding-top:25px;
+        a{
+            padding:10px 60px
+        }
+    }
+    .txt-1{
+        font-size:14px;
+        color:#888888;
+        margin-top:10px;
+        line-height:23px;
+        .money{
+            color:#e8343a;
+            font-weight:normal;
+        }
+    }
+    .forms{
+        margin-top:25px;
+        .item{
+            float:left;
+        }
+        .lab{
+            padding-right:5px;
+        }
+        .ipt-text{
+            height:18px;
+            line-height:18px;
+            padding:14px 8px;
+            background:#f8f8f8;
+            border:1px solid #e1e1e1;
+            font-size:16px;
+            &.ipt-phone{
+                width:260px;
+            }
+            &.ipt-name{
+                width:160px;
+                margin-right:25px;
+            }
+        }
+    }
+}
+
+.dia-ljdh-form{
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom:10px;
+    margin-bottom: 10px; 
+    .hd-tit{
+        color:#333333;
+        font-size: 18px; 
+    }
+
+    .form-item{
+        position: relative;
+        padding:10px 0;
+        .lab{
+            position: absolute;
+            left:0;
+            padding-left: 15px;
+            top:50%;
+            margin-top: -24px;
+            color:#b4b4b4;
+            font-size: 14px; 
+            height: 48px;
+            line-height: 48px;
+            width:439px; 
+            cursor: text;
+        }
+        .ipt-text{
+            border:1px solid #e5e5e5;
+             height:18px;
+             line-height:16px;
+             padding:11px 5px;
+             width:477px; 
+            
+           
+        }
+    }
+    .form-item-lqfs{
+        color: #666666;
+        margin-top: 5px;
+        input {
+                vertical-align: middle;
+                margin: 0 3px 0 0;
+            }
+        .lab{
+            padding-right: 15px;
+        }
+    }
+    .form-item-address{
+        padding: 8px 0;
+        color: #666666;
+        .address {
+            border: 1px solid #e1e1e1;
+            width: 344px;
+            padding: 5px 5px;
+        }
+        &.address-zdy{
+            .para-tit {
+                vertical-align: top;
+            }
+        }
+    }
+
+    .dia-ljdh-intro{
+        color:#666666;
+        font-size: 14px;
+        line-height: 28px;
+        margin-top: 5px; 
+        .intro-item{
+            margin-right: 20px;
+        }
+    }
+}

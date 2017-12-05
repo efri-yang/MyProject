@@ -39,7 +39,9 @@ function DevStyles(){
 		.pipe(rev())
 		.pipe(gulpif(compress,cleanCSS()))
 		.pipe(gulp.dest(conf.dev +'/'+conf.staticDev+ conf.mod))
-		.pipe(rev.manifest())
+		.pipe(rev.manifest({
+			merge: true 
+		}))
 		.pipe(gulp.dest(conf.revSrc+ conf.mod))
 		.pipe(server.reload({stream:true}));
 }

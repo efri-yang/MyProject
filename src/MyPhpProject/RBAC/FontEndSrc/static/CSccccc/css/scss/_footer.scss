@@ -1,0 +1,138 @@
+.footer{
+	background:#3d3d3d;
+	padding:15px 0;
+	position:relative;
+	z-index:20;
+	.ft-logo{
+		width:184px;
+		height:34px;
+		overflow:hidden;
+		float: left;
+		margin-top:48px;
+		display:block;
+		background:url("../images/ft_logo.png") no-repeat center center; 
+	}
+	.ft-middle{
+		float:left;
+		width:510px;
+		margin-left:100px;
+		margin-top:20px;
+		display:inline;
+		color:#ffffff;
+		text-align: center;
+		
+	}
+	.ft-nav{
+		border-bottom:1px solid #2c2c2c; 
+		line-height: 25px;
+		padding:8px 0;
+		a{
+			color:#ffffff;
+			margin:0 10px;
+		}	
+	}
+	.copyright{
+		padding:8px 0;
+		border-top:1px solid #555555; 
+		text-align:center;
+	}
+	.ft-qrcode{
+		float:right;
+		.pic{
+			width:109px;
+			height:109px;
+			overflow:hidden;
+			padding:4px;
+			background:url("../images/ft_qrcode_pic.jpg") no-repeat center center #2c2c2c;
+			border-radius: 5px;
+		}
+		p{
+			margin-top:2px;
+			text-align:center;
+			color:#dcdcdc;
+		}
+	}
+}
+
+.ft-shfz-form{
+	background:#fff;
+	padding:20px;
+   display:none;
+	
+	
+	
+	.tip{
+		color:#666666;
+		font-size:14px; 
+	}
+	.forms-box{
+		padding-top:15px;
+		.item{
+			margin-bottom:20px; 
+			&.item-checkbox{
+				position:relative;
+				padding-left:120px;
+				.para-tit{
+					position:absolute;
+					left:0;
+					top:0;
+				}
+				.lab{
+					padding-right:10px;
+					margin-bottom:8px;
+					display:inline-block;white-space:nowrap;
+				}
+			}
+		}
+		.ipt-submit{
+			width:300px;
+			height:46px;
+			border:2px solid #ff8184;
+			border-radius:10px;
+			background:#fff;
+			color:#fd2f2c;
+			text-align:center;
+			font-size:16px;
+			cursor:pointer;
+			margin:0 auto;
+			display:block;
+		}
+		.ipt-text{
+			height: 18px;
+		    line-height: 18px;
+		    padding: 14px 8px;
+		    background: #f8f8f8;
+		    border: 1px solid #e1e1e1;
+		    font-size: 14px;
+		    width:472px;//490-2-16
+		}
+		.para-tit{
+			    padding-right: 10px;
+	    min-width: 52px;
+	    display: inline-block;
+		}
+		.ipt-checkbox {
+            -webkit-appearance: none;
+            width: 17px;
+            height: 17px;
+            border: 1px solid #ccc;
+            text-align: center;
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, .125);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, .125);
+            vertical-align: top;
+            &:checked {
+                border-color: #ff8997;
+                background: #fff4f5;
+                &:before {
+                    color: #ff495e;
+                    content: "\e625";
+                    font-size: 18px;
+                    line-height: 17px;
+                    margin: 0 0 0 -1px;
+                    vertical-align: top;
+                }
+            }
+        }
+	}
+}

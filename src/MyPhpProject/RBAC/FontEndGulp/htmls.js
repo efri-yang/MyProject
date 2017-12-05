@@ -32,10 +32,10 @@ function DevHtmls(){
                
                 replaceReved: true,
                 dirReplacements: {
-                    'FontEndSrc': function (manifest_value) {
+                    '..':function (manifest_value) {
                         return "xxx";
                     },
-                },
+                }
                 
             }))
             .pipe(debug({title: 'htmls-------------'}))

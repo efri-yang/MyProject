@@ -1,0 +1,19 @@
+@import "./_funVar.scss";
+/**
+ * 联机PK
+ */
+.ljpk-page {
+    padding: 40px 0 100px;
+    .ljpk-caption {
+        color: #17182c;
+        font-size: 40px;
+        text-align: center;
+    }
+    .ljpk-qrcode {
+        width: 667px;
+        height: 558px;
+        margin: 10px auto;
+        overflow: hidden;
+        background: url("../images/ljpk_bg.jpg") no-repeat top center;
+    }
+}
