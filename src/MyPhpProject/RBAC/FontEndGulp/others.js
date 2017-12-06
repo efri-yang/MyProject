@@ -9,21 +9,21 @@ const server = require("./server.js")
 
 
 function DevOthers() {
-    return gulp.src([conf.src + conf.mod + '/**/*', '!' + conf.src + conf.mod + '/**/*.{html,js,scss,css,sass,png,jpg,gif,jpeg,ico,eot,svg,ttf,woff}'])
+    return gulp.src([conf.staticSrc+ conf.mod + '/**/*', '!' + conf.src + conf.mod + '/**/*.{html,js,scss,css,sass,png,jpg,gif,jpeg,ico,eot,svg,ttf,woff}'])
         .pipe(filter(function(file) {
             return file.stat.isFile();
         }))
-        .pipe(changed(conf.dev+conf.mod))
-        .pipe(gulp.dest(conf.dev+conf.mod));
+        .pipe(changed(conf.staticDev+conf.mod))
+        .pipe(gulp.dest(conf.staticDev+conf.mod));
 }
 
 function DistOthers() {
-    return gulp.src([conf.src + conf.mod + '/**/*', '!' + conf.src + conf.mod + '/**/*.{html,js,scss,css,sass,png,jpg,gif,jpeg,ico,eot,svg,ttf,woff}'])
+    return gulp.src([conf.staticSrc + conf.mod + '/**/*', '!' + conf.src + conf.mod + '/**/*.{html,js,scss,css,sass,png,jpg,gif,jpeg,ico,eot,svg,ttf,woff}'])
         .pipe(filter(function(file) {
             return file.stat.isFile();
         }))
-        .pipe(changed(conf.dist+conf.mod))
-        .pipe(gulp.dest(conf.dist+conf.mod));
+        .pipe(changed(conf.staticServerFolder+conf.mod))
+        .pipe(gulp.dest(conf.staticServerFolder+conf.mod));
 }
 
 module.exports ={

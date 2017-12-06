@@ -7,15 +7,16 @@ const gulpif=require("gulp-if");
 
 const conf=require("./config");
 
-var delHtmlDist=conf.htmlDist + conf.mod;
-var delStaticDist=conf.staticDist + conf.mod;
+
 
 function DevClean(){
-	return del([conf.dev,conf.revSrc]);
+	return del([conf.dev]);
 }
 
+var delHtml=conf.htmlDistFolder + conf.mod;
+var delStatic=conf.serverFolder + conf.mod;
 function DistClean(){
-	return del(delHtmlDist,delStaticDist);
+	return del([delHtml,delStatic,conf.revSrc]);
 }
 
 

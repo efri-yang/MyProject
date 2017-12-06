@@ -3,8 +3,10 @@
 module.exports={
 		src:"FontEndSrc",
 		dev:"FontEndDev",
-		htmlDist:"FontEndDist",
-		serverFolder:"public",
-		staticDevFolder:"static",
-		revSrc:"FontEndRev"	
+		staticLocalFolder:"staticLocal",
+		staticServerFolder:"static",
+		htmlDistFolder:"FontEndDist",
+		revSrc:"FontEndRev",
+		serverFolder:"public"
+		
 }

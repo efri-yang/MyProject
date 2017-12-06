@@ -1,0 +1,25 @@
+@import "./_funVar.scss";
+
+
+.test{
+    background:#000; 
+}
+/**
+ * 首页
+ */
+
+.home-banner {
+    height: 1200px;
+    background: url("/static/bobingPC/images/home_banner.jpg") no-repeat top center;
+}
+
+.home-container {
+    position: relative;
+    .container-main {
+        margin-top: -350px;
+        .main-inner {
+            top: -2px;
+        }
+    }
+}
+

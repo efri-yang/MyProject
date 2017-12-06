@@ -15,15 +15,30 @@ const knownOptions = {
 var options = minimist(process.argv.slice(2), knownOptions);
 
 
-
-options.htmlDist=cpaths.htmlDist;
+options.src=cpaths.src; 
+options.dev=cpaths.dev
+options.htmlDistFolder=cpaths.htmlDistFolder;
 options.revSrc=cpaths.revSrc;
+options.staticLocalFolder=cpaths.staticLocalFolder;
+options.staticServerFolder=cpaths.staticServerFolder
+options.serverFolder=cpaths.serverFolder;
 //打包y模块的时候
 options.mod=options.mod ? ((options.mod==="all") ? "" :"/"+options.mod) :"";
-options.defaultSrc=cpaths.src;
-options.src=cpaths.src;
-options.dev=cpaths.dev+"/"+cpaths.staticDevFolder;
-options.dist=cpaths.serverFolder+"/"+cpaths.staticDevFolder;
+
+//没有传递模块的时候，默认打包全部默认
+/**
+ * 对于html   src+模块
+ * 对于静态资源  static+** 
+ */
+if(!options.mod){
+	options.staticSrc=options.src+"/"+options.staticLocalFolder;
+	options.staticDev=options.dev+"/"+options.staticLocalFolder;
+	options.staticServerFolder=cpaths.serverFolder+"/"+options.staticServerFolder;
+}else{
+	options.staticSrc=options.src;
+	options.staticDev=options.dev;
+	options.staticServerFolder=cpaths.serverFolder;
+}
 
 options.compress=!!options.compress  ? options.compress.toLowerCase() :"";
 

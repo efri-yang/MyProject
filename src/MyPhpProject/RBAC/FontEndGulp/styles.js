@@ -31,7 +31,7 @@ var modifyCssUrls = require('gulp-modify-css-urls');
  */
 function DevStyles(){
 	var compress=conf.compress==true || conf.compress=="css";
-	return gulp.src(conf.src+conf.mod + '/**/*.{scss,sass,css}')
+	return gulp.src(conf.staticSrc+conf.mod + '/**/*.{scss,sass,css}')
 		.pipe(sourcemaps.init({sourcemap:true}))
 		.pipe(sass().on('error', sass.logError))
 		.pipe(sourcemaps.write({includeContent: false}))
@@ -40,7 +40,7 @@ function DevStyles(){
 		}))
 		// .pipe(rev())
 		.pipe(gulpif(compress,cleanCSS()))
-		.pipe(gulp.dest(conf.dev + conf.mod))
+		.pipe(gulp.dest(conf.staticDev+ conf.mod))
 		// .pipe(rev.manifest({
 		// 	merge:true
 		// }))
@@ -50,7 +50,7 @@ function DevStyles(){
 
 function DistStyles(){
 	var compress=conf.compress==true || conf.compress=="css";
-	return gulp.src(conf.src +conf.mod + '/**/*.{scss,sass,css}')
+	return gulp.src(conf.staticSrc +conf.mod + '/**/*.{scss,sass,css}')
 		.pipe(sourcemaps.init({sourcemap:true}))
 		.pipe(sass().on('error', sass.logError))
 		.pipe(sourcemaps.write({includeContent: false}))
@@ -62,10 +62,10 @@ function DistStyles(){
 		//        return url;
 		//     }
 		// }))
-		// .pipe(rev())
+		.pipe(rev())
 		.pipe(gulpif(compress,cleanCSS()))
-		.pipe(gulp.dest(conf.dist+conf.mod))
-		// .pipe(rev.manifest())
+		.pipe(gulp.dest(conf.staticServerFolder+conf.mod))
+		.pipe(rev.manifest('rev-manifest-css.json'))
 		.pipe(gulp.dest(conf.revSrc))
 		.pipe(server.reload({stream:true}));
 }

@@ -14,11 +14,11 @@ var rev = require('gulp-rev');
 
 function DevScripts(){
     var compress=conf.compress==true || conf.compress=="js";
-    return gulp.src(conf.src +conf.mod +  '/**/*.js')
+    return gulp.src(conf.staticSrc+conf.mod +  '/**/*.js')
         .pipe(gulpif(compress, uglify()))
         .pipe(changed(conf.dev))
         // .pipe(rev())
-        .pipe(gulp.dest(conf.dev + conf.mod))
+        .pipe(gulp.dest(conf.staticDev + conf.mod))
         // .pipe(rev.manifest({
         //     path:"rev-js.json",
         //     merge:true
@@ -30,10 +30,13 @@ function DevScripts(){
 
 function DistScripts(){
     var compress=conf.compress==true || conf.compress=="js";
-    return gulp.src(conf.src + conf.mod + '/**/*.js')
+    return gulp.src(conf.staticSrc + conf.mod + '/**/*.js')
+        .pipe(rev())
         .pipe(gulpif(compress, uglify()))
-        .pipe(changed(conf.dist+conf.mod))
-        .pipe(gulp.dest(conf.dist+conf.mod))
+        // .pipe(changed(conf.staticServerFolder+conf.mod))
+        .pipe(gulp.dest(conf.staticServerFolder+conf.mod))
+        .pipe(rev.manifest('rev-manifest-js.json'))
+        .pipe(gulp.dest(conf.revSrc))
         .pipe(server.reload({ stream: true }));
 
 }

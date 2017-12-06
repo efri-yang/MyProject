@@ -22,7 +22,7 @@ function DevServer(){
 function DistServer(){
     browserSync.init({
         server:{
-            baseDir:conf.dev,
+            baseDir:".",
             directory:true
         }
     });

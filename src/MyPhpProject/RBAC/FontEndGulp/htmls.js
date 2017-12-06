@@ -23,7 +23,6 @@ var revCollector = require('gulp-rev-collector');
 
 function DevHtmls(){
 	return gulp.src([conf.src + conf.mod + '/**/*.html',"!" + conf.src + conf.mod + '/**/_*.html'])
-           
 		  	.pipe(fileInclude({
             	prefix: '@@',
             	basepath: '@file'
@@ -46,14 +45,14 @@ function DistHtmls(){
              .pipe(revCollector({
                 replaceReved: true,
                 dirReplacements: {
-                    'static/':function(manifest_value) {
-                        console.dir(manifest_value);
-                        return "xxx/"+manifest_value;
+                    'staticLocal':function(manifest_value) {
+                        console.dir(conf.serverFolder+"/"+conf.staticServerFolder+"/"+manifest_value);
+                        return conf.serverFolder+"/"+conf.staticServerFolder+"/"+manifest_value;
                     }
                 }  
             }))
-            // .pipe(debug({title: 'htmls-------------'}))
-            .pipe(gulp.dest(conf.htmlDist + conf.mod))
+            .pipe(debug({title: 'htmls-------------'}))
+            .pipe(gulp.dest(conf.htmlDistFolder + conf.mod))
            
             
 }
