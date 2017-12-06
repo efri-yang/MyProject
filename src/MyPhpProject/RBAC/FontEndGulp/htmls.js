@@ -22,23 +22,38 @@ var revCollector = require('gulp-rev-collector');
  */
 
 function DevHtmls(){
-	return gulp.src([conf.revSrc+"/**/*.json",conf.src + conf.mod + '/**/*.html',"!" + conf.src + conf.mod + '/**/_*.html'])
+	return gulp.src([conf.src + conf.mod + '/**/*.html',"!" + conf.src + conf.mod + '/**/_*.html'])
            
 		  	.pipe(fileInclude({
             	prefix: '@@',
             	basepath: '@file'
         	}))
              .pipe(revCollector({
-                replaceReved: true,
-                // dirReplacements: {
-                //      'static': function(manifest_value) {
-                       
-                //      }
-                // }
-               
+                replaceReved: true  
             }))
-            .pipe(debug({title: 'htmls-------------'}))
+            // .pipe(debug({title: 'htmls-------------'}))
         	.pipe(gulp.dest(conf.dev + conf.mod))
+           
+            
+}
+
+function DistHtmls(){
+    return gulp.src([conf.revSrc+"/**/*.json",conf.src + conf.mod + '/**/*.html',"!" + conf.src + conf.mod + '/**/_*.html'])
+            .pipe(fileInclude({
+                prefix: '@@',
+                basepath: '@file'
+            }))
+             .pipe(revCollector({
+                replaceReved: true,
+                dirReplacements: {
+                    'static/':function(manifest_value) {
+                        console.dir(manifest_value);
+                        return "xxx/"+manifest_value;
+                    }
+                }  
+            }))
+            // .pipe(debug({title: 'htmls-------------'}))
+            .pipe(gulp.dest(conf.htmlDist + conf.mod))
            
             
 }
@@ -47,5 +62,6 @@ function DevHtmls(){
 
 
 module.exports={
-	DevHtmls:DevHtmls
+	DevHtmls:DevHtmls,
+    DistHtmls:DistHtmls
 };

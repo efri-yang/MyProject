@@ -19,9 +19,20 @@ function DevServer(){
 }
 
 
+function DistServer(){
+    browserSync.init({
+        server:{
+            baseDir:conf.dev,
+            directory:true
+        }
+    });
+}
+
+
 
 
 module.exports={
     reload:browserSync.reload,
-    DevServer:DevServer
+    DevServer:DevServer,
+    DistServer:DistServer
 };

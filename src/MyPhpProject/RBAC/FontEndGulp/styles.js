@@ -19,6 +19,8 @@ const gulpif=require("gulp-if");
 
 const server=require("./server.js");
 
+var modifyCssUrls = require('gulp-modify-css-urls');
+
 
 
 /**
@@ -29,18 +31,42 @@ const server=require("./server.js");
  */
 function DevStyles(){
 	var compress=conf.compress==true || conf.compress=="css";
-	return gulp.src(conf.src +'/'+conf.staticDev+conf.mod + '/**/*.{scss,sass,css}')
+	return gulp.src(conf.src+conf.mod + '/**/*.{scss,sass,css}')
 		.pipe(sourcemaps.init({sourcemap:true}))
 		.pipe(sass().on('error', sass.logError))
 		.pipe(sourcemaps.write({includeContent: false}))
 		.pipe(autoprefixer({
 			browsers: ['> 1%', 'IE 7']
 		}))
-		.pipe(rev())
+		// .pipe(rev())
 		.pipe(gulpif(compress,cleanCSS()))
-		.pipe(gulp.dest(conf.dev +'/'+conf.staticDev+ conf.mod))
-		.pipe(rev.manifest())
-		.pipe(gulp.dest(conf.revSrc+ conf.mod))
+		.pipe(gulp.dest(conf.dev + conf.mod))
+		// .pipe(rev.manifest({
+		// 	merge:true
+		// }))
+		// .pipe(gulp.dest(conf.revSrc))
+		.pipe(server.reload({stream:true}));
+}
+
+function DistStyles(){
+	var compress=conf.compress==true || conf.compress=="css";
+	return gulp.src(conf.src +conf.mod + '/**/*.{scss,sass,css}')
+		.pipe(sourcemaps.init({sourcemap:true}))
+		.pipe(sass().on('error', sass.logError))
+		.pipe(sourcemaps.write({includeContent: false}))
+		.pipe(autoprefixer({
+			browsers: ['> 1%', 'IE 7']
+		}))
+		// .pipe(modifyCssUrls({
+		// 	modify: function (url, filePath) {
+		//        return url;
+		//     }
+		// }))
+		// .pipe(rev())
+		.pipe(gulpif(compress,cleanCSS()))
+		.pipe(gulp.dest(conf.dist+conf.mod))
+		// .pipe(rev.manifest())
+		.pipe(gulp.dest(conf.revSrc))
 		.pipe(server.reload({stream:true}));
 }
 
@@ -60,5 +86,6 @@ function DevStyles(){
 
 
 module.exports={
-	DevStyles:DevStyles
+	DevStyles:DevStyles,
+	DistStyles:DistStyles
 };

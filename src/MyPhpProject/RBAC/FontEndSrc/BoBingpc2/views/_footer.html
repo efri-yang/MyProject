@@ -1,0 +1,66 @@
+
+<div class="footer clearfix">
+	<div class="container">
+		 <a class="ft-logo"></a>
+		 <div class="ft-middle">
+			<p class="ft-nav">
+				<a href="#">关于小鱼博饼</a>|    
+				<a href="#" id="J_ft-cooperation">商务合作</a>|    
+				<a href="#">义工招募</a>|    
+				<a href="#">博饼讨论</a>
+			</p>
+			<p class="copyright">小鱼网第十一届博饼嘉年华暨第四届手机博饼消费节</p>
+		 </div>
+		 <div class="ft-qrcode">
+				<div class="pic"></div>
+				<p>博饼客服微信</p>
+		 </div>
+	</div>
+</div>
+
+<div class="ft-shfz-form" id="J_ft-shfz-form">
+    <div class="tip">
+		<p>感谢您对于博饼合作具有一定意向，登记之前您也可以先了解一下小鱼博饼,<a href="#">关
+于小鱼博饼 >></a></p>
+		<p>登记之后，我们的客服人员将会第一时间与您联系</p>
+    </div>
+    <div class="forms-box">
+		 <div class="item">
+			<input type="text" class="ipt-text" placeholder="姓名">
+		 </div>
+		 <div class="item">
+			<input type="text" class="ipt-text" placeholder="手机">
+		 </div>
+		 <div class="item">
+			<input type="text" class="ipt-text" placeholder="企业/店铺名称">
+		 </div>
+		 <div class="item item-checkbox">
+			<span class="para-tit">合作意向（多选）:</span>
+            <label class="lab"><input type="checkbox" class="ipt-checkbox iconfont">包厢入驻合作 </label>
+            <label class="lab"><input type="checkbox" class="ipt-checkbox iconfont">线上礼品赞助</label>
+            <label class="lab"><input type="checkbox" class="ipt-checkbox iconfont">线下礼品赞助</label>
+            <label class="lab"><input type="checkbox" class="ipt-checkbox iconfont">博饼程序购买</label>
+            <label class="lab"><input type="checkbox" class="ipt-checkbox iconfont">其他</label>
+            
+		 </div>
+		 <input type="submit" class="ipt-submit" value="立即登记">
+    </div>
+
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		(function(){
+            $("#J_ft-cooperation").on("click",function(){
+                layer.open({
+                  type: 1,
+                  shade: [0.8, '#000'],
+                  area:["530px","600px"],
+                  shadeClose:true,
+                  title:"商务合作意向登记", //不显示标题
+                  content:$("#J_ft-shfz-form")
+                })
+            })
+        })();
+	})
+</script>

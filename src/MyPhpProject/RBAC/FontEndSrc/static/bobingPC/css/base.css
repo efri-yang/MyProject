@@ -215,7 +215,7 @@ input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webki
 
 
 body{
-	background:#f60; 
+	background:#f60 !important; 
 	height: 100%;
 }
 

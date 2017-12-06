@@ -50,6 +50,32 @@ function DevWatchs(){
 }
 
 
+function DistWatchs(){
+	/**
+	 * 只能用on 绑定 change属性
+	 */
+	gulp.watch([conf.src + '/**/*.html',"!" + conf.src + '/**/_*.html']).on("change",gulp.series(htmls.DistHtmls,server.reload));
+
+	gulp.watch(conf.src + '/**/_*.html').on("change",gulp.series(htmls.DistHtmls,server.reload));
+
+
+
+	/**
+	 * 改变一个。scss 对应的文件夹会被改变
+	 */
+	gulp.watch(conf.src+"/**/*.{scss,sass,css}",gulp.series(styles.DistStyles));
+
+
+	gulp.watch(conf.src+'/**/*.{png,jpg,gif,jpeg,ico,eot,svg,ttf,woff}',gulp.series(images.DistImages));
+
+	gulp.watch(conf.src+'/**/*.js',gulp.series(scripts.DistScripts))
+
+	gulp.watch([conf.src + '/**/*', '!' +conf.src + '/**/*.{html,js,scss,css,sass,png,jpg,gif,jpeg,ico,eot,svg,ttf,woff}'],gulp.series(others.DistOthers))
+
+}
+
+
 module.exports ={
-	DevWatchs:DevWatchs
+	DevWatchs:DevWatchs,
+	DistWatchs:DistWatchs
 };
