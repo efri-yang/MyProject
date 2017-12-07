@@ -49,41 +49,30 @@ function DevStyles(){
 }
 
 function DistStyles(){
-	var compress=conf.compress==true || conf.compress=="css";
-	return gulp.src(conf.staticSrc +conf.mod + '/**/*.{scss,sass,css}')
-		.pipe(sourcemaps.init({sourcemap:true}))
+	//不不传递的时候  传递 css
+	var compress=(!!conf.compress || conf.compress.toLowerCase()=="css") ? true :false;
+	return gulp.src(conf.staticSrc+conf.mod + '/**/*.{scss,sass,css}')
+		
 		.pipe(sass().on('error', sass.logError))
-		.pipe(sourcemaps.write({includeContent: false}))
+	
 		.pipe(autoprefixer({
 			browsers: ['> 1%', 'IE 7']
 		}))
-		// .pipe(modifyCssUrls({
-		// 	modify: function (url, filePath) {
-		//        return url;
-		//     }
-		// }))
-		.pipe(rev())
+		.pipe(modifyCssUrls({
+			modify: function (url, filePath) {
+		       return "/"+conf.serverFolder+url;
+		    }
+		}))
+		.pipe(sass().on('error', sass.logError))
+		.pipe(autoprefixer({
+			browsers: ['> 1%', 'IE 7']
+		}))
+		
+		
 		.pipe(gulpif(compress,cleanCSS()))
 		.pipe(gulp.dest(conf.staticServerFolder+conf.mod))
-		.pipe(rev.manifest('rev-manifest-css.json'))
-		.pipe(gulp.dest(conf.revSrc))
 		.pipe(server.reload({stream:true}));
 }
-
-// function cStyles(){
-// 	return gulp.src(conf.src + conf.commonFile + '/**/*.{scss,sass,css}')
-// 		.pipe(gulpif(conf.env==="d",sourcemaps.init({sourcemap:true})))
-// 		.pipe(sass().on('error', sass.logError))
-// 		.pipe(gulpif(conf.env==="d",sourcemaps.write({includeContent: false})))
-// 		.pipe(autoprefixer({
-// 			browsers: ['> 1%', 'IE 7']
-// 		}))
-// 		.pipe(gulpif(conf.compress,cleanCSS()))
-// 		.pipe(gulp.dest(conf.dest + conf.commonFile))
-// 		.pipe(server.reload({stream:true}));
-// }
-
-
 
 module.exports={
 	DevStyles:DevStyles,

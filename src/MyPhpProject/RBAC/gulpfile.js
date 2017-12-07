@@ -19,7 +19,9 @@ const cleans = require('./FontEndGulp/clean');
 gulp.task('dev', gulp.series(cleans.DevClean,scripts.DevScripts,styles.DevStyles,htmls.DevHtmls,gulp.parallel(images.DevImages,others.DevOthers,watchs.DevWatchs,servers.DevServer)));
 
 
-gulp.task('dist', gulp.series(cleans.DistClean,scripts.DistScripts,styles.DistStyles,htmls.DistHtmls,gulp.parallel(images.DistImages,others.DistOthers,watchs.DistWatchs,servers.DistServer)));
+gulp.task('dist', gulp.series(cleans.DistClean,scripts.DistScripts,styles.DistStyles,htmls.DistHtmls,gulp.parallel(images.DistImages,watchs.DistWatchs,servers.DistServer)));
+
+// gulp.task('dist', gulp.series(cleans.DistClean,scripts.DistScripts,styles.DistStyles,htmls.DistHtmls,gulp.parallel(images.DistImages,others.DistOthers,watchs.DistWatchs,servers.DistServer)));
 
 
 

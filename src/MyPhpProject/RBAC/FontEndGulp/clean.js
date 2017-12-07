@@ -16,7 +16,7 @@ function DevClean(){
 var delHtml=conf.htmlDistFolder + conf.mod;
 var delStatic=conf.serverFolder + conf.mod;
 function DistClean(){
-	return del([delHtml,delStatic,conf.revSrc]);
+	return del([delHtml,delStatic]);
 }
 
 

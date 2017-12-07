@@ -13,7 +13,7 @@ var conf=require("./config.js");
 
 var server=require("./server.js");
 var revCollector = require('gulp-rev-collector');
-
+const template = require('gulp-template');
 
 
 /**
@@ -27,10 +27,7 @@ function DevHtmls(){
             	prefix: '@@',
             	basepath: '@file'
         	}))
-             .pipe(revCollector({
-                replaceReved: true  
-            }))
-            // .pipe(debug({title: 'htmls-------------'}))
+            .pipe(template({serverStaticUrl:''}))
         	.pipe(gulp.dest(conf.dev + conf.mod))
            
             
@@ -42,17 +39,10 @@ function DistHtmls(){
                 prefix: '@@',
                 basepath: '@file'
             }))
-             .pipe(revCollector({
-                replaceReved: true,
-                dirReplacements: {
-                    'staticLocal':function(manifest_value) {
-                        console.dir(conf.serverFolder+"/"+conf.staticServerFolder+"/"+manifest_value);
-                        return conf.serverFolder+"/"+conf.staticServerFolder+"/"+manifest_value;
-                    }
-                }  
-            }))
+            .pipe(template({serverStaticUrl:'/public'}))
             .pipe(debug({title: 'htmls-------------'}))
             .pipe(gulp.dest(conf.htmlDistFolder + conf.mod))
+            
            
             
 }
