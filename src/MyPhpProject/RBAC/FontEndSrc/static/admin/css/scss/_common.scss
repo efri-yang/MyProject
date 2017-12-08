@@ -1,0 +1,60 @@
+body,
+html {
+    width: 100%;
+    height: 100%;
+}
+
+.com-layout-header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 50px;
+    background-color: #3c8dbc;
+    z-index: 10;
+}
+
+.com-layout-container {
+    position: relative;
+    height: 100%;
+    padding-top: 50px;
+    background: #f60;
+}
+
+.com-layout-aside {
+    background-color: #222d32;
+    position: absolute;
+    left: 0;
+    top: 50px;
+    bottom: 0;
+    width: 230px;
+    overflow:auto; 
+    &::-webkit-scrollbar-track-piece {
+        //滚动条凹槽的颜色，还可以设置边框属性
+        background-color: #222d32;
+    }
+    &::-webkit-scrollbar {
+        //滚动条的宽度
+        width: 8px;
+        height: 8px;
+
+    }
+    &::-webkit-scrollbar-thumb {
+        //滚动条的设置
+        background-color: #9d9e9f;
+        background-clip: padding-box;
+        min-height: 28px;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background-color:darken(#9d9e9f,5%);
+    }
+}
+
+.com-layout-content {
+    background-color: #ecf0f5;
+    height: 100%;
+    overflow:auto;
+
+    
+}

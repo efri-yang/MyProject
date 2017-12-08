@@ -15,7 +15,7 @@
 </head>
 <body>
 	<?php
-		$sql="";
+		echo $_SERVER['HTTP_HOST'];
 	?>
 </body>
 </html>
