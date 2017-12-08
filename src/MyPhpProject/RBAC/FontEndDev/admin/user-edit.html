@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>管理后台用户列表</title>
+	<title>管理后台用户信息修改</title>
 	<script type="text/javascript" src=""></script>
 	<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
 	<link rel="stylesheet" type="text/css" href="/static/common/js/bootstrap/css/bootstrap.css">
@@ -71,59 +71,57 @@
 			</div>
 			<div class="com-layout-content">
 				<div class="bread-nav-box">
-					<p class="tit">用户列表</p>
+					<p class="tit">用户信息修改</p>
 				</div>
-				<div class="pl20 pr20 pt20">
-					<div class="bg-fff">
-						<table class="user-list-tbl">
-							<thead>
-								<tr>
-									<th>名称</th>
-									<th>操作</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>admin</td>
-									<td>
-										<a href="#" class="btn btn-info mr10">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
-									</td>
-								</tr>
-								<tr>
-									<td>ptadmin</td>
-									<td>
-										<a href="#" class="btn btn-info mr10">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
-									</td>
-								</tr>
-								<tr>
-									<td>user</td>
-									<td>
-										<a href="#" class="btn btn-info mr10">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="com-pagination-box">
-			<a href="#" class="first disabled">首页</a>
-			<a href="#" class="prev disabled">上一页</a>
-			<span>...</span>
-			<a href="#">3</a>
-			<a href="#">4</a>
-			<a href="#" class="current">5</a>
-			<a href="#">6</a>
-			<a href="#">7</a>
-			<span>...</span>
-			<a href="#" class="next disabled">下一页</a>
-			<a href="#" class="last disabled">尾页</a>
-			<span>共11</span>
-			<form class="pageform" action="m_page.sql" method="post">
-				<span>到 <input type="text" size="2">页</span>
-				<input type="submit" value="确定" />
-			</form>
-		</div>
+				<div class="ml20 mr20 pt30 bg-fff">
+					<div class="user-edit-form">
+						<form class="form-horizontal">
+							<div class="form-group">
+						        <label class="col-sm-1 control-label">用户名</label>
+						        <div class="col-sm-5">
+						          <input type="text" class="form-control" placeholder="用户名">
+						        </div>
+						    </div>
+
+						    <div class="form-group">
+						        <label class="col-sm-1 control-label">密码</label>
+						        <div class="col-sm-5">
+						          	<div class="pwd">
+										<span>**********</span>
+						          		<a href="#">修改</a>
+						          	</div>
+						        </div>
+						    </div>
+
+						    <div class="form-group">
+						        <label class="col-sm-1 control-label">角色</label>
+						        <div class="col-sm-5">
+						          	<select class="form-control">
+										<option>管理员</option>
+										<option>普通管理员</option>
+										<option>用户</option>
+						          	</select>
+						        </div>
+						    </div>
+
+
+						    <div class="form-group">
+						        <label class="col-sm-1 control-label">邮箱</label>
+						        <div class="col-sm-5">
+						          <input type="text" class="form-control" placeholder="邮箱">
+						        </div>
+						    </div>
+
+
+						    <div class="form-group">
+						        <label class="col-sm-1"></label>
+						        <div class="col-sm-5">
+						          	<input type="submit" value=" 修改 " class="btn btn-success">
+						        </div>
+						    </div>
+
+						</form>
+						<div class="pb30"></div>
 					</div>
 				</div>
 			</div>

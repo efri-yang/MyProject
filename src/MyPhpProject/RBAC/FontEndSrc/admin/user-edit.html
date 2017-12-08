@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>管理后台用户信息修改</title>
+	<script type="text/javascript" src=""></script>
+	<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
+	<link rel="stylesheet" type="text/css" href="/static/common/js/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/common.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css">
+</head>
+<body>
+	<!-- 头部 start -->
+	 @@include("./views/_header.html")
+	<!-- 头部 end -->
+	 <div class="com-layout-container">
+			<div class="com-layout-aside">
+				 @@include("./views/_aside.html")
+			</div>
+			<div class="com-layout-content">
+				<div class="bread-nav-box">
+					<p class="tit">用户信息修改</p>
+				</div>
+				<div class="ml20 mr20 pt30 bg-fff">
+					<div class="user-edit-form">
+						<form class="form-horizontal">
+							<div class="form-group">
+						        <label class="col-sm-1 control-label">用户名</label>
+						        <div class="col-sm-5">
+						          <input type="text" class="form-control" placeholder="用户名">
+						        </div>
+						    </div>
+
+						    <div class="form-group">
+						        <label class="col-sm-1 control-label">密码</label>
+						        <div class="col-sm-5">
+						          	<div class="pwd">
+										<span>**********</span>
+						          		<a href="#">修改</a>
+						          	</div>
+						        </div>
+						    </div>
+
+						    <div class="form-group">
+						        <label class="col-sm-1 control-label">角色</label>
+						        <div class="col-sm-5">
+						          	<select class="form-control">
+										<option>管理员</option>
+										<option>普通管理员</option>
+										<option>用户</option>
+						          	</select>
+						        </div>
+						    </div>
+
+
+						    <div class="form-group">
+						        <label class="col-sm-1 control-label">邮箱</label>
+						        <div class="col-sm-5">
+						          <input type="text" class="form-control" placeholder="邮箱">
+						        </div>
+						    </div>
+
+
+						    <div class="form-group">
+						        <label class="col-sm-1"></label>
+						        <div class="col-sm-5">
+						          	<input type="submit" value=" 修改 " class="btn btn-success">
+						        </div>
+						    </div>
+
+						</form>
+						<div class="pb30"></div>
+					</div>
+				</div>
+			</div>
+
+	  </div>
+</body>
+</html>

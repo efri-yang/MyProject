@@ -127,7 +127,7 @@
 			<span>...</span>
 			<a href="#">3</a>
 			<a href="#">4</a>
-			<a href="#">5</a>
+			<a href="#" class="current">5</a>
 			<a href="#">6</a>
 			<a href="#">7</a>
 			<span>...</span>
