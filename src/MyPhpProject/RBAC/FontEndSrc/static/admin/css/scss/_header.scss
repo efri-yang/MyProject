@@ -1,0 +1,50 @@
+.header-top-tit{
+	font-size: 22px;
+	color:#fff;
+	line-height: 50px;
+	padding:0 15px;
+	font-weight: bold;  
+	float: left;
+}
+
+.header-top-avatar{
+	float: right;
+	position: relative;
+	margin-right: 30px;
+	&:hover{
+		.avatar-handle{
+			display: block;
+		}
+	}
+	.avatar-info{
+		padding-top:7px;
+		.pic{
+			width: 36px;
+			height: 36px;
+			overflow: hidden;
+			border-radius: 100%;
+			overflow: hidden;
+			float: left;
+			margin-right: 10px;			
+		}
+		.txt{
+			float:left;
+			line-height: 36px;
+			color:#fff; 
+		}
+	}
+	.avatar-handle{
+		position: absolute;
+		left:0;
+		top:50px;
+		background:#fff; 
+		border:1px solid #e5e5e5;
+		display:none; 
+		a{
+			display: block;
+			white-space: nowrap;
+			padding: 6px 15px;
+			border-bottom:1px solid #e5e5e5; 
+		}
+	}
+}

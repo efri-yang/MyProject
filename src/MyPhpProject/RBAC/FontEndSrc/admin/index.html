@@ -31,11 +31,17 @@
 					<li>
 						<a href="#">首页</a>
 					</li>
-					<li>
+					<li class="active">
 						<a href="#">文章管理</a>
 						<ul>
 							<li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章列表</a></li>
-							<li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加文章</a></li>
+							<li class="active">
+								<a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加文章</a>
+								<ul>
+									<li class="curr"><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户列表</a></li>
+									<li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加角色</a></li>
+								</ul>
+							</li>
 						</ul>
 					</li>
 					<li>
@@ -63,7 +69,9 @@
 				</ul>
 			</div>
 			<div class="com-layout-content">
-				<p style="height: 1800px">1111</p>
+				<div class="bread-nav-box">
+					<p class="tit">文章列表</p>
+				</div>
 			</div>
 	  </div>
 </body>
