@@ -109,3 +109,22 @@
 		}
 	}
 }
+
+
+
+
+.perssion-list-hd{
+	li{
+		padding: 8px 20px;
+		&.item-1{
+			width:80%;
+			float: left; 
+		}
+		&.item-2{
+			width: 20%;
+			float: left;
+			text-align: center;
+		}
+		
+	}
+}
