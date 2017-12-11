@@ -49,3 +49,57 @@
 		}
 	}
 }
+
+
+
+
+
+.role-list-tbl{
+	width: 100%;
+	margin-bottom: 35px; 
+	thead{
+		background:#d8e4ed;
+		th{
+			text-align: center;
+			border:1px solid #eeeeee;
+			padding:10px 5px;
+			font-size: 16px;
+		} 
+	}
+
+	tbody{
+		tr:nth-of-type(odd){
+			background:#f9f9f9; 
+		}
+		td{
+			padding:10px 0; 
+			text-align: center;
+
+		}
+	}
+}
+
+
+.role-edit-form{
+	padding:0 30px;
+	.pwd{
+		span{
+			margin-top: 6px;
+			line-height: 27px;
+			display: inline-block;
+			margin-right:30px;
+		}
+	}
+}
+
+.role-perssion-tree{
+	&.sub{
+		padding-left: 30px;
+	}
+	.item{
+		background:#f9f9f9;
+		label{
+			
+		} 
+	}
+}
