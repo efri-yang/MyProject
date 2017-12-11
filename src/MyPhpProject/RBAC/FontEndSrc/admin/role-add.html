@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>管理后台——角色添加</title>
+	<script type="text/javascript" src=""></script>
+	<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
+	<link rel="stylesheet" type="text/css" href="/static/common/js/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/common.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css">
+</head>
+<body>
+	<!-- 头部 start -->
+	 @@include("./views/_header.html")
+	<!-- 头部 end -->
+	 <div class="com-layout-container">
+			<div class="com-layout-aside">
+				 @@include("./views/_aside.html")
+			</div>
+			<div class="com-layout-content">
+				<div class="bread-nav-box">
+					<p class="tit">角色添加</p>
+				</div>
+				<div class="ml20 mr20 pt30">
+					<div class="bg-fff">
+						<div class="role-edit-form">
+							<form class="form-horizontal">
+								<div class="form-group">
+							        <label class="col-sm-1 control-label">角色名称</label>
+							        <div class="col-sm-5">
+							          <input type="text" class="form-control" placeholder="角色名称">
+							        </div>
+							    </div>
+
+
+							    <div class="form-group">
+							        <label class="col-sm-1 control-label">角色权限</label>
+							        <div class="col-sm-5">
+							          	<div class="role-perssion-list">
+											<div class="role-perssion-tree">
+												<p class="item"><label><input type="checkbox" class="ipt-checkbox">首页</label></p>
+											</div>
+
+											<div class="role-perssion-tree">
+												<p class="item"><label><input type="checkbox" class="ipt-checkbox">文章管理</label></p>
+												<div class="role-perssion-tree sub">
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">文章列表</label></p>
+													<div class="role-perssion-tree sub">
+														<p class="item"><label><input type="checkbox"  class="ipt-checkbox">国内文章</label></p>
+														<p class="item"><label><input type="checkbox"  class="ipt-checkbox">国内文章</label></p>
+													</div>
+												</div>
+											</div>
+
+											<div class="role-perssion-tree">
+												<p class="item"><label><input type="checkbox" class="ipt-checkbox">权限管理</label></p>
+												<div class="role-perssion-tree sub">
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">权限列表</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">添加权限</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">修改权限</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">删除权限</label></p>
+												</div>
+											</div>
+
+											<div class="role-perssion-tree">
+												<p class="item"><label><input type="checkbox" class="ipt-checkbox">角色管理</label></p>
+												<div class="role-perssion-tree sub">
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">角色列表</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">添加角色</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">修改角色</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">删除角色</label></p>
+												</div>
+											</div>
+
+											<div class="role-perssion-tree">
+												<p class="item"><label><input type="checkbox" class="ipt-checkbox">用户管理</label></p>
+												<div class="role-perssion-tree sub">
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">用户列表</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">修改信息</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">添加信息</label></p>
+													<p class="item"><label><input type="checkbox"  class="ipt-checkbox">删除信息</label></p>
+												</div>
+											</div>
+							          	</div>
+							        </div>
+							    </div>  
+
+							    <div class="form-group">
+							        <label class="col-sm-1 control-label"></label>
+							        <div class="col-sm-5">
+							        	<input type="submit" value="添加" class="btn btn-success btn-lg pl30 pr30" />
+							        </div>
+							    </div> 
+							</form>
+							<div class="pb30"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+	  </div>
+</body>
+</html>
