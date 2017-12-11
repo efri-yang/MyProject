@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>管理后台用户信息修改</title>
+	<title>管理后台添加用户</title>
 	<script type="text/javascript" src=""></script>
 	<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
 	<link rel="stylesheet" type="text/css" href="/static/common/js/bootstrap/css/bootstrap.css">
@@ -35,8 +35,7 @@
 						        <label class="col-sm-1 control-label">密码</label>
 						        <div class="col-sm-5">
 						          	<div class="pwd">
-										<span>**********</span>
-						          		<a href="#">修改</a>
+										<input type="text" class="form-control" placeholder="密码">
 						          	</div>
 						        </div>
 						    </div>
@@ -45,6 +44,7 @@
 						        <label class="col-sm-1 control-label">角色</label>
 						        <div class="col-sm-5">
 						          	<select class="form-control">
+						          		<option>请选择角色</option>
 										<option>管理员</option>
 										<option>普通管理员</option>
 										<option>用户</option>
@@ -72,7 +72,7 @@
 						    <div class="form-group">
 						        <label class="col-sm-1"></label>
 						        <div class="col-sm-5">
-						          	<input type="submit" value=" 修改 " class="btn btn-success">
+						          	<input type="submit" value="添加" class="btn btn-success">
 						        </div>
 						    </div>
 
