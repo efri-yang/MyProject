@@ -155,15 +155,15 @@
 										<div id="J_uploader-list" class="clearfix">
 											<ul class="uploading-img-list">
 												<li>
-													<div class="img-wrap"></div>
+													<div class="img-wrap"><img src="../static/admin/upload/01.jpg"></div>
 													<div class="handle-bar">
 														<span class="upload-btn">上传</span>
 														<span class="del-btn">删除</span>
 													</div>
 													<div class="progress">
-														<span></span>
+														<span style="width:18%;"></span>
 													</div>
-													<div class="error"></div>
+													<div class="error">上传失败了</div>
 													<div class="success"></div>
 												</li>
 											</ul>
@@ -183,5 +183,30 @@
 				</div>
 	  		</div>
 	</div>
+
+	<script type="text/javascript">
+		$(function(){
+			 var uploader = WebUploader.create({
+        pick: {
+            id: '#filePicker',
+            label: '点击上传本地图片'
+        },
+        formData: {
+           
+        },
+        accept: {// 只允许选择图片文件格式
+            title: 'Images',
+            extensions: 'gif,jpg,bmp,png',
+            mimeTypes: 'image/jpg,image/jpeg,image/png'
+        },
+        server: './js/fileupload2.php',
+        swf: '../../static/js/webuploader/Uploader.swf',
+        //限制文件的大小
+        fileSingleSizeLimit:10 * 1024 * 1024,
+        fileNumLimit:5,
+        fileSizeLimit: 10 * 1024 * 1024
+    });
+		})
+	</script>
 </body>
 </html>
