@@ -223,6 +223,18 @@
 	}
 	.sel-1{
 		width:150px;
+		padding:5px 10px;
+	}
+}
+
+
+
+.com-upload-single-box{
+	.no-pic{
+		width: 150px;
+		height: 150px;
+		overflow: hidden;
+		background:url("/static/common/images/common/uploads/not_img_pic.png") no-repeat center center; 
 	}
 }
 
