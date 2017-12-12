@@ -174,8 +174,17 @@
 }
 
 
+.align-c{
+	text-align: center;
+}
 
+.relative{
+	position: relative;
+}
 
+.valign-t{
+	vertical-align:top;
+}
 
 @import "scss/_common.scss";
 @import "scss/_header.scss";

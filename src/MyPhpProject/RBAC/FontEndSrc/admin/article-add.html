@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>管理后文章——添加文章</title>
+	<script type="text/javascript" src=""></script>
+	<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
+	<link rel="stylesheet" type="text/css" href="/static/common/js/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/common.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css">
+</head>
+<body>
+	<!-- 头部 start -->
+	 @@include("./views/_header.html")
+	<!-- 头部 end -->
+	<div class="com-layout-container">
+			<div class="com-layout-aside">
+				 @@include("./views/_aside.html")
+			</div>
+			<div class="com-layout-content">
+				<div class="bread-nav-box clearfix">
+					<p class="tit fl">添加文章</p>
+				</div>
+				<div class="ml20 mr20 pt30">
+					
+					<div class="bg-fff">
+						<table class="article-add-tbl">
+							<tr>
+								<td class="para-tit">
+									<span class="star">*</span>
+									标题：
+								</td>
+								<td>
+									<input type="text" size="45" name="title" value="">
+								</td>
+							</tr>
+							<tr>
+								<td class="para-tit">
+									副标题：
+								</td>
+								<td>
+									<input type="text" size="45" name="title" value="">
+								</td>
+							</tr>
+							<tr>
+								<td class="para-tit valign-t">
+									所属栏目：
+								</td>
+								<td>
+									<select class="sel-1" size="12">
+										<option>新闻中心</option>
+										<option>|-新闻中心</option>
+									</select>
+									<p>
+										<a href="#" class="btn btn-success mt15">创建栏目</a>
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td class="para-tit">
+									关键字：
+								</td>
+								<td>
+									<input type="text" size="45" name="title" value="">
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+	  		</div>
+	</div>
+</body>
+</html>

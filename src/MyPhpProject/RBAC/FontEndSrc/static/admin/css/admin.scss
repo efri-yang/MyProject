@@ -114,6 +114,8 @@
 
 
 .perssion-list-hd{
+	border-bottom:1px solid #e5e5e5;
+	background:#f5f5f5;
 	li{
 		padding: 8px 20px;
 		&.item-1{
@@ -128,3 +130,99 @@
 		
 	}
 }
+
+.perssion-list-tree{
+	padding-left:30px;
+	padding-right:30px;
+	li{
+		ul{
+			padding-left:30px;
+		}
+		.name{
+			float:left;
+			clear:both;
+			line-height:44px;
+			margin:0;
+		}
+		.handle{
+			float:right;
+			>a{
+				margin:0 7px;
+			}
+		}
+		.item-info{
+			zoom: 1;
+			&:after{
+				content: " ";
+				display: block;
+				clear: both;
+				height: 0;
+			}
+		}
+	}
+	>li{
+		border-bottom:1px dashed #eee;
+		padding-top:10px;
+	}
+}
+
+
+.perssion-add-form{
+	padding:30px 30px 0;
+	.pwd{
+		span{
+			margin-top: 6px;
+			line-height: 27px;
+			display: inline-block;
+			margin-right:30px;
+		}
+	}
+}
+
+.article-list-tbl{
+	width: 100%;
+	margin-top: 15px;
+	thead{
+		th{
+			background:#fff;
+			border:1px solid #cfcfcf;
+			padding:10px 5px; 
+			text-align: center;
+			background:#e6e6e6;
+		}
+	}
+	tbody{
+		td{
+			padding:10px 5px;
+			border:1px solid #cfcfcf;
+		}
+	}
+	.handle a{
+		margin:0 10px;
+		color:blue;
+		text-decoration: underline;
+	}
+}
+
+.article-list-handle{
+	position:absolute;
+	left:0;
+	top:7px;
+}
+
+.article-add-tbl{
+	border:1px solid #999;
+	width:100%;
+	td{
+		border: 1px solid #999;
+    	padding: 10px;
+		&.para-tit{
+			width: 150px;
+    		text-align: right;
+		}
+	}
+	.sel-1{
+		width:150px;
+	}
+}
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>管理后台 权限列表</title>
+	<script type="text/javascript" src=""></script>
+	<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
+	<link rel="stylesheet" type="text/css" href="/static/common/js/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/common.css">
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css">
+</head>
+<body>
+	<!-- 头部 start -->
+	 @@include("./views/_header.html")
+	<!-- 头部 end -->
+	 <div class="com-layout-container">
+			<div class="com-layout-aside">
+				 @@include("./views/_aside.html")
+			</div>
+			<div class="com-layout-content">
+				<div class="bread-nav-box clearfix">
+					<p class="tit fl">添加权限</p>
+				</div>
+				<div class="ml20 mr20 pt30">
+					<div class="bg-fff">
+						<div class="perssion-add-form">
+							<form class="form-horizontal">
+								<div class="form-group">
+							        <label class="col-sm-1 control-label">权限目录</label>
+							        <div class="col-sm-5">
+							          	<select class="form-control">
+							          		<option>顶级权限</option>
+											<option>&nbsp;&nbsp;&nbsp;&nbsp;|—用户管理</option>
+											<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|—普通管理员</option>
+											
+											<option>顶级权限</option>
+											<option>&nbsp;&nbsp;&nbsp;&nbsp;|—用户管理</option>
+											<option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|—普通管理员</option>
+							          	</select>
+							        </div>
+							    </div>
+
+								<div class="form-group">
+							        <label class="col-sm-1 control-label">权限名称</label>
+							        <div class="col-sm-5">
+							          <input type="text" class="form-control" placeholder="权限名称">
+							        </div>
+							    </div>
+
+
+							    <div class="form-group">
+							        <label class="col-sm-1 control-label">类方法名</label>
+							        <div class="col-sm-5">
+							          <input type="text" class="form-control" placeholder="类方法名">
+							        </div>
+							    </div>
+
+							    <div  class="form-group">
+									<label class="col-sm-1 control-label"></label>
+									<div class="col-sm-5">
+										<input type="submit" value="添加" class="btn btn-success mr20" />
+										<input type="reset" value="充值" class="btn btn-default">
+									</div>
+							    </div>
+
+							    
+							</form>
+							<div class="pb30"></div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+
+	  </div>
+</body>
+</html>
