@@ -13,7 +13,7 @@ session_start();
 	   $y=rand(5,10);
 	   imagestring($image,$fontsize,$x,$y,$fontcontent,$fontcolor);   
    }*/
-   //增加背景中的点点点的干扰
+   
    
    $captch_code="";
    for($i=0;$i<4;$i++){
@@ -30,6 +30,7 @@ session_start();
    }
    $_SESSION["authcode"]=$captch_code;
    
+   //增加背景中的点点点的干扰
    for($i=0;$i<200;$i++){
 	  $pointcolor=imagecolorallocate($image,rand(0,120),rand(0,120),rand(0,120));
 	  imagesetpixel($image,rand(1,99),rand(1,29),$pointcolor);
