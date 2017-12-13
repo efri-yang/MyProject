@@ -24,7 +24,7 @@ function DevScripts(){
 
 function DistScripts(){
 
-    var compress=(!conf.compress || conf.compress=="js") ? true :false;
+     var compress=conf.compress==true || conf.compress=="js";
     return gulp.src(conf.staticSrc + conf.mod + '/**/*.js')
         .pipe(gulpif(compress, uglify()))
         .pipe(gulp.dest(conf.staticServerFolder+conf.mod))

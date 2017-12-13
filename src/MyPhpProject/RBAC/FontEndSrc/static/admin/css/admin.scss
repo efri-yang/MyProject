@@ -233,6 +233,32 @@
 	}
 }
 
+/**
+ * 登录注册
+ */
+.register-server-tip,.login-server-tip{
+	border:1px solid #f60;
+	padding: 20px;
+	font-size: 16px;
+	display: none;
+	margin-bottom: 30px;
+}
+
+.login-form-box{
+	.yzm-btn{
+		line-height: 34px;
+	}
+	.yzm-pic{
+		width: 100px;
+		height: 34px;
+		overflow: hidden;
+		display: inline-block;
+		vertical-align: middle;
+	}
+}
+
+
+
 
 
 

@@ -1,0 +1,205 @@
+@charset "UTF-8";
+.bread-nav-box {
+  padding: 20px 20px 0; }
+
+.bread-nav-box .tit {
+  font-size: 22px;
+  padding: 8px 10px;
+  border-bottom: 2px solid #00a65a;
+  margin-bottom: 0; }
+
+.user-list-tbl {
+  width: 100%;
+  margin-bottom: 35px; }
+
+.user-list-tbl thead {
+  background: #d8e4ed; }
+
+.user-list-tbl thead th {
+  text-align: center;
+  border: 1px solid #eeeeee;
+  padding: 10px 5px;
+  font-size: 16px; }
+
+.user-list-tbl tbody tr:nth-of-type(odd) {
+  background: #f9f9f9; }
+
+.user-list-tbl tbody td {
+  padding: 10px 0;
+  text-align: center; }
+
+.user-edit-form {
+  padding: 0 30px; }
+
+.user-edit-form .pwd span {
+  margin-top: 6px;
+  line-height: 27px;
+  display: inline-block;
+  margin-right: 30px; }
+
+.role-list-tbl {
+  width: 100%;
+  margin-bottom: 35px; }
+
+.role-list-tbl thead {
+  background: #d8e4ed; }
+
+.role-list-tbl thead th {
+  text-align: center;
+  border: 1px solid #eeeeee;
+  padding: 10px 5px;
+  font-size: 16px; }
+
+.role-list-tbl tbody tr:nth-of-type(odd) {
+  background: #f9f9f9; }
+
+.role-list-tbl tbody td {
+  padding: 10px 0;
+  text-align: center; }
+
+.role-edit-form {
+  padding: 30px 30px 0; }
+
+.role-edit-form .pwd span {
+  margin-top: 6px;
+  line-height: 27px;
+  display: inline-block;
+  margin-right: 30px; }
+
+.role-perssion-tree.sub {
+  padding-left: 30px; }
+
+.role-perssion-tree .item {
+  background: #f1f1f1;
+  padding: 5px 0 5px 10px; }
+
+.role-perssion-tree .item > label {
+  display: block; }
+
+.role-perssion-tree .item .ipt-checkbox {
+  margin-right: 5px;
+  vertical-align: middle;
+  margin-top: -2px; }
+
+.perssion-list-hd {
+  border-bottom: 1px solid #e5e5e5;
+  background: #f5f5f5; }
+
+.perssion-list-hd li {
+  padding: 8px 20px; }
+
+.perssion-list-hd li.item-1 {
+  width: 80%;
+  float: left; }
+
+.perssion-list-hd li.item-2 {
+  width: 20%;
+  float: left;
+  text-align: center; }
+
+.perssion-list-tree {
+  padding-left: 30px;
+  padding-right: 30px; }
+
+.perssion-list-tree li ul {
+  padding-left: 30px; }
+
+.perssion-list-tree li .name {
+  float: left;
+  clear: both;
+  line-height: 44px;
+  margin: 0; }
+
+.perssion-list-tree li .handle {
+  float: right; }
+
+.perssion-list-tree li .handle > a {
+  margin: 0 7px; }
+
+.perssion-list-tree li .item-info {
+  zoom: 1; }
+
+.perssion-list-tree li .item-info:after {
+  content: " ";
+  display: block;
+  clear: both;
+  height: 0; }
+
+.perssion-list-tree > li {
+  border-bottom: 1px dashed #eee;
+  padding-top: 10px; }
+
+.perssion-add-form {
+  padding: 30px 30px 0; }
+
+.perssion-add-form .pwd span {
+  margin-top: 6px;
+  line-height: 27px;
+  display: inline-block;
+  margin-right: 30px; }
+
+.article-list-tbl {
+  width: 100%;
+  margin-top: 15px; }
+
+.article-list-tbl thead th {
+  background: #fff;
+  border: 1px solid #cfcfcf;
+  padding: 10px 5px;
+  text-align: center;
+  background: #e6e6e6; }
+
+.article-list-tbl tbody td {
+  padding: 10px 5px;
+  border: 1px solid #cfcfcf; }
+
+.article-list-tbl .handle a {
+  margin: 0 10px;
+  color: blue;
+  text-decoration: underline; }
+
+.article-list-handle {
+  position: absolute;
+  left: 0;
+  top: 7px; }
+
+.article-add-tbl {
+  border: 1px solid #999;
+  width: 100%; }
+
+.article-add-tbl td {
+  border: 1px solid #999;
+  padding: 10px; }
+
+.article-add-tbl td.para-tit {
+  width: 150px;
+  text-align: right; }
+
+.article-add-tbl .sel-1 {
+  width: 150px;
+  padding: 5px 10px; }
+
+.article-add-tbl .hand-submit > input {
+  min-width: 150px;
+  margin: 0 15px; }
+
+/**
+ * 登录注册
+ */
+.register-server-tip,
+.login-server-tip {
+  border: 1px solid #f60;
+  padding: 20px;
+  font-size: 16px;
+  display: none;
+  margin-bottom: 30px; }
+
+.login-form-box .yzm-btn {
+  line-height: 34px; }
+
+.login-form-box .yzm-pic {
+  width: 100px;
+  height: 34px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle; }
