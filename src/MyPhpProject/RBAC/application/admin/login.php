@@ -1,28 +1,32 @@
 <?php
 	include("../../config.php");
     include(ROOT_PATH."/application/admin/common/common.php");
-
-    echo $_SESSION["captcha"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>登录注册</title>
-	
+	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/vue/vue.js"></script>
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/css/base.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/common.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/admin.css">
+
+    
+    <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/veevalidate/vee-validate.js"></script>
+    <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/veevalidate/locale/zh_CN.js"></script>
+
 </head>
 <body>
-		<div class="container mt20 login-form-box">
-        <div class="login-server-tip"></div>
+		<div class="container mt20 login-form-box" id="J_login-form-box">
+        
         <form class="form-horizontal" method="post" action="./doLogin.php" id="defaultForm">
             <div class="form-group">
                 <label  class="col-sm-2 control-label">用户名</label>
                 <div class="col-sm-10">
-                    <input type="text" name="username" class="form-control" placeholder="用户名">
+                    <input v-validate="'required|email'" :class="{'input': true, 'is-danger': errors.has('email') }" name="email" type="text" placeholder="Email">
+                     <span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
                 </div>
             </div>
             <div class="form-group">
@@ -54,6 +58,21 @@
             </div>
         </form>
     </div>
+    <script type="text/javascript">
+         const config = {
+            locale: 'zh_CN'
+        };
+        Vue.use(VeeValidate, config);
+        var app = new Vue({
+          el: '#J_login-form-box',
+         
+        });
+       
 
+        
+       
+       
+
+    </script>
 </body>
 </html>
