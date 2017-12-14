@@ -97,8 +97,7 @@
 	}
 
 
-	$verifyImage=new VerifyImage();
-	$verifyImage->createVerifyImage();
+	
 
-	echo $verifyImage->captchCode;
+	
 ?>

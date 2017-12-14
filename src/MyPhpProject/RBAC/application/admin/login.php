@@ -1,6 +1,8 @@
 <?php
 	include("../../config.php");
     include(ROOT_PATH."/application/admin/common/common.php");
+
+    echo $_SESSION["captcha"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +39,7 @@
                 </div>
 
                 <div class="col-sm-8">
-                    <span class="yzm-pic"><img  src="/public/static/admin/upload/01.jpg" id="J_captcha-img"></span>
+                    <span class="yzm-pic"><img  src="doCaptcha.php?r=<?php echo rand();?>" id="J_captcha-img"></span>
                     <a href="" class="yzm-btn" id="J_yzmbtn">看不清</a>
                 </div>
             </div>
