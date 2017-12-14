@@ -13,9 +13,11 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/common.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/admin.css">
 
-    
-    <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/veevalidate/vee-validate.js"></script>
     <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/veevalidate/locale/zh_CN.js"></script>
+    <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/veevalidate/vee-validate.js"></script>
+    
+    
+
 
 </head>
 <body>
@@ -59,13 +61,19 @@
         </form>
     </div>
     <script type="text/javascript">
-         const config = {
+       
+
+      
+      
+       
+        
+        Vue.use(VeeValidate,{
             locale: 'zh_CN'
-        };
-        Vue.use(VeeValidate, config);
+        });
+
+        
         var app = new Vue({
-          el: '#J_login-form-box',
-         
+          el: '#J_login-form-box'
         });
        
 
