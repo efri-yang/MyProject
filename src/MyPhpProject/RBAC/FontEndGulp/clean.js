@@ -13,10 +13,10 @@ function DevClean(){
 	return del([conf.dev]);
 }
 
-var delHtml=conf.htmlDistFolder + conf.mod;
-var delStatic=conf.serverFolder + conf.mod;
+// var delHtml=conf.htmlDistFolder + conf.mod;
+// var delStatic=conf.serverFolder + conf.mod;
 function DistClean(){
-	return del([delHtml,delStatic]);
+	// return del([delHtml,delStatic]);
 }
 
 
