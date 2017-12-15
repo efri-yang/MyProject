@@ -25,8 +25,8 @@
 				</a>
 			</div>
 			<div class="avatar-handle">
-				<a href="#">信息修改</a>
-				<a href="#">退出</a>
+				<a href="userEdit.php?id=1">信息修改</a>
+				<a href="loginout.php">退出</a>
 			</div>
 		</div>
 	  </div>
