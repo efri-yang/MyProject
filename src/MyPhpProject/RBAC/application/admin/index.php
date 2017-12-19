@@ -1,6 +1,12 @@
 <?php
     include("../../config.php");
     include(ROOT_PATH."/application/admin/common/common.php");
+    $userId=$_SESSION["userid"];
+    sessionDrawGuide($userId,"login.php");
+
+    $sql="select * from user where id='$userId'";
+
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,8 +19,11 @@
     <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/common.css">
     <link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/admin.css">
+
+    <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/common.js"></script>
 </head>
 <body>
+   
 	  <div class="com-layout-header">
 		<p class="header-top-tit">管理后台</p>
 		<div class="header-top-avatar">

@@ -19,5 +19,11 @@
 		echo "<script type='text/javascript'>handleResultLocation('$url','timecount','$time');</script>";
 	}
 
+	function sessionDrawGuide($id,$url){
+		if(empty($id) || !isset($id)){
+			header('Location:'.$url);
+		}
+	}
+
 	
 ?>
