@@ -32,6 +32,45 @@
         $tree=new Tree();
         $data=$tree->hTree($resArr);
         print_r($data);
+        // 
+        /**
+         * Array
+(
+    
+    [7] => Array
+        (
+            [rid] => 1
+            [id] => 7
+            [pid] => 0
+            [name] => 角色管理
+            [fname] => roleIndex
+            [status] => 0
+            [aside] => 1
+            [sub] => Array
+                (
+                    [8] => Array
+                        (
+                            [rid] => 1
+                            [id] => 8
+                            [pid] => 7
+                            [name] => 角色列表
+                            [fname] => roleList
+                            [status] => 0
+                            [aside] => 1
+                            [sub] => Array
+                                (
+                                )
+
+                        )
+                )
+
+        )
+
+    
+)
+         */
+       
+      
         function dispalyAside($data,$className='',$pid,$step=0,$str=""){
             $str.="<ul>";
             $emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$step);
@@ -53,7 +92,7 @@
 	  <div class="com-layout-container">
 			<div class="com-layout-aside">
                 <div class="aside-nav-list">
-				    <?php echo  dispalyAside($data,"articleList")?>
+				    <?php echo  dispalyAside($data,"articleList",0)?>
 			    </div>
             </div>
 			<div class="com-layout-content">
