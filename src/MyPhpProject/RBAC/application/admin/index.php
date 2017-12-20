@@ -31,13 +31,17 @@
 
         $tree=new Tree();
         $data=$tree->hTree($resArr);
-        function dispalyAside($data,$str="",$step=0){
+        print_r($data);
+        function dispalyAside($data,$className='',$pid,$step=0,$str=""){
             $str.="<ul>";
             $emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$step);
             foreach ($data as $k => $v) {
-                $str.="<li><a href='index.php?class=".$v["fname"]."'>".$emptyholer.$v["name"]."</a>";
-                if(count($v["sub"])){
-                    $str=dispalyAside($v["sub"],$str,$step+1);
+                $subLen=count($v["sub"]);
+                $active=($v["fname"]==$className) ? "active" :"";
+                $current=($v['pid']==$pid) ? 'current' :"";
+                $str.="<li class='".$active." ".$current."'><a href='index.php?class=".$v["fname"]."'>".$emptyholer.$v["name"]."</a>";
+                if($subLen){
+                    $str=dispalyAside($v["sub"],$v['id'],$className,$step+1,$str);
                 }
                 $str.="</li>";
             }
@@ -49,7 +53,7 @@
 	  <div class="com-layout-container">
 			<div class="com-layout-aside">
                 <div class="aside-nav-list">
-				    <?php echo  dispalyAside($data)?>
+				    <?php echo  dispalyAside($data,"articleList")?>
 			    </div>
             </div>
 			<div class="com-layout-content">
