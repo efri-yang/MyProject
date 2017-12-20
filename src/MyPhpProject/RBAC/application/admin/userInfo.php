@@ -1,12 +1,15 @@
 <?php
     include("../../config.php");
     include(ROOT_PATH."/application/admin/common/common.php");
+    $userId=$_SESSION["userid"];
+    sessionDrawGuide($userId,"login.php"); 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>管理后台用户信息修改</title>
+	<title>管理后台用户信息</title>
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/jquery/jquery-1.12.4.js"></script>
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/vue/vue.js"></script>
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/css/base.css">
@@ -17,26 +20,14 @@
 	<link  type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.css">
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.js"></script>
 
-	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/webuploader.js"></script>
-
+	
 </head>
 <body>
 	<!-- 头部 start -->
-	  <div class="com-layout-header">
-		<p class="header-top-tit">管理后台</p>
-		<div class="header-top-avatar">
-			<div class="avatar-info">
-				<a href="#" class="clearfix">
-					<div class="pic"><img src="/static/admin/upload/01.jpg"></div>
-					<p class="txt">杨艺辉</p>
-				</a>
-			</div>
-			<div class="avatar-handle">
-				<a href="#">信息修改</a>
-				<a href="#">退出</a>
-			</div>
-		</div>
-	  </div>
+	 <?php
+        include("./include/header.php");
+        print_r($resData);
+    ?>
 	<!-- 头部 end -->
 	 <div class="com-layout-container">
 			<div class="com-layout-aside">
@@ -90,7 +81,7 @@
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">用户名</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="用户名">
+						          <input type="text" class="form-control" placeholder="用户名" value="<?php echo $resData['username'] ?>">
 						        </div>
 						    </div>
 

@@ -8,8 +8,8 @@ Create your own skin at http://designer.videojs.com
 
 @font-face {
   font-family: VideoJS;
-  src: url("/publicfont/vjs.eot");
-  src: url("/publicfont/vjs.eot?#iefix") format("embedded-opentype"), url("/publicfont/vjs.woff") format("woff"), url("/publicfont/vjs.ttf") format("truetype");
+  src: url("/MyProject/src/MyPhpProject/RBAC/publicfont/vjs.eot");
+  src: url("/MyProject/src/MyPhpProject/RBAC/publicfont/vjs.eot?#iefix") format("embedded-opentype"), url("/MyProject/src/MyPhpProject/RBAC/publicfont/vjs.woff") format("woff"), url("/MyProject/src/MyPhpProject/RBAC/publicfont/vjs.ttf") format("truetype");
   font-weight: 400;
   font-style: normal; }
 

@@ -46,7 +46,7 @@
   margin: 0 auto; }
 
 .transparent {
-  background: url("/publicimages/bg.gif") repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicimages/bg.gif") repeat; }
 
 .bottom table tr td {
   border: 1px dashed #ccc; }

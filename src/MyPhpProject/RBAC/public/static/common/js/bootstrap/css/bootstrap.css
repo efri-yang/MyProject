@@ -237,8 +237,8 @@ th {
 
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url("/public../fonts/glyphicons-halflings-regular.eot");
-  src: url("/public../fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/public../fonts/glyphicons-halflings-regular.woff2") format("woff2"), url("/public../fonts/glyphicons-halflings-regular.woff") format("woff"), url("/public../fonts/glyphicons-halflings-regular.ttf") format("truetype"), url("/public../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+  src: url("/MyProject/src/MyPhpProject/RBAC/public../fonts/glyphicons-halflings-regular.eot");
+  src: url("/MyProject/src/MyPhpProject/RBAC/public../fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("/MyProject/src/MyPhpProject/RBAC/public../fonts/glyphicons-halflings-regular.woff2") format("woff2"), url("/MyProject/src/MyPhpProject/RBAC/public../fonts/glyphicons-halflings-regular.woff") format("woff"), url("/MyProject/src/MyPhpProject/RBAC/public../fonts/glyphicons-halflings-regular.ttf") format("truetype"), url("/MyProject/src/MyPhpProject/RBAC/public../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 
 .glyphicon {
   position: relative;

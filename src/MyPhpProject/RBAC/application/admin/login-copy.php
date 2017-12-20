@@ -25,6 +25,9 @@
 
 </head>
 <body>
+        <?php
+            include(ROOT_PATH."/include/header.php");
+        ?>
 		<div class="container mt20 login-form-box" id="J_login-form-box">
         
         <form class="form-horizontal" method="post" action="./doLogin.php" id="defaultForm">

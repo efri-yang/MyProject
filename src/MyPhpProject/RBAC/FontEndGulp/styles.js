@@ -60,7 +60,7 @@ function DistStyles(){
 		}))
 		.pipe(modifyCssUrls({
 			modify: function (url, filePath) {
-		       return "/"+conf.serverFolder+url;
+		       return "/MyProject/src/MyPhpProject/RBAC/"+conf.serverFolder+url;
 		    }
 		}))
 		.pipe(sass().on('error', sass.logError))

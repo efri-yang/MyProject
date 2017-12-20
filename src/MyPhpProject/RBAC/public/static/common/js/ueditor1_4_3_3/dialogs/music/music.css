@@ -99,20 +99,20 @@
   float: left;
   width: 20px;
   height: 20px;
-  background: url("/publichttp://static.tieba.baidu.com/tb/editor/images/try_music.gif") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publichttp://static.tieba.baidu.com/tb/editor/images/try_music.gif") no-repeat; }
 
 .m-trying {
   float: left;
   width: 20px;
   height: 20px;
-  background: url("/publichttp://static.tieba.baidu.com/tb/editor/images/stop_music.gif") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publichttp://static.tieba.baidu.com/tb/editor/images/stop_music.gif") no-repeat; }
 
 .loading {
   width: 95px;
   height: 7px;
   font-size: 7px;
   margin: 60px auto;
-  background: url("/publichttp://static.tieba.baidu.com/tb/editor/images/loading.gif") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publichttp://static.tieba.baidu.com/tb/editor/images/loading.gif") no-repeat; }
 
 .empty {
   width: 300px;

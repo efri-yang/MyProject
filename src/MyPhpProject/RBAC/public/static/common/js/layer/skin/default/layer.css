@@ -6,7 +6,7 @@
   white-space: nowrap; }
 
 *html {
-  background-image: url("/publicabout:blank");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicabout:blank");
   background-attachment: fixed; }
 
 html #layuicss-skinlayercss {
@@ -49,10 +49,10 @@ html #layuicss-skinlayercss {
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); }
 
 .layui-layer-load {
-  background: url("/publicloading-1.gif") center center no-repeat #eee; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicloading-1.gif") center center no-repeat #eee; }
 
 .layui-layer-ico {
-  background: url("/publicicon.png") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicicon.png") no-repeat; }
 
 .layui-layer-btn a,
 .layui-layer-dialog .layui-layer-ico,
@@ -479,18 +479,18 @@ html #layuicss-skinlayercss {
 .layui-layer-loading .layui-layer-content {
   width: 60px;
   height: 24px;
-  background: url("/publicloading-0.gif") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicloading-0.gif") no-repeat; }
 
 .layui-layer-loading .layui-layer-loading1 {
   width: 37px;
   height: 37px;
-  background: url("/publicloading-1.gif") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicloading-1.gif") no-repeat; }
 
 .layui-layer-ico16,
 .layui-layer-loading .layui-layer-loading2 {
   width: 32px;
   height: 32px;
-  background: url("/publicloading-2.gif") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicloading-2.gif") no-repeat; }
 
 .layui-layer-tips {
   background: 0 0;
@@ -578,7 +578,7 @@ html #layuicss-skinlayercss {
   background: #92B8B1; }
 
 .layui-layer-iconext {
-  background: url("/publicicon-ext.png") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicicon-ext.png") no-repeat; }
 
 .layui-layer-prompt .layui-layer-input {
   display: block;

@@ -2,11 +2,7 @@
     include("../../config.php");
     include(ROOT_PATH."/application/admin/common/common.php");
     $userId=$_SESSION["userid"];
-    sessionDrawGuide($userId,"login.php");
-
-    $sql="select * from user where id='$userId'";
-
-    
+    sessionDrawGuide($userId,"login.php");  
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,22 +19,23 @@
     <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/common.js"></script>
 </head>
 <body>
-   
-	  <div class="com-layout-header">
-		<p class="header-top-tit">管理后台</p>
-		<div class="header-top-avatar">
-			<div class="avatar-info">
-				<a href="#" class="clearfix">
-					<div class="pic"><img src="<?php echo STATIC_PATH;?>/public/static/admin/upload/01.jpg"></div>
-					<p class="txt">杨艺辉</p>
-				</a>
-			</div>
-			<div class="avatar-handle">
-				<a href="userEdit.php?id=1">信息修改</a>
-				<a href="loginout.php">退出</a>
-			</div>
-		</div>
-	  </div>
+    <?php
+        include("./include/header.php");
+
+        $sql="select user_role.rid,perssion.id,perssion.pid,perssion.name,perssion.fname,perssion.status,perssion.aside from user_role inner join perssion_role on user_role.rid=perssion_role.rid inner join perssion on perssion_role.pid=perssion.id   where uid='$userId' and perssion.aside=1";
+
+        $result=$mysqli->query($sql);
+        while ($row=$result->fetch_assoc()) {
+            $resArr[]=$row;
+        }
+
+        $tree=new Tree();
+        $data=$tree->hTree($resArr);
+
+        function dispalyAside($data){
+            
+        }
+    ?>
 	  <div class="com-layout-container">
 			<div class="com-layout-aside">
 				<ul class="aside-nav-list">
@@ -48,7 +45,7 @@
     <li class="active">
         <a href="article-list.html">文章管理</a>
         <ul>
-            <li><a href="article-list.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章列表</a></li>
+            <li><a href=8"article-list.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章列表</a></li>
             <li class="active">
                 <a href="article-add.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加文章</a>
                 <ul>

@@ -90,16 +90,16 @@ em {
   opacity: 0.3; }
 
 .size1 {
-  background: url("/publicimages/size.png") 1px center no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicimages/size.png") 1px center no-repeat; }
 
 .size2 {
-  background: url("/publicimages/size.png") -10px center no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicimages/size.png") -10px center no-repeat; }
 
 .size3 {
-  background: url("/publicimages/size.png") -22px center no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicimages/size.png") -22px center no-repeat; }
 
 .size4 {
-  background: url("/publicimages/size.png") -35px center no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicimages/size.png") -35px center no-repeat; }
 
 .addImgH {
   position: relative; }
@@ -140,7 +140,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/undoH.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/undoH.png");
   cursor: pointer; }
 
 .previousStepH .text {
@@ -151,7 +151,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/undo.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/undo.png");
   cursor: default; }
 
 .previousStep .text {
@@ -162,7 +162,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/redoH.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/redoH.png");
   cursor: pointer; }
 
 .nextStepH .text {
@@ -173,7 +173,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/redo.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/redo.png");
   cursor: default; }
 
 .nextStep .text {
@@ -184,7 +184,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/emptyH.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/emptyH.png");
   cursor: pointer; }
 
 .clearBoardH .text {
@@ -195,7 +195,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/empty.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/empty.png");
   cursor: default; }
 
 .clearBoard .text {
@@ -206,7 +206,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/scaleH.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/scaleH.png");
   cursor: pointer; }
 
 .scaleBoardH .text {
@@ -217,7 +217,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/scale.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/scale.png");
   cursor: default; }
 
 .scaleBoard .text {
@@ -228,7 +228,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/delimgH.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/delimgH.png");
   cursor: pointer; }
 
 .removeImgH .text {
@@ -239,7 +239,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/delimg.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/delimg.png");
   cursor: default; }
 
 .removeImg .text {
@@ -251,7 +251,7 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/addimg.png"); }
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/addimg.png"); }
 
 .addImgH .text {
   color: #888;
@@ -263,10 +263,10 @@ em {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/brush.png"); }
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/brush.png"); }
 
 .eraserIcon {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url("/publicimages/eraser.png"); }
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/eraser.png"); }

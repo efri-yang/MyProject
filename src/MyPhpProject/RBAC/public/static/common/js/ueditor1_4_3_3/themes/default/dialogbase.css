@@ -108,7 +108,7 @@ body {
   padding: 0 5px;
   height: 30px;
   border: 1px solid #ccc;
-  background: url("/publicimages/dialog-title-bg.png") repeat-x;
+  background: url("/MyProject/src/MyPhpProject/RBAC/publicimages/dialog-title-bg.png") repeat-x;
   text-align: center;
   line-height: 30px;
   cursor: pointer;
@@ -135,7 +135,7 @@ a.button {
   width: 95px;
   border: 0;
   color: #838383;
-  background: url("/public../../themes/default/images/icons-all.gif") no-repeat; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/public../../themes/default/images/icons-all.gif") no-repeat; }
 
 a.button:hover {
   background-position: 0 -30px; }

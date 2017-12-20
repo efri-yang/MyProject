@@ -58,7 +58,7 @@
   height: 17px;
   margin-right: 3px;
   margin-left: 3px;
-  background-image: url("/public./images/alignicon.jpg"); }
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/public./images/alignicon.jpg"); }
 
 .alignBar #alignIcon .none-align {
   background-position: 0 -18px; }
@@ -160,7 +160,7 @@
   display: inline-block;
   width: 20px;
   height: 20px;
-  background: url("/public../../themes/default/images/lock.gif") -13px -13px no-repeat;
+  background: url("/MyProject/src/MyPhpProject/RBAC/public../../themes/default/images/lock.gif") -13px -13px no-repeat;
   vertical-align: middle; }
 
 #remote #preview {
@@ -215,7 +215,7 @@
   height: 172px;
   padding-top: 150px;
   text-align: center;
-  background: url("/public./images/image.png") center 70px no-repeat;
+  background: url("/MyProject/src/MyPhpProject/RBAC/public./images/image.png") center 70px no-repeat;
   color: #cccccc;
   font-size: 18px;
   position: relative;
@@ -280,7 +280,7 @@
 #upload .filelist li {
   width: 113px;
   height: 113px;
-  background: url("/public./images/bg.png");
+  background: url("/MyProject/src/MyPhpProject/RBAC/public./images/bg.png");
   text-align: center;
   margin: 9px 0 0 9px;
   *margin: 6px 0 0 6px;
@@ -324,7 +324,7 @@
   overflow: hidden;
   width: 0;
   height: 100%;
-  background: #1483d8 url("/public./images/progress.png") repeat-x;
+  background: #1483d8 url("/MyProject/src/MyPhpProject/RBAC/public./images/progress.png") repeat-x;
   -webit-transition: width 200ms linear;
   transition: width 200ms linear;
   -webkit-animation: progressmove 2s linear infinite;
@@ -379,13 +379,13 @@
   height: 40px;
   width: 100%;
   z-index: 200;
-  background: url("/public./images/success.png") no-repeat right bottom;
-  background: url("/public./images/success.gif") no-repeat right bottom \9; }
+  background: url("/MyProject/src/MyPhpProject/RBAC/public./images/success.png") no-repeat right bottom;
+  background: url("/MyProject/src/MyPhpProject/RBAC/public./images/success.gif") no-repeat right bottom \9; }
 
 #upload .filelist li.filePickerBlock {
   width: 113px;
   height: 113px;
-  background: url("/public./images/image.png") no-repeat center 12px;
+  background: url("/MyProject/src/MyPhpProject/RBAC/public./images/image.png") no-repeat center 12px;
   border: 1px solid #eeeeee;
   border-radius: 0; }
 
@@ -416,8 +416,8 @@
   float: right;
   text-indent: -9999px;
   overflow: hidden;
-  background: url("/public./images/icons.png") no-repeat;
-  background: url("/public./images/icons.gif") no-repeat \9;
+  background: url("/MyProject/src/MyPhpProject/RBAC/public./images/icons.png") no-repeat;
+  background: url("/MyProject/src/MyPhpProject/RBAC/public./images/icons.gif") no-repeat \9;
   margin: 5px 1px 1px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -599,8 +599,8 @@
   border: 3px solid #1094fa; }
 
 #online li.selected .icon {
-  background-image: url("/publicimages/success.png");
-  background-image: url("/publicimages/success.gif") \9;
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/success.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/success.gif") \9;
   background-position: 75px 75px; }
 
 #online li.selected .icon:hover {

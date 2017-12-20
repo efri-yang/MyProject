@@ -154,7 +154,7 @@ div.alignment,
   border: 3px solid #1094fa; }
 
 #imgManager li.selected .icon {
-  background-image: url("/publicimages/success.png");
+  background-image: url("/MyProject/src/MyPhpProject/RBAC/publicimages/success.png");
   background-position: 75px 75px; }
 
 #imgManager li.selected .icon:hover {
