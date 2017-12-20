@@ -31,53 +31,27 @@
 
         $tree=new Tree();
         $data=$tree->hTree($resArr);
-
-        function dispalyAside($data){
-            
+        function dispalyAside($data,$str="",$step=0){
+            $str.="<ul>";
+            $emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$step);
+            foreach ($data as $k => $v) {
+                $str.="<li><a href='index.php?class=".$v["fname"]."'>".$emptyholer.$v["name"]."</a>";
+                if(count($v["sub"])){
+                    $str=dispalyAside($v["sub"],$str,$step+1);
+                }
+                $str.="</li>";
+            }
+            $str.="</ul>";
+            return $str;
         }
+       
     ?>
 	  <div class="com-layout-container">
 			<div class="com-layout-aside">
-				<ul class="aside-nav-list">
-    <li>
-        <a href="#">首页</a>
-    </li>
-    <li class="active">
-        <a href="article-list.html">文章管理</a>
-        <ul>
-            <li><a href=8"article-list.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章列表</a></li>
-            <li class="active">
-                <a href="article-add.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加文章</a>
-                <ul>
-                    <li class="curr"><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xxx</a></li>
-                    <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xxxx</a></li>
-                </ul>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="user-list.html">用户管理</a>
-        <ul>
-            <li><a href="user-list.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;用户列表</a></li>
-            <li><a href="user-add.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加角色</a></li>
-        </ul>
-    </li>
-    <li>
-        <a href="role-list.html">角色管理</a>
-        <ul>
-            <li><a href="role-list.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;角色列表</a></li>
-            <li><a href="role-add.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加角色</a></li>
-        </ul>
-    </li>
-    <li>
-        <a href="perssion-list.html">权限管理</a>
-        <ul>
-            <li><a href="perssion-list.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;权限列表</a></li>
-            <li><a href="perssion-add.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加权限</a></li>
-        </ul>
-    </li>
-</ul>
-			</div>
+                <div class="aside-nav-list">
+				    <?php echo  dispalyAside($data)?>
+			    </div>
+            </div>
 			<div class="com-layout-content">
 				<div class="bread-nav-box">
 					<p class="tit">文章列表</p>

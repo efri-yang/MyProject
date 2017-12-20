@@ -1,6 +1,7 @@
 .aside-nav-list{
 	padding: 15px 0 20px;
-	>li{
+	ul{
+		>li{
 		border-bottom: 1px solid #444;
 		>a{
 			padding-left: 18px;
@@ -30,6 +31,7 @@
 					height:38px;
 					line-height:38px;
 					display: block;
+					font-size:14px; 
 					&:hover{
 						text-decoration: none;
 						color:#019a58; 
@@ -52,5 +54,6 @@
 				}
 			}
 		}
+	}
 	}
 }

@@ -518,10 +518,10 @@ html {
 .aside-nav-list {
   padding: 15px 0 20px; }
 
-.aside-nav-list > li {
+.aside-nav-list ul > li {
   border-bottom: 1px solid #444; }
 
-.aside-nav-list > li > a {
+.aside-nav-list ul > li > a {
   padding-left: 18px;
   color: #fff;
   font-size: 16px;
@@ -529,38 +529,39 @@ html {
   line-height: 40px;
   display: block; }
 
-.aside-nav-list > li:hover > a,
-.aside-nav-list > li.active > a {
+.aside-nav-list ul > li:hover > a,
+.aside-nav-list ul > li.active > a {
   background: #1e282c;
   text-decoration: none;
   border-left: 3px solid #3c8dbc;
   padding-left: 15px; }
 
-.aside-nav-list > li:hover > ul,
-.aside-nav-list > li.active > ul {
+.aside-nav-list ul > li:hover > ul,
+.aside-nav-list ul > li.active > ul {
   display: block; }
 
-.aside-nav-list > li ul {
+.aside-nav-list ul > li ul {
   display: none; }
 
-.aside-nav-list > li ul li a {
+.aside-nav-list ul > li ul li a {
   color: #fff;
   height: 38px;
   line-height: 38px;
-  display: block; }
+  display: block;
+  font-size: 14px; }
 
-.aside-nav-list > li ul li a:hover {
+.aside-nav-list ul > li ul li a:hover {
   text-decoration: none;
   color: #019a58;
   font-weight: bold; }
 
-.aside-nav-list > li ul li:hover .curr a,
-.aside-nav-list > li ul li.active .curr a {
+.aside-nav-list ul > li ul li:hover .curr a,
+.aside-nav-list ul > li ul li.active .curr a {
   color: #019a58; }
 
-.aside-nav-list > li ul li:hover ul,
-.aside-nav-list > li ul li.active ul {
+.aside-nav-list ul > li ul li:hover ul,
+.aside-nav-list ul > li ul li.active ul {
   display: block; }
 
-.aside-nav-list > li ul li ul {
+.aside-nav-list ul > li ul li ul {
   display: none; }
