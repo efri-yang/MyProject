@@ -67,7 +67,36 @@
         )
 
     
-)
+)       
+        
+        function dispalyAside($data,$className='',$pid,$step=0,$str=""){
+            $str.="<ul>";
+            $emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$step);
+            foreach ($data as $k => $v) {
+                $str.="<li><a> </a>";
+                if($subLen){
+                    $str="<ul><li><a> </a>"
+                         $str.="<ul>";
+                        $emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$step);
+                        $str.="<li> <a></a>";
+                                (
+                                    $str.="<ul><li><a> </a><ul>";
+                                    $emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$step);
+                                    $str.="<li> <a></a>";
+                                     $str.="</li>";
+                                       $str.="</ul>";
+                                     return $str; <ul><li><a></a><ul><li><a></a></li></ul>
+                                )
+                          $str.="</li>";
+                           $str.="</ul>"
+                         return $str;;<ul><li><a></a><ul><li><a></a></li></ul></li></ul>
+                }
+                $str.="</li>";
+            }
+            $str.="</ul>";
+            return $str;
+        }
+
          */
        
       
