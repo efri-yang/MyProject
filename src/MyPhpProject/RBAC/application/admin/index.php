@@ -127,9 +127,9 @@
             $emptyholer=str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$step);
             foreach ($data as $k => $v) {
                 $subLen=count($v["sub"]);
-                $active=($v["fname"]==$className) ? "active" :"";
-                $current=($v['pid']==$pid) ? 'current' :"";
-                $str.="<li class='".$active." ".$current."'><a href='index.php?class=".$v["fname"]."'>".$emptyholer.$v["name"]."</a>";
+                $current=($v["fname"]==$className) ? 'current' :"";
+
+                $str.="<li class='".$current."'><a href='index.php?class=".$v["fname"]."'>".$emptyholer.$v["name"]."</a>";
                 if($subLen){
                     $str=dispalyAside($v["sub"],$v['id'],$className,$step+1,$str);
                 }
