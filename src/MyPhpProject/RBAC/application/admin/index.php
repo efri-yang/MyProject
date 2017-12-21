@@ -35,28 +35,61 @@
         // 
         /**
          * Array(
-            [7] => Array(
-                    [rid] => 1
-                    [id] => 7
-                    [pid] => 0
-                    [name] => 角色管理
-                    [fname] => roleIndex
-                    [status] => 0
-                    [aside] => 1
-                    [sub] => Array(
-                            [8] => Array(
-                                    [rid] => 1
-                                    [id] => 8
-                                    [pid] => 7
-                                    [name] => 角色列表
-                                    [fname] => roleList
-                                    [status] => 0
-                                    [aside] => 1
-                                    [sub] => Array()
+            [2] => Array(
+            [rid] => 1
+            [id] => 2
+            [pid] => 0
+            [name] => 文章管理
+            [fname] => articleIndex
+            [status] => 0
+            [aside] => 1
+            [sub] => Array(
+                    [3] => Array(
+                            [rid] => 1
+                            [id] => 3
+                            [pid] => 2
+                            [name] => 文章列表
+                            [fname] => articleList
+                            [status] => 0
+                            [aside] => 1
+                            [sub] => Array(
+                                    [22] => Array(
+                                            [rid] => 1
+                                            [id] => 22
+                                            [pid] => 3
+                                            [name] => 国内文章
+                                            [fname] => gnwz
+                                            [status] => 0
+                                            [aside] => 1
+                                            [sub] => Array()
+                                        )
+                                    [23] => Array(
+                                            [rid] => 1
+                                            [id] => 23
+                                            [pid] => 3
+                                            [name] => 国外文章
+                                            [fname] => gwwz
+                                            [status] => 0
+                                            [aside] => 1
+                                            [sub] => Array()
+                                        )
                                 )
                         )
-                ) 
-        )       
+
+                    [4] => Array(
+                            [rid] => 1
+                            [id] => 4
+                            [pid] => 2
+                            [name] => 添加文章
+                            [fname] => articleAdd
+                            [status] => 0
+                            [aside] => 1
+                            [sub] => Array()
+                        )
+                )
+            )
+        )
+      
         
         function dispalyAside($data,$className='',$pid,$step=0,$str=""){
             $str.="<ul>";
