@@ -34,40 +34,29 @@
         print_r($data);
         // 
         /**
-         * Array
-(
-    
-    [7] => Array
-        (
-            [rid] => 1
-            [id] => 7
-            [pid] => 0
-            [name] => 角色管理
-            [fname] => roleIndex
-            [status] => 0
-            [aside] => 1
-            [sub] => Array
-                (
-                    [8] => Array
-                        (
-                            [rid] => 1
-                            [id] => 8
-                            [pid] => 7
-                            [name] => 角色列表
-                            [fname] => roleList
-                            [status] => 0
-                            [aside] => 1
-                            [sub] => Array
-                                (
+         * Array(
+            [7] => Array(
+                    [rid] => 1
+                    [id] => 7
+                    [pid] => 0
+                    [name] => 角色管理
+                    [fname] => roleIndex
+                    [status] => 0
+                    [aside] => 1
+                    [sub] => Array(
+                            [8] => Array(
+                                    [rid] => 1
+                                    [id] => 8
+                                    [pid] => 7
+                                    [name] => 角色列表
+                                    [fname] => roleList
+                                    [status] => 0
+                                    [aside] => 1
+                                    [sub] => Array()
                                 )
-
                         )
-                )
-
-        )
-
-    
-)       
+                ) 
+        )       
         
         function dispalyAside($data,$className='',$pid,$step=0,$str=""){
             $str.="<ul>";
