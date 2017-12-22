@@ -23,4 +23,11 @@
         $user->userList($destUrl);
     }
 
+
+    if($action=="userEdit"){
+        $userId=$_GET["id"];
+        $destUrl="userEdit.php?action=userEdit&id=".$userId;
+        header("Location:".$destUrl);
+    }
+
 ?>
