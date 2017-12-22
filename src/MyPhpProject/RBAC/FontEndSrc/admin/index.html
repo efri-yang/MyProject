@@ -8,6 +8,8 @@
 	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/common/js/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/admin/css/common.css">
 	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/admin/css/admin.css">
+
+	<script type="text/javascript" src="<%= serverStaticUrl %>/static/common/js/jquery/jquery-1.12.4.js"></script>
 </head>
 <body>
 	  <div class="com-layout-header">
@@ -35,5 +37,11 @@
 				</div>
 			</div>
 	  </div>
+
+	  <script type="text/javascript">
+	  		$(function(){
+	  			// $(".aside-nav-list").find("li.current").parents("li").addClass("active");
+	  		})
+	  </script>
 </body>
 </html>

@@ -34,6 +34,11 @@
                     display: block;
                 }
             }
+            &.active{
+                >ul{
+                    display:block;
+                }
+            }
 
             ul {
                 display: none;
@@ -51,7 +56,7 @@
                         }
                     }
                     &.current {
-                        a {
+                        >a {
                             color: #019a58;
                         }
 

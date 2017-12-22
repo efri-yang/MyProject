@@ -550,6 +550,9 @@ html {
 .aside-nav-list > ul li.current ul {
   display: block; }
 
+.aside-nav-list > ul li.active > ul {
+  display: block; }
+
 .aside-nav-list > ul li ul {
   display: none; }
 
@@ -565,7 +568,7 @@ html {
   color: #019a58;
   font-weight: bold; }
 
-.aside-nav-list > ul li ul li.current a {
+.aside-nav-list > ul li ul li.current > a {
   color: #019a58; }
 
 .aside-nav-list > ul li ul li.current ul {
