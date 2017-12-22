@@ -23,3 +23,27 @@
         return $str;
     }
 ?>
+
+<style type="text/css">
+    .aside-nav-list > ul li a b{
+        padding:5px 10px;
+        background:red;  
+    }
+</style>
+<script type="text/javascript">
+    $(function(){
+        $(".aside-nav-list").find("li.current").parents("li").addClass("active");
+
+        $(".aside-nav-list").find(".arrow").on("click",function(event){
+            event.stopPropagation();
+            var $this=$(this);
+            var $parent= $this.parent().parent("li");
+            if($parent.hasClass('current')){
+                $parent.removeClass('current');
+            }else{
+                $parent.addClass('current');
+            }
+            return false;
+        })
+    })
+</script>
