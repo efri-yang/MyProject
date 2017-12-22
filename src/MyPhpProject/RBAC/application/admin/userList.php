@@ -17,10 +17,9 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/common.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/admin.css">
 
-	<link  type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.css">
-	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.js"></script>
 
-	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/webuploader.js"></script>
+
+
 
 </head>
 <body>
@@ -59,50 +58,86 @@
 									}
 									foreach ($resData as $key => $value) {
 								?>
+								<tr>
+									<td><?php echo $value['username'] ?></td>
+									<td>
+										<a href='<?php echo "index.php?action=userEdit&id=".$userId;?>' class="btn btn-info mr10">修改</a>
+										<a href="loginOut.php" class="btn btn-danger">删除</a>
+									</td>
+								</tr>
 								<?php		
 									}
 								?>
-								<tr>
-									<td>admin</td>
-									<td>
-										<a href="user-edit.html" class="btn btn-info mr10">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
-									</td>
-								</tr>
-								<tr>
-									<td>ptadmin</td>
-									<td>
-										<a href="user-edit.html" class="btn btn-info mr10">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
-									</td>
-								</tr>
-								<tr>
-									<td>user</td>
-									<td>
-										<a href="user-edit.html" class="btn btn-info mr10">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
-									</td>
-								</tr>
 							</tbody>
 						</table>
-						<div class="com-pagination-box">
-							<a href="#" class="first disabled">首页</a>
-							<a href="#" class="prev disabled">上一页</a>
-							<span>...</span>
-							<a href="#">3</a>
-							<a href="#">4</a>
-							<a href="#" class="current">5</a>
-							<a href="#">6</a>
-							<a href="#">7</a>
-							<span>...</span>
-							<a href="#" class="next disabled">下一页</a>
-							<a href="#" class="last disabled">尾页</a>
-							<span>共11</span>
-							<form class="pageform" action="m_page.sql" method="post">
-								<span>到 <input type="text" size="2">页</span>
-								<input type="submit" value="确定" />
-							</form>
-						</div>
+
+						<!-- 
+							定义 显示页数 $viewNum=5
+							判断 总页数
+								如果 小于 5 那么全部显示
+
+						 -->
+						<?php 
+			$start=1;
+			$end=$totalPage;
+			$page_banner="<div class='com-pagination-box'>";
+			if($pageNum>1){
+				$page_banner.="<a href='".$_SERVER['PHP_SELF']."?p=1' class='first'>首页</a>";
+				$page_banner.="<a href='".$_SERVER['PHP_SELF']."?p=".($pageNum-1)."' class='prev'>上一页</a>";
+			}else{
+				$page_banner.="<a href='javascript:void(0)' class='first disabled'>首页</a>";
+				$page_banner.="<a href='javascript:void(0)' class='prev disabled'>上一页</a>";
+			}
+
+			if($totalPage > $pageShowFixLen){
+				//例如 显示... 23456 ... 总页数一定要大于 5
+				
+				//当前页大于 3的时候=4  那么就是... 45678
+				if($pageNum > $pageOffset+1){
+					$page_banner.="<span>...</span>";
+				}
+				//3 4 5.....
+				if($pageNum > $pageOffset){
+					$start=$pageNum-$pageOffset;
+					$end=$totalPage > $pageNum+$pageOffset ? $pageNum+$pageOffset :$totalPage;
+				}else{
+					$start=1;
+					$end=$totalPage > $pageShowFixLen ? $pageShowFixLen : $totalPage;
+				}
+
+				if(($pageOffset+$pageNum) > $totalPage){
+
+					$start=$start-($pageNum+$pageOffset-$end);
+					$end=$totalPage;
+				}
+			}
+			for($i=$start;$i<=$end;$i++){
+				if($pageNum==$i){
+					$page_banner.="<span class='current'>{$i}</span>";
+				}else{
+					$page_banner.="<a href='".$_SERVER['PHP_SELF']."?p=".$i."'>{$i}</a>";
+				}
+			}
+
+			if($totalPage >$pageShowFixLen && $totalPage > ($pageNum+$pageOffset)){
+				$page_banner.="<span>...</span>";
+			}
+
+			if($pageNum <$totalPage){
+				$page_banner.="<a href='".$_SERVER['PHP_SELF']."?p=".($pageNum+1)."' class='next'>下一页</a>";
+				$page_banner.="<a href='".$_SERVER['PHP_SELF']."?p=".$totalPage."' class='last'>尾页</a>";
+			}else{
+				$page_banner.="<a href='javascript:void(0)' class='next disabled'>下一页</a>";
+				$page_banner.="<a href='javascript:void(0)' class='last disabled'>尾页</a>";
+			}
+			
+			$page_banner.="<span>共".$totalPage."</span>";
+			$page_banner.="<form class='pageform' action='page1.php' method='post'>";
+			$page_banner.="<span>到 <input type='text' size='2'>页</span><input type='submit' value='确定' />";
+			$page_banner.="</form>";
+			$page_banner.="</div>";
+			echo $page_banner;
+		 ?>
 					</div>
 				</div>
 			</div>

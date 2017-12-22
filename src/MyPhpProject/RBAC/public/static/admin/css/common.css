@@ -271,7 +271,8 @@ html {
 
 .com-pagination-box .disabled:hover {
   border-color: #eee;
-  color: #c1c1c1; }
+  color: #c1c1c1;
+  text-decoration: none; }
 
 .bg-fff {
   background: #fff; }
