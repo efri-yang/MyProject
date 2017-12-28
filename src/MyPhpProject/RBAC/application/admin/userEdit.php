@@ -46,15 +46,15 @@
 					<?php
 						$sql="select * from user where id='$userId'";
 						$result=$mysqli->query($sql);
-						$resData[]=$result->fetch_assoc();
+						$resData=$result->fetch_assoc();
 
-						print_r($resData);
+						
 					?>
 						<form class="form-horizontal">
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">用户名</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="用户名">
+						          <input type="text" class="form-control" placeholder="用户名" value="<?php echo $resData['username'] ?>">
 						        </div>
 						    </div>
 
