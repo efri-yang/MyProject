@@ -43,6 +43,13 @@
 				</div>
 				<div class="ml20 mr20 pt30 bg-fff">
 					<div class="user-edit-form">
+					<?php
+						$sql="select * from user where id='$userId'";
+						$result=$mysqli->query($sql);
+						$resData[]=$result->fetch_assoc();
+
+						print_r($resData);
+					?>
 						<form class="form-horizontal">
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">用户名</label>
