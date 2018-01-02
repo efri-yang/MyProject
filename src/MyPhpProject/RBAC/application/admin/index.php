@@ -10,7 +10,6 @@
         $destUrl="admin.php?action=homeIndex";
         $home=new Home();
         $home->index($destUrl);
-       
     }
 
     

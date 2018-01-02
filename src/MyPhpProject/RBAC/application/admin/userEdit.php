@@ -20,6 +20,8 @@
 	<link  type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.css">
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.js"></script>
 
+	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/upload.js"></script>
+
 	
 
 </head>
@@ -44,17 +46,21 @@
 				<div class="ml20 mr20 pt30 bg-fff">
 					<div class="user-edit-form">
 					<?php
-						$sql="select * from user where id='$userId'";
+						$sql="select username,email,phone,avatar,rid,role.name from user inner join user_role on user.id=user_role.uid inner join role on user_role.rid=role.id where user.id='$userId'";
 						$result=$mysqli->query($sql);
 						$resData=$result->fetch_assoc();
 
-						
+						$roleSql="select * from role";
+						$roleResult=$mysqli->query($roleSql);
+						while($row=$roleResult->fetch_assoc()){
+							$roleResData[]=$row;
+						}
 					?>
 						<form class="form-horizontal">
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">用户名</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="用户名" value="<?php echo $resData['username'] ?>">
+						          <input type="text" class="form-control" placeholder="用户名" value="<?php echo $resData['username'] ?>" disabled>
 						        </div>
 						    </div>
 
@@ -71,10 +77,18 @@
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">角色</label>
 						        <div class="col-sm-5">
-						          	<select class="form-control">
-										<option>管理员</option>
-										<option>普通管理员</option>
-										<option>用户</option>
+						          	<select class="form-control" disabled>
+										<?php
+											$roleItemStr="";
+											foreach ($roleResData as $key => $value) {
+												if($value['id']==$resData["rid"]){
+													$roleItemStr.="<option selected>".$value["name"]."</option>";
+												}else{
+													$roleItemStr.="<option>".$value["name"]."</option>";
+												}
+											}
+											echo $roleItemStr;
+										?>
 						          	</select>
 						        </div>
 						    </div>
@@ -83,7 +97,7 @@
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">手机</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="手机">
+						          <input type="text" class="form-control" placeholder="手机" value="<?php echo $resData['phone']; ?>" disabled>
 						        </div>
 						    </div>
 
@@ -91,7 +105,7 @@
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">邮箱</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="邮箱">
+						          <input type="text" class="form-control" placeholder="邮箱" value="<?php echo $resData['email']; ?>" disabled>
 						        </div>
 						    </div>
 
