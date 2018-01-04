@@ -13,7 +13,7 @@
             $subLen=count($v["sub"]);
             $current=($v['fname']==$className) ? 'current' :"";
             $arrowElem=$subLen ? "<b class='arrow'>></b>" :'';
-            $str.="<li class='".$current."'><a href='index.php?action=".$v["fname"]."'>".$emptyholer.$v["name"].$arrowElem."</a>";
+            $str.="<li class='".$current."'><a href='".$v["fname"]."php'>".$emptyholer.$v["name"].$arrowElem."</a>";
             if($subLen){
                 $str=dispalyAside($v["sub"],$className,$v['id'],$step+1,$str);
             }

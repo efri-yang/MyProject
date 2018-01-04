@@ -10,9 +10,9 @@
 			<a href="userInfo.php?id=<?php echo $userInfoData['id']; ?>" class="clearfix">
 				<div class="pic">
                     <?php
-                        if($resData["avatar"]){
+                        if($userInfoData["avatar"]){
                     ?>
-                            <img src="<?php echo $userInfoData["avatar"];?>">
+                            <img src="<?php echo STATIC_PATH.$userInfoData["avatar"];?>">
                     <?php
                         }else{
                     ?>
@@ -22,7 +22,7 @@
                     ?>
                    
                 </div>
-				<p class="txt">杨艺辉</p>
+				<p class="txt"><?php echo $userInfoData['username']; ?></p>
 			</a>
 		</div>
 		<div class="avatar-handle">

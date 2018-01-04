@@ -20,7 +20,7 @@
 
 <link  type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.css">
 <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.js"></script>
-<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/upload.js"></script>
+
 <script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/layer/layer.js"></script>
 
 
@@ -117,13 +117,13 @@
 						        <label class="col-sm-1 control-label">头像</label>
 						        <div class="col-sm-5">
 						         	<div class="com-upload-single-box">
-										<!-- <div class="no-pic" id="J_no-pic"></div> -->
+										
 										<ul class="uploading-img-list clearfix" id="J_uploader-list">
 												<li><div class="img-wrap">
 													<?php
 														if(!!$resData["avatar"]){
 													?>
-															<img src="<?php echo $resData['avatar'];?>" />
+															<img src="<?php echo STATIC_PATH.$resData['avatar'];?>" />
 													<?php		
 														}else{
 													?>
@@ -133,26 +133,7 @@
 													?>
 												</div></li>
 										</ul>
-										
-											<!-- <ul class="uploading-img-list clearfix" id="J_uploader-list">
-												<li>
-													<div class="img-wrap"><img src="<?php echo STATIC_PATH;?>/public/static/admin/upload/01.jpg"></div>
-													<div class="handle-bar">
-														<span class="upload-btn">上传</span>
-														<span class="del-btn">删除</span>
-													</div>
-													<div class="progressing">
-														<span style="width:18%;"></span>
-													</div>
-													<div class="error">上传失败了</div>
-													<div class="success"></div>
-												</li>
-											</ul> -->
-										
-										<!-- <div class="upload-btn-group clearfix">
-											<div id="filePicker" class="filepicker-container"></div>
-											<a href="#" class="btn btn-success uploader-server-btn">从服务器端选择</a>
-										</div>	 -->									
+											
 									</div>
 						        </div>
 						    </div>

@@ -48,7 +48,7 @@
             },
             server: './singleUpload.php',
             //限制文件的大小
-            fileSingleSizeLimit:1 * 1024 * 1024,
+            fileSingleSizeLimit:2 * 1024 * 1024,
             fileNumLimit:1,
             fileSizeLimit: 4 * 1024 * 1024
         });
