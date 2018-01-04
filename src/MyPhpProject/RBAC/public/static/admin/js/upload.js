@@ -2,8 +2,16 @@
     $(function() {
 
         var $elemNoPic=$("#J_no-pic"),
-            $elemUploaderList=$("#J_uploader-list");
+            $elemUploaderList=$("#J_uploader-list"),
+            $elemAvatarfile=$("#J_avatarfile");
 
+
+        if(!!$elemAvatarfile.val()){
+            var avatarOldFile=static_path+$elemAvatarfile.val();
+            
+        }
+
+        
 
         function renderItem(file){
             var str='<li id="'+file.id+'">'
@@ -90,6 +98,9 @@
                     var id=$(this).parent().parent().attr("id");
                     uploader.removeFile(id,true);
                     $li.remove(); 
+                    if(!!avatarOldFile){
+                        $('<li><div class="img-wrap"><img src="'+avatarOldFile+'" /></div></li>').appendTo($elemUploaderList);
+                    }
                 })
 
 
@@ -107,7 +118,7 @@
         uploader.on("fileDequeued",function(file){
                 console.group("触发了：fileDequeued——事件(当文件被移除队列后触发)");
                 var len=uploader.getFiles("inited").length;
-                if(!len){
+                if(!len && !avatarOldFile){
                     $elemNoPic.show();
                 }
         });
@@ -136,9 +147,11 @@
         uploader.on("uploadSuccess",function(file,response){
                 console.group("触发了：uploadSuccess——事件");
                 var $li = $('#' + file.id);
-                 console.dir(response);
+                
+                
                 if(!!response){
                     $li.find(".success").show();
+                    $elemAvatarfile.val(response.url);
                 }else{
                     $li.find(".error").show();
                 }

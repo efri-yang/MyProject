@@ -30,12 +30,12 @@ if(@move_uploaded_file($_FILES["file"]["tmp_name"],$filePath)){
     $sql="update user set avatar='$filePathRelative' where id='$userId'";
     $result=$mysqli->query($sql);
     if($mysqli->affected_rows >= 0){
-        echo 1;
+        echo json_encode(array("url"=>$filePathRelative));
     }else{
         echo 0;
     }
  }else{
-    echo 1;
+   echo json_encode(array("url"=>$filePathRelative));
  }
 
 

@@ -19,10 +19,14 @@
 
 	<link  type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.css">
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.js"></script>
-
-
+	<script type="text/javascript">
+		var static_path="<?php echo STATIC_PATH; ?>";
+	</script>
+	
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/upload.js"></script>
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/layer/layer.js"></script>
+
+
 
 	
 
@@ -58,11 +62,11 @@
 							$roleResData[]=$row;
 						}
 					?>
-						<form class="form-horizontal">
+						<form class="form-horizontal" action="userEditDo.php" method="post">
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">用户名</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="用户名" value="<?php echo $resData['username'] ?>">
+						          <input type="text" class="form-control" placeholder="用户名" value="<?php echo $resData['username'] ?>" name="username">
 						        </div>
 						    </div>
 
@@ -79,14 +83,14 @@
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">角色</label>
 						        <div class="col-sm-5">
-						          	<select class="form-control">
+						          	<select class="form-control" name="role">
 										<?php
 											$roleItemStr="";
 											foreach ($roleResData as $key => $value) {
 												if($value['id']==$resData["rid"]){
-													$roleItemStr.="<option selected>".$value["name"]."</option>";
+													$roleItemStr.="<option selected value='".$value['id']."'>".$value["name"]."</option>";
 												}else{
-													$roleItemStr.="<option>".$value["name"]."</option>";
+													$roleItemStr.="<option value='".$value['id']."'>".$value["name"]."</option>";
 												}
 											}
 											echo $roleItemStr;
@@ -99,7 +103,7 @@
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">手机</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="手机" value="<?php echo $resData['phone']; ?>" >
+						          <input type="text" class="form-control" placeholder="手机" value="<?php echo $resData['phone']; ?>" name="phone" >
 						        </div>
 						    </div>
 
@@ -107,7 +111,7 @@
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">邮箱</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="邮箱" value="<?php echo $resData['email']; ?>">
+						          <input type="text" class="form-control" placeholder="邮箱" value="<?php echo $resData['email']; ?>" name="email">
 						        </div>
 						    </div>
 
@@ -133,9 +137,9 @@
 										</div>										
 									</div>
 						        </div>
+						        <input type="hidden" name="avatarfile" id="J_avatarfile" value="<?php echo $resData['avatar'] ?>">
 						    </div>
-							<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/upload.js"></script>
-
+							
 						    <div class="form-group">
 						        <label class="col-sm-1"></label>
 						        <div class="col-sm-5">
