@@ -162,6 +162,7 @@ html {
                 height: 30px;
                 line-height: 30px;
                 background-color: rgba(0, 0, 0, 0.8);
+                display:none;
             }
             .upload-btn {
                 float: left;
@@ -177,6 +178,7 @@ html {
                 color: #fff;
                 text-decoration: none;
                 cursor: pointer;
+                
                 &:hover {
                     text-decoration: underline;
                 }
@@ -192,6 +194,7 @@ html {
                 background: #f60;
                 color: #fff;
                 font-size: 12px;
+                display:none;
             }
             .success {
                 width: 40px;
@@ -200,6 +203,7 @@ html {
                 position: absolute;
                 right: 0;
                 bottom: 0;
+                display:none;
             }
 
             .progressing {
@@ -211,6 +215,7 @@ html {
                 overflow: hidden;
                 z-index: 50;
                 margin-bottom: 0;
+                display:none;
                 span {
                     overflow: hidden;
                     width: 0;

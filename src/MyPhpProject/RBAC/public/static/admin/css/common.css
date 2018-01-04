@@ -312,7 +312,8 @@ html {
   padding: 0 5px;
   height: 30px;
   line-height: 30px;
-  background-color: rgba(0, 0, 0, 0.8); }
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none; }
 
 .com-upload-single-box .uploading-img-list li .upload-btn {
   float: left;
@@ -342,7 +343,8 @@ html {
   text-align: center;
   background: #f60;
   color: #fff;
-  font-size: 12px; }
+  font-size: 12px;
+  display: none; }
 
 .com-upload-single-box .uploading-img-list li .success {
   width: 40px;
@@ -350,7 +352,8 @@ html {
   background: url("/MyProject/src/MyPhpProject/RBAC/public/static/common/images/common/uploads/success.png") no-repeat top center;
   position: absolute;
   right: 0;
-  bottom: 0; }
+  bottom: 0;
+  display: none; }
 
 .com-upload-single-box .uploading-img-list li .progressing {
   position: absolute;
@@ -360,7 +363,8 @@ html {
   height: 15px;
   overflow: hidden;
   z-index: 50;
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  display: none; }
 
 .com-upload-single-box .uploading-img-list li .progressing span {
   overflow: hidden;

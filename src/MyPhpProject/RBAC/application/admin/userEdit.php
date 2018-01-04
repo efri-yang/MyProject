@@ -20,7 +20,9 @@
 	<link  type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.css">
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.js"></script>
 
+
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/upload.js"></script>
+	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/layer/layer.js"></script>
 
 	
 
@@ -60,7 +62,7 @@
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">用户名</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="用户名" value="<?php echo $resData['username'] ?>" disabled>
+						          <input type="text" class="form-control" placeholder="用户名" value="<?php echo $resData['username'] ?>">
 						        </div>
 						    </div>
 
@@ -77,7 +79,7 @@
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">角色</label>
 						        <div class="col-sm-5">
-						          	<select class="form-control" disabled>
+						          	<select class="form-control">
 										<?php
 											$roleItemStr="";
 											foreach ($roleResData as $key => $value) {
@@ -97,7 +99,7 @@
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">手机</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="手机" value="<?php echo $resData['phone']; ?>" disabled>
+						          <input type="text" class="form-control" placeholder="手机" value="<?php echo $resData['phone']; ?>" >
 						        </div>
 						    </div>
 
@@ -105,7 +107,7 @@
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">邮箱</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="邮箱" value="<?php echo $resData['email']; ?>" disabled>
+						          <input type="text" class="form-control" placeholder="邮箱" value="<?php echo $resData['email']; ?>">
 						        </div>
 						    </div>
 
@@ -114,30 +116,17 @@
 						        <label class="col-sm-1 control-label">头像</label>
 						        <div class="col-sm-5">
 						         	<div class="com-upload-single-box">
-										<div class="no-pic" id="J_no-pic"></div>
-										<!-- <ul class="uploaded-img-list">
-											<li>
-												<div class="img-wrap">
-													<img src="/static/admin/upload/upalod_1.jpg" />
-												</div>
-											</li>
-										</ul> -->
-										<div id="J_uploader-list" class="clearfix">
-											<ul class="uploading-img-list">
+						         		
+											<div class="no-pic" id="J_no-pic" style="<?php echo !$resData['avatar'] ? "display:block" :"display:none"; ?>"></div>
+											
+									
+											<ul class="uploading-img-list clearfix" id="J_uploader-list" style="<?php echo !!$resData['avatar'] ? "display:block" :"display:none"; ?>">
 												<li>
-													<div class="img-wrap"><img src="<?php echo STATIC_PATH;?>/public/static/admin/upload/01.jpg"></div>
-													<div class="handle-bar">
-														<span class="upload-btn">上传</span>
-														<span class="del-btn">删除</span>
-													</div>
-													<div class="progressing">
-														<span style="width:18%;"></span>
-													</div>
-													<div class="error">上传失败了</div>
-													<div class="success"></div>
+													<div class="img-wrap"><img src="<?php echo STATIC_PATH.$resData["avatar"];?>"></div>	
 												</li>
 											</ul>
-										</div>
+										
+										
 										<div class="upload-btn-group clearfix">
 											<div id="filePicker" class="filepicker-container"></div>
 											<a href="#" class="btn btn-success uploader-server-btn">从服务器端选择</a>
@@ -145,7 +134,7 @@
 									</div>
 						        </div>
 						    </div>
-
+							<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/upload.js"></script>
 
 						    <div class="form-group">
 						        <label class="col-sm-1"></label>

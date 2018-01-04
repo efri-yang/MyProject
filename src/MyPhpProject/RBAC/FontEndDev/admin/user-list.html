@@ -3,11 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>管理后台用户列表</title>
-	<script type="text/javascript" src=""></script>
-	<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
+		<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
 	<link rel="stylesheet" type="text/css" href="/static/common/js/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="/static/admin/css/common.css">
 	<link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css">
+	<script type="text/javascript" src="/static/common/js/jquery/jquery-1.12.4.js"></script>
 </head>
 <body>
 	<!-- 头部 start -->
@@ -34,16 +34,19 @@
     <li>
         <a href="#">首页</a>
     </li>
-    <li class="active">
-        <a href="article-list.html">文章管理</a>
+    <li>
+        <a href="article-list.html">文章管理<b class="arrow">></b></a>
         <ul>
-            <li><a href="article-list.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章列表</a></li>
-            <li class="active">
-                <a href="article-add.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加文章</a>
-                <ul>
-                    <li class="curr"><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xxx</a></li>
-                    <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xxxx</a></li>
+            <li>
+                <a href="article-list.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文章列表<b class="arrow">></b></a>
+                 <ul>
+                    <li class="current"><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;国内文章</a></li>
+                    <li><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;国际文章</a></li>
                 </ul>
+            </li>
+            <li>
+                <a href="article-add.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加文章</a>
+               
             </li>
         </ul>
     </li>
