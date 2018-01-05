@@ -3,19 +3,14 @@
     include(ROOT_PATH."/application/admin/common/common.php");
     $userId=$_SESSION["userid"];
     sessionDrawGuide($userId,"login.php");
-    $action=$_GET["action"];  
+    $uid=$_GET["id"]; 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>管理后台用户信息修改</title>
-	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/jquery/jquery-1.12.4.js"></script>
-	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/vue/vue.js"></script>
-	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/css/base.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/bootstrap/css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/common.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/admin.css">
+	<title>管理后台——用户信息修改</title>
+	<?php  @include("./include/styleScript.php");?>
 
 	<link  type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.css">
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.js"></script>
@@ -52,7 +47,7 @@
 				<div class="ml20 mr20 pt30 bg-fff">
 					<div class="user-edit-form">
 					<?php
-						$sql="select username,email,phone,avatar,rid,role.name from user inner join user_role on user.id=user_role.uid inner join role on user_role.rid=role.id where user.id='$userId'";
+						$sql="select username,email,phone,avatar,rid,role.name from user inner join user_role on user.id=user_role.uid inner join role on user_role.rid=role.id where user.id='$uid'";
 						$result=$mysqli->query($sql);
 						$resData=$result->fetch_assoc();
 

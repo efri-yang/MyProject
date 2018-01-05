@@ -1,21 +1,31 @@
+<?php
+    include("../../config.php");
+    include(ROOT_PATH."/application/admin/common/common.php");
+    $userId=$_SESSION["userid"];
+    sessionDrawGuide($userId,"login.php");
+    $urlFileName=getUrlFileName();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>管理后台添加用户</title>
-	<script type="text/javascript" src=""></script>
-	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/common/css/base.css">
-	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/common/js/bootstrap/css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/admin/css/common.css">
-	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/admin/css/admin.css">
+	<title>管理后台——添加用户</title>
+	<?php  @include("./include/styleScript.php");?>
+
+	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/layer/layer.js"></script>
 </head>
 <body>
-	<!-- 头部 start -->
-	 @@include("./views/_header.html")
-	<!-- 头部 end -->
-	 <div class="com-layout-container">
+	<?php
+        include("./include/header.php");
+    ?>
+	<div class="com-layout-container">
 			<div class="com-layout-aside">
-				 @@include("./views/_aside.html")
+				<div class="aside-nav-list">
+				    <?php
+                        include("./include/aside.php");
+                        echo  dispalyAside($asideData,$urlFileName); 
+                    ?>
+			    </div>
 			</div>
 			<div class="com-layout-content">
 				<div class="bread-nav-box">

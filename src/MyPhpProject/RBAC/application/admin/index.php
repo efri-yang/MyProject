@@ -14,7 +14,7 @@
     }
 
     
-    if($action=="userIndex"){
+    if($action=="userIndex" || $action=="userList"){
         $page=$_GET["page"];
         $page=!!$page ? $page : 1;
         $destUrl="userList.php?action=userIndex&page=".$page;

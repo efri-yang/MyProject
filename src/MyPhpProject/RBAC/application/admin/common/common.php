@@ -25,5 +25,12 @@
 		}
 	}
 
+
+	function getUrlFileName(){
+		$url = $_SERVER['PHP_SELF'];
+    	$filename= substr( $url , strrpos($url,'/')+1);
+    	return $filename;
+	}
+
 	
 ?>

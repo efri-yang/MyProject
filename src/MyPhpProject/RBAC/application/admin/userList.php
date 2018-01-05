@@ -3,21 +3,16 @@
     include(ROOT_PATH."/application/admin/common/common.php");
     $userId=$_SESSION["userid"];
     sessionDrawGuide($userId,"login.php");
-    $action=$_GET["action"];  
+    $urlFileName=getUrlFileName();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>管理后台——用户信息列表</title>
-	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/jquery/jquery-1.12.4.js"></script>
-	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/vue/vue.js"></script>
-	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/css/base.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/common/js/bootstrap/css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/common.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH;?>/public/static/admin/css/admin.css">
+	<?php  @include("./include/styleScript.php");?>
 
-
+	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/layer/layer.js"></script>
 
 
 
@@ -31,14 +26,14 @@
 				<div class="aside-nav-list">
 				    <?php
                         include("./include/aside.php");
-                        echo  dispalyAside($asideData,$action); 
+                        echo  dispalyAside($asideData,$urlFileName); 
                     ?>
 			    </div>
 			</div>
 			<div class="com-layout-content">
 				<div class="bread-nav-box clearfix">
 					<p class="tit fl">用户列表</p>
-					<a href="user-add.html" class="btn btn-success fr mt15">添加用户</a>
+					<a href="userAdd.php" class="btn btn-success fr mt15">添加用户</a>
 				</div>
 				<div class="pl20 pr20 pt20">
 					<div class="bg-fff">
@@ -51,6 +46,49 @@
 							</thead>
 							<tbody>
 								<?php
+									 $sql="select user.id,user.username,role.id as rid,role.pid from user inner join user_role on user_role.uid=user.id inner join role on user_role.rid=role.id";
+
+    								$result=$mysqli->query($sql);
+								    while ($row=$result->fetch_assoc()) {
+								    	if($row["id"]==$userId){
+								    		$referArr=$row;
+								    	}
+								    	$resURData[]=$row;
+								    }
+								
+								   /**
+								    * 						
+								Array
+(
+    [id] => 2
+    [username] => ptadmin
+    [rid] => 2
+    [pid] => 1
+)
+								
+								    */
+
+								   $tree=new Tree();
+								   //进行数据的树形排序，然后通过pid 来获取当前用户角色下的用户78
+
+								  // print_r($resCURData);
+								   function getChildRoleData($arr,$pid){
+								   		foreach($arr as $k => $v){
+								            if($v['pid']==$pid){
+								                $data[$v['id']]=$v;
+								                $data+=getChildRoleData($arr,$v['id']);
+								            }
+								        }
+								        return isset($data)?$data:array();
+								   }
+								   //2
+								 
+								   $roleChildHData=getChildRoleData($resURData,$referArr["id"]);
+
+								   print_r($roleChildHData);
+
+
+
 									$sql="select * from user where id !='$userId'";
 									$res=$mysqli->query($sql);
 									while ($row=$res->fetch_assoc()) {
@@ -61,7 +99,9 @@
 								<tr>
 									<td><?php echo $value['username'] ?></td>
 									<td>
-										<a href='<?php echo "index.php?action=userEdit&id=".$userId;?>' class="btn btn-info mr10">修改</a>
+										<a href='<?php echo "userEdit.php?id=".$value['id'];?>' class="btn btn-info mr10">修改</a>
+
+										<a href='<?php echo "userForbiddenDo.php?id=".$value['id'];?>' class="btn btn-info mr10 btn-forbidden"><?php echo !!$value["forbidden"] ? "启用" : "禁用"; ?></a>
 										<a href="loginOut.php" class="btn btn-danger">删除</a>
 									</td>
 								</tr>
@@ -70,7 +110,43 @@
 								?>
 							</tbody>
 						</table>
-
+						<script type="text/javascript">
+							$(function(){
+								$(document).on("click",".btn-forbidden",function(event){
+									event.preventDefault();
+									var $this=$(this);
+									
+									var href=$this.attr("href");
+									$.ajax({
+										url:href,
+										dataType:"json",
+										success:function(respone){
+											/**
+											 * {
+											 * 	error:0
+											 * 	data:{
+											 * 		forbidden:0
+											 * 	}
+											 * }
+											 */
+											if(!!respone.error){
+												layer.msg("出错啦！！");
+											}else{
+												if(!!respone.data.forbidden){
+													
+													$this.html("启用");
+													layer.msg("禁用成功！");
+												}else{
+													$this.html("禁用");
+													layer.msg("开启成功！")
+												}
+											}
+											
+										}
+									})
+								})
+							})
+						</script>
 						<!-- 
 							定义 显示页数 $viewNum=5
 							判断 总页数

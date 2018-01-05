@@ -9,10 +9,8 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>登录注册</title>
-	<?php
-		@include("./include/styleScript.php");
-	?>
+	<title>管理后台——用户信息编辑</title>
+	<?php  @include("./include/styleScript.php");?>
 </head>
 <body>
 	<?php
