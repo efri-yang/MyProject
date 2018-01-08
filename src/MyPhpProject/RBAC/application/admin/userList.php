@@ -52,49 +52,16 @@
 								    while ($row=$result->fetch_assoc()) {
 								    	if($row["id"]==$userId){
 								    		$referArr=$row;
+								    		
 								    	}
-								    	$resURData[]=$row;
+								    	$resRoleData[]=$row;
+								    	
 								    }
-								
-								   /**
-								    * 						
-								Array
-(
-    [id] => 2
-    [username] => ptadmin
-    [rid] => 2
-    [pid] => 1
-)
-								
-								    */
-
 								   $tree=new Tree();
 								   //进行数据的树形排序，然后通过pid 来获取当前用户角色下的用户78
 
-								  // print_r($resCURData);
-								   function getChildRoleData($arr,$pid){
-								   		foreach($arr as $k => $v){
-								            if($v['pid']==$pid){
-								                $data[$v['id']]=$v;
-								                $data+=getChildRoleData($arr,$v['id']);
-								            }
-								        }
-								        return isset($data)?$data:array();
-								   }
-								   //2
-								 
-								   $roleChildHData=getChildRoleData($resURData,$referArr["id"]);
-
-								   print_r($roleChildHData);
-
-
-
-									$sql="select * from user where id !='$userId'";
-									$res=$mysqli->query($sql);
-									while ($row=$res->fetch_assoc()) {
-										$resData[]=$row;
-									}
-									foreach ($resData as $key => $value) {
+								   $roleChildHData=$tree->vTree($resRoleData,$referArr["id"]);
+									foreach ($roleChildHData as $key => $value) {
 								?>
 								<tr>
 									<td><?php echo $value['username'] ?></td>

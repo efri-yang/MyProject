@@ -20,6 +20,16 @@
 	        }
 	        return isset($data)?$data:array();
 	    }
+
+	     public function vTree($arr,$id=0){
+	        foreach($arr as $k => $v){
+	            if($v['pid']==$id){
+	                $data[$v['id']]=$v;
+	                $data+=self::vTree($arr,$v['id']);
+	            }
+	        }
+	        return isset($data)?$data:array();
+	    }
 	}
 
 ?>

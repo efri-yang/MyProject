@@ -33,11 +33,11 @@
 				</div>
 				<div class="ml20 mr20 pt30 bg-fff">
 					<div class="user-edit-form">
-						<form class="form-horizontal">
+						<form class="form-horizontal" action="userAddDo.php" method="post">
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">用户名</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="用户名">
+						          <input type="text" name="username" class="form-control" placeholder="用户名">
 						        </div>
 						    </div>
 
@@ -45,7 +45,7 @@
 						        <label class="col-sm-1 control-label">密码</label>
 						        <div class="col-sm-5">
 						          	<div class="pwd">
-										<input type="text" class="form-control" placeholder="密码">
+										<input type="password" name="password" class="form-control" placeholder="密码">
 						          	</div>
 						        </div>
 						    </div>
@@ -53,7 +53,7 @@
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">角色</label>
 						        <div class="col-sm-5">
-						          	<select class="form-control">
+						          	<select class="form-control" name="role">
 						          		<option>请选择角色</option>
 										<option>管理员</option>
 										<option>普通管理员</option>
@@ -66,7 +66,7 @@
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">手机</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="手机">
+						          <input type="text" name="phone" class="form-control" placeholder="手机">
 						        </div>
 						    </div>
 
@@ -74,7 +74,7 @@
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">邮箱</label>
 						        <div class="col-sm-5">
-						          <input type="text" class="form-control" placeholder="邮箱">
+						          <input type="text" name="email" class="form-control" placeholder="邮箱">
 						        </div>
 						    </div>
 
