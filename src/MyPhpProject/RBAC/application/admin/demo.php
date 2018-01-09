@@ -95,3 +95,34 @@ print_r(getData($arr,2));
 ?>
 
 
+
+<?php
+                                    $tree=new Tree();
+                                    $resHData=$tree->vTree($resData,$roleData["pid"]);
+
+
+
+                                    foreach ($resHData as $key => $v) {
+                                        
+                                ?>
+                                        <tr>
+                                            <td><?php echo $v['name']. ?></td>
+                                            <td>
+                                            <?php 
+                                                if($v["pid"]==$roleData["pid"]){
+                                                    //当前角色 角色是超级管理员
+                                            ?>  
+                                                    <a href="roleInfo.php?id=<?php echo $v['id']; ?>" class="btn btn-info mr10">查看</a>
+                                                
+                                            
+                                            <?php       
+                                                }
+                                             ?>
+                                                <!-- <a href="roleInfo.php?id=<?php echo $v['id']; ?>" class="btn btn-info mr10">查看</a>
+                                                <a href="roleEdit.php?id=<?php echo $v['id']; ?>" class="btn btn-info mr10">修改</a>
+                                                <a href="roleDelDo.php?id=<?php echo $v['id']; ?>" class="btn btn-danger">删除</a> -->
+                                            </td>
+                                        </tr>
+                                <?php       
+                                    }
+                                ?>

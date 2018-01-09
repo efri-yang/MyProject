@@ -4,6 +4,15 @@
     $userId=$_SESSION["userid"];
     sessionDrawGuide($userId,"login.php");
     $urlFileName=getUrlFileName();
+
+    $roleSql="select role.id,role.name,role.pid from role inner join user_role on role.id=user_role.uid where user_role.uid=$userId";
+    $roleRes=$mysqli->query($roleSql);
+    while ($row=$roleRes->fetch_assoc()) {
+    	$roleData=$row;
+    }
+
+   
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,6 +49,11 @@
 				</div>
 				<div class="pl20 pr20 pt20">
 					<div class="bg-fff">
+						<!-- 
+							
+							对于比自己高级的角色 (不显示出来)
+							跟自己同等级的角色进行飘红 但是可查看 不可修改
+						 -->
 						<table class="role-list-tbl">
 							<thead>
 								<tr>
@@ -48,17 +62,49 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php
-									$sql="select * from";
-								?>
+								
 								<tr>
-									<td>admin</td>
+									<td><?php echo $roleData['name']."<span style='color:#f60;font-weight:bold;'>(自身角色)</span>" ?></td>
 									<td>
-										<a href="role-edit.html" class="btn btn-info mr10">查看</a>
-										<a href="role-edit.html" class="btn btn-info mr10">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
+										<a href="roleInfo.php?id=<?php echo $roleData['id']; ?>" class="btn btn-info mr10">查看</a>
+										<a href="roleEdit.php?id=<?php echo $v['id']; ?>" class="btn btn-info mr10">修改</a>
 									</td>
 								</tr>
+
+								<?php
+
+
+
+									$sql="select * from role";
+									$res=$mysqli->query($sql);
+									while ($row=$res->fetch_assoc()) {
+										$resData[]=$row;
+									}
+
+
+
+									
+							
+                                    $tree=new Tree();
+                                    $resHData=$tree->vTree($resData,$roleData['id']);
+                                    foreach ($resHData as $key => $v) {
+                                ?>
+									<tr>
+										<td><?php echo $v['name']; ?></td>
+										<td>
+											<a href="roleInfo.php?id=<?php echo $v['id']; ?>" class="btn btn-info mr10">查看</a>
+											<a href="roleEdit.php?id=<?php echo $v['id']; ?>" class="btn btn-info mr10">修改</a>
+											<a href="roleDelDo.php?id=<?php echo $v['id']; ?>" class="btn btn-danger">删除</a>
+										</td>
+									</tr>
+
+                                <?php    	
+                                    }
+                                   
+                                        
+                                ?>
+                          
+								
 								
 							</tbody>
 						</table>
