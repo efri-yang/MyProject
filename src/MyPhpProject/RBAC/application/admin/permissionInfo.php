@@ -39,7 +39,7 @@
 					<div class="bg-fff">
 						<div class="bg-fff">
 						<div class="perssion-add-form">
-							<form class="form-horizontal">
+							<div class="form-horizontal">
 								<div class="form-group">
 							        <label class="col-sm-2 control-label">权限所属目录</label>
 							        <div class="col-sm-5">
@@ -52,20 +52,24 @@
 							        		while ($row=$res->fetch_assoc()) {
 							        			$resData[]=$row;
 							        			if($row["id"]==$uid){
-							        				$pid=$row['pid'];
+							        				$currData=$row;
 							        			}
 							        		}
+
+
 							        		$tree=new Tree();
 							        		$resHData=$tree->hTree($resData);
 
+							        			// print_r($resHData);
 
-							        		function displayPerssion($data,$str="",$step=0){
+							        		function displayPerssion($data,$pid,$str="",$step=1){
 							        			foreach ($data as $key => $v) {
 							        				$emptyholer=@str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$step);
 							        				$selected=($v["id"]==$pid) ? "selected" :"";
+							        				echo $v["id"];
 							        				$str.='<option '.$selected.' value="'.$v["id"].'">'.$emptyholer."|—".$v['name'].'</option>';
 							        				if(count($v["sub"])){
-							        					$str.=displayPerssion($v["sub"],$step+1,$str);
+							        					$str=displayPerssion($v["sub"],$v["id"],$str,$step+1);
 							        				}
 							        			}
 							        			
@@ -74,9 +78,9 @@
 							        		}
 							        		
 							        	?>
-							          	<select class="form-control">
-							          		<option value="0">|—顶级权限</option>
-											<?php echo displayPerssion($resHData,$str=""); ?>
+							          	<select class="form-control perssion-add-sel" disabled>
+							          		<option value="0"  <?php echo $pid==0 ? "selected":""; ?>>|—顶级权限</option>
+											<?php echo displayPerssion($resHData,$currData["pid"],$str=""); ?>
 											
 							          	</select>
 							        </div>
@@ -85,7 +89,7 @@
 								<div class="form-group">
 							        <label class="col-sm-2 control-label">权限名称</label>
 							        <div class="col-sm-5">
-							          <input type="text" class="form-control" placeholder="权限名称" value="权限x1">
+							          <input type="text" class="form-control" placeholder="权限名称" value="<?php echo $currData['name']; ?>" disabled>
 							        </div>
 							    </div>
 
@@ -93,17 +97,17 @@
 							    <div class="form-group">
 							        <label class="col-sm-2 control-label">权限文件名</label>
 							        <div class="col-sm-5">
-							          <input type="text" class="form-control" placeholder="类方法名" value="quanxian01">
+							          <input type="text" class="form-control" placeholder="类方法名" value="<?php echo $currData['url']; ?>" disabled>
 							        </div>
 							    </div>
 
 							    <div  class="form-group">
 									<label class="col-sm-2 control-label"></label>
 									<div class="col-sm-5">
-										<input type="submit" value="修改" class="btn btn-success mr20" />
+										<a  href="permissionEdit.php?id=<?php echo $uid; ?>" class="btn btn-success mr20">编辑</a>
 									</div>
 							    </div>    
-							</form>
+							</div>
 							<div class="pb30"></div>
 						</div>
 						

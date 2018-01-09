@@ -188,6 +188,12 @@
     }
 }
 
+.perssion-add-sel{
+	option[selected]{
+		background:#e5e5e5; 
+	}
+}
+
 .article-list-tbl {
     width: 100%;
     margin-top: 15px;
