@@ -97,7 +97,7 @@
 							    <div class="form-group">
 							        <label class="col-sm-2 control-label">权限文件名</label>
 							        <div class="col-sm-5">
-							          <input type="text" name="pfilename"> class="form-control" placeholder="类方法名" value="<?php echo $currData['url']; ?>" />
+							          <input type="text" name="pfilename" class="form-control" placeholder="类方法名" value="<?php echo $currData['url']; ?>" />
 							        </div>
 							    </div>
 
