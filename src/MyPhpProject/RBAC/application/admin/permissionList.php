@@ -62,7 +62,7 @@
 
 							        foreach ($data as $k => $v) {
 							            $subLen=count($v["sub"]);
-							            $str.="<li class='clearfix'><div class='item-info' style='padding-left:".$paddingLeft."'><p class='name'>".$v["name"]."</p><div class='handle'><a href='permissionEdit.php?id=".$v["id"]."' class='btn btn-info'>修改</a><a href='permissionDelDo.php?id=".$v["id"]."' class='btn btn-danger'>删除</a></div></div>";
+							            $str.="<li class='clearfix'><div class='item-info' style='padding-left:".$paddingLeft."'><p class='name'>".$v["name"]."</p><div class='handle'><a href='permissionInfo.php?id=".$v["id"]."' class='btn btn-info'>查看</a><a href='permissionEdit.php?id=".$v["id"]."' class='btn btn-info'>修改</a><a href='permissionDelDo.php?id=".$v["id"]."' class='btn btn-danger'>删除</a></div></div>";
 							            
 							            if($subLen){
 							                $str=dispalyPerssion($v["sub"],$v['id'],$step+1,$str);
