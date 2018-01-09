@@ -39,7 +39,7 @@
 					<div class="bg-fff">
 						<div class="bg-fff">
 						<div class="perssion-add-form">
-							<div class="form-horizontal">
+							<form class="form-horizontal" action="permissionEditDo.php?id=<?php echo $uid;?>" method="post">
 								<div class="form-group">
 							        <label class="col-sm-2 control-label">权限所属目录</label>
 							        <div class="col-sm-5">
@@ -78,7 +78,7 @@
 							        		}
 							        		
 							        	?>
-							          	<select class="form-control perssion-add-sel">
+							          	<select class="form-control perssion-add-sel" name="pparentid">
 							          		<option value="0"  <?php echo $currData["pid"]==0 ? "selected":""; ?>>|—顶级权限</option>
 											<?php echo displayPerssion($resHData,$currData["pid"],$str=""); ?>
 											
@@ -89,7 +89,7 @@
 								<div class="form-group">
 							        <label class="col-sm-2 control-label">权限名称</label>
 							        <div class="col-sm-5">
-							          <input type="text" class="form-control" placeholder="权限名称" value="<?php echo $currData['name']; ?>" />
+							          <input type="text" name="pname" class="form-control" placeholder="权限名称" value="<?php echo $currData['name']; ?>" />
 							        </div>
 							    </div>
 
@@ -97,17 +97,18 @@
 							    <div class="form-group">
 							        <label class="col-sm-2 control-label">权限文件名</label>
 							        <div class="col-sm-5">
-							          <input type="text" class="form-control" placeholder="类方法名" value="<?php echo $currData['url']; ?>" />
+							          <input type="text" name="pfilename"> class="form-control" placeholder="类方法名" value="<?php echo $currData['url']; ?>" />
 							        </div>
 							    </div>
 
 							    <div  class="form-group">
 									<label class="col-sm-2 control-label"></label>
 									<div class="col-sm-5">
-										<input type="submit" value="保存" class="btn btn-success mr20">保存</a>
+										<input type="submit" value="保存" class="btn btn-lg btn-success mr20" />
+										
 									</div>
 							    </div>    
-							</div>
+							</form>
 							<div class="pb30"></div>
 						</div>
 						
