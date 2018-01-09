@@ -98,36 +98,36 @@
   text-align: center; }
 
 .perssion-list-tree {
-  padding-left: 30px;
-  padding-right: 30px; }
+  margin-bottom: 100px;
+  padding-bottom: 30px; }
 
-.perssion-list-tree li ul {
-  padding-left: 30px; }
-
-.perssion-list-tree li .name {
+.perssion-list-tree ul li .name {
   float: left;
   clear: both;
   line-height: 44px;
   margin: 0; }
 
-.perssion-list-tree li .handle {
-  float: right; }
+.perssion-list-tree ul li .handle {
+  float: right;
+  padding-top: 5px; }
 
-.perssion-list-tree li .handle > a {
+.perssion-list-tree ul li .handle > a {
   margin: 0 7px; }
 
-.perssion-list-tree li .item-info {
+.perssion-list-tree ul li .item-info {
   zoom: 1; }
 
-.perssion-list-tree li .item-info:after {
+.perssion-list-tree ul li .item-info:hover {
+  background: #e5e5e5; }
+
+.perssion-list-tree ul li .item-info:after {
   content: " ";
   display: block;
   clear: both;
   height: 0; }
 
-.perssion-list-tree > li {
-  border-bottom: 1px dashed #eee;
-  padding-top: 10px; }
+.perssion-list-tree > ul > li > .item-info {
+  border-bottom: 1px dashed #eee; }
 
 .perssion-add-form {
   padding: 30px 30px 0; }

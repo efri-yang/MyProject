@@ -4,10 +4,10 @@
 	<meta charset="UTF-8">
 	<title>管理后台 权限列表</title>
 	<script type="text/javascript" src=""></script>
-	<link rel="stylesheet" type="text/css" href="/static/common/css/base.css">
-	<link rel="stylesheet" type="text/css" href="/static/common/js/bootstrap/css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" href="/static/admin/css/common.css">
-	<link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css">
+	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/common/css/base.css">
+	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/common/js/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/admin/css/common.css">
+	<link rel="stylesheet" type="text/css" href="<%= serverStaticUrl %>/static/admin/css/admin.css">
 </head>
 <body>
 	<!-- 头部 start -->
@@ -28,66 +28,68 @@
 							<li class="item-1">权限名</li>
 							<li class="item-2">操作</li>
 						</ul>
-						<ul class="perssion-list-tree">
-							<li class="clearfix">
-								<div class="item-info">
-									<p class="name">|—首页</p>
-									<div class="handle">
-										<a href="perssion-edit.html" class="btn btn-info">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
-									</div>
-								</div>
-							</li>
-							<li  class="clearfix">
-								<div class="item-info">
-									<p class="name">|—文章管理</p>
-									<div class="handle">
-										<a href="#" class="btn btn-info">修改</a>
-										<a href="#" class="btn btn-danger">删除</a>
-									</div>
-								</div>
-								<ul>
-									<li  class="clearfix">
-										<div class="item-info">
-											<p  class="name">|—文章列表</p>
-											<div class="handle">
-												<a href="#" class="btn btn-info">修改</a>
-												<a href="#" class="btn btn-danger">删除</a>
-											</div>
+						<div class="perssion-list-tree">
+							<ul>
+								<li class="clearfix">
+									<div class="item-info">
+										<p class="name">|—首页</p>
+										<div class="handle">
+											<a href="perssion-edit.html" class="btn btn-info">修改</a>
+											<a href="#" class="btn btn-danger">删除</a>
 										</div>
-										<ul>
-											<li  class="clearfix">
-												<div class="item-info">
-													<p  class="name">|—文章列表</p>
-													<div class="handle">
-														<a href="#" class="btn btn-info">修改</a>
-														<a href="#" class="btn btn-danger">删除</a>
-													</div>
-												</div>
-											</li>
-											<li  class="clearfix">
-												<div class="item-info">
-													<p class="name">|—添加文章</p>
-													<div class="handle">
-														<a href="#" class="btn btn-info">修改</a>
-														<a href="#" class="btn btn-danger">删除</a>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</li>
-									<li  class="clearfix">
-										<div class="item-info">
-											<p class="name">|—添加文章</p>
-											<div class="handle">
-												<a href="#" class="btn btn-info">修改</a>
-												<a href="#" class="btn btn-danger">删除</a>
-											</div>
+									</div>
+								</li>
+								<li  class="clearfix">
+									<div class="item-info">
+										<p class="name">|—文章管理</p>
+										<div class="handle">
+											<a href="#" class="btn btn-info">修改</a>
+											<a href="#" class="btn btn-danger">删除</a>
 										</div>
-									</li>
-								</ul>
-							</li>
-						</ul>
+									</div>
+									<ul>
+										<li  class="clearfix">
+											<div class="item-info">
+												<p  class="name">|—文章列表</p>
+												<div class="handle">
+													<a href="#" class="btn btn-info">修改</a>
+													<a href="#" class="btn btn-danger">删除</a>
+												</div>
+											</div>
+											<ul>
+												<li  class="clearfix">
+													<div class="item-info">
+														<p  class="name">|—文章列表</p>
+														<div class="handle">
+															<a href="#" class="btn btn-info">修改</a>
+															<a href="#" class="btn btn-danger">删除</a>
+														</div>
+													</div>
+												</li>
+												<li  class="clearfix">
+													<div class="item-info">
+														<p class="name">|—添加文章</p>
+														<div class="handle">
+															<a href="#" class="btn btn-info">修改</a>
+															<a href="#" class="btn btn-danger">删除</a>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</li>
+										<li  class="clearfix">
+											<div class="item-info">
+												<p class="name">|—添加文章</p>
+												<div class="handle">
+													<a href="#" class="btn btn-info">修改</a>
+													<a href="#" class="btn btn-danger">删除</a>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
