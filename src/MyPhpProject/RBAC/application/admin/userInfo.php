@@ -3,7 +3,10 @@
     include(ROOT_PATH."/application/admin/common/common.php");
     $userId=$_SESSION["userid"];
     sessionDrawGuide($userId,"login.php"); 
-    $action=$_GET["action"];  
+    $action=$_GET["action"];
+    $uid=$_GET["id"];  
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +25,9 @@
 	
 </head>
 <body>
+	<?php
+		checkPermission($userId,$urlFileName);
+	?>
 	<!-- 头部 start -->
 	 <?php
         include("./include/header.php");
@@ -44,7 +50,7 @@
 				<div class="ml20 mr20 pt30 bg-fff">
 					<div class="user-edit-form">
 						<?php
-						$sql="select username,email,phone,avatar,rid,role.name from user inner join user_role on user.id=user_role.uid inner join role on user_role.rid=role.id where user.id='$userId'";
+						$sql="select username,email,phone,avatar,rid,role.name from user inner join user_role on user.id=user_role.uid inner join role on user_role.rid=role.id where user.id='$uid'";
 						$result=$mysqli->query($sql);
 						$resData=$result->fetch_assoc();
 
@@ -139,7 +145,7 @@
 						    <div class="form-group">
 						        <label class="col-sm-1"></label>
 						        <div class="col-sm-5">
-						          	<a href="userEdit.php?id=<?php echo $userId; ?>" class="btn btn-success btn-lg" style="padding-left:50px;padding-right:50px;">编辑</a>
+						          	<a href="userEdit.php?id=<?php echo $uid; ?>" class="btn btn-success btn-lg" style="padding-left:50px;padding-right:50px;">编辑</a>
 						        </div>
 						    </div>
 

@@ -3,7 +3,11 @@
     include(ROOT_PATH."/application/admin/common/common.php");
     $userId=$_SESSION["userid"];
     sessionDrawGuide($userId,"login.php");
-    $action=$_GET["action"];  
+    $action=$_GET["action"]; 
+    $urlFileName=getUrlFileName(); 
+
+  
+  
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,12 +25,15 @@
 </head>
 <body>
     <?php
+
         include("./include/header.php");
     ?>
 	  <div class="com-layout-container">
 			<div class="com-layout-aside">
                 <div class="aside-nav-list">
 				    <?php
+
+
                         include("./include/aside.php");
                         echo  dispalyAside($asideData,$action); 
                     ?>
@@ -49,6 +56,10 @@
                     <p>欢迎来到管理首页</p>
                     <p>babababababababbaba.............................................</p>
                 </div>
+
+                <?php 
+                    $hasPermission=checkPermission($userId,"admin.php");
+                 ?>
 			</div>
 	  </div>
 </body>

@@ -3,7 +3,7 @@
     include(ROOT_PATH."/application/admin/common/common.php");
     $userId=$_SESSION["userid"];
     sessionDrawGuide($userId,"login.php");
-
+   
     $username=$_POST["username"];
     $password=$_POST["password"];
 
@@ -35,29 +35,44 @@
 <body>
 	<?php
 
-		$sql="insert into user_role(uid,rid) values((select max(id) from user)+1,'$role')";
-		$result=$mysqli->query($sql);
-		if($result){
-			echo "xsdfasdfasd陈宫";
-		}else{
-			echo "失败！！！！";
-		}
-		// if(!!$errorTxt){	
-		// 	resultDrawGuide(0,$errorTxt,"userAdd.php");
+		// $sql="insert into user_role(uid,rid) values((select max(id) from user)+1,'$role')";
+		// $result=$mysqli->query($sql);
+		// if($result){
+		// 	echo "xsdfasdfasd陈宫";
 		// }else{
-		// 	$password=md5($password);
-		// 	$sql="insert into user(username,password,email,phone) values('$username','$password','$email','$phone')";
-		// 	$sql="insert into user_role(uid,rid) values((select max(id) from user)+1)";
-		// 	$mysqli->query("start transaction");
-
-		// 	$result=$mysqli->query($sql);
-
-		// 	if($result->num_rows){
-		// 		echo "插入成功----------------";
-		// 	}else{
-		// 		echo "插入失败----------------";
-		// 	}
+		// 	echo "失败！！！！";
 		// }
+		
+		$insertFlag=true;
+		if(!!$errorTxt){	
+			resultDrawGuide(0,$errorTxt,"userAdd.php");
+		}else{
+			$password=md5($password);
+			$mysqli->begin_transaction();
+			$sql01="insert into user(username,password,email,phone) values('$username','$password','$email','$phone')";
+			$sql02="insert into user_role(uid,rid) values((select max(id) from user),'$role')";
+			$result01=$mysqli->query($sql01);
+
+			if(!$result01){
+				$insertFlag=false;
+				$mysqli->rollback();
+			}
+			$result02=$mysqli->query($sql02);
+
+			if(!$result02){
+				$insertFlag=false;
+				$mysqli->rollback();
+			}
+
+			$mysqli->commit();
+			$mysqli->close();
+
+			if($insertFlag){
+				resultDrawGuide(1,"添加成功！","userList.php");
+			}else{
+				resultDrawGuide(0,"添加失败！","userList.php");
+			}
+		}
 	?>
 </body>
 </html>

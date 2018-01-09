@@ -1,6 +1,8 @@
 <?php
 include("../../config.php");
- $userId=$_SESSION["userid"];
+$uid=$_REQUEST["uid"];
+
+
 function getUniName(){
     return md5(uniqid(microtime(true),true));
 }
@@ -27,15 +29,15 @@ $filePathRelative="/public/uploads/avatars/".$date."/".$uniName;
 
 if(@move_uploaded_file($_FILES["file"]["tmp_name"],$filePath)){
     $filePath=addslashes($filePath);
-    $sql="update user set avatar='$filePathRelative' where id='$userId'";
+    $sql="update user set avatar='$filePathRelative' where id='$uid'";
     $result=$mysqli->query($sql);
     if($mysqli->affected_rows >= 0){
-        echo json_encode(array("url"=>$filePathRelative));
+        echo json_encode(array("url"=>$filePathRelative,"uid"=>$uid));
     }else{
         echo 0;
     }
  }else{
-   echo json_encode(array("url"=>$filePathRelative));
+   echo json_encode(array("url"=>$filePathRelative,"uid"=>$uid));
  }
 
 

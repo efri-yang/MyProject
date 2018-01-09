@@ -39,7 +39,7 @@
                 label: '点击上传本地头像'
             },
             formData: {
-                
+                uid:uidForUpLoad
             },
             accept: { // 只允许选择图片文件格式
                 title: 'Images',

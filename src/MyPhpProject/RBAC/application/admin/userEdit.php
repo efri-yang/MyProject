@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/common/js/webuploader/webuploader.js"></script>
 	<script type="text/javascript">
 		var static_path="<?php echo STATIC_PATH; ?>";
+		var uidForUpLoad="<?php echo $uid; ?>";
 	</script>
 	
 	<script type="text/javascript" src="<?php echo STATIC_PATH;?>/public/static/admin/js/upload.js"></script>
@@ -27,6 +28,9 @@
 
 </head>
 <body>
+	<?php
+		checkPermission($userId,$urlFileName);
+	?>
 	<?php
         include("./include/header.php");
     ?>
@@ -57,7 +61,7 @@
 							$roleResData[]=$row;
 						}
 					?>
-						<form class="form-horizontal" action="userEditDo.php" method="post">
+						<form class="form-horizontal" action="userEditDo.php?id=<?php echo $uid; ?>" method="post">
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">用户名</label>
 						        <div class="col-sm-5">

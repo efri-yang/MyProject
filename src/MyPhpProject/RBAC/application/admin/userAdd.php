@@ -16,6 +16,9 @@
 </head>
 <body>
 	<?php
+		checkPermission($userId,$urlFileName);
+	?>
+	<?php
         include("./include/header.php");
     ?>
 	<div class="com-layout-container">
@@ -49,15 +52,29 @@
 						          	</div>
 						        </div>
 						    </div>
-
+							<?php
+								
+								$roleSql="select * from role";
+								$roleResult=$mysqli->query($roleSql);
+								while($row=$roleResult->fetch_assoc()){
+									$roleResData[]=$row;
+								}
+							?>
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">角色</label>
 						        <div class="col-sm-5">
 						          	<select class="form-control" name="role">
-						          		<option>请选择角色</option>
-										<option>管理员</option>
-										<option>普通管理员</option>
-										<option>用户</option>
+						          		<?php
+											$roleItemStr="";
+											foreach ($roleResData as $key => $value) {
+												if($value['id']==$resData["rid"]){
+													$roleItemStr.="<option selected value='".$value['id']."'>".$value["name"]."</option>";
+												}else{
+													$roleItemStr.="<option value='".$value['id']."'>".$value["name"]."</option>";
+												}
+											}
+											echo $roleItemStr;
+										?>
 						          	</select>
 						        </div>
 						    </div>
