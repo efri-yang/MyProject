@@ -64,7 +64,7 @@
 						        <label class="col-sm-1 control-label">父角色</label>
 						        <div class="col-sm-5">
 						        	<?php
-											$sql="select * from role";
+											$sql="select * from role where pid !=0";
 											$res=$mysqli->query($sql);
 											while ($row=$res->fetch_assoc()) {
 												$resData[]=$row;

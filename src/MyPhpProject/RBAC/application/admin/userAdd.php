@@ -59,6 +59,10 @@
 								while($row=$roleResult->fetch_assoc()){
 									$roleResData[]=$row;
 								}
+								$tree=new Tree();
+
+								$roleResData=$tree->vTree($roleResData,$userInfoData["pid"]);
+
 							?>
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">角色</label>

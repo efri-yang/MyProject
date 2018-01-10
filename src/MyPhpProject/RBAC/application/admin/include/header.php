@@ -1,13 +1,16 @@
 <?php
-    $sql="select * from user where id='$userId'";
+    $sql="select user.id as userid, user.username,avatar,user_role.rid,role.pid from user inner join user_role on user.id=user_role.uid inner join role on role.id=user_role.rid where user.id='$userId'";
     $result=$mysqli->query($sql);
     $userInfoData=$result->fetch_assoc();
+
+
+    
 ?>
   <div class="com-layout-header">
 	<p class="header-top-tit">管理后台</p>
 	<div class="header-top-avatar">
 		<div class="avatar-info">
-			<a href="userInfo.php?id=<?php echo $userInfoData['id']; ?>" class="clearfix">
+			<a href="userInfo.php?id=<?php echo $userInfoData['userid']; ?>" class="clearfix">
 				<div class="pic">
                     <?php
                         if($userInfoData["avatar"]){
@@ -26,8 +29,8 @@
 			</a>
 		</div>
 		<div class="avatar-handle">
-			<a href="userEdit.php?id=<?php echo $userInfoData['id']; ?>">信息修改</a>
-			<a href="loginout.php?id=<?php echo $userInfoData['id']; ?>">退出</a>
+			<a href="userEdit.php?id=<?php echo $userInfoData['userid']; ?>">信息修改</a>
+			<a href="loginout.php?id=<?php echo $userInfoData['userid']; ?>">退出</a>
 		</div>
 	</div>
   </div>

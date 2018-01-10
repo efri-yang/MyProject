@@ -64,8 +64,6 @@
 								   //进行数据的树形排序，然后通过pid 来获取当前用户角色下的用户78
 
 								   $roleChildHData=$tree->vTree($resRoleData,$referArr["id"]);
-
-								    print_r($roleChildHData);
 									foreach ($roleChildHData as $key => $value) {
 								?>
 								<tr>
@@ -75,7 +73,7 @@
 										<a href='<?php echo "userEdit.php?id=".$value['id'];?>' class="btn btn-info mr10">修改</a>
 
 										<a href='<?php echo "userForbiddenDo.php?id=".$value['id'];?>' class="btn btn-info mr10 btn-forbidden"><?php echo !!$value["forbidden"] ? "启用" : "禁用"; ?></a>
-										<a href="loginOut.php" class="btn btn-danger">删除</a>
+										<a href="userDelDo.php?id=<?php echo $value['id']; ?>" class="btn btn-danger">删除</a>
 									</td>
 								</tr>
 								<?php		

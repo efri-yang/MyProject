@@ -39,12 +39,11 @@
 <body>
 	
 		<?php
-			
+		
 			$updateFlag=true;
-			$sql01="update role set name='$rolename' where id='$roleid'";
+			$sql01="update role set name='$rolename' where id='$roleId'";
 			
-
-			
+			echo $sql01;
 		
 			$mysqli->begin_transaction();
 

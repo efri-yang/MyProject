@@ -35,13 +35,14 @@
 <body>
 	<?php
 
-		// $sql="insert into user_role(uid,rid) values((select max(id) from user)+1,'$role')";
-		// $result=$mysqli->query($sql);
-		// if($result){
-		// 	echo "xsdfasdfasd陈宫";
-		// }else{
-		// 	echo "失败！！！！";
-		// }
+		/**
+		 * 这里出现要记住：我们添加了一个用户：那么要处理三件事情
+		 * 
+		 * 向user 表中添加用户记录 用户记录
+		 * 向 user_role 中添加 用户 角色 数据
+		 * 
+		 * 向 permission_role 中添加 用户
+		 */
 		
 		$insertFlag=true;
 		if(!!$errorTxt){	

@@ -5,6 +5,15 @@
     sessionDrawGuide($userId,"login.php");
     $urlFileName=getUrlFileName();
 
+    $sql="select id from perssion";
+    $res=$mysqli->query($sql);
+    while ($row=$res->fetch_assoc()) {
+    	$pTotalIdArr[]=$row['id'];
+    }
+
+
+  
+ 
    
 ?>
 <!DOCTYPE html>
@@ -21,10 +30,18 @@
 		$rolePid=$_POST["rolepid"];
 		$pressionIdArr=$_POST["perssionid"];
 
-		print_r($perssionid);
-		foreach ($pressionIdArr as $key => $value) {
-			$strSqlArr[]='((select max(id) from role),"'.$value.'",0)';
+
+		foreach ($pTotalIdArr as $key => $value) {
+			echo $value;
+			if(in_array($value,$pressionIdArr)){
+				$strSqlArr[]='((select max(id) from role),"'.$value.'",0)';
+			}else{
+				$strSqlArr[]='((select max(id) from role),"'.$value.'",1)';
+			}
+			
 		}
+
+		
 		/**
 		 * 数据库的事物
 		 *

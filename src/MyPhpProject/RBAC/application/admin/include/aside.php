@@ -1,9 +1,11 @@
 <?php
-	$sql="select user_role.rid,perssion.id,perssion.pid,perssion.name,perssion.url,perssion.status,perssion.aside from user_role inner join perssion_role on user_role.rid=perssion_role.rid inner join perssion on perssion_role.pid=perssion.id   where uid='$userId' and perssion.aside=1";
+	$sql="select user_role.rid,perssion.id,perssion.pid,perssion.name,perssion.url,perssion.status,perssion.aside from user_role inner join perssion_role on user_role.rid=perssion_role.rid inner join perssion on perssion_role.pid=perssion.id   where uid='$userId' and perssion.aside=1 and perssion_role.forbidden=0";
 	$result=$mysqli->query($sql);
+
 	while ($row=$result->fetch_assoc()) {
         $resArr[]=$row;
     }
+    !$resArr && $resArr=array();
     $tree=new Tree();
     $asideData=$tree->hTree($resArr);
 

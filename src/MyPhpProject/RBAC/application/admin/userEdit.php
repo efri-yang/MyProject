@@ -60,6 +60,8 @@
 						while($row=$roleResult->fetch_assoc()){
 							$roleResData[]=$row;
 						}
+						$tree=new Tree();
+						$roleResData=$tree->vTree($roleResData,$userInfoData["pid"]);
 					?>
 						<form class="form-horizontal" action="userEditDo.php?id=<?php echo $uid; ?>" method="post">
 							<div class="form-group">
@@ -78,7 +80,7 @@
 						          	</div>
 						        </div>
 						    </div>
-
+							
 						    <div class="form-group">
 						        <label class="col-sm-1 control-label">角色</label>
 						        <div class="col-sm-5">
@@ -97,7 +99,7 @@
 						          	</select>
 						        </div>
 						    </div>
-							
+
 
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">手机</label>
