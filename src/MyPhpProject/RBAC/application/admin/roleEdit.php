@@ -30,19 +30,21 @@
 		<div class="com-layout-content">
 			<div class="bread-nav-box clearfix">
 				<p class="tit fl">角色信息</p>
-				<a href="userAdd.php" class="btn btn-success fr mt15">添加角色</a>
 			</div>
 			<div class="ml20 mr20 pt30 bg-fff">
 					<div class="role-edit-form">
 						<?php
 							$sql="select role.id as rid,role.name as rolename,forbidden,perssion.id,perssion.pid,perssion.name as pname from role inner join user_role on role.id=user_role.uid inner join perssion_role on user_role.rid=perssion_role.rid inner join perssion on perssion_role.pid=perssion.id where user_role.uid=$uid";
 							$res=$mysqli->query($sql);
+							$resData[];
 							while ($row=$res->fetch_assoc()) {
 								$resData[]=$row;
 								$roleName=$row["rolename"];
 								$roleId=$row["rid"];
-							}
 
+							}
+							
+							
 							$tree=new Tree();
 							$resHData=$tree->hTree($resData);
 

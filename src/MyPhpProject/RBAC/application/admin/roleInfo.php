@@ -30,7 +30,7 @@
 		<div class="com-layout-content">
 			<div class="bread-nav-box clearfix">
 				<p class="tit fl">角色信息</p>
-				<a href="userAdd.php" class="btn btn-success fr mt15">添加角色</a>
+				
 			</div>
 			<div class="ml20 mr20 pt30 bg-fff">
 					<div class="role-edit-form">

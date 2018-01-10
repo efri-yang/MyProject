@@ -45,7 +45,7 @@
 			<div class="com-layout-content">
 				<div class="bread-nav-box clearfix">
 					<p class="tit fl">角色列表</p>
-					<a href="userAdd.php" class="btn btn-success fr mt15">添加角色</a>
+					<a href="roleAdd.php" class="btn btn-success fr mt15">添加角色</a>
 				</div>
 				<div class="pl20 pr20 pt20">
 					<div class="bg-fff">
@@ -67,7 +67,7 @@
 									<td><?php echo $roleData['name']."<span style='color:#f60;font-weight:bold;'>(自身角色)</span>" ?></td>
 									<td>
 										<a href="roleInfo.php?id=<?php echo $roleData['id']; ?>" class="btn btn-info mr10">查看</a>
-										<a href="roleEdit.php?id=<?php echo $v['id']; ?>" class="btn btn-info mr10">修改</a>
+										<a href="roleEdit.php?id=<?php echo $roleData['id']; ?>" class="btn btn-info mr10">修改</a>
 									</td>
 								</tr>
 
