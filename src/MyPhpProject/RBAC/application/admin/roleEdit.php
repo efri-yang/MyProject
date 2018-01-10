@@ -34,15 +34,21 @@
 			<div class="ml20 mr20 pt30 bg-fff">
 					<div class="role-edit-form">
 						<?php
-							$sql="select role.id as rid,role.name as rolename,forbidden,perssion.id,perssion.pid,perssion.name as pname from role inner join user_role on role.id=user_role.uid inner join perssion_role on user_role.rid=perssion_role.rid inner join perssion on perssion_role.pid=perssion.id where user_role.uid=$uid";
+							//通过roleId   通过 permission_role 获取 权限的id 然后在关联到permiss
+							$sql="select role.id as rid,role.name,forbidden,perssion.id,perssion.pid,perssion.name as pname from role inner join perssion_role on role.id=perssion_role.rid inner join perssion on perssion_role.pid=perssion.id where role.id=$uid";
 							$res=$mysqli->query($sql);
-							$resData[];
+						
+
 							while ($row=$res->fetch_assoc()) {
 								$resData[]=$row;
-								$roleName=$row["rolename"];
+								$roleName=$row["name"];
 								$roleId=$row["rid"];
 
 							}
+
+
+
+
 							
 							
 							$tree=new Tree();
@@ -76,7 +82,9 @@
 						        <div class="col-sm-8">
 
 						          	<div class="role-perssion-list">
-						          		<?php echo  displayRolePerssion($resHData); ?>
+						          		
+										<?php echo displayRolePerssion($resHData); ?>
+						          		
 										
 						          	</div>
 						        </div>
