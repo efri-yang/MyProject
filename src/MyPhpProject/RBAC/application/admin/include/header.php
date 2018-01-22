@@ -1,7 +1,9 @@
 <?php
-    $sql="select user.id as userid, user.username,avatar,user_role.rid,role.pid from user inner join user_role on user.id=user_role.uid inner join role on role.id=user_role.rid where user.id='$userId'";
+    $sql="select user.id as userid, user.username,avatar,user_role.rid,role.pid,group_concat(perssion_role.pid) as perId,group_concat(perssion.url) from user inner join user_role on user.id=user_role.uid inner join role on role.id=user_role.rid inner join perssion_role on perssion_role.rid=user_role.rid inner join perssion on perssion.id=perssion_role.pid   where user.id='$userid' group by(userid)";
     $result=$mysqli->query($sql);
     $userInfoData=$result->fetch_assoc();
+
+    print_r($userInfoData);
 
 
     
