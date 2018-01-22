@@ -47,10 +47,6 @@
 		}else{
 			resultDrawGuide(0,"删除失败！","roleList.php");
 		}
-
-		
-
-
 	?>
 </body>
 </html>
