@@ -25,8 +25,8 @@
 </head>
 <body>
     <?php
-
         include("./include/header.php");
+        
     ?>
 	  <div class="com-layout-container">
 			<div class="com-layout-aside">
@@ -57,9 +57,7 @@
                     <p>babababababababbaba.............................................</p>
                 </div>
 
-                <?php 
-                    $hasPermission=checkPermission($userId,"admin.php");
-                 ?>
+                
 			</div>
 	  </div>
 </body>

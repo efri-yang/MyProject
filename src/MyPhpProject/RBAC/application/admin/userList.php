@@ -3,7 +3,7 @@
     include(ROOT_PATH."/application/admin/common/common.php");
     $userId=$_SESSION["userid"];
     sessionDrawGuide($userId,"login.php");
-    $urlFileName=getUrlFileName();
+   
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,9 +18,7 @@
 
 </head>
 <body>
-	<?php
-		checkPermission($userId,$urlFileName);
-	?>
+	
 	<?php
         include("./include/header.php");
     ?>

@@ -71,6 +71,7 @@
 
 						?>
 						<form class="form-horizontal" action="roleEditDo.php?id=<?php echo $uid; ?>" method='post'>
+							
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">角色名称</label>
 						        <div class="col-sm-5">

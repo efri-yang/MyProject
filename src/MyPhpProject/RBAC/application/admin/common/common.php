@@ -38,32 +38,30 @@
 	}
 
 
-	function permissionSave($uid){
-		 global $mysqli;
-		$sql01="select perssion.id,perssion.pid,perssion.name,perssion.url,perssion.is_last from user_role inner join perssion_role on user_role.rid=perssion_role.rid inner join perssion on perssion_role.pid=perssion.id where user_role.uid=$uid";
+	function getUserInfoData($uid){
+		global $mysqli;
+		$sql01="select user.id as userid, user.username,avatar,user_role.rid,role.pid,group_concat(perssion_role.pid) as perId,group_concat(perssion.url) as url from user inner join user_role on user.id=user_role.uid inner join role on role.id=user_role.rid inner join perssion_role on perssion_role.rid=user_role.rid inner join perssion on perssion.id=perssion_role.pid   where user.id='$uid' group by(userid)";
 		$result=$mysqli->query($sql01);
 		while ($row=$result->fetch_assoc()) {
 			$resData[]=$row;
 		}
 
+		$_SESSION["perssion"]=explode(",",$userInfoData["url"]);
+
 		return $resData;
 	}
 
-	function checkPermission($uid,$urlFileName){
-		$hasPermission=false;
-		$resData=permissionSave($uid);
-		foreach ($resData as $key => $v) {
-			if($v["url"]==$urlFileName){
-				$hasPermission=true;
-				break;
-			}else{
-				if($key==(count($resData)-1)){
-					resultDrawGuide(0,"您没有权限,请联系管理员！","",false);
+	function checkPermission($urlFileName){
+		$perssionArr=$_SESSION["perssion"];
+		
+		foreach ($perssionArr as $key => $value) {
+			if(strtolower($value) !=$urlFileName && ((count($perssionArr)-1)==$key)){
+					resultDrawGuide(0,"您没有权限","",false);
 					exit();
-				}
+			}else{
+				break;
 			}
 		}
-		return $hasPermission;
 	}
 
 	

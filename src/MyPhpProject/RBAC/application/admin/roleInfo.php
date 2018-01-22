@@ -46,8 +46,12 @@
 
 							}
 
+							// print_r($resData);
+
 							$tree=new Tree();
 							$resHData=$tree->hTree($resData);
+
+
 
 							function displayRolePerssion($data,$str="",$hasSub=false,$step=0){
 								$str.='<div class="role-perssion-tree '.(!!$hasSub ? "sub" :"").'">';
@@ -63,6 +67,7 @@
 
 						?>
 						<div class="form-horizontal">
+							
 							<div class="form-group">
 						        <label class="col-sm-1 control-label">角色名称</label>
 						        <div class="col-sm-5">
