@@ -1,4 +1,13 @@
 <?php
+
+class TextInput{
+	$label="asdfasdf";
+	public function __toString(){
+		return $this->label;
+	}
+}
+
+$p1=new TextInput();
 	
 	// function get_file($filename){
 	// 	return file_get_contents($filename);
@@ -11,18 +20,18 @@
 	// echo call_user_func_array($function,$args);
 
 	
-	$food="pizza";
-	$drink="beer";
+	// $food="pizza";
+	// $drink="beer";
 
-	function party(){
-		global $food,$drink;
-		unset($food);
-		unset($GLOBALS['drink']);
-	}
+	// function party(){
+	// 	global $food,$drink;
+	// 	unset($food);
+	// 	unset($GLOBALS['drink']);
+	// }
 
-	print "$food:$drink"."<br/>";
-	party();
-	print "$food:$drink"."<br/>";
+	// print "$food:$drink"."<br/>";
+	// party();
+	// print "$food:$drink"."<br/>";
 	//pizza:beer
 	//pizza:
 
