@@ -11,7 +11,8 @@
 
 namespace think;
 
-use think\exception\ClassNotFoundException;
+
+
 
 class Loader
 {
@@ -37,7 +38,7 @@ class Loader
     // 自动加载
     public static function autoload($class)
     {
-        
+
         // 检测命名空间别名
         if (!empty(self::$namespaceAlias)) {
             $namespace = dirname($class);
@@ -48,7 +49,7 @@ class Loader
                 }
             }
         }
-
+        //通过Class 名字找到文件 然后把文件包进来
         if ($file = self::findFile($class)) {
             // Win环境严格区分大小写
             // pathinfo($file, PATHINFO_FILENAME)==index.php取得index
@@ -74,10 +75,14 @@ class Loader
         }
 
         // 查找 PSR-4
+        // 将$class 中的 
+        echo $class."<br/>"; //think\Route   think\Config  think\Validate
         $logicalPathPsr4 = strtr($class, '\\', DS) . EXT;
-
-        $first = $class[0];
+        // echo $logicalPathPsr4."<br/>";
+        $first = $class[0]; // t t t
+        
         if (isset(self::$prefixLengthsPsr4[$first])) {
+           
             foreach (self::$prefixLengthsPsr4[$first] as $prefix => $length) {
                 if (0 === strpos($class, $prefix)) {
                     foreach (self::$prefixDirsPsr4[$prefix] as $dir) {
@@ -241,25 +246,46 @@ class Loader
     public static function register($autoload = '')
     {
 
+
+
+/*
+spl_autoload_register(function ($class_name) {
+    require_once $class_name . '.php';
+});   我们在new ClassName 的时候 会自动加载文件
+
+ */
+
         // 注册系统自动加载  抛出异常    参数2：添加函数到队列之首，而不是队列尾部
+        // 注册好自动加载函数后 以后如果 new 那么就会 自动执行这个加载函数
         spl_autoload_register($autoload ?: 'think\\Loader::autoload', true, true);
+
+
         // 注册命名空间定义
+        // LIB_PATH=..../thinkphp/library/
         self::addNamespace([
             'think'    => LIB_PATH . 'think' . DS,
             'behavior' => LIB_PATH . 'behavior' . DS,
             'traits'   => LIB_PATH . 'traits' . DS,
         ]);
+
         // 加载类库映射文件
+        // G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\runtime\
+        // is_file — 判断给定文件名是否为一个正常的文件G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\runtime\classmap.php
         if (is_file(RUNTIME_PATH . 'classmap' . EXT)) {
             self::addClassMap(__include_file(RUNTIME_PATH . 'classmap' . EXT));
         }
 
         // Composer自动加载支持
+        // s_dir — 判断给定文件名是否是一个目录
+        // VENDOR_PATH=G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\vendor\composer
         if (is_dir(VENDOR_PATH . 'composer')) {
             self::registerComposerLoader();
         }
 
         // 自动加载extend目录
+        // rtrim — 删除字符串末端的空白字符（或者其他字符）
+//EXTEND_PATH=G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\extend\   扩展类库目录 去掉 extend 后面的斜杠
+//G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\extend 
         self::$fallbackDirsPsr4[] = rtrim(EXTEND_PATH, DS);
     }
 
