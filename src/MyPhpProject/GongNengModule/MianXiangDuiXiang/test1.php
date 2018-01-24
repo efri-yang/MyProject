@@ -34,9 +34,30 @@ $p1=new TextInput();
 	// print "$food:$drink"."<br/>";
 	//pizza:beer
 	//pizza:
-
-
 	
+	interface Nameable{
+		public function getName();
+		public function setName($name);
+	}
+	
+	class Book implements Nameable{
+		private $name;
+		public function getName(){
+			return $this->name;
+		}
+		public function setName($name){
+			return $this->name=$name;
+		}
+	}
+	
+
+	$book1=class_implements('Book');
+
+	$book2=new ReflectionClass("Book");
+
+	if($book2->implementsInterface('Nameable')){
+		print "Book implements Nameable\n";
+	}
 
 	
 ?>

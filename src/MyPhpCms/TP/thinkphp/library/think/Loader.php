@@ -37,6 +37,7 @@ class Loader
     // 自动加载
     public static function autoload($class)
     {
+        
         // 检测命名空间别名
         if (!empty(self::$namespaceAlias)) {
             $namespace = dirname($class);
@@ -49,8 +50,8 @@ class Loader
         }
 
         if ($file = self::findFile($class)) {
-
             // Win环境严格区分大小写
+            // pathinfo($file, PATHINFO_FILENAME)==index.php取得index
             if (IS_WIN && pathinfo($file, PATHINFO_FILENAME) != pathinfo(realpath($file), PATHINFO_FILENAME)) {
                 return false;
             }
@@ -239,7 +240,8 @@ class Loader
     // 注册自动加载机制
     public static function register($autoload = '')
     {
-        // 注册系统自动加载
+
+        // 注册系统自动加载  抛出异常    参数2：添加函数到队列之首，而不是队列尾部
         spl_autoload_register($autoload ?: 'think\\Loader::autoload', true, true);
         // 注册命名空间定义
         self::addNamespace([
