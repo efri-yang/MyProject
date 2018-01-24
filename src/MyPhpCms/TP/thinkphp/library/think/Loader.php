@@ -24,6 +24,42 @@ class Loader
     protected static $namespaceAlias = [];
 
     // PSR-4
+    // 
+    /**
+
+Array
+(
+    [t] => Array
+        (
+            [think\] => 6
+            [traits\] => 7
+        )
+
+    [b] => Array
+        (
+            [behavior\] => 9
+        )
+
+)
+    $prefixDirsPsr4=Array
+(
+    [think\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\think
+        )
+
+    [behavior\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\behavior
+        )
+
+    [traits\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\traits
+        )
+
+)
+     */ 
     private static $prefixLengthsPsr4 = [];
     private static $prefixDirsPsr4    = [];
     private static $fallbackDirsPsr4  = [];
@@ -229,6 +265,7 @@ class Loader
             //self::$prefixLengthsPsr4[t][traits\]=7
             //self::$prefixLengthsPsr4[a][app\]=4
             self::$prefixLengthsPsr4[$prefix[0]][$prefix] = $length;
+
             //self::$prefixLengthsPsr4[think\]=4
             self::$prefixDirsPsr4[$prefix]                = (array) $paths;
 
