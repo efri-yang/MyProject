@@ -26,8 +26,8 @@ class Loader
     // PSR-4
     // 
     /**
-
-Array
+前缀长度
+$prefixLengthsPsr4=Array
 (
     [t] => Array
         (
@@ -41,6 +41,8 @@ Array
         )
 
 )
+
+前缀目录数组
     $prefixDirsPsr4=Array
 (
     [think\] => Array
@@ -92,7 +94,7 @@ Array
             if (IS_WIN && pathinfo($file, PATHINFO_FILENAME) != pathinfo(realpath($file), PATHINFO_FILENAME)) {
                 return false;
             }
-
+           
             __include_file($file);
             return true;
         }
@@ -105,6 +107,7 @@ Array
      */
     private static function findFile($class)
     {
+
         if (!empty(self::$map[$class])) {
             // 类库映射
             return self::$map[$class];
@@ -118,10 +121,14 @@ Array
         $first = $class[0]; // t t t
         
         if (isset(self::$prefixLengthsPsr4[$first])) {
-           
+            
             foreach (self::$prefixLengthsPsr4[$first] as $prefix => $length) {
                 if (0 === strpos($class, $prefix)) {
                     foreach (self::$prefixDirsPsr4[$prefix] as $dir) {
+                        // echo $logicalPathPsr4."<br/>";
+                        // $logicalPathPsr4=think\Config.php 
+                        //  substr($logicalPathPsr4, $length) 就是获取获取Config.php 
+                        // echo substr($logicalPathPsr4, $length);
                         if (is_file($file = $dir . DS . substr($logicalPathPsr4, $length))) {
                             return $file;
                         }
@@ -130,11 +137,19 @@ Array
             }
         }
 
+
         // 查找 PSR-4 fallback dirs
+        // 
+        
+
+
         foreach (self::$fallbackDirsPsr4 as $dir) {
+
             if (is_file($file = $dir . DS . $logicalPathPsr4)) {
+
                 return $file;
             }
+            
         }
 
         // 查找 PSR-0
@@ -148,6 +163,7 @@ Array
         }
 
         if (isset(self::$prefixesPsr0[$first])) {
+           
             foreach (self::$prefixesPsr0[$first] as $prefix => $dirs) {
                 if (0 === strpos($class, $prefix)) {
                     foreach ($dirs as $dir) {
@@ -192,6 +208,42 @@ Array
         } else {
             self::addPsr4($namespace . '\\', rtrim($path, DS), true);
         }
+        /**
+         * 注册好以后，prefixLengthsPsr4 就变成如下值
+         * $prefixLengthsPsr4=Array
+(
+    [t] => Array
+        (
+            [think\] => 6
+            [traits\] => 7
+        )
+
+    [b] => Array
+        (
+            [behavior\] => 9
+        )
+
+)
+        * $prefixDirsPsr4 就变成如下值
+        *  $prefixDirsPsr4=Array
+(
+    [think\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\think
+        )
+
+    [behavior\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\behavior
+        )
+
+    [traits\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\traits
+        )
+
+)
+         */
 
 
     }
@@ -309,7 +361,7 @@ Array
          */
 
         // 注册系统自动加载  抛出异常    参数2：添加函数到队列之首，而不是队列尾部
-        // 注册好自动加载函数后 以后如果 new 那么就会 自动执行这个加载函数
+        // 注册好自动加载函数后 以后如果 new 或者 Class::method 那么就会 自动执行这个加载函数
         spl_autoload_register($autoload ?: 'think\\Loader::autoload', true, true);
 
 
@@ -321,7 +373,7 @@ Array
             'traits'   => LIB_PATH . 'traits' . DS,
         ]);
 
-        print_r(self::$prefixLengthsPsr4);
+        
 
        
 
@@ -331,6 +383,8 @@ Array
         if (is_file(RUNTIME_PATH . 'classmap' . EXT)) {
             self::addClassMap(__include_file(RUNTIME_PATH . 'classmap' . EXT));
         }
+
+        
 
         // Composer自动加载支持
         // s_dir — 判断给定文件名是否是一个目录
