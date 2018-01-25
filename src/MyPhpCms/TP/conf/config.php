@@ -8,6 +8,8 @@
 	// ]
 	
 	return [
-		
+		'root_namespace' => [
+			'my' => '../application/extend/my/'
+		]
 	];
 ?>

@@ -17,8 +17,9 @@
 
 		
 		 public function index(){
-		 	dump(Config("nav_set"));
-		 	// return $this->fetch();
+		 	
+			$Test = new \my\Test();
+			$Test->sayHello();
 		 }
 
 		  public function login(){

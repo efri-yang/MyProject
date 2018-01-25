@@ -18,6 +18,4 @@ define('CONF_PATH',__DIR__.'/../conf/');
 
 
 
-
-define('BIND_MODULE','admin/index');
 require __DIR__ . '/../thinkphp/start.php';
