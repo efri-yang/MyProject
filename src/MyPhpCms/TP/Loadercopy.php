@@ -11,7 +11,8 @@
 
 namespace think;
 
-use think\exception\ClassNotFoundException;
+
+
 
 class Loader
 {
@@ -23,6 +24,43 @@ class Loader
     protected static $namespaceAlias = [];
 
     // PSR-4
+    // 
+    /**
+
+Array
+(
+    [t] => Array
+        (
+            [think\] => 6
+            [traits\] => 7
+        )
+
+    [b] => Array
+        (
+            [behavior\] => 9
+        )
+
+)
+
+    $prefixDirsPsr4=Array
+(
+    [think\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\think
+        )
+
+    [behavior\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\behavior
+        )
+
+    [traits\] => Array
+        (
+            [0] => E:\Xampp\htdocs\MyProject\src\MyPhpCms\TP\thinkphp\library\traits
+        )
+
+)
+     */ 
     private static $prefixLengthsPsr4 = [];
     private static $prefixDirsPsr4    = [];
     private static $fallbackDirsPsr4  = [];
@@ -37,6 +75,7 @@ class Loader
     // 自动加载
     public static function autoload($class)
     {
+
         // 检测命名空间别名
         if (!empty(self::$namespaceAlias)) {
             $namespace = dirname($class);
@@ -47,10 +86,10 @@ class Loader
                 }
             }
         }
-
+        //通过Class 名字找到文件 然后把文件包进来
         if ($file = self::findFile($class)) {
-
             // Win环境严格区分大小写
+            // pathinfo($file, PATHINFO_FILENAME)==index.php取得index
             if (IS_WIN && pathinfo($file, PATHINFO_FILENAME) != pathinfo(realpath($file), PATHINFO_FILENAME)) {
                 return false;
             }
@@ -73,10 +112,14 @@ class Loader
         }
 
         // 查找 PSR-4
+        // 将$class 中的 
+        // echo $class."<br/>"; //think\Route   think\Config  think\Validate
         $logicalPathPsr4 = strtr($class, '\\', DS) . EXT;
-
-        $first = $class[0];
+        // echo $logicalPathPsr4."<br/>";
+        $first = $class[0]; // t t t
+        
         if (isset(self::$prefixLengthsPsr4[$first])) {
+           
             foreach (self::$prefixLengthsPsr4[$first] as $prefix => $length) {
                 if (0 === strpos($class, $prefix)) {
                     foreach (self::$prefixDirsPsr4[$prefix] as $dir) {
@@ -138,15 +181,20 @@ class Loader
     }
 
     // 注册命名空间
+    // '\\' 这个就是一个转义的问题
+    // rtrim($paths, DS) 去掉最后一个斜杠或者是空格
     public static function addNamespace($namespace, $path = '')
     {
         if (is_array($namespace)) {
             foreach ($namespace as $prefix => $paths) {
+                
                 self::addPsr4($prefix . '\\', rtrim($paths, DS), true);
             }
         } else {
             self::addPsr4($namespace . '\\', rtrim($path, DS), true);
         }
+
+
     }
 
     // 添加Ps0空间
@@ -190,6 +238,8 @@ class Loader
     // 添加Psr4空间
     private static function addPsr4($prefix, $paths, $prepend = false)
     {
+        
+        //是或否有key
         if (!$prefix) {
             // Register directories for the root namespace.
             if ($prepend) {
@@ -206,11 +256,21 @@ class Loader
         } elseif (!isset(self::$prefixDirsPsr4[$prefix])) {
             // Register directories for a new namespace.
             $length = strlen($prefix);
+            //think\  behavior\  traits\  app\
             if ('\\' !== $prefix[$length - 1]) {
                 throw new \InvalidArgumentException("A non-empty PSR-4 prefix must end with a namespace separator.");
             }
+           
+            //self::$prefixLengthsPsr4[t][think\]=6
+            //self::$prefixLengthsPsr4[b][behavior\]=9
+            //self::$prefixLengthsPsr4[t][traits\]=7
+            //self::$prefixLengthsPsr4[a][app\]=4
             self::$prefixLengthsPsr4[$prefix[0]][$prefix] = $length;
+
+            //self::$prefixLengthsPsr4[think\]=4
             self::$prefixDirsPsr4[$prefix]                = (array) $paths;
+
+
         } elseif ($prepend) {
             // Prepend directories for an already registered namespace.
             self::$prefixDirsPsr4[$prefix] = array_merge(
@@ -239,25 +299,51 @@ class Loader
     // 注册自动加载机制
     public static function register($autoload = '')
     {
-        // 注册系统自动加载
+
+
+
+        /*
+        spl_autoload_register(function ($class_name) {
+            require_once $class_name . '.php';
+        });   我们在new ClassName 的时候 会自动加载文件
+
+         */
+
+        // 注册系统自动加载  抛出异常    参数2：添加函数到队列之首，而不是队列尾部
+        // 注册好自动加载函数后 以后如果 new 那么就会 自动执行这个加载函数
         spl_autoload_register($autoload ?: 'think\\Loader::autoload', true, true);
+
+
         // 注册命名空间定义
+        // LIB_PATH=..../thinkphp/library/
         self::addNamespace([
             'think'    => LIB_PATH . 'think' . DS,
             'behavior' => LIB_PATH . 'behavior' . DS,
             'traits'   => LIB_PATH . 'traits' . DS,
         ]);
+
+
+
+       
+
         // 加载类库映射文件
+        // G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\runtime\
+        // is_file — 判断给定文件名是否为一个正常的文件G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\runtime\classmap.php
         if (is_file(RUNTIME_PATH . 'classmap' . EXT)) {
             self::addClassMap(__include_file(RUNTIME_PATH . 'classmap' . EXT));
         }
 
         // Composer自动加载支持
+        // s_dir — 判断给定文件名是否是一个目录
+        // VENDOR_PATH=G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\vendor\composer
         if (is_dir(VENDOR_PATH . 'composer')) {
             self::registerComposerLoader();
         }
 
         // 自动加载extend目录
+        // rtrim — 删除字符串末端的空白字符（或者其他字符）
+        //EXTEND_PATH=G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\extend\   扩展类库目录 去掉 extend 后面的斜杠
+        //G:\xampp\htdocs\MyProject\src\MyPhpCms\TP\extend 
         self::$fallbackDirsPsr4[] = rtrim(EXTEND_PATH, DS);
     }
 

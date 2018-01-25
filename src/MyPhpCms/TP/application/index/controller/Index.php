@@ -11,8 +11,8 @@
 
 		
 		 public function index(){
-		 		$this->assign('name','ThinkPHP');
-		 		return $this->fetch('index');
+		 		$this->assign('my',"ccccccccc");
+				return $this->fetch('index');
 			 
 		 }
 
