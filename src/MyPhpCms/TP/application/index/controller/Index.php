@@ -1,6 +1,6 @@
 <?php
 	namespace app\index\controller;
-
+	use think\Config;
 	use think\Controller;
 	use think\View;
 	use think\Loader;
@@ -18,8 +18,7 @@
 		
 		 public function index(){
 		 	
-			$Test = new \my\Test();
-			$Test->sayHello();
+			print_r(config::get());
 		 }
 
 		  public function login(){

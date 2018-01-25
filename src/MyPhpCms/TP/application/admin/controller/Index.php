@@ -3,7 +3,8 @@
 	use think\Controller;
 	class Index extends Controller{
 		public function index(){
-			echo "<h1>asdfasdf</h1>";
+			$data = ['name'=>'thinkphp','url'=>'thinkphp.cn'];
+			return ['data'=>$data,'code'=>1,'message'=>'操作完成'];
 		}
 	}
 

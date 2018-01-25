@@ -10,6 +10,7 @@
 	return [
 		'root_namespace' => [
 			'my' => '../application/extend/my/'
-		]
+		],
+		'testConfig'=>"TP/Conf/config.php"
 	];
 ?>
