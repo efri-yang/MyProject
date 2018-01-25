@@ -1,7 +1,7 @@
 <?php
 	
 	return [
-		'app_status'             => 'office',
+		'app_debug'              => true,
 		
 	];
 ?>

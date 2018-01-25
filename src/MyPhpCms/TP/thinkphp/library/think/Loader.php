@@ -322,7 +322,7 @@ Array
             'traits'   => LIB_PATH . 'traits' . DS,
         ]);
 
-        print_r(self::$prefixLengthsPsr4);
+
 
        
 
