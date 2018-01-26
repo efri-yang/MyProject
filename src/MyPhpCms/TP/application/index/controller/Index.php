@@ -6,15 +6,22 @@
 	use think\Request;
 	use think\View;
 
+	use app\index\user;
+
 
 	
 
 	
 	class Index extends Controller{
-		public function index(){
-			$event = controller('Blog', 'event');
-			echo $event->insert();
+		public function index($id=10){
+			$request = Request::instance();
+			dump($request->get());
+			
 
+		}
+
+		public function hello(){
+			return "index模块下index控制器下的hello方法！";
 		}
 		
 		

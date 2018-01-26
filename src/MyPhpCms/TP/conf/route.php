@@ -1,6 +1,5 @@
 <?php 
 	return [
-		"index/:id"=>"index/index/index"
+		// "index/:id"=>["index/index/index",[],['name'=>'\d+']]
 	]
-	
 ?>
