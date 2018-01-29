@@ -7,6 +7,8 @@
 	use think\View;
 	use think\Db;
 
+	use app\index\model\Usertest;
+
 
 	
 
@@ -17,10 +19,13 @@
 	class Index extends Controller{
 		public function index(){
 			
-			Db::table('think_user')->chunk(2, function($users) {
-				print_r($users);
-			});
+			$user=new Usertest();
+			$user->username = 'ThinkPHP';
+			$user->save();
 			
+// 			$user = Usertest::find(3);
+// $user->username = 'THINKPHP';
+// $user->save();
 			
 		}
 		public function hello(){
