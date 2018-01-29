@@ -15,7 +15,7 @@
 	class Index extends Controller{
 		public function index($id=10){
 			$request = Request::instance();
-			dump($request->get());
+			dump($request->only("id"));
 			
 
 		}
