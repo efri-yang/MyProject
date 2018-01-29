@@ -16,17 +16,10 @@
 		public function index($id=10){
 			$request = Request::instance();
 			dump($request->only("id"));
-			
-
 		}
-
 		public function hello(){
 			return "index模块下index控制器下的hello方法！";
-		}
-		
-		
-		 
-		 
+		}	 
 	}
 
 ?>
