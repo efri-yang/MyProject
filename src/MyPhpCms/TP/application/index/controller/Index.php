@@ -5,17 +5,23 @@
 	use think\Route;
 	use think\Request;
 	use think\View;
+	use think\Db;
 
-	use app\index\user;
+
+	
 
 
 	
 
 	
 	class Index extends Controller{
-		public function index($id=10){
-			$request = Request::instance();
-			dump($request->only("id"));
+		public function index(){
+			
+			Db::table('think_user')->chunk(2, function($users) {
+				print_r($users);
+			});
+			
+			
 		}
 		public function hello(){
 			return "index模块下index控制器下的hello方法！";
