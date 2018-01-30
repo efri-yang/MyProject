@@ -7,7 +7,8 @@
 	use think\View;
 	use think\Db;
 
-	use app\index\model\Usertest;
+	use app\index\model\User;
+	use app\index\model\Message;
 
 
 	
@@ -18,19 +19,12 @@
 	
 	class Index extends Controller{
 		public function index(){
-			
-			// $user=new Usertest();
-			$user = Usertest::get(1);
-			echo $user->toJson();
-			
-// 			$user = Usertest::find(3);
-// $user->username = 'THINKPHP';
-// $user->save();
-			
+			$user = User::get(13);
+			$res=$user->message()->select();
+			//message 要加括号！！！！
+			dump(collection($res)->toArray());
+			//输出array(array(),array())	
 		}
-		public function hello(){
-			return "index模块下index控制器下的hello方法！";
-		}	 
 	}
 
 ?>
