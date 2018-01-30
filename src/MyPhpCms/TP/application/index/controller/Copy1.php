@@ -22,8 +22,18 @@
 			// foreach ($res as $key => $value) {
 			// 	dump($value->toArray());
 			// }
-			$list=Usercopy::get(1); //对象类型
-			echo $list->toJson();
+			// Usercopy::event('before_insert', function ($user) {
+			// 	if ($user->age != 1) {
+			// 		return false;
+			// 	}
+			// });
+			$user=new Usercopy();
+			$user->data([
+				'username' => 'thinkphpxxxx',
+				'age' =>20
+			]);
+			$user->save();
+			
 			
 
 		}		

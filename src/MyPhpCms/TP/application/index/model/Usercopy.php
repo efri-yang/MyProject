@@ -2,16 +2,16 @@
 	namespace app\index\model;
 	use think\Model;
 	class Usercopy extends Model{
-		protected $resultSetType = 'collection';
+		// protected $resultSetType = 'collection';
 		protected $autoWriteTimestamp = false;
-		protected function scopeThinkphp($query){
-			$query->where('username','thinkphp')->field("uid,username");
-		}
-		protected function scopeAge($query){
-			$query->where("age",">",10);
-		}
+		protected static function init(){
+			User::event('before_insert', function ($user) {
+				if ($user->status != 1) {
+					return false;
+				}
+			});
+		}	
 		
-	}
 
-	
+	}
 ?>

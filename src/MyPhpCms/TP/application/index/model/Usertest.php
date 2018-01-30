@@ -3,8 +3,13 @@
 	use think\Model;
 	class Usertest extends Model{
 		protected $autoWriteTimestamp = false;
+
+
 		
 	}
+
+	
+
 
 	// class Usertest extends Model{
 	// 	protected $autoWriteTimestamp = false;
