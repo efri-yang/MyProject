@@ -1,7 +1,7 @@
 <?php
 	namespace app\index\model;
 	use think\Model;
-	class Usertcopy extends Model{
+	class Usertest extends Model{
 		protected $autoWriteTimestamp = false;
 		
 	}

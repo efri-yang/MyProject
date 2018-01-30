@@ -16,12 +16,14 @@
 			// $res=Usercopy::destroy(function($query){
 			// 	$query->where("uid",10);
 			// });
-			$res=Usercopy::scope(function($query){
-						$query->where('age','>',10)->limit(10);
-				})->select();
-			foreach ($res as $key => $value) {
-				dump($value->toArray());
-			}
+			// $res=Usercopy::scope(function($query){
+			// 			$query->where('age','>',10)->limit(10);
+			// 	})->select();
+			// foreach ($res as $key => $value) {
+			// 	dump($value->toArray());
+			// }
+			$list=Usercopy::get(1); //对象类型
+			echo $list->toJson();
 			
 
 		}		

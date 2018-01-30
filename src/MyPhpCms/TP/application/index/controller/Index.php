@@ -19,8 +19,9 @@
 	class Index extends Controller{
 		public function index(){
 			
-			$user=new Usertest();
-			
+			// $user=new Usertest();
+			$user = Usertest::get(1);
+			echo $user->toJson();
 			
 // 			$user = Usertest::find(3);
 // $user->username = 'THINKPHP';
