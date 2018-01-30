@@ -20,8 +20,7 @@
 		public function index(){
 			
 			$user=new Usertest();
-			$user->username = 'ThinkPHP';
-			$user->save();
+			
 			
 // 			$user = Usertest::find(3);
 // $user->username = 'THINKPHP';
