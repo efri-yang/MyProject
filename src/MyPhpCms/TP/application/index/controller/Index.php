@@ -19,11 +19,14 @@
 	
 	class Index extends Controller{
 		public function index(){
-			$user = User::get(13);
-			$res=$user->message()->select();
-			//message 要加括号！！！！
-			dump(collection($res)->toArray());
-			//输出array(array(),array())	
+			
+			// return $this->fetch("index",["name"=>"yyh00001","email"=>"948061564@qq.com","__PUBLIC__"=>"ASDFASDFASDF"]);
+			$this->view->engine->layout(true); 
+			return $this->fetch();
+		}
+
+		public function login(){
+			return $this->fetch();
 		}
 	}
 
