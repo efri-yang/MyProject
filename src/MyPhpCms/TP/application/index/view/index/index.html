@@ -1,20 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    {block name="title"}<title>网站标题</title>{/block}
-    <link rel="stylesheet" type="text/css" href="__STATIC__/css/base.css">
-    <link rel="stylesheet" type="text/css" href="__STATIC__/js/bootstrap/css/bootstrap.css">
-    <script type="text/javascript" src="__STATIC__/js/jquery/jquery-1.12.4.js"></script>
-    <script type="text/javascript" src="__STATIC__/js/bootstrap/js/bootstrap.js"></script>
-</head>
 
-<body>
-{block name="title"}<title>{$web_title}</title>{/block}
+	{include file="header" title="$wbtitle" keywords="开源WEB开发框架" /}
+	{extend name="base" /}
+	{block name="title"}{$title}{/block}
+
+	{block name="menu"}
+		<a href="/" >首页</a>
+		<a href="/info/" >资讯</a>
+		<a href="/bbs/" >论坛</a>
+	{/block}
+
+	{block name="left"}{/block}
+	
    
-   
-sfdasdf
-</body>
-
-</html>
