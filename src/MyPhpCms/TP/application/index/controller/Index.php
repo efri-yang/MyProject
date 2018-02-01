@@ -20,9 +20,9 @@
 	class Index extends Controller{
 		public function index(){
 			
-			// return $this->fetch("index",["name"=>"yyh00001","email"=>"948061564@qq.com","__PUBLIC__"=>"ASDFASDFASDF"]);
 			
-			return $this->fetch("index",["title"=>"网站头部","wbtitle"=>"网站头部1111"]);
+			$this->fetch("index");
+			
 		}
 
 		public function login(){
