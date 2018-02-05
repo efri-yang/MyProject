@@ -54,6 +54,8 @@ class Auth
         $this->controller = $this->request->controller();
         $this->action     = $this->request->action();
         self::$crypt_key  = Config::get('app_key') != null ? Config::get('app_key') : 'beautiful_taoqi';
+
+
     }
 
     /**
@@ -65,6 +67,7 @@ class Auth
     public static function instance($options = [])
     {
         if (is_null(self::$instance)) {
+            echo "xx00";
             self::$instance = new static($options);
         }
         return self::$instance;

@@ -7,9 +7,12 @@
 	use think\View;
 	use think\Db;
 
-	use app\index\model\User;
-	use app\index\model\Message;
+	
 
+
+
+
+	
 
 	
 
@@ -20,14 +23,12 @@
 	class Index extends Controller{
 		public function index(){
 			
-			
-			$this->fetch("index");
+			$auth = new \think\Auth();  
+       		print_r($auth);
 			
 		}
 
-		public function login(){
-			return $this->fetch();
-		}
+		
 	}
 
 ?>
