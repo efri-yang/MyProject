@@ -93,7 +93,7 @@ class Auth
         'auth_group'        => 'auth_group', // 用户组数据表名
         'auth_group_access' => 'auth_group_access', // 用户-用户组关系表
         'auth_rule'         => 'auth_rule', // 权限规则表
-        'auth_user'         => 'member', // 用户信息表
+        'auth_user'         => 'auth_user', // 用户信息表
     ];
 
     /**
@@ -194,9 +194,12 @@ class Auth
     /**
      * 根据用户id获取用户组,返回值为数组
      * @param  $uid int     用户id
-     * @return array       用户所属的用户组 array(
-     *              array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开'),
-     *              ...)
+     * @return array       用户所属的用户组 
+     * array(
+     *         0=>array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开'),
+     *         1=>array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开')
+     *)
+     *             
      */
     public function getGroups($uid)
     {
@@ -205,9 +208,13 @@ class Auth
             return $groups[$uid];
         }
         // 转换表名
+        // $a="a-b-c"; 转成A-b-c;
+        // $a="a_b_c"; 转成ABC
         $auth_group_access = Loader::parseName($this->config['auth_group_access'], 1);
         $auth_group        = Loader::parseName($this->config['auth_group'], 1);
-        // 执行查询
+
+
+        // 执行查询(视图查询)
         $user_groups  = Db::view($auth_group_access, 'uid,group_id')
             ->view($auth_group, 'title,rules', "{$auth_group_access}.group_id={$auth_group}.id", 'LEFT')
             ->where("{$auth_group_access}.uid='{$uid}' and {$auth_group}.status='1'")
@@ -225,6 +232,7 @@ class Auth
      */
     protected function getAuthList($uid, $type)
     {
+
         static $_authList = []; //保存用户验证通过的权限列表
         $t = implode(',', (array)$type);
         if (isset($_authList[$uid . $t])) {
@@ -280,18 +288,21 @@ class Auth
      * 获得用户资料
      * @param $uid
      * @return mixed
+     *
+     *
+     * array("用户id"=>array());
      */
     protected function getUserInfo($uid)
     {
+        //定义一个静态变量
         static $user_info = [];
-
+        //设置了表的前缀 就可以用 Db::name
         $user = Db::name($this->config['auth_user']);
-        // 获取用户表主键
+        // 获取用户表主键getPk() 如果没有 默认的是uid
         $_pk = is_string($user->getPk()) ? $user->getPk() : 'uid';
         if (!isset($user_info[$uid])) {
             $user_info[$uid] = $user->where($_pk, $uid)->find();
         }
-
         return $user_info[$uid];
     }
 }

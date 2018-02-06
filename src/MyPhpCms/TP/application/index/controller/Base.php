@@ -26,10 +26,10 @@
 
 	
 	class Base extends Controller{
-		function __construct(){
+		public function __construct(){
 			echo "Base extends Controller  __construct"."<br/>";
+			parent::__construct();
 		}
-
 		public function _initialize(){
 			echo "Base extends Controller _initialize"."<br/>";
 		}
