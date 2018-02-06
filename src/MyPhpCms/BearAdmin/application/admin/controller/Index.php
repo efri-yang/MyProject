@@ -18,23 +18,24 @@ class Index extends Base
     public function index()
     {
        
-        $sysinfo  = new Sysinfo();
-        $sys_info = [
-            'lang'    => $sysinfo->getLang(),
-            'browser' => $sysinfo->getBrowser(),
-            'ip'      => $sysinfo->getIp(),
-            'city'    => $sysinfo->getCity(),
-            'os'      => $sysinfo->getOS(),
-            'date'    => date('Y-m-d')
-        ];
+       
+        // $sysinfo  = new Sysinfo();
+        // $sys_info = [
+        //     'lang'    => $sysinfo->getLang(),
+        //     'browser' => $sysinfo->getBrowser(),
+        //     'ip'      => $sysinfo->getIp(),
+        //     'city'    => $sysinfo->getCity(),
+        //     'os'      => $sysinfo->getOS(),
+        //     'date'    => date('Y-m-d')
+        // ];
 
-        $Parsedown = new Parsedown();
+        // $Parsedown = new Parsedown();
 
-        $this->assign([
-            'readme'=> $Parsedown->text(file_get_contents(ROOT_PATH.'README.md')),
-            'sys'      => $sys_info,
-        ]);
-        return $this->fetch();
+        // $this->assign([
+        //     'readme'=> $Parsedown->text(file_get_contents(ROOT_PATH.'README.md')),
+        //     'sys'      => $sys_info,
+        // ]);
+        // return $this->fetch();
     }
 
 

@@ -25,16 +25,19 @@
 	
 
 	
-	class Index extends Controller{
+	class Index extends Base{
+		function __construct(){
+			echo "Index extends Base"."<br/>";
+		}
 		public function index(){
 			
 			$Auth =new \auth\Auth(); 
 			
 
-			$Request=Request::instance();
-			$module=$Request->module();
-			$controller=$Request->controller();
-			$action=$Request->action();
+		// 	$Request=Request::instance();
+		// 	$module=$Request->module();
+		// 	$controller=$Request->controller();
+		// 	$action=$Request->action();
 		$name="admin/index/index";
 		  //当前用户id
 		  $uid = '2';
