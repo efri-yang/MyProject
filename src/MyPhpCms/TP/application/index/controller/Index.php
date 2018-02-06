@@ -30,7 +30,6 @@
 		
 		public function _initialize(){
 			echo "Index extends Base _initialize"."<br/>";
-			
 		}
 		public function index(){
 			

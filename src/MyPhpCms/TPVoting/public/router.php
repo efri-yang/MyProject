@@ -2,18 +2,19 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+// $Id$
 
-// [ 应用入口文件 ]
-// __DIR__ 返回的是文件所在的绝对路径但是没有文件自身的名字在内
-// 定义应用目录
-define('APP_PATH', __DIR__ . '/../application/');
-
-
-
-require __DIR__ . '/../thinkphp/start.php';
+if (is_file($_SERVER["DOCUMENT_ROOT"] . $_SERVER["SCRIPT_NAME"])) {
+    return false;
+} else {
+    if (!isset($_SERVER['PATH_INFO'])) {
+        $_SERVER['PATH_INFO'] = $_SERVER['REQUEST_URI'];
+    }
+    require __DIR__ . "/index.php";
+}

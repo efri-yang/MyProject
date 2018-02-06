@@ -18,7 +18,7 @@ class Index extends Base
     public function index()
     {
        
-       echo "Index模块 下index控制器 index 方法 ";
+       
         $sysinfo  = new Sysinfo();
         $sys_info = [
             'lang'    => $sysinfo->getLang(),

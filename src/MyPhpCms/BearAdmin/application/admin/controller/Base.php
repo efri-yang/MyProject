@@ -53,13 +53,13 @@ class Base extends Controller
         parent::__construct();
         //会执行 下面的 __initialize();
 
-        echo "Base extends Controller -__construct";
+        
     }
 
 
     public function _initialize()
     {
-         echo "Base extends Controller  -_initialize";
+         
         $auth = new Auth();
         if ($this->request->isAjax()) {
             if ($auth->is_login()) {

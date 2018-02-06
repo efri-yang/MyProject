@@ -1,19 +1,20 @@
 <?php
 // +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK ]
+// | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006-2015 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
-// | Author: liu21st <liu21st@gmail.com>
+// | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
+namespace tests;
 
-// [ 应用入口文件 ]
-// __DIR__ 返回的是文件所在的绝对路径但是没有文件自身的名字在内
-// 定义应用目录
-define('APP_PATH', __DIR__ . '/../application/');
+class ExampleTest extends TestCase
+{
 
-
-
-require __DIR__ . '/../thinkphp/start.php';
+    public function testBasicExample()
+    {
+        $this->visit('/')->see('ThinkPHP');
+    }
+}
