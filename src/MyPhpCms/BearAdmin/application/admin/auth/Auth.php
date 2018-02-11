@@ -237,6 +237,7 @@ class Auth {
 	 * @param  string $user_name 用户名
 	 * @param  bool $remember
 	 * @return bool
+	 * 登录以后设置 相当于于把一串字符串保存作为user_sign 的标记
 	 */
 	public static function login($user_id, $user_name, $remember = false) {
 		if (empty($user_id) && empty($user_name)) {

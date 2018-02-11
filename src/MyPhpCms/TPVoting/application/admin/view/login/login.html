@@ -14,7 +14,7 @@
     <div class="layui-container page-login">
         <div class="layui-col-md3"></div>
         <div class="layui-col-md6">
-            <form class="layui-form" action="{:url('admin/login/createUser')}" method="post">
+            <form class="layui-form" action="{:url('admin/login/login')}" method="post">
                 <div class="layui-form-item">
                     <label class="layui-form-label">邮箱</label>
                     <div class="layui-input-block">
@@ -40,7 +40,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label"></label>
                     <div class="layui-input-block">
-                        <input type="checkbox" name="like1[read]" lay-skin="primary" title="记住我">
+                        <input type="checkbox" value="1" name="remember" lay-skin="primary" title="记住我">
                     </div>
                 </div>
                 <div class="layui-form-item">

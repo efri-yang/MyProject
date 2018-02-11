@@ -1,11 +1,12 @@
 <?php
-namespace think\common;
+namespace app\admin\common;
 
 use think\Config;
 use think\Db;
 use think\Loader;
 use think\Request;
 use think\Session;
+use think\Cookie;
 
 class Auth {
 	/**
@@ -196,6 +197,7 @@ class Auth {
 	 * 获得用户资料
 	 * @param $uid
 	 * @return mixed
+	 * 声明类属性或方法为静态，就可以不实例化类而直接访问。静态属性不能通过一个类已实例化的对象来访问
 	 */
 	protected function getUserInfo($uid) {
 		static $user_info = [];
@@ -208,6 +210,69 @@ class Auth {
 		}
 
 		return $user_info[$uid];
+	}
+
+	/**
+	 * extend by yyh 2018-02-11
+	 */
+	
+	/**
+	 * 数据签名认证
+	 */
+	public static function dataAuthSign($data){
+		$code=http_build_query($data);
+		$sign = sha1($code);
+		return $sign;
+	}
+
+	public static function login($userId,$userName,$remember=false){
+		if (empty($userId) && empty($userName)) {
+			return false;
+		}
+		$user = [
+			'user_id' => $userId,
+			'user_name' => $userName,
+			'timestamp' => time(),
+		];
+		Session::set('user', $user);
+		Session::set('user_sign', self::dataAuthSign($user));
+
+		if($remember==true){
+			Cookie::set('user',$user);
+			Cookie::set('user_sign',self::dataAuthSign($user));
+		}else{
+			if (Cookie::has('user') || Cookie::has('user_sign')) {
+				Cookie::delete('user');
+				Cookie::delete('user_sign');
+			}
+		}
+	} 
+
+	public static function isLogin(){
+		$user = Session::get('user');
+		if (empty($user)) {
+			if(Cookie::has('user') && Cookie::has('user_sign')){
+				$user =Cookie::get('user');
+				$userSign = Cookie::get('user_sign');
+				$isSign =($userSign == self::dataAuthSign($user)) ? $user : false;
+				if ($isSign){
+					Session::set('user', $user);
+					Session::set('user_sign', $userSign);
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+
+	public static function loginout(){
+		Session::delete('user');
+		Session::delete('user_sign');
+		if (Cookie::has('user')) {
+			Cookie::delete('user');
+			Cookie::delete('user_sign');
+		}
+		return true;
 	}
 }
 ?>
