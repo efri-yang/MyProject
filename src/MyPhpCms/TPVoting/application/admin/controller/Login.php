@@ -1,72 +1,35 @@
 <?php
 namespace app\admin\controller;
-
+use app\admin\model\AuthUser;
 use think\Controller;
-use think\View;
+use think\Loader;
+use think\Request;
 use think\Session;
+use think\Validate;
 
-
-class Login extends Controller
-{
-    public function index()
-    {	
-    	
-    	//当前模块/默认视图目录/当前控制器（ 小写） /当前操作（ 小写） .html
-        return $this->fetch("login");
-    }
-
-    public function  vertify(){
-    	
-		if($_REQUEST["type"]=="ajax"){
-			if($_REQUEST["yzm"]==$_SESSION["authcode"]){
-				echo json_encode(array("valid"=>true));
-			}else{
-				echo json_encode(array("valid"=>false));
+class Login extends Controller {
+	public function index() {
+		//当前模块/默认视图目录/当前控制器（ 小写） /当前操作（ 小写） .html
+		return $this->fetch("login");
+	}
+	public function createUser() {
+		$request = Request::instance();
+		$data = $request->param();
+		$data["password"] = md5($data["password"]);
+		$validate = Loader::validate("UserLogin");
+		if (!$validate->check($data)) {
+			$this->error($validate->getError(), "login/index");
+		} else {
+			$authUser = new AuthUser;
+			$user = $authUser::get(["email" => $data["email"], "password" => $data["password"]]);
+			if (!!$user->id) {
+				Session::set('uid', $user->id);
+				$this->success("登录成功！", "index/index");
+			} else {
+				$this->error("用户名或者密码错误！", "login/index");
 			}
-		}else{
-		    //填充底色
-			$image=imagecreatetruecolor (100,34);
-			$bgcolor=imagecolorallocate($image,255,255,255);
-			imagefill($image,0,0,$bgcolor);
-
-			//填充文字
-			$captch_code;
-			$fontsize=6;
-			$codeStr='12345678';
-			for($i=0;$i<4;$i++){
-				$fontcontent=substr($codeStr,rand(0,strlen($codeStr)-1),1);
-				$fontcolor=imagecolorallocate($image,rand(0,120),rand(0,120),rand(0,120));
-
-				
-				$captch_code.=$fontcontent;
-				$x=($i*100/4)+rand(5,10);
-				$y=rand(5,10);
-				imagestring($image,$fontsize,$x,$y,$fontcontent,$fontcolor); 
-
-			}
-			$_SESSION["authcode"]=$captch_code;
-			
-			//添加点点来点缀
-			
-			for($i=0;$i<200;$i++){
-			  $pointcolor=imagecolorallocate($image,rand(0,120),rand(0,120),rand(0,120));
-			  imagesetpixel($image,rand(1,99),rand(1,29),$pointcolor);
-		    }
-
-		    //添加线来点缀
-		    for($i=0;$i<3;$i++){
-			   $linecolor=imagecolorallocate($image,rand(80,220),rand(80,220),rand(80,220));   
-		       imageline($image,rand(1,99),rand(1,29),rand(1,99),rand(1,29),$linecolor);
-		   }
-		   	header('Content-type: image/jpeg');
-		    ob_clean();
-			imagepng($image);
-			imagedestroy($image);
 
 		}
+	}
 
-    }
-
-
-   
 }
