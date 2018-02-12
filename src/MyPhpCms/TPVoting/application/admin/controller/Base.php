@@ -7,7 +7,7 @@ use think\Session;
 use think\Url;
 
 class Base extends Controller {
-	protected $request, $param, $module, $controller, $action, $url, $requestType, $menuInfo, $webData;
+	protected $request, $param, $module, $controller, $action, $url,$mcUrl,$requestType, $menuInfo, $webData;
 
 	public function __construct() {
 		$this->request = Request::instance();
@@ -16,7 +16,7 @@ class Base extends Controller {
 		$this->controller = $this->request->controller();
 		$this->action = $this->request->action();
 		$this->url = $this->module . "/" . $this->parseName($this->controller) . "/" . $this->action;
-
+		$this->mcUrl=$this->module . "/" . $this->parseName($this->controller) . "/";
 		parent::__construct();
 
 	}
@@ -36,8 +36,13 @@ class Base extends Controller {
 						$this->error('您没有权限,请联系管理员！');
 					}
 				}
+				$this->webData["mc_url"]=$this->mcUrl;
+				$this->webData["left_menu"]=$this->getLeftMenu();
+
+
 				//获取信息保存在某个地方
 				$menuInfo = $this->getMenuInfo();
+
 
 			} else {
 				//没登录直接跳转到登录页面、
@@ -59,6 +64,12 @@ class Base extends Controller {
 
 	protected function getMenuInfo() {
 		return Db::table('think_admin_menu')->where(["url" => $this->url])->find();
+	}
+
+	protected function getLeftMenu() {
+		$auth = new Auth();
+		//(array) $type 就是将type转化成数组类型
+		$t = implode(',', (array) $type);
 	}
 
 }

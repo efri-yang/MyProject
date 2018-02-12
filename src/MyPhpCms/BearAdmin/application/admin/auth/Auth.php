@@ -166,6 +166,7 @@ class Auth {
 		if (isset($_authList[$uid . $t])) {
 			return $_authList[$uid . $t];
 		}
+		//1为实时认证  2为登录验证
 		if (2 == $this->config['auth_type'] && Session::has('_auth_list_' . $uid . $t)) {
 			return Session::get('_auth_list_' . $uid . $t);
 		}
@@ -187,6 +188,7 @@ class Auth {
 		);
 		//读取用户组所有权限规则
 		$rules = Db::name($this->config['auth_rule'])->where($map)->field('condition,name')->select();
+		
 		//循环规则，判断结果。
 		$authList = []; //
 		foreach ($rules as $rule) {
@@ -194,6 +196,9 @@ class Auth {
 				//根据condition进行验证
 				$user = $this->getUserInfo($uid); //获取用户信息,一维数组
 				$command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
+
+				print_r($command);
+				exit();
 				$condition = '';
 				@(eval('$condition=(' . $command . ');'));
 				if ($condition) {
@@ -357,6 +362,7 @@ class Auth {
 
 		static $_authList = []; //保存用户验证通过的权限列表
 		$t = implode(',', (array) $type);
+		//
 		if (isset($_authList[$uid . $t])) {
 
 			return $_authList[$uid . $t];
