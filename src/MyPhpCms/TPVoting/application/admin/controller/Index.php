@@ -1,12 +1,14 @@
 <?php
 namespace app\admin\controller;
+use app\admin\common\Auth;
 use think\Controller;
-use think\Session;
+use think\Request;
 
-class Index extends Controller {
+class Index extends Base {
 	public function index() {
+		$request = Request::instance();
+		$auth = new Auth();
 
-		
 		//当前模块/默认视图目录/当前控制器（ 小写） /当前操作（ 小写） .html
 		return $this->fetch();
 	}

@@ -10,3 +10,9 @@
 			 是超级管理员 那么就通过url 然后 跳转
 			 不是超级管理员
 				检查权限
+
+1、控制器SayAge 中class Sayage 那么在访问的时候 要用admin/say_age/  而模板也要用下划线，这个时候我们获取的控制器的名字是SayAge 而不是say_age 所以我们需要转化
+2、模块名称如果用大写，module得到的还是小写，命名空间不许分大小写例如TEST_M  那么命名空间就是 app\TEST_M\controller  或者是 app\test_m\controller
+3、方法名：index_say indexSay 定义成哪样就访问哪样
+
+所以对于模块名称或控制器的方法是不需要担心任何东西的，命名成什么样子，就用什么样子来设置命名空间和访问路劲！！！但是对于控制器的名称却需要转化，sayAge 那么对应say_age目录下的index.html

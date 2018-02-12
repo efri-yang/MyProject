@@ -87,8 +87,7 @@ class Base extends Controller {
 			if ($auth->is_login()) {
 				$user_id = Session::get('user.user_id');
 				if ($user_id != 1) {
-					echo $user_id . "xxxx11111";
-					exit();
+
 					if (!$auth->check($this->url, $user_id)) {
 						$this->do_error('无权限');
 					}
