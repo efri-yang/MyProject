@@ -197,13 +197,16 @@ class Auth {
 				$user = $this->getUserInfo($uid); //获取用户信息,一维数组
 				$command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
 
-				print_r($command);
-				exit();
-				$condition = '';
+				echo $command;
+				
 				@(eval('$condition=(' . $command . ');'));
+				//https://www.kancloud.cn/a113211/alls/263279
+				//$condition=($user['score'] > 10 and $user['score'] < 10 );
 				if ($condition) {
 					$authList[] = strtolower($rule['name']);
 				}
+				print_r($condition);
+				exit();
 			} else {
 				//只要存在就记录
 				$authList[] = strtolower($rule['name']);
@@ -400,11 +403,14 @@ class Auth {
 				//根据condition进行验证
 				$user = $this->getUserInfo($uid); //获取用户信息,一维数组
 				$command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
-				$condition = '';
+
 				@(eval('$condition=(' . $command . ');'));
 				if ($condition) {
+					echo "sadfasdfsadf";
 					$authList[] = strtolower($rule['menu_id']);
+					
 				}
+
 			} else {
 				//只要存在就记录
 				$authList[] = strtolower($rule['menu_id']);

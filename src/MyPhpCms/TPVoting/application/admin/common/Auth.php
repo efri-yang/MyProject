@@ -180,6 +180,7 @@ class Auth {
 				//根据condition进行验证
 				$user = $this->getUserInfo($uid); //获取用户信息,一维数组
 				$command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
+				
 				@(eval('$condition=(' . $command . ');'));
 				if ($condition) {
 					$authList[] = strtolower($rule['name']);

@@ -10,8 +10,7 @@ function parseName($name, $type = 0, $ucfirst = true) {
 		return strtolower(trim(preg_replace("/[A-Z]/", "_\\0", $name), "_"));
 	}
 }
-$type=1;
-$b=(array) $type;
+@(eval('$condition=(' . $command . ');'));
 
-print_r($b);
+
 ?>
