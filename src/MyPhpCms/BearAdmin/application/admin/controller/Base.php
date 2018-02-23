@@ -186,12 +186,14 @@ class Base extends Controller {
 						$ru = '<li><a><i class="fa ' . $a['icon'] . '"></i> ' . $a['title'] . '</a></li>';
 						$current_nav = $ru . $current_nav;
 						$temp_result = $this->getCurrentNav($arr, $a['parent_id'], $parent_ids, $current_nav);
+						print_r($temp_result);
 						$parent_ids = $temp_result[0];
 						$current_nav = $temp_result[1];
 					}
 				}
 			}
 		}
+
 		return !empty([$parent_ids, $current_nav]) ? [$parent_ids, $current_nav] : false;
 	}
 
@@ -305,6 +307,7 @@ class Base extends Controller {
 			if ($v['url'] == $this->url) {
 				$parent_ids = $this->getMenuParent($menu, $v['menu_id']);
 				$current_id = $v['menu_id'];
+				//返回的是array(0=>array(74,34),1=>"<li></li><li><>")
 				$current_nav = $this->getCurrentNav($menu, $v['menu_id']);
 			}
 		}

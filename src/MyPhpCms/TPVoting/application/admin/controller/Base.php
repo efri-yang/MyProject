@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 use app\admin\common\Auth;
 use think\Controller;
+use think\Db;
 use think\Request;
 use think\Session;
 use think\Url;
@@ -38,6 +39,7 @@ class Base extends Controller {
 				}
 				//获取信息保存在某个地方
 				$menuInfo = $this->getMenuInfo();
+				$this->webData["left_menu"] = $this->getLeftMenu();
 
 			} else {
 				//没登录直接跳转到登录页面、
@@ -46,6 +48,46 @@ class Base extends Controller {
 		}
 	}
 
+	protected function getLeftMenu() {
+		$auth = new Auth();
+		$menu = $auth->getMenuList(Session::get('user.user_id'), 1);
+
+		$parent_ids = array(0 => 0);
+
+		foreach ($menu as $k => $v) {
+
+			if ($v['url'] == $this->url) {
+				$parent_ids = $this->getMenuParent($menu, $v['menu_id']);
+
+			}
+		}
+
+	}
+
+	protected function getMenuParent($arr, $myid, $parent_ids = array()) {
+		$a = $newarr = array();
+		if (is_array($arr)) {
+			foreach ($arr as $id => $a) {
+				if ($a['menu_id'] == $myid) {
+					if ($a['parent_id'] != 0) {
+
+						array_push($parent_ids, $a['parent_id']);
+						$parent_ids = $this->getMenuParent($arr, $a['parent_id'], $parent_ids);
+					}
+				}
+			}
+
+		}
+		return !empty($parent_ids) ? $parent_ids : false;
+	}
+
+	protected function getCurrentNav($arr, $myid, $parent_ids = array(), $current_nav = '') {
+		$a = $newarr = array();
+		if (is_array($arr)) {
+
+		}
+		return !empty([$parent_ids, $current_nav]) ? [$parent_ids, $current_nav] : false;
+	}
 	protected function parseName($name, $type = 0, $ucfirst = true) {
 		if ($type) {
 			$name = preg_replace_callback('/_([a-zA-Z])/', function ($match) {
@@ -58,7 +100,7 @@ class Base extends Controller {
 	}
 
 	protected function getMenuInfo() {
-		return Db::table('think_admin_menu')->where(["url" => $this->url])->find();
+		return Db::table('think_admin_menus')->where(["url" => $this->url])->find();
 	}
 
 }

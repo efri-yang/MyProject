@@ -25,8 +25,8 @@ class Auth {
 		'auth_type' => 1, // 认证方式，1为实时认证；2为登录认证。
 		'auth_group' => 'auth_group', // 用户组数据表名
 		'auth_group_access' => 'auth_group_access', // 用户-用户组关系表
-		'auth_rule' => 'auth_rule', // 权限规则表
-		'auth_user' => 'member', // 用户信息表
+		'auth_rule' => 'auth_rules', // 权限规则表
+		'auth_user' => 'auth_user', // 用户信息表
 	];
 
 	/**
@@ -193,6 +193,68 @@ class Auth {
 		return array_unique($authList);
 	}
 
+	public function getMenuList($uid, $type) {
+		static $_authList = []; //保存用户验证通过的权限列表
+		$t = implode(',', (array) $type);
+		if (isset($_authList[$uid . $t])) {
+			return $_authList[$uid . $t];
+		}
+		if (2 == $this->config['auth_type'] && Session::has('_auth_list_' . $uid . $t)) {
+			return Session::get('_auth_list_' . $uid . $t);
+		}
+		//读取用户所属用户组
+		$groups = $this->getGroups($uid);
+		$ids = []; //保存用户所属用户组设置的所有权限规则id
+		foreach ($groups as $g) {
+			$ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
+		}
+		$ids = array_unique($ids);
+		if (empty($ids)) {
+			$_authList[$uid . $t] = [];
+			return [];
+		}
+		$map = array(
+			'id' => ['in', $ids],
+			'type' => $type,
+			'status' => 1,
+		);
+		$rules = Db::name($this->config['auth_rule'])->where($map)->field('condition,name,menu_id')->select();
+		$authList = [];
+		foreach ($rules as $rule) {
+			if (!empty($rule['condition'])) {
+				$user = $this->getUserInfo($uid); //获取用户信息,一维数组
+				$command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
+				@(eval('$condition=(' . $command . ');'));
+				if ($condition) {
+					$authList[] = strtolower($rule['menu_id']);
+				}
+			} else {
+				$authList[] = strtolower($rule['menu_id']);
+			}
+		}
+		$_authList[$uid . $t] = $authList;
+		if (2 == $this->config['auth_type']) {
+			Session::set('_auth_list_' . $uid . $t, $authList);
+		}
+		//$authList  保存的是menu_Id
+		$authList = array_unique($authList);
+		$idss = []; //保存用户所属用户组设置的所有权限规则id
+		foreach ($authList as $gg) {
+			$idss = array_merge($idss, explode(',', trim($gg, ',')));
+		}
+		$map_menu = array(
+			'menu_id' => ['in', $idss],
+			'is_show' => 1,
+		);
+		$user_id = Session::get('user.user_id');
+		if ($user_id == 1) {
+			$menus = Db::name('admin_menus')->where('is_show=1')->order(["sort_id" => "asc", 'menu_id' => 'asc'])->field('menu_id,title,url,icon,is_show,parent_id')->column('*', 'menu_id');
+		} else {
+			$menus = Db::name('admin_menus')->where($map_menu)->order(["sort_id" => "asc", 'menu_id' => 'asc'])->field('menu_id,title,url,icon,is_show,parent_id')->column('*', 'menu_id');
+		}
+		return $menus;
+	}
+
 	/**
 	 * 获得用户资料
 	 * @param $uid
@@ -276,5 +338,6 @@ class Auth {
 		}
 		return true;
 	}
+
 }
 ?>
