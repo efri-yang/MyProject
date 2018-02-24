@@ -186,9 +186,8 @@ class Base extends Controller {
 						$ru = '<li><a><i class="fa ' . $a['icon'] . '"></i> ' . $a['title'] . '</a></li>';
 						$current_nav = $ru . $current_nav;
 						$temp_result = $this->getCurrentNav($arr, $a['parent_id'], $parent_ids, $current_nav);
-						print_r($temp_result);
 						$parent_ids = $temp_result[0];
-						$current_nav = $temp_result[1];
+						$current_nav = $temp_result[1]; //一系列字符窜<li></li>
 					}
 				}
 			}
@@ -321,12 +320,14 @@ class Base extends Controller {
 
 		foreach ($menu as $k => $v) {
 			$url = url($v['url']);
+
 			$menu[$k]['icon'] = !empty($v['icon']) ? $v['icon'] : 'fa fa-list';
 			$menu[$k]['level'] = $tree->get_level($v['menu_id'], $menu);
 			$max_level = $max_level <= $menu[$k]['level'] ? $menu[$k]['level'] : $max_level;
 			$menu[$k]['url'] = $url;
 		}
 
+		print_r($menu);
 		$tree->init($menu);
 
 		$text_base_one = "<li class='treeview";
