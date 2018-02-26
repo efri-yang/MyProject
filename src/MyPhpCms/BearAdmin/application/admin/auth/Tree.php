@@ -165,6 +165,7 @@ class Tree
      */
     public function get_level($id, $array = array(), $i = 0)
     {
+        //parent_id=0 证明是第一级别  或者 parent_id 找不到对应的键值
         if ($array[$id]['parent_id'] == 0 || empty($array[$array[$id]['parent_id']]) || $array[$id]['parent_id'] == $id) {
             return $i;
         } else {

@@ -304,6 +304,7 @@ class Base extends Controller {
 		$current_nav = ['', ''];
 		foreach ($menu as $k => $v) {
 			if ($v['url'] == $this->url) {
+				//返回的是当前menu_id 所有的父元素的id的集合
 				$parent_ids = $this->getMenuParent($menu, $v['menu_id']);
 				$current_id = $v['menu_id'];
 				//返回的是array(0=>array(74,34),1=>"<li></li><li><>")
@@ -320,7 +321,6 @@ class Base extends Controller {
 
 		foreach ($menu as $k => $v) {
 			$url = url($v['url']);
-
 			$menu[$k]['icon'] = !empty($v['icon']) ? $v['icon'] : 'fa fa-list';
 			$menu[$k]['level'] = $tree->get_level($v['menu_id'], $menu);
 			$max_level = $max_level <= $menu[$k]['level'] ? $menu[$k]['level'] : $max_level;
