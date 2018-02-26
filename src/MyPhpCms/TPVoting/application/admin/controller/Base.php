@@ -59,10 +59,13 @@ class Base extends Controller {
 
 		$parent_ids = array(0 => 0);
 
+		$current_id = 1;
 		foreach ($menu as $k => $v) {
 
 			if ($v['url'] == $this->url) {
 				$parent_ids = $this->getMenuParent($menu, $v['menu_id']);
+				$current_id = $v['menu_id'];
+				
 
 			}
 		}
@@ -108,10 +111,5 @@ class Base extends Controller {
 		return Db::table('think_admin_menus')->where(["url" => $this->url])->find();
 	}
 
-	protected function getLeftMenu() {
-		$auth = new Auth();
-		//(array) $type 就是将type转化成数组类型
-		$t = implode(',', (array) $type);
-	}
-
+	
 }

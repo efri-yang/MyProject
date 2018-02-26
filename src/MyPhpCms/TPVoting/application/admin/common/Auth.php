@@ -344,16 +344,5 @@ class Auth {
 		}
 		return true;
 	}
-
-<<<<<<< HEAD
-=======
-	public function getMenuList($uid, $type){
-		static $_authList = [];
-		//(array) $type 将$type的类型转化成array;
-		$t = implode(',', (array) $type);
-
-
-	}
->>>>>>> 93865c4b985fb3d1f63766473cb3571556e0790e
 }
 ?>
