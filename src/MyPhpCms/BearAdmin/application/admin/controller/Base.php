@@ -123,9 +123,11 @@ class Base extends Controller {
 
 				$this->web_data['left_menu'] = $this->getLeftMenu();
 				$menu_info = $this->getMenuInfo();
+
 				$this->web_data['web_title'] = $menu_info['title'];
 				$this->web_data['log_type'] = $menu_info['log_type'];
 				$user_info = $this->getUserInfo($user_id);
+
 				$this->web_data['user_info'] = $user_info;
 
 				//Debug::remark('end');
@@ -372,7 +374,7 @@ class Base extends Controller {
                             <span>\$title</span>
                             </a>
                          </li>";
-        //<li class='treeview><a href='javascript:void(0);'><i class='fa \$icon'></i><span>\$title</span><span class='pull-right-container'><i class='fa fa-angle-left pull-right'></i></span></a><ul class='treeview-menu">
+		//<li class='treeview><a href='javascript:void(0);'><i class='fa \$icon'></i><span>\$title</span><span class='pull-right-container'><i class='fa fa-angle-left pull-right'></i></span></a><ul class='treeview-menu">
 		$text_0 = $text_base_one . $text_base_two . $text_base_three;
 		//<li class='treeview active'><a href='javascript:void(0);'><i class='fa \$icon'></i><span>\$title</span><span class='pull-right-container'><i class='fa fa-angle-left pull-right'></i></span></a><ul class='treeview-menu menu-open">
 		$text_1 = $text_base_one . $text_hover . $text_base_two . $text_open . $text_base_three;

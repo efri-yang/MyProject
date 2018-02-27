@@ -101,42 +101,42 @@ class Tree {
 		if (is_array($child)) {
 			//获取数组的每个数组中都有一个内部的指针指向它的"当前"元素，初始指向插入到数组中的第一个元素。
 			$menu = current($child); //当前项
-            // print_r($menu);
-            // array(
-            //     [menu_id] => 1
-            //     [parent_id] => 0
-            //     [is_show] => 1
-            //     [title] => 后台首页
-            //     [url] => /MyProject/src/MyPhpCms/BearAdmin/public/admin/index/index.html
-            //     [param] => 
-            //     [icon] => fa-home
-            //     [log_type] => 0
-            //     [sort_id] => 1
-            //     [create_time] => 0
-            //     [update_time] => 1489371526
-            //     [status] => 1
-            //     [level] => 0
-            // )
-            // exit();
+			// print_r($menu);
+			// array(
+			//     [menu_id] => 1
+			//     [parent_id] => 0
+			//     [is_show] => 1
+			//     [title] => 后台首页
+			//     [url] => /MyProject/src/MyPhpCms/BearAdmin/public/admin/index/index.html
+			//     [param] =>
+			//     [icon] => fa-home
+			//     [log_type] => 0
+			//     [sort_id] => 1
+			//     [create_time] => 0
+			//     [update_time] => 1489371526
+			//     [status] => 1
+			//     [level] => 0
+			// )
+			// exit();
 			// dump($this->text);
 			// exit();
 			//获取当前等级的html
 			$text = isset($this->text[$menu['level']]) ? $this->text[$menu['level']] : end($this->text);
-            //child 中的$key==$v["menu_id"]
+			//child 中的$key==$v["menu_id"]
 			foreach ($child as $k => $v) {
 				//将v 数组选项中的键值赋予键名字，这个时候就可以取得$title,$menu_id
 				@extract($v);
 				// print_r($v);
 				// exit();
-				//在menu 中查找 parent_id=menu_id 的项，存在 就证明 当前项有父项
+				//在menu 中查找 menu_id=parent_id 的项，存在 就证明 当前项有子项
 				if ($this->get_child($k)) {
 					//array_search() 函数在数组中搜索某个键值，并返回对应的键名。
-					//$parent_ids 中能找的到 $key 说明当前页面的菜单项
+					//当前 menu_id 如果是在 父项里面  那么可以判断 下级菜单是当前页
 					if (array_search($k, $parent_ids, true) !== false) {
 						//如果下级菜单是当前页面
 						eval("\$nstr = \"$text[1]\";");
-                        // dump($nstr);
-                        // exit();
+						// dump($nstr);
+						// exit();
 						$this->html .= $nstr;
 					} else {
 						//如果下级菜单不是当前页面
