@@ -188,7 +188,7 @@ class Auth {
 		);
 		//读取用户组所有权限规则
 		$rules = Db::name($this->config['auth_rule'])->where($map)->field('condition,name')->select();
-		
+
 		//循环规则，判断结果。
 		$authList = []; //
 		foreach ($rules as $rule) {
@@ -198,7 +198,7 @@ class Auth {
 				$command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
 
 				echo $command;
-				
+
 				@(eval('$condition=(' . $command . ');'));
 				//https://www.kancloud.cn/a113211/alls/263279
 				//$condition=($user['score'] > 10 and $user['score'] < 10 );
@@ -406,9 +406,9 @@ class Auth {
 
 				@(eval('$condition=(' . $command . ');'));
 				if ($condition) {
-					echo "sadfasdfsadf";
+
 					$authList[] = strtolower($rule['menu_id']);
-					
+
 				}
 
 			} else {

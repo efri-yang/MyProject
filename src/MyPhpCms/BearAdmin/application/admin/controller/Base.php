@@ -159,8 +159,10 @@ class Base extends Controller {
 	protected function getMenuParent($arr, $myid, $parent_ids = array()) {
 		$a = $newarr = array();
 		if (is_array($arr)) {
+			//遍历当前用户所有权限列表
 			foreach ($arr as $id => $a) {
 				if ($a['menu_id'] == $myid) {
+					//如果不是顶级的目录，那么久添加到$parent_ids，相当于获取当前栏目的所有父栏目
 					if ($a['parent_id'] != 0) {
 						array_push($parent_ids, $a['parent_id']);
 						$parent_ids = $this->getMenuParent($arr, $a['parent_id'], $parent_ids);
@@ -168,6 +170,7 @@ class Base extends Controller {
 				}
 			}
 		}
+
 		return !empty($parent_ids) ? $parent_ids : false;
 	}
 
@@ -183,11 +186,13 @@ class Base extends Controller {
 				if ($a['menu_id'] == $myid) {
 					if ($a['parent_id'] != 0) {
 						array_push($parent_ids, $a['parent_id']);
+
 						$ru = '<li><a><i class="fa ' . $a['icon'] . '"></i> ' . $a['title'] . '</a></li>';
 						$current_nav = $ru . $current_nav;
 						$temp_result = $this->getCurrentNav($arr, $a['parent_id'], $parent_ids, $current_nav);
 						$parent_ids = $temp_result[0];
 						$current_nav = $temp_result[1]; //一系列字符窜<li></li>
+
 					}
 				}
 			}
@@ -295,6 +300,21 @@ class Base extends Controller {
 	 */
 	protected function getLeftMenu() {
 		$auth = new Auth();
+		//读取所有的权限列表array(1(menu_id)=>array(
+		// 			[menu_id] => 1
+		//          [parent_id] => 0
+		//          [is_show] => 1
+		//          [title] => 后台首页
+		//          [url] => admin/index/index
+		//          [param] =>
+		//          [icon] => fa-home
+		//          [log_type] => 0
+		//          [sort_id] => 1
+		//          [create_time] => 0
+		//          [update_time] => 1489371526
+		//          [status] => 1
+		//))
+		// array 中的id 就是menu_id的值
 		$menu = $auth->getMenuList(Session::get('user.user_id'), 1);
 
 		$max_level = 0;
@@ -303,31 +323,37 @@ class Base extends Controller {
 
 		$current_nav = ['', ''];
 		foreach ($menu as $k => $v) {
+			//寻找url 等于当前url 的 item
 			if ($v['url'] == $this->url) {
-				//返回的是当前menu_id 所有的父元素的id的集合
+
+				//返回的是当前menu_id 所有的父元素的id的集合(父元素本身是顶级栏目,返回的是false)
 				$parent_ids = $this->getMenuParent($menu, $v['menu_id']);
+
 				$current_id = $v['menu_id'];
 				//返回的是array(0=>array(74,34),1=>"<li></li><li><>")
 				$current_nav = $this->getCurrentNav($menu, $v['menu_id']);
+
 			}
 		}
+
 		if ($parent_ids == false) {
 			$parent_ids = array(0 => 0);
 		}
 
-		$this->web_data['current_nav'] = $current_nav[1];
+		$this->web_data['current_nav'] = $current_nav[1]; //包含父元素的li
 
 		$tree = new Tree();
-
+		// print_r($menu);
 		foreach ($menu as $k => $v) {
+			//转化成url
 			$url = url($v['url']);
 			$menu[$k]['icon'] = !empty($v['icon']) ? $v['icon'] : 'fa fa-list';
 			$menu[$k]['level'] = $tree->get_level($v['menu_id'], $menu);
 			$max_level = $max_level <= $menu[$k]['level'] ? $menu[$k]['level'] : $max_level;
 			$menu[$k]['url'] = $url;
-		}
 
-		print_r($menu);
+		}
+		//初始化tree 只是设置一些数据 返回true 或者是false
 		$tree->init($menu);
 
 		$text_base_one = "<li class='treeview";
