@@ -372,11 +372,15 @@ class Base extends Controller {
                             <span>\$title</span>
                             </a>
                          </li>";
-
+        //<li class='treeview><a href='javascript:void(0);'><i class='fa \$icon'></i><span>\$title</span><span class='pull-right-container'><i class='fa fa-angle-left pull-right'></i></span></a><ul class='treeview-menu">
 		$text_0 = $text_base_one . $text_base_two . $text_base_three;
+		//<li class='treeview active'><a href='javascript:void(0);'><i class='fa \$icon'></i><span>\$title</span><span class='pull-right-container'><i class='fa fa-angle-left pull-right'></i></span></a><ul class='treeview-menu menu-open">
 		$text_1 = $text_base_one . $text_hover . $text_base_two . $text_open . $text_base_three;
 		$text_2 = "</ul></li>";
+
+		//$text_current=<li class='active'><a href='\$url'><i class='fa \$icon'></i><span>\$title</span></a></li>
 		$text_current = $text_base_four . $text_hover_li . $text_base_five;
+		//$text_other=<li><a href='\$url'><i class='fa \$icon'></i><span>\$title</span></a></li>
 		$text_other = $text_base_four . $text_base_five;
 
 		for ($i = 0; $i <= $max_level; $i++) {
