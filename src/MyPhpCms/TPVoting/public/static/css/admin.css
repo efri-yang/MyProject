@@ -1,0 +1,122 @@
+.sidebar-menu{
+	width:200px; 
+}
+.sidebar-menu li a{
+	display:block; 
+	height: 45px;
+    line-height: 45px;
+    padding: 0 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color:#c3c1c1;
+    position: relative;
+    box-sizing:border-box; 
+}
+
+.sidebar-menu >li >a:hover{
+	background:#4E5465;
+	color:#fff;  
+}
+.sidebar-menu >li.active > a,.sidebar-menu >li.current > a{
+	background:#4E5465;
+	color:#fff; 
+}
+
+.treeview > a{
+	display:block; 
+	height: 45px;
+    line-height: 45px;
+}
+
+
+.treeview > a .arrow{
+	content: '';
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    margin-top: -3px;
+    border-width: 6px;
+	border-style: solid dashed dashed;
+    border-color: #fff transparent transparent;
+    border-top-color: rgba(255,255,255,.7);
+}
+.treeview >a:hover{
+	color:#fff; 
+}
+.treeview > .treeview-menu{
+	display:none; 
+}
+.treeview.active >.treeview-menu{
+	display:block; 
+}
+
+.treeview >a:hover .arrow{
+	border-top-color:#fff;
+}
+
+.treeview.active > a{
+	color:#fff; 
+}
+.treeview.active > a .arrow{
+	border-top-color:#fff;
+}
+
+.treeview.current > a{
+	color:#fff; 
+}
+.treeview.current > a .arrow{
+	border-top-color:#fff;
+}
+
+
+
+.treeview-menu{
+	padding-left:20px;
+}
+
+.treeview-menu > li > a{
+	color:#c3c1c1;
+	display:inline; 
+}
+.treeview-menu > li.treeview > a{
+	display:block; 
+}
+.treeview-menu > li > a:hover{
+	color:#fff; 
+}
+
+.treeview-menu >li.active >a{
+	color:#fff; 
+}
+
+
+.content-header{
+	border-bottom:3px solid #3c8dbc;
+}
+.content-header .tit{
+	float:left;
+	font-size:20px; 
+	padding:0 0 10px;
+	
+}
+
+.breadcrumb{
+	float:right; 
+}
+
+.breadcrumb li{
+	float:left;
+	margin-right:5px;  
+}
+
+
+.content-container{
+	padding:20px;
+}

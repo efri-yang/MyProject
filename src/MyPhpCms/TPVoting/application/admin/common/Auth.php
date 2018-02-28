@@ -153,7 +153,7 @@ class Auth {
 			return Session::get('_auth_list_' . $uid . $t);
 		}
 //读取用户所属用户组(二维数组)
-//array(array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开'),array());
+		//array(array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开'),array());
 		$groups = $this->getGroups($uid);
 		$ids = []; //保存用户所属用户组设置的所有权限规则id
 		foreach ($groups as $g) {
@@ -172,7 +172,6 @@ class Auth {
 		//读取用户组所有权限规则 用name 就是可以表示省略了配置表的前缀
 		$rules = Db::name($this->config['auth_rule'])->where($map)->field('condition,name')->select();
 
-		
 		//循环规则，判断结果。
 		$authList = []; //
 		foreach ($rules as $rule) {
@@ -180,7 +179,7 @@ class Auth {
 				//根据condition进行验证
 				$user = $this->getUserInfo($uid); //获取用户信息,一维数组
 				$command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
-				
+
 				@(eval('$condition=(' . $command . ');'));
 				if ($condition) {
 					$authList[] = strtolower($rule['name']);
@@ -323,7 +322,6 @@ class Auth {
 				$user = Cookie::get('user');
 				$userSign = Cookie::get('user_sign');
 				$isSign = ($userSign == self::dataAuthSign($user)) ? $user : false;
-				print_r($userSign);
 				if ($isSign) {
 					Session::set('user', $user);
 					Session::set('user_sign', $userSign);

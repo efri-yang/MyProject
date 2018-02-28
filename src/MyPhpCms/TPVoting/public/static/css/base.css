@@ -66,6 +66,12 @@
 .pr30{padding-right:30px;}
 .pb30{padding-bottom:30px;}
 
+.clearfix:after{
+    content:"";
+    display:table;
+    clear:both
+}
+
 
 
 

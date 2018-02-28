@@ -7,52 +7,7 @@
 </head>
 
 <body>
-    <ul class="sidebar-nav" style="color: white;font-size: 17px;">
-    	
-        {volist name="nav_list" id="bar"}
-        
-            <li>
-                <if condition="$bar.hasSub == 1">
-                    <if condition="$bar.state == 1">
-                        <a href="#" class="sidebar-nav-menu open" style="color: white">
-                                            <i class="fa fa-chevron-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-                                            <i class="fa fa-gear sidebar-nav-icon"></i>
-                                            <span class="sidebar-nav-mini-hide">{$bar.name}</span>
-                                        </a>
-                        <else/>
-                        <a href="#" class="sidebar-nav-menu" style="color: white">
-                                            <i class="fa fa-chevron-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-                                            <i class="fa fa-gear sidebar-nav-icon"></i>
-                                            <span class="sidebar-nav-mini-hide">{$bar.name}</span>
-                                        </a>
-                    </if>
-                    <ul>
-                        <volist name="$bar.sub" id="sub_bar">
-                            <li>
-                                <if condition="$sub_bar.state == 1">
-                                    <a href="{$sub_bar.url}" class="active">{$sub_bar.name}</a>
-                                    <else/>
-                                    <a href="{$sub_bar.url}" class="" style="color: white">{$sub_bar.name}</a>
-                                </if>
-                            </li>
-                        </volist>
-                    </ul>
-                    <else/>
-                    <if condition="$bar.state == 1">
-                        <a href="{$bar.url}" class="open" style="{$bar.style}">
-                                            <i class="{$bar.icon} sidebar-nav-icon"></i>
-                                            <span>{$bar.name}</span>
-                                        </a>
-                        <else/>
-                        <a href="{$bar.url}" style="{$bar.style}">
-                                            <i class="{$bar.icon} sidebar-nav-icon"></i>
-                                            <span>{$bar.name}</span>
-                                        </a>
-                    </if>
-                </if>
-            </li>
-        {/volist}
-    </ul>
+    
 </body>
 
 </html>

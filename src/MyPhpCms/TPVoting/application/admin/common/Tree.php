@@ -1,0 +1,73 @@
+<?php
+namespace app\admin\common;
+class Tree {
+    public $menuList;
+    public $text, $html;
+
+    public function init($menu = array()) {
+        $this->menuList = $menu;
+
+    }
+    public function get_authTree($id, $currentNavId, $parentIds) {
+        //根据id 获取所有顶级的菜单，然后遍历这些菜单，查找子元素，这个时候需要用到递归的方法
+        $nstr = '';
+        $child = $this->get_child($id);
+
+        if (is_array($child)) {
+            $menu = current($child); //当前项
+            $text = isset($this->text[$menu['level']]) ? $this->text[$menu['level']] : end($this->text);
+            foreach ($child as $k => $v) {
+                @extract($v);
+                if ($this->get_child($k)) {
+                    //下级菜单是当前页面
+                    if (array_search($k, $parentIds, true) !== false) {
+                        eval("\$nstr = \"$text[1]\";");
+                        $this->html .= $nstr;
+                        //下级菜单不是当前页面
+                    } else {
+                        eval("\$nstr = \"$text[0]\";");
+                        $this->html .= $nstr;
+                    }
+                    self::get_authTree($k, $currentNavId, $parentIds);
+                    eval("\$nstr = \"$text[2]\";");
+                    $this->html .= $nstr;
+                } else {
+                    if ($k == $currentNavId) {
+                        $a = $this->text['current'];
+                        eval("\$nstr = \"$a\";");
+                        $this->html .= $nstr;
+                    } else {
+                        $a = $this->text['other'];
+                        eval("\$nstr = \"$a\";");
+                        $this->html .= $nstr;
+                    }
+                }
+            }
+        }
+        return $this->html;
+
+    }
+
+    protected function get_child($menuId) {
+        $menu = array();
+        if (is_array($this->menuList)) {
+            foreach ($this->menuList as $k => $v) {
+                if ($v["parent_id"] == $menuId) {
+                    $menu[$k] = $v;
+                }
+            }
+        }
+        return !empty($menu) ? $menu : false;
+    }
+
+    public function get_level($id, $array = array(), $i = 0) {
+        //parent_id=0 证明是第一级别  或者 parent_id 找不到对应的键值说明是顶级(第一级) 或者是  当前项的parent_id等于id,那么level 就是0，level 取决于你的参照物
+        if ($array[$id]['parent_id'] == 0 || empty($array[$array[$id]['parent_id']]) || $array[$id]['parent_id'] == $id) {
+            return $i;
+        } else {
+            $i++;
+            return self::get_level($array[$id]['parent_id'], $array, $i);
+        }
+    }
+}
+?>
