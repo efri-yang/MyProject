@@ -8,6 +8,8 @@ return [
     'template' => [
         'layout_on' => true,
         'layout_name' => 'layout',
+        'layout_item' => '{__REPLACE__}',
+
     ],
     'view_replace_str' => [
         '__ROOT__' => $basename,

@@ -118,7 +118,7 @@ class Base extends Controller {
             if ($v["menu_id"] == $childMenuId) {
                 if ($v['parent_id'] != 0) {
                     array_push($parentIds, $v['parent_id']);
-                    $parentIds = getMenuParentid($authMenu, $v["parent_id"], $parentIds);
+                    $parentIds = $this->getMenuParentid($authMenu, $v["parent_id"], $parentIds);
                 }
 
             }

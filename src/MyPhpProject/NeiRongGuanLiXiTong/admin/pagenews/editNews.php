@@ -11,30 +11,30 @@ date_default_timezone_set('PRC');
 
 $action = $_REQUEST['action'];
 if ($action == "edit" && !isset($_POST["submit"])) {
-    $newId   = $_REQUEST["id"];
-    $sql     = "select mc_article.pclassid,mc_columns.classname,mc_article.title,mc_article.shorttitle,mc_article.content,mc_article.thumbnail,mc_article.keywords,mc_article.description,author from mc_article  inner join mc_columns on mc_article.pclassid=mc_columns.classid where mc_article.id='$newId'";
-    $result  = $mysqli->query($sql);
+    $newId = $_REQUEST["id"];
+    $sql = "select mc_article.pclassid,mc_columns.classname,mc_article.title,mc_article.shorttitle,mc_article.content,mc_article.thumbnail,mc_article.keywords,mc_article.description,author from mc_article  inner join mc_columns on mc_article.pclassid=mc_columns.classid where mc_article.id='$newId'";
+    $result = $mysqli->query($sql);
     $results = resultToArray($result);
 
-    $title     = $results[0]["title"];
-    $subtitle  = $results[0]["shorttitle"];
-    $pclassid  = $results[0]["pclassid"];
-    $keyword   = $results[0]["keywords"];
-    $intro     = $results[0]["description"];
+    $title = $results[0]["title"];
+    $subtitle = $results[0]["shorttitle"];
+    $pclassid = $results[0]["pclassid"];
+    $keyword = $results[0]["keywords"];
+    $intro = $results[0]["description"];
     $thumbnail = $results[0]["thumbnail"];
-    $content   = $results[0]["content"];
-    $author    = $results[0]["author"];
+    $content = $results[0]["content"];
+    $author = $results[0]["author"];
 } else {
-    $newId      = $_REQUEST["id"];
-    $title      = $_POST["title"];
-    $subtitle   = $_POST["subtitle"];
-    $pclassid   = $_POST["pclassid"];
-    $keyword    = $_POST["keyword"];
-    $intro      = $_POST["intro"];
-    $thumbnail  = $_POST["thumbnail"];
-    $content    = $_POST["content"];
+    $newId = $_REQUEST["id"];
+    $title = $_POST["title"];
+    $subtitle = $_POST["subtitle"];
+    $pclassid = $_POST["pclassid"];
+    $keyword = $_POST["keyword"];
+    $intro = $_POST["intro"];
+    $thumbnail = $_POST["thumbnail"];
+    $content = $_POST["content"];
     $publicTime = date('Y-m-d H:i:s');
-    $author     = $_POST["author"];
+    $author = $_POST["author"];
     if (isset($_POST["submit"])) {
         if (empty($title)) {
             $strErorr = "<p>请输入标题！</p>";
@@ -123,17 +123,16 @@ if (isset($_POST["submit"]) && empty($strErorr)) {
 					<td class="para-tit">所属栏目：</td>
 					<td>
 						<?php
-$sql     = "select * from mc_columns";
-    $result  = $mysqli->query($sql);
+$sql = "select * from mc_columns";
+    $result = $mysqli->query($sql);
     $results = resultToArray($result);
-    $data    = ClassTree::hTree($results);
-    $data    = ClassTree::sort($data, 'sortrank');
-    function dispalyList($arr, $str = "", $step = 1, $pclassId = "")
-    {
+    $data = ClassTree::hTree($results);
+    $data = ClassTree::sort($data, 'sortrank');
+    function dispalyList($arr, $str = "", $step = 1, $pclassId = "") {
         foreach ($arr as $key => $value) {
             $emptyholer = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;", $step);
-            $flag       = "|-";
-            $disabled   = !!$value["islast"] ? "" : "disabled";
+            $flag = "|-";
+            $disabled = !!$value["islast"] ? "" : "disabled";
             if ($pclassId == $value['classid']) {
                 $str .= "<option selected value='" . $value['classid'] . "' " . $disabled . ">" . $emptyholer . $flag . $value["classname"] . "</option>";
             } else {
