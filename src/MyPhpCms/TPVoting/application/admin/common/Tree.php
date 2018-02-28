@@ -8,6 +8,9 @@ class Tree {
         $this->menuList = $menu;
 
     }
+    //array(array(),array())
+    //通过遍历每个array 然后在查找子菜单,然后遍历子菜单，然后再查找子菜单，就是递归，判断有子菜单，那么当前
+    //菜单 html 结构就不一样
     public function get_authTree($id, $currentNavId, $parentIds) {
         //根据id 获取所有顶级的菜单，然后遍历这些菜单，查找子元素，这个时候需要用到递归的方法
         $nstr = '';
