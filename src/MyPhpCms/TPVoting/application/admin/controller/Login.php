@@ -28,7 +28,7 @@ class Login extends Controller {
                 }
                 //记住我
                 if (@$params['remember'] == 1) {
-                    Auth::login($user->getData("id"), $user->getData("username"), true);2
+                    Auth::login($user->getData("id"), $user->getData("username"), true);
                 } else {
                     Auth::login($user->getData("id"), $user->getData("username"), false);
                 }
@@ -39,6 +39,15 @@ class Login extends Controller {
             }
 
         }
+    }
+
+    public function logout(){
+        $auth=new Auth();
+        $resFlag=$auth->loginout();
+        if($resFlag){
+            $this->success("成功退出！", "login/index");
+        }
+        
     }
 
 }

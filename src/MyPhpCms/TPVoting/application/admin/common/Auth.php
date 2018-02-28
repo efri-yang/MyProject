@@ -334,6 +334,7 @@ class Auth {
 	}
 
 	public static function loginout() {
+		
 		Session::delete('user');
 		Session::delete('user_sign');
 		if (Cookie::has('user')) {
