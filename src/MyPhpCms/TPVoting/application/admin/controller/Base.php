@@ -3,10 +3,10 @@ namespace app\admin\controller;
 use app\admin\common\Auth;
 use app\admin\common\Tree;
 use think\Controller;
+use think\Db;
 use think\Request;
 use think\Session;
 use think\Url;
-use think\Db;
 
 class Base extends Controller {
     protected $request, $param, $module, $controller, $action, $url, $mcUrl, $requestType, $menuInfo, $webData;
@@ -33,17 +33,16 @@ class Base extends Controller {
                 }
             }
             $this->webData["left_menu"] = $this->getLeftMenu($userId, 1);
-            $this->webData["user_info"]=$this->getUserInfo($userId);
+            $this->webData["user_info"] = $this->getUserInfo($userId);
 
-            print_r($this->webData["user_info"]);
         } else {
             //没有登录，重定向到登录页面，并且记录下页面 方便跳转
             $this->redirect("login/index", ["uri" => $this->url]);
         }
 
     }
-    protected function getUserInfo($userId){
-        $userInfo=Db::table('think_auth_user')->where('id',$userId)->find();
+    protected function getUserInfo($userId) {
+        $userInfo = Db::table('think_auth_user')->where('id', $userId)->find();
         return $userInfo;
     }
     //对于控制器进行转化，因为控制器SayAge 中class Sayage 那么在访问的时候 要用admin/say_age/
@@ -130,6 +129,5 @@ class Base extends Controller {
         parent::assign(['web_data' => $this->webData]);
         return parent::fetch($template, $vars, $replace, $config);
     }
-    
 
 }

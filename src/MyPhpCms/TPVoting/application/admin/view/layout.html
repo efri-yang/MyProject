@@ -8,6 +8,7 @@
     <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
     <link rel="stylesheet" type="text/css" href="__STATIC__/css/admin.css">
 </head>
+
 <body class="layui-layout-body">
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header">
@@ -16,8 +17,8 @@
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                  <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                  贤心
+                  <img src="__AVATAR__{$web_data['user_info']['avatar']}" class="layui-nav-img">
+                  {$web_data["user_info"]["username"]}
                 </a>
                     <dl class="layui-nav-child">
                         <dd><a href="">基本资料</a></dd>
