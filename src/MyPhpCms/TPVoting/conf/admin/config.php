@@ -6,7 +6,7 @@ if (pathinfo($basename, PATHINFO_EXTENSION) == 'php') {
 }
 return [
     'template' => [
-        'layout_on' => true,
+        'layout_on' => false,
         'layout_name' => 'layout',
         'layout_item' => '{__REPLACE__}',
 
