@@ -1,14 +1,14 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:102:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\user\profileEdit.html";i:1520320858;s:82:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\application\admin\view\layout.html";i:1520304695;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:102:"E:\Xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\user\profileEdit.html";i:1520326353;s:92:"E:\Xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\layout.html";i:1520301531;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/layui/css/layui.css">
-    <link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/css/base.css">
-    <script type="text/javascript" src="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/js/jquery/jquery-1.12.4.js"></script>
-    <script type="text/javascript" src="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/layui/layui.js"></script>
-    <link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/css/admin.css">
+	<link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/base.css">
+    <script type="text/javascript" src="__STATIC__/js/jquery/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/admin.css">
 </head>
 
 <body class="layui-layout-body">
@@ -18,7 +18,7 @@
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                  <img src="/MyProject/src/MyPhpCms/TPVoting/public/uploads/admin/avatar/<?php echo $web_data['user_info']['avatar']; ?>" class="layui-nav-img">
+                  <img src="__AVATAR__<?php echo $web_data['user_info']['avatar']; ?>" class="layui-nav-img">
                   <?php echo $web_data["user_info"]["username"]; ?>
                 </a>
                     <dl class="layui-nav-child">
@@ -75,13 +75,15 @@
                 <label class="layui-form-label">头像</label>
                 <div class="layui-input-block">
                     <div class="coms-zoom-img">
+                        
+                       
                         <?php if($web_data['user_info']['avatar']=='avatar.png'): ?>
                             <div class="no-pic" id="J_no-pic"></div>
                         <?php else: ?>
                             <ul class="upload-img">
                                 <li>
                                     <div class="img-wrap">
-                                        <img src="/MyProject/src/MyPhpCms/TPVoting/public/uploads/admin/avatar/<?php echo $web_data['user_info']['avatar']; ?>" />
+                                        <img src="__AVATAR__<?php echo $web_data['user_info']['avatar']; ?>" />
                                     </div>
                                 </li>
                             </ul>
@@ -129,8 +131,8 @@
         </form>
     </div>
 </div>
-<link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/js/webuploader/webuploader.css" />
-<script type="text/javascript" src="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/js/webuploader/webuploader.js"></script>
+<link rel="stylesheet" type="text/css" href="__STATIC__/js/webuploader/webuploader.css" />
+<script type="text/javascript" src="__STATIC__/js/webuploader/webuploader.js"></script>
 <script type="text/javascript">
 layui.use(["form", "laydate"], function() {
     var form = layui.form;
@@ -172,7 +174,7 @@ $(function() {
             mimeTypes: 'image/jpg,image/jpeg,image/png'
         },
         server: '<?php echo url("admin/user/uploadAvatar"); ?>',
-        swf: '/MyProject/src/MyPhpCms/TPVoting/public/static/admin/js/webuploader/Uploader.swf',
+        swf: '__STATIC__/js/webuploader/Uploader.swf',
         //限制文件的大小
         fileSingleSizeLimit: 10 * 1024 * 1024,
         fileNumLimit: 5,
@@ -238,6 +240,7 @@ $(function() {
     });
 
     uploader.on("uploadSuccess", function(file, response) {
+        //这里还要根据服务端的返回信息来判断是否上传成功
         console.group("触发了：uploadSuccess");
         console.dir(response);
         $thumbNailIpt.val(response.filePath);

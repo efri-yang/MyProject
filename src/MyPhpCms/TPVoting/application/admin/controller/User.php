@@ -6,6 +6,8 @@ use think\Config;
 use think\Controller;
 use think\Request;
 use think\Url;
+use think\File;
+
 
 class User extends Base {
     public function index() {
@@ -21,13 +23,18 @@ class User extends Base {
     }
 
     public function uploadAvatar() {
-        $file = request()->file('image');
+        $file = request()->file('file');
         if ($file) {
-            $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads');
+
+            $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads'. DS .'admin'. DS .'avatar');
             if ($info) {
-                echo $info->getExtension();
+                $authUser=new AuthUser();
+                $filePath=$info->getSaveName();
+                $authUser->save(["avatar"=>$filePath],["id"=>1]);
+                return json_encode(array("filePath"=>$info->getSaveName()));
             } else {
-                echo $file->getError();
+                return 0;
+               
             }
         }
     }
