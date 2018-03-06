@@ -1,28 +1,35 @@
 <?php
 namespace app\admin\controller;
 
+use app\admin\model\AuthUser;
 use think\Config;
 use think\Controller;
 use think\Request;
 use think\Url;
-
-use app\admin\model\AuthUser;
 
 class User extends Base {
     public function index() {
         return $this->fetch();
     }
     //个人资料
-    public function profile() {
-        return $this->fetch();
+    public function profile($action = '') {
+        if (!$action) {
+            return $this->fetch();
+        } else {
+            return $this->fetch("user/profileEdit");
+        }
     }
 
     public function uploadAvatar() {
-        $tmpDir;
-        $storeDir;
-        $request = Request::instance();
-        $fileInfo = $request->param();
-        echo json_encode($fileInfo);
+        $file = request()->file('image');
+        if ($file) {
+            $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads');
+            if ($info) {
+                echo $info->getExtension();
+            } else {
+                echo $file->getError();
+            }
+        }
     }
 }
 

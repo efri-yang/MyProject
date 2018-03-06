@@ -1,21 +1,22 @@
-{__NOLAYOUT__}
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:97:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\login\index.html";i:1520313931;}*/ ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
-    <link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css">
-    <link rel="stylesheet" type="text/css" href="__STATIC__/css/base.css">
-    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
-    <link rel="stylesheet" type="text/css" href="__STATIC__/css/registerLogin.css">
+    <link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/css/base.css">
+    <script type="text/javascript" src="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/css/registerLogin.css">
 </head>
 
 <body>
     <div class="layui-container page-login">
         <div class="layui-col-md3"></div>
         <div class="layui-col-md6">
-            <form class="layui-form" action="{:url('admin/login/login')}" method="post">
+            <form class="layui-form" action="<?php echo url('admin/login/login'); ?>" method="post">
                 <div class="layui-form-item">
                     <label class="layui-form-label">邮箱</label>
                     <div class="layui-input-block">
@@ -34,7 +35,7 @@
                         <input type="text" name="captcha" required lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input" />
                     </div>
                     <div class="yzm-pic">
-                        <img src="{:captcha_src()}" alt="captcha" id="J_captcha" />
+                        <img src="<?php echo captcha_src(); ?>" alt="captcha" id="J_captcha" />
                     </div>
                     <p class="yzm-kbq" id="J_captcha-kbq">看不清</p>
                 </div>
@@ -68,7 +69,7 @@
 
             function refreshVerify() {
                 var ts = Date.parse(new Date()) / 1000;
-                $('#J_captcha').attr("src", "{:captcha_src()}");
+                $('#J_captcha').attr("src", "<?php echo captcha_src(); ?>");
             }
             $("#J_captcha-kbq").on("click", function() {
                 refreshVerify();
