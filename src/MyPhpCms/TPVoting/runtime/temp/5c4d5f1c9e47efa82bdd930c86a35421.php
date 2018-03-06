@@ -1,13 +1,14 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:96:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\user\index.html";i:1520254180;s:82:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\application\admin\view\layout.html";i:1520265491;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css">
-    <link rel="stylesheet" type="text/css" href="__STATIC__/css/base.css">
-    <script type="text/javascript" src="__STATIC__/js/jquery/jquery-1.12.4.js"></script>
-    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
-    <link rel="stylesheet" type="text/css" href="__STATIC__/css/admin.css">
+	<link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/css/base.css">
+    <script type="text/javascript" src="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/js/jquery/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="/MyProject/src/MyPhpCms/TPVoting/public/static/admin/css/admin.css">
 </head>
 
 <body class="layui-layout-body">
@@ -17,21 +18,21 @@
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                  <img src="__AVATAR__{$web_data['user_info']['avatar']}" class="layui-nav-img">
-                  {$web_data["user_info"]["username"]}
+                  <img src="/MyProject/src/MyPhpCms/TPVoting/public/uploads/admin/avatar/<?php echo $web_data['user_info']['avatar']; ?>" class="layui-nav-img">
+                  <?php echo $web_data["user_info"]["username"]; ?>
                 </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="{:url('user/profile')}">基本资料</a></dd>
+                        <dd><a href="<?php echo url('user/profile'); ?>">基本资料</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="{:url('login/logout')}">退了</a></li>
+                <li class="layui-nav-item"><a href="<?php echo url('login/logout'); ?>">退了</a></li>
             </ul>
         </div>
         <div class="layui-side layui-bg-black">
             <div class="layui-side-scroll">
                 <!-- 左侧导航区域（可配合layui已有的垂直导航）-->
                 <ul class="sidebar-menu">
-                    {$web_data["left_menu"]}
+                    <?php echo $web_data["left_menu"]; ?>
                 </ul>  
             </div>
         </div>
@@ -39,15 +40,15 @@
         <div class="layui-body">
             <div class="content-container">
                 <div class="content-header clearfix">
-                    <h1 class="tit">{$web_data["web_title"]}</h1>
+                    <h1 class="tit"><?php echo $web_data["web_title"]; ?></h1>
                     <ol class="breadcrumb">
-                        <li><a href="{:url('admin/index/index')}">首页</a> </li>
-                        {$web_data["web_breadcrumb"]}
+                        <li><a href="<?php echo url('admin/index/index'); ?>">首页</a> </li>
+                        <?php echo $web_data["web_breadcrumb"]; ?>
                     </ol>
                 </div>
 
                 <div class="content-main">
-                    {__REPLACE__}
+                    asdfasdf 
                 </div>
             </div>
         </div>

@@ -34,12 +34,24 @@ class Base extends Controller {
             }
             $this->webData["left_menu"] = $this->getLeftMenu($userId, 1);
             $this->webData["user_info"] = $this->getUserInfo($userId);
+            //根据url 获取think_admin_menu 对应的 menu 信息
+            $menuInfo = $this->getMenuInfo();
+
+            $this->webData["web_title"] = $menuInfo["title"];
+            // print_r($menuInfo);
+            //面包导航屑(根据当前menu_id 后去父元素);
 
         } else {
             //没有登录，重定向到登录页面，并且记录下页面 方便跳转
             $this->redirect("login/index", ["uri" => $this->url]);
         }
 
+    }
+    //获取面包导航面包屑
+    //
+
+    protected function getMenuInfo() {
+        return Db::table("think_admin_menus")->where("url", $this->url)->find();
     }
     protected function getUserInfo($userId) {
         $userInfo = Db::table('think_auth_user')->where('id', $userId)->find();
@@ -57,6 +69,22 @@ class Base extends Controller {
         }
     }
 
+    protected function getBreadcrumb($id, $menu, $parent_ids = array(), $current_nav = "") {
+        if (is_array($menu)) {
+            foreach ($menu as $k => $v) {
+                if ($id == $v["menu_id"]) {
+                    //证明不是顶级的元素
+                    if ($v["parent_id"] != 0) {
+                        array_push($parent_ids, $v['parent_id']);
+                        $current_nav .= "<li> > <span>" . $v["title"] . "</span></li>";
+                        $this->getBreadcrumb($v['parent_id'], $menu, $parent_ids, $current_nav);
+                    }
+                }
+            }
+        }
+        return !empty([$parent_ids, $current_nav]) ? [$parent_ids, $current_nav] : false;
+    }
+
     protected function getLeftMenu($userId, $type) {
         $auth = new Auth();
         //获取指定用户的菜单列表
@@ -70,8 +98,10 @@ class Base extends Controller {
             if ($v["url"] == $this->url) {
                 $currentNavId = $v["menu_id"];
                 $parentIds = $this->getMenuParentid($authMenu, $v["menu_id"]);
+                $this->webData["web_breadcrumb"] = $this->getBreadcrumb($v["menu_id"], $authMenu)[1];
             }
         }
+
         if ($parentIds == false) {
             $parentIds = array(0 => 0);
         }

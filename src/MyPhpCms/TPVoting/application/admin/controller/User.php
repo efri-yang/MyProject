@@ -7,10 +7,14 @@ use think\Request;
 use think\Url;
 
 class User extends Base {
+    public function index() {
+        return $this->fetch();
+    }
     public function profile() {
         $userId = $this->webData["user_info"]["id"];
         return $this->fetch();
     }
+
     public function uploadAvatar() {
         $tmpDir;
         $storeDir;
