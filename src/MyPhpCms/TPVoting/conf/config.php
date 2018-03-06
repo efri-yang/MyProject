@@ -2,7 +2,7 @@
 return [
 	'app_debug' => true,
 
-	'url_common_param' => true,
+	'url_common_param' => false,
 	/**
 	 *需要开启url路由：'url_route_on' => true,
 	 */

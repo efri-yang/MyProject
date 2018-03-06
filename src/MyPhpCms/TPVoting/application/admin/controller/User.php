@@ -6,12 +6,14 @@ use think\Controller;
 use think\Request;
 use think\Url;
 
+use app\admin\model\AuthUser;
+
 class User extends Base {
     public function index() {
         return $this->fetch();
     }
+    //个人资料
     public function profile() {
-        $userId = $this->webData["user_info"]["id"];
         return $this->fetch();
     }
 
