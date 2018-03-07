@@ -1,16 +1,25 @@
 <?php
 namespace app\admin\controller;
-use app\admin\common\Auth;
 use think\Controller;
 use think\Request;
+use think\Db;
+use app\admin\common\Tree;
+
+use app\admin\common\Auth;
 
 class AdminMenu extends Base {
-	public function del() {
-		$request = Request::instance();
-		$auth = new Auth();
+	public function Index(){
+		
+		$result=Db::table("think_admin_menus")->order(["sort_id" => "asc", 'menu_id' => 'asc'])->column('*', 'menu_id');
+		$tree=new Tree();
+		foreach ($result as $k => $v) {
+			$result[$k]['level'] = $tree->get_level($v['menu_id'], $result);
+		}
 
-		//当前模块/默认视图目录/当前控制器（ 小写） /当前操作（ 小写） .html
-		// return $this->fetch();
+
+		print_r($result);
+		
+		
 	}
 }
 

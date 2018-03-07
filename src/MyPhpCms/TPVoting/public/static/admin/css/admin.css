@@ -298,3 +298,23 @@
     overflow: hidden;
     margin: 0 auto;
 }
+
+.amdin-menu-tbl{
+    width:100%; 
+    border:1px solid #f4f4f4;
+}
+
+.amdin-menu-tbl th{
+    text-align:center;
+    padding:10px 0;
+    border:1px solid #f4f4f4;  
+}
+
+.amdin-menu-tbl td{
+    padding:10px;
+    border:1px solid #f4f4f4;  
+}
+
+.amdin-menu-wrap{
+    margin-top:30px; 
+}

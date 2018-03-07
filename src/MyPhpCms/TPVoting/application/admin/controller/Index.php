@@ -1,6 +1,6 @@
 <?php
 namespace app\admin\controller;
-use think\Config;
+
 use think\Controller;
 use think\Request;
 use think\Url;

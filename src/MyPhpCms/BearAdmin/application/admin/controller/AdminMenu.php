@@ -41,8 +41,8 @@ class AdminMenu extends Base {
 	 * @return mixed
 	 */
 	public function index() {
-
-		$result = Db::name('AdminMenus')
+		//返回一个二维数组  * 表示
+		$result = Db::name('admin_menus')
 			->order(["sort_id" => "asc", 'menu_id' => 'asc'])
 			->column('*', 'menu_id');
 
