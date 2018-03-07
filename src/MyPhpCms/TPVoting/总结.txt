@@ -23,3 +23,7 @@
 
 
 3、{if condition="$web_data['user_info']['avatar'] =='avatar.png'"}  这个判断是失效的。为什么 因为avatar.png 中有电耗
+
+
+
+
