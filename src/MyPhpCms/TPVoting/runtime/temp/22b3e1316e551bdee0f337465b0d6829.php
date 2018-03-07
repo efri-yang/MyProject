@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:97:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\login\index.html";i:1520313931;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:97:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\login\index.html";i:1520337592;}*/ ?>
 
 <!DOCTYPE html>
 <html lang="en">
