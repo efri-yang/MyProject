@@ -77,6 +77,7 @@ class Tree {
                 $nbsp = $this->nbsp;
                 $this->get_tree($id, $str, $sid, $adds . $k . $nbsp, $str_group);
                 $number++;
+
             }
         }
         return $this->ret;

@@ -2,8 +2,10 @@
 namespace app\admin\common;
 class Tree {
     public $menuList;
+    public $icon = array('│', '├', '└');
+    public $nbsp = "&nbsp;";
     public $text, $html;
-
+    public $ret = " ";
     public function init($menu = array()) {
         $this->menuList = $menu;
 
@@ -71,6 +73,28 @@ class Tree {
             $i++;
             return self::get_level($array[$id]['parent_id'], $array, $i);
         }
+    }
+
+    public function get_tree($id, $str, $adds = '', $str_group = '') {
+        $parent_id = '';
+        $nstr = '';
+        $number = 0;
+        $child = $this->get_child($id);
+        if (is_array($child)) {
+            foreach ($child as $k => $v) {
+                $j = $n = '';
+                $j .= $this->icon[1];
+                $n = $adds ? $this->icon[0] : '';
+                $spacer = $adds ? $adds . $j : '';
+                @extract($v);
+                $parent_id == 0 && $str_group ? eval("\$nstr = \"$str_group\";") : eval("\$nstr = \"$str\";");
+                $this->ret .= $nstr;
+                $nbsp = $this->nbsp;
+                $this->get_tree($k, $str, $adds . $n . $nbsp, $str_group);
+                $number++;
+            }
+        }
+        return $this->ret;
     }
 }
 ?>
