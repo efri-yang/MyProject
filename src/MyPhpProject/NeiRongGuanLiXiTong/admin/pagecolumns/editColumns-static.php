@@ -1,14 +1,13 @@
 <?php
-	session_start();
+session_start();
 
-	
-	include("../../config.php");
-	include(ROOT_PATH."/include/mysqli.php");
-	include(ROOT_PATH."/admin/common/session.php");
-	include(ROOT_PATH."/admin/common/common.func.php");
-	include(ROOT_PATH."/admin/common/classtree.func.php");
+include "../../config.php";
+include ROOT_PATH . "/include/mysqli.php";
+// include ROOT_PATH . "/admin/common/session.php";
+include ROOT_PATH . "/admin/common/common.func.php";
+include ROOT_PATH . "/admin/common/classtree.func.php";
 
-	$classId=$_REQUEST["classid"];
+$classId = $_REQUEST["classid"];
 
 ?>
 <!DOCTYPE html>
@@ -16,14 +15,14 @@
 <head>
 	<meta charset="UTF-8">
 	<title>栏目编辑</title>
-	<?php include(ROOT_PATH.'/admin/template/scriptstyle.php') ?>
+	<?php include ROOT_PATH . '/admin/template/scriptstyle.php'?>
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/css/page-column.css">
 	<script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/layer/layer.js"></script>
 	<link rel="stylesheet" type="text/css" href="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.css">
 	<script type="text/javascript" src="<?php echo STATIC_PATH; ?>/admin/static/js/webuploader/webuploader.js"></script>
 </head>
 <body>
-	<?php include(ROOT_PATH.'/admin/template/header_top.php') ?>
+	<?php include ROOT_PATH . '/admin/template/header_top.php'?>
 	<div class="container">
 		<table class="col-edit-tbl">
 			<thead>
@@ -74,7 +73,7 @@
 				<tr>
 					<td  class="para-tit">栏目缩略图：</td>
 					<td>
-						<div class="zoom-img">
+						<div class="coms-zoom-img">
 							<div class="no-pic" id="J_no-pic"></div>
 							<!-- .preview -->
 							<div class="upload-img" id="J_upload-imgbox">
@@ -117,16 +116,16 @@
 								<div class="success"></div>
 							</div>
 							<div id="filePicker" class="filepicker-container">
-								
+
 							</div>
 							<div class="uploader-server">从服务器端选择</div>
 						</div>
 					</td>
 				</tr>
 
-				
 
-				
+
+
 				<tr>
 					<td class="para-tit">页面关键字：</td>
 					<td>
@@ -140,7 +139,7 @@
 					</td>
 				</tr>
 				<tr>
-					
+
 					<td colspan="2" class="align-c">
 						<input type="submit" name="submit" value="提交" class="btn btn-success  btn-lg">
 					</td>
@@ -151,9 +150,9 @@
 	<div style="height: 200px;"></div>
 
 	<script type="text/javascript">
-		var $classId=<?php echo $classId;?>;
+		var $classId=<?php echo $classId; ?>;
 	</script>
 	<script type="text/javascript" src="./js/upload2.js"></script>
-	
+
 </body>
 </html>
