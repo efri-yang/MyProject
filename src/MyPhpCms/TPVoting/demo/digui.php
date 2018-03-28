@@ -72,6 +72,7 @@ function getChild($id,$data){
 
 function  getTree($id,$data,$nav=""){
     $child=getChild($id,$data);
+    if()
     foreach ($child as $key => $value) {
         if($id==0){
             $nav.='<ul class="aside-menu" id="J_aside-menu">';
