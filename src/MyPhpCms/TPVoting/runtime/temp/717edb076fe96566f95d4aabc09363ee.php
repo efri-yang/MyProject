@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:102:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\user\profileEdit.html";i:1520341988;s:82:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\application\admin\view\layout.html";i:1520304695;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:102:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\public/../application/admin\view\user\profileEdit.html";i:1520341988;s:82:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPVoting\application\admin\view\layout.html";i:1522221703;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
