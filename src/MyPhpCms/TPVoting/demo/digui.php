@@ -65,33 +65,27 @@ function getChild($id,$data){
             $arr[$value["menu_id"]]=$value;
         }
     }
-    return isset($arr) ? $arr :array();
+    return isset($arr) ? $arr :false;
 }
 
 // print_r(getChild(0,$resArr));
 
 function  getTree($id,$data,$nav=""){
     $child=getChild($id,$data);
-    if()
-    foreach ($child as $key => $value) {
-        if($id==0){
-            $nav.='<ul class="aside-menu" id="J_aside-menu">';
-        }else{
-            $nav.='<ul class="treeview-menu">';
+    if(is_array($child)){
+        foreach ($child as $key => $value) {
+            $subChild=getChild($key,$data);
+            if($subChild){
+                $nav.='<li class="treeview"><a href="'.$value["url"].'">'.$value["title"].'</a><ul class="treemenu">';
+                $nav=getTree($value["menu_id"],$data,$nav);
+                $nav.="</ul></li>";
+
+            }else{
+                $nav.='<li><a href="'.$value["url"].'">'.$value["title"].'</a></li>';
+            }
         }
-        $subChild=getChild($value["menu_id"],$data);
-        if(!empty($subChild)){
-                $nav.='<li class="treeview"><a href="'.$value["url"].'">'.$value["title"].'</a>';
-                foreach ($subChild as $k => $v) {
-                    $nav=getTree($v["menu_id"],$data,$nav);
-                }
-                 $nav.="</li></ul>";
-           }else{
-                $nav.='<li><a href="'.$value["url"].'">'.$value["title"].'</a>';
-           }
-       $nav.="</li></ul>";
     }
-   
+    
     return $nav;  
 }
 $nav=getTree(0,$resArr);
