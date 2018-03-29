@@ -49,6 +49,8 @@ class Auth {
      * @return \think\Request
      */
     public static function instance($options = []) {
+        echo "Adfasdfasdf";
+        exit();
         if (is_null(self::$instance)) {
             self::$instance = new static($options);
         }
