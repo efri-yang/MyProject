@@ -16,6 +16,8 @@ class Login extends controller {
         $params = $request->param();
         $params["password"] = md5($params["password"]);
         $validate = Loader::validate("UserLogin");
+
+      
         if (!$validate->check($params)) {
             $this->error($validate->getError(), "login/index");
         } else {
@@ -30,7 +32,14 @@ class Login extends controller {
                 if ($user->status != 1) {
                     $this->error("账户被冻结", "login/index");
                 }
-                //判断是否需要记住账号和密码
+                //判断是否需要记住账号和密码(没有选中checkbox的时候是不在的)，记住账号和密码 那么就需要cookie 存在本地
+                if($params["remember"]==1){
+
+                }else{
+
+                }
+                return "SAdfasdfasdfasdf";
+                exit();
 
                 $this->success("登录成功！", "index/index");
             } else {

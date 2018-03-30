@@ -70,15 +70,33 @@ class Auth {
             if ("url" == $mode && $query != $auth) {
                 //获取id=10&age=20 转化成数组  Array ( [id] => 10 [age] => 20 )
                 parse_str($query, $param);
-                //(返回数组)返回时在$REQUEST中出现同时又出现在$param
+                //(返回数组)返回时在$REQUEST中出现同时又出现在$param参数
                 $intersect = array_intersect_assoc($REQUEST, $param);
                 //返回url  admin/index/say/id/10?id=10&age=20 返回的是 admin/index/say/id/10
                 $auth = preg_replace('/\?.*$/U', '', $auth);
+                if(in_array($auth,$name) && $intersect == $param){
+                    //证明节点符合
+                    $list[] = $auth;
+                }else{
+                    //不是url的模式的时候 只要url 对应就可以
+                    if(in_array($auth,$name)){
+                        $list[] = $auth;
+                    }
+                }
 
             }
 
         }
-
+        if($relation=='or' && !empty($list)){
+            //通过的验证通过的规则名不为空 而且是一个或者的查询
+            return true;
+        }
+        //比较数组$name(传进来的url) 和$list(通过的验证规则的url),并返回返回差集
+        $diff = array_diff($name, $list);
+        if($relation=="and" && empty($diff)){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -173,7 +191,36 @@ class Auth {
             Session::set('_auth_list_' . $uid . $t, $authList);
         }
         return array_unique($authList);
+    }
 
+    public static function dataAuthSign($data){
+        if(!is_array($data)){  
+            $data = (array)$data; 
+        } 
+        ksort($data); //排序  
+         //http_build_query 一个数组经过转化后 foo=bar&baz=boom&cow=milk&php=hypertext
+        $code = http_build_query($data);
+        //sha1 以后 就变成4d759639adf55f64691e8e66b288683c9de02dfc
+        $sign = sha1($code); //生成签名
+        return $sign;
+    }
+
+
+
+    public static function login($uid,$username,$remember=false){
+        if(empty($uid) || empty($username)){
+            return false;
+        }
+        $user = [
+            'user_id' => $uid,
+            'user_name' => $username,
+            'timestamp' => time()
+        ];
+        Session::set('user', $user);
+        Session::set('user_sign', self::data_auth_sign($user));
+        if($remember==true){
+
+        }
     }
 
 }
