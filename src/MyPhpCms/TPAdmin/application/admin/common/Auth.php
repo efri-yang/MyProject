@@ -44,7 +44,41 @@ class Auth {
         if (!$this->config['auth_on']) {
             return true;
         }
-        //
+        //获取权限列表
+        $authList = $this->getAuthList($uid, $type);
+
+        //对参数url($name) 进行格式  并转数组
+        if (is_string($name)) {
+            $name = strtolower($name);
+            if (strpos($name, ",") !== false) {
+                $name = explode(',', $name);
+            } else {
+                $name = [$name];
+            }
+        }
+
+        $list = [];
+        $REQUEST = '';
+        //php  序列化 serialize(返回字符串,存储于任何地方。这有利于存储或传递 PHP 的值，同时不丢失其类型和结构)
+        //开启url模式时全部转换为小写：
+        if ($mode == "url") {
+            $REQUEST = unserialize(strtolower(serialize($this->request->param())));
+        }
+        foreach ($authList as $key => $auth) {
+            //获取url 参数 admin/index/say/id/10?id=10&age=20  获取id=10&age=20
+            $query = preg_replace('/^.+\?/U', '', $auth);
+            if ("url" == $mode && $query != $auth) {
+                //获取id=10&age=20 转化成数组  Array ( [id] => 10 [age] => 20 )
+                parse_str($query, $param);
+                //(返回数组)返回时在$REQUEST中出现同时又出现在$param
+                $intersect = array_intersect_assoc($REQUEST, $param);
+                //返回url  admin/index/say/id/10?id=10&age=20 返回的是 admin/index/say/id/10
+                $auth = preg_replace('/\?.*$/U', '', $auth);
+
+            }
+
+        }
+
     }
 
     /**
