@@ -5,11 +5,12 @@ namespace app\admin\Controller;
 //是否是超级管理员
 //判断权限
 use app\admin\common\Auth;
+use app\admin\common\Tree;
 use app\admin\model\AuthUser;
 use think\Controller;
+use think\Db;
 use think\Loader;
 use think\Request;
-use think\Db;
 use think\Session;
 
 class Base extends Controller {
@@ -44,12 +45,11 @@ class Base extends Controller {
 
             //获取左侧菜单的信息
 
-            $this->webData["sidemenu"] = $this->getSideMenuInfo($uid,1);
+            $this->webData["sidemenu"] = $this->getSideMenuInfo($uid, 1);
             //获取面包导航的信息
-
+            // print_r($this->webData["sidemenu"]);
             //获取页面的标题
             //
-
 
         } else {
             //没登录跳转到登录页面，跟上url
@@ -62,15 +62,42 @@ class Base extends Controller {
         return $userInfo;
     }
 
-    protected function getSideMenuInfo($uid,$type) {
+    protected function getSideMenuInfo($uid, $type) {
         //去调用admin_menus当中
         $auth = new Auth();
 
-        //根据uid 获取 权限的id 关联到menus 表然后读取要显示的选项
-        $menu=$auth->getMenuList($uid, $type);
+        //根据uid 获取 权限的id 关联到menus 表然后读取要显示的选项(menu_id,title,url,icon,is_show,parent_id)
+        $menuList = $auth->getMenuList($uid, $type);
+        $currentNavId = 1;
+        $parentIds = [];
 
-        print_r($menu);
+        //展示菜单选项（获取当前菜单id,所属的父元素(后面循环的时候方便判断)）
 
+        foreach ($menuList as $key => $value) {
+            if ($value['url'] == $this->urlMCA) {
+                $currentNavId = $value["menu_id"];
+                $parentIds = $this->getParentId($value["menu_id"], $menuList);
+            }
+        }
+
+        $tree = new Tree();
+        $sideMenuText = $tree->getSideMenu(0, $currentNavId, $parentIds, $menuList);
+        return $sideMenuText;
+    }
+
+    public function getParentId($id, $data, $parentIds = array()) {
+        foreach ($data as $key => $value) {
+            if ($value["menu_id"] == $id) {
+                $parentIds[] = $value["parent_id"];
+                $parentIds = $this->getParentId($value["parent_id"], $data, $parentIds);
+            }
+        }
+        return $parentIds;
+    }
+
+    protected function fetch($template = '', $vars = [], $replace = [], $config = []) {
+        parent::assign(['webData' => $this->webData]);
+        return parent::fetch($template, $vars, $replace, $config);
     }
 }
 
