@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:96:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPAdmin\public/../application/admin\view\login\index.html";i:1522239492;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:96:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPAdmin\public/../application/admin\view\login\index.html";i:1522399375;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,6 +46,12 @@
                         <img src="<?php echo captcha_src(); ?>" style="height:37px;" id="J_captcha">
                     </div>
                     <div class="am-para-inline"><p class="yzm-kbq" id="J_captcha-kbq" style="height:37px;line-height:37px;">看不清</p></div>
+                </div>
+                <div class="am-form-group">
+                    <label class="am-para-label"></label>
+                    <div class="am-para-input">
+                        <label><input type="checkbox" value="1" name="remember" class="mr5">记住我</label>
+                    </div>
                 </div>
                 <div class="am-cf pl50 pr50">
                     <input type="submit" name="" value="登 录" class="am-btn am-btn-primary am-btn-sm am-fl">

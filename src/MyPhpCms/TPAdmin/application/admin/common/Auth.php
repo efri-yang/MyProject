@@ -1,5 +1,7 @@
 <?php
 namespace app\admin\common;
+use crypt\Crypt;
+use crypt\SafeCookie;
 use think\Config;
 use think\Cookie;
 use think\Db;
@@ -74,12 +76,12 @@ class Auth {
                 $intersect = array_intersect_assoc($REQUEST, $param);
                 //返回url  admin/index/say/id/10?id=10&age=20 返回的是 admin/index/say/id/10
                 $auth = preg_replace('/\?.*$/U', '', $auth);
-                if(in_array($auth,$name) && $intersect == $param){
+                if (in_array($auth, $name) && $intersect == $param) {
                     //证明节点符合
                     $list[] = $auth;
-                }else{
+                } else {
                     //不是url的模式的时候 只要url 对应就可以
-                    if(in_array($auth,$name)){
+                    if (in_array($auth, $name)) {
                         $list[] = $auth;
                     }
                 }
@@ -87,13 +89,13 @@ class Auth {
             }
 
         }
-        if($relation=='or' && !empty($list)){
+        if ($relation == 'or' && !empty($list)) {
             //通过的验证通过的规则名不为空 而且是一个或者的查询
             return true;
         }
         //比较数组$name(传进来的url) 和$list(通过的验证规则的url),并返回返回差集
         $diff = array_diff($name, $list);
-        if($relation=="and" && empty($diff)){
+        if ($relation == "and" && empty($diff)) {
             return true;
         }
         return false;
@@ -193,34 +195,40 @@ class Auth {
         return array_unique($authList);
     }
 
-    public static function dataAuthSign($data){
-        if(!is_array($data)){  
-            $data = (array)$data; 
-        } 
-        ksort($data); //排序  
-         //http_build_query 一个数组经过转化后 foo=bar&baz=boom&cow=milk&php=hypertext
+    public static function dataAuthSign($data) {
+        if (!is_array($data)) {
+            $data = (array) $data;
+        }
+        ksort($data); //排序
+        //http_build_query 一个数组经过转化后 foo=bar&baz=boom&cow=milk&php=hypertext
         $code = http_build_query($data);
         //sha1 以后 就变成4d759639adf55f64691e8e66b288683c9de02dfc
         $sign = sha1($code); //生成签名
         return $sign;
     }
 
-
-
-    public static function login($uid,$username,$remember=false){
-        if(empty($uid) || empty($username)){
+    public static function login($uid, $username, $remember = false) {
+        if (empty($uid) || empty($username)) {
             return false;
         }
         $user = [
             'user_id' => $uid,
             'user_name' => $username,
-            'timestamp' => time()
+            'timestamp' => time(),
         ];
         Session::set('user', $user);
-        Session::set('user_sign', self::data_auth_sign($user));
-        if($remember==true){
-
+        Session::set('user_sign', self::dataAuthSign($user));
+        if ($remember == true) {
+            SafeCookie::set('user', $user);
+            SafeCookie::set('user_sign', self::dataAuthSign($user));
+        } else {
+            //不需要记住的时候记得删除cookie
+            if (Cookie::has('user') || Cookie::has('user_sign')) {
+                Cookie::delete('user');
+                Cookie::delete('user_sign');
+            }
         }
+        return true;
     }
 
 }
