@@ -258,6 +258,87 @@ class Auth {
         return Session::get('user_sign') == self::dataAuthSign($user) ? $user : false;
     }
 
+    public function getMenuList($uid, $type){
+        
+        //通过的集合
+        static $_authList=[];
+
+        //获取当前用户的权限列表
+        
+        $groups=$this->getGroups($uid);
+
+        //当前用户所有权限的id
+        $ids=[];
+
+        foreach ($groups as $key => $value) {
+            $ids=array_merge($ids,explode(",",trim($value["rules"],",")));
+        }
+        //ids 去重复
+        $ids=array_unique($ids);
+
+        //获取所有的满足条件的rule
+        $map = array(
+            'id' => ['in', $ids],
+            'type' => $type,
+            'status' => 1,
+        );
+        $rules=Db::name($this->config["auth_rule"])->where($map)->field('condition,name,menu_id')->select();
+
+        //保存通过筛选的menu_id
+        $authList = []; 
+        foreach ($rules as $key => $rule) {
+            if(!empty($rule["condition"])){
+                $user=$this->getUserInfo($uid); //获取用户信息，为后面的$user["条件"] 做准备
+                $command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
+                @(eval('$condition=(' . $command . ');'));
+                if($condition){
+                    $authList[] = strtolower($rule['menu_id']);
+                }
+            }else{
+                $authList[]=strtolower($rule["menu_id"]);
+            }
+        }
+
+        //通过menus表的关联筛选出符合的菜单
+        
+
+        $map_menu = array(
+            'menu_id' => ['in', $authList],
+            'is_show' => 1,
+        );
+
+        $menus = Db::name('admin_menus')->where($map_menu)->order(["sort_id" => "asc", 'menu_id' => 'asc'])->field('menu_id,title,url,icon,is_show,parent_id')->column('*', 'menu_id');
+        return $menus;
+
+
+        
+
+
+        
+        // if(is_array($authList)){
+        //     //遍历所有的权限，然后通过对比
+        //     foreach ($authList as $key => $value) {
+               
+        //     }
+        // }
+
+    }
+
+
+    protected function getUserInfo($uid){ 
+        static $userInfo=[];
+        $user=Db::name($this->config["auth_user"]);
+        $_pk=is_string($user->getPK()) ? $user->getPk() : 'user_id';
+
+        if(!isset($userInfo[$uid])){
+            $userInfo[$uid]=$user->where($_pk,$uid)->find();
+        }
+        return $userInfo[$uid];
+    }
+
+
+
+
 }
 
 ?>

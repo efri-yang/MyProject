@@ -9,6 +9,7 @@ use app\admin\model\AuthUser;
 use think\Controller;
 use think\Loader;
 use think\Request;
+use think\Db;
 use think\Session;
 
 class Base extends Controller {
@@ -43,12 +44,12 @@ class Base extends Controller {
 
             //获取左侧菜单的信息
 
-            $this->webData["sidemenu"] = $this->getSideMenuInfo($uid);
+            $this->webData["sidemenu"] = $this->getSideMenuInfo($uid,1);
             //获取面包导航的信息
 
             //获取页面的标题
             //
-            //
+
 
         } else {
             //没登录跳转到登录页面，跟上url
@@ -61,9 +62,14 @@ class Base extends Controller {
         return $userInfo;
     }
 
-    protected function getSideMenuInfo($uid) {
+    protected function getSideMenuInfo($uid,$type) {
         //去调用admin_menus当中
         $auth = new Auth();
+
+        //根据uid 获取 权限的id 关联到menus 表然后读取要显示的选项
+        $menu=$auth->getMenuList($uid, $type);
+
+        print_r($menu);
 
     }
 }
