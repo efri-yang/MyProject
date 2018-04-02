@@ -7,7 +7,7 @@ use think\Cookie;
 use think\Db;
 use think\Loader;
 use think\Request;
-use think\session;
+use think\Session;
 
 class Auth {
     protected $request;
@@ -229,6 +229,30 @@ class Auth {
             }
         }
         return true;
+    }
+
+    /**
+     * 手机对于session 进行判断 (如果没有session  则进行cookie，因为用户可能选择记住我)
+     * 上面登录的时候保存了user 和 user_sign，所以判断user 存在且user_sign相等 就可以判断登录
+     * 
+     */
+    public static function isLogin(){
+        $user=Session::get("user");
+        if(empty($user)){
+            if(Cookie::get("user") && Cookie::get("user_sign")){
+                //解码过程
+                $user = SafeCookie::get('user');
+                $user_sign = SafeCookie::get('user_sign');
+                $is_sin =($user_sign == self::dataAuthSign($user)) ? $user : false;
+                if($is_sin){
+                    Session::set('user', $user);
+                    Session::set('user_sign', $user_sign);
+                    return true;
+                }
+                return false;
+            }
+        }
+        return Session::get('user_sign')==self::dataAuthSign($user) ? $user : false;
     }
 
 }

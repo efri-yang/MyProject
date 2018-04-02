@@ -37,7 +37,7 @@ class Login extends controller {
                 if (@$params["remember"] == 1) {
                     Auth::login($user["id"], $user["username"], true);
                 } else {
-                    Auth::login($user["id"], $user["username"], true);
+                    Auth::login($user["id"], $user["username"], false);
                 }
                 $this->success("登录成功！", "index/index");
             } else {
