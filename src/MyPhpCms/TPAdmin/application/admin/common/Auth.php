@@ -29,7 +29,7 @@ class Auth {
     }
 
     /**
-     * 检查权限
+     * 检查权限(对请求参数进行直接认证)
      * @param $name string|array  需要验证的规则列表,支持逗号分隔的权限规则或索引数组
      * @param $uid  int           认证用户的id
      * @param string $relation 如果为 'or' 表示满足任一条规则即通过验证;如果为 'and'则表示需满足所有规则才能通过验证
@@ -48,7 +48,7 @@ class Auth {
         }
         //获取权限列表
         $authList = $this->getAuthList($uid, $type);
-
+        
         //对参数url($name) 进行格式  并转数组
         if (is_string($name)) {
             $name = strtolower($name);
@@ -87,8 +87,10 @@ class Auth {
                 }
 
             }
-
         }
+
+        print_r($list);
+        exit();
         if ($relation == 'or' && !empty($list)) {
             //通过的验证通过的规则名不为空 而且是一个或者的查询
             return true;
@@ -159,7 +161,7 @@ class Auth {
         $ids = []; //保存用户所属用户组设置的所有权限规则id
         foreach ($groups as $key => $value) {
             //去除rules前后的逗号
-            $ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
+            $ids = array_merge($ids, explode(',', trim($value['rules'], ',')));
         }
         $ids = array_unique($ids);
         if (empty($ids)) {

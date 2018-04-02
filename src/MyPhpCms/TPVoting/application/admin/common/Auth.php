@@ -101,6 +101,7 @@ class Auth {
                 }
             }
         }
+       
         if ('or' == $relation && !empty($list)) {
             return true;
         }
