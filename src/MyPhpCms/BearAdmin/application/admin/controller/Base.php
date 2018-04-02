@@ -209,6 +209,8 @@ class Base extends Controller {
 
     protected function getUserInfo($user_id) {
         $user_info = AdminUsers::get($user_id);
+
+        print_r($user_info);
         return $user_info;
     }
 
@@ -276,8 +278,8 @@ class Base extends Controller {
     function ajaxReturnData($result = []) {
         return Response::create($result, 'json');
     }
-
     /**
+
      * 错误返回
      * @param string $message
      * @param int $status

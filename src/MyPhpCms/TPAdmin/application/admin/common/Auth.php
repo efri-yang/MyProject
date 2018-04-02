@@ -48,7 +48,7 @@ class Auth {
         }
         //获取权限列表
         $authList = $this->getAuthList($uid, $type);
-        
+
         //对参数url($name) 进行格式  并转数组
         if (is_string($name)) {
             $name = strtolower($name);
@@ -67,30 +67,31 @@ class Auth {
             $REQUEST = unserialize(strtolower(serialize($this->request->param())));
         }
         foreach ($authList as $key => $auth) {
+
             //获取url 参数 admin/index/say/id/10?id=10&age=20  获取id=10&age=20
             $query = preg_replace('/^.+\?/U', '', $auth);
+
             if ("url" == $mode && $query != $auth) {
+
                 //获取id=10&age=20 转化成数组  Array ( [id] => 10 [age] => 20 )
                 parse_str($query, $param);
                 //(返回数组)返回时在$REQUEST中出现同时又出现在$param参数
                 $intersect = array_intersect_assoc($REQUEST, $param);
                 //返回url  admin/index/say/id/10?id=10&age=20 返回的是 admin/index/say/id/10
                 $auth = preg_replace('/\?.*$/U', '', $auth);
+
                 if (in_array($auth, $name) && $intersect == $param) {
                     //证明节点符合
                     $list[] = $auth;
-                } else {
-                    //不是url的模式的时候 只要url 对应就可以
-                    if (in_array($auth, $name)) {
-                        $list[] = $auth;
-                    }
                 }
-
+            } else {
+                //不是url的模式的时候 只要url 对应就可以
+                if (in_array($auth, $name)) {
+                    $list[] = $auth;
+                }
             }
         }
 
-        print_r($list);
-        exit();
         if ($relation == 'or' && !empty($list)) {
             //通过的验证通过的规则名不为空 而且是一个或者的查询
             return true;
@@ -236,17 +237,17 @@ class Auth {
     /**
      * 手机对于session 进行判断 (如果没有session  则进行cookie，因为用户可能选择记住我)
      * 上面登录的时候保存了user 和 user_sign，所以判断user 存在且user_sign相等 就可以判断登录
-     * 
+     *
      */
-    public static function isLogin(){
-        $user=Session::get("user");
-        if(empty($user)){
-            if(Cookie::get("user") && Cookie::get("user_sign")){
+    public static function isLogin() {
+        $user = Session::get("user");
+        if (empty($user)) {
+            if (Cookie::get("user") && Cookie::get("user_sign")) {
                 //解码过程
                 $user = SafeCookie::get('user');
                 $user_sign = SafeCookie::get('user_sign');
-                $is_sin =($user_sign == self::dataAuthSign($user)) ? $user : false;
-                if($is_sin){
+                $is_sin = ($user_sign == self::dataAuthSign($user)) ? $user : false;
+                if ($is_sin) {
                     Session::set('user', $user);
                     Session::set('user_sign', $user_sign);
                     return true;
@@ -254,7 +255,7 @@ class Auth {
                 return false;
             }
         }
-        return Session::get('user_sign')==self::dataAuthSign($user) ? $user : false;
+        return Session::get('user_sign') == self::dataAuthSign($user) ? $user : false;
     }
 
 }
