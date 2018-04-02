@@ -11,6 +11,7 @@ use think\Session;
 
 class Auth {
     protected $request;
+    protected static $instance;
     protected $config = [
         'auth_on' => true, // 认证开关
         'auth_type' => 1, // 认证方式，1为实时认证；2为登录认证。
@@ -316,7 +317,11 @@ class Auth {
             'is_show' => 1,
         );
 
-        $menus = Db::name('admin_menus')->where($map_menu)->order(["sort_id" => "asc", 'menu_id' => 'asc'])->field('menu_id,title,url,icon,is_show,parent_id')->column('*', 'menu_id');
+        if ($uid == 1) {
+            $menus = Db::name('admin_menus')->where('is_show=1')->order(["sort_id" => "asc", 'menu_id' => 'asc'])->field('menu_id,title,url,icon,is_show,parent_id')->column('*', 'menu_id');
+        } else {
+            $menus = Db::name('admin_menus')->where($map_menu)->order(["sort_id" => "asc", 'menu_id' => 'asc'])->field('menu_id,title,url,icon,is_show,parent_id')->column('*', 'menu_id');
+        }
 
         return $menus;
 
@@ -338,6 +343,16 @@ class Auth {
             $userInfo[$uid] = $user->where($_pk, $uid)->find();
         }
         return $userInfo[$uid];
+    }
+
+    public static function loginOut() {
+        Session::delete('user');
+        Session::delete('user_sign');
+        if (Cookie::has('user')) {
+            Cookie::delete('user');
+            Cookie::delete('user_sign');
+        }
+        return true;
     }
 
 }

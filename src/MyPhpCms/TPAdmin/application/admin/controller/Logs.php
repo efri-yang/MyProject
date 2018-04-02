@@ -1,6 +1,5 @@
 <?php
 namespace app\admin\controller;
-use app\admin\common\Auth;
 use think\Controller;
 use think\Session;
 
@@ -10,14 +9,15 @@ use think\Session;
  *
  * 结论 就是： _initialize 其实是在tp 中调用的，只会执行一次，从子元素向下搜索，找打第一个执行
  */
-class Index extends Base {
-    // public function __construct(){
-    //     echo  "Index_construct"."<br/>";
-    // }
+class Logs extends Base {
 
-    public function index() {
+    public function handler() {
 
         return $this->fetch();
+    }
+    public function sys() {
+
+        echo "Logs-sys";
     }
 }
 ?>

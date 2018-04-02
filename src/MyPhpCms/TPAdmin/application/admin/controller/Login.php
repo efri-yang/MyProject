@@ -33,7 +33,6 @@ class Login extends controller {
                     $this->error("账户被冻结", "login/index");
                 }
                 //判断是否需要记住账号和密码(没有选中checkbox的时候是不在的)，记住账号和密码 那么就需要cookie 存在本地
-
                 if (@$params["remember"] == 1) {
                     Auth::login($user["id"], $user["username"], true);
                 } else {
@@ -44,6 +43,12 @@ class Login extends controller {
                 //用户不存在
                 $this->error("用户名或者密码错误！", "login/index");
             }
+        }
+    }
+
+    public function loginOut() {
+        if (Auth::loginOut()) {
+            $this->success("成功退出！", "login/index");
         }
     }
 }

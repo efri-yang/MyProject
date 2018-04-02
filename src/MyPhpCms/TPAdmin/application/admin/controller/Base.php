@@ -47,7 +47,7 @@ class Base extends Controller {
 
             $this->webData["sidemenu"] = $this->getSideMenuInfo($uid, 1);
             //获取面包导航的信息
-            // print_r($this->webData["sidemenu"]);
+
             //获取页面的标题
             //
 
@@ -76,13 +76,35 @@ class Base extends Controller {
         foreach ($menuList as $key => $value) {
             if ($value['url'] == $this->urlMCA) {
                 $currentNavId = $value["menu_id"];
+                $this->webData["webtitle"] = $value["title"];
                 $parentIds = $this->getParentId($value["menu_id"], $menuList);
             }
         }
 
+        $this->webData["crumb"] = $this->getBreadcrumb($currentNavId, $menuList);
+
         $tree = new Tree();
         $sideMenuText = $tree->getSideMenu(0, $currentNavId, $parentIds, $menuList);
         return $sideMenuText;
+    }
+
+    public function getBreadcrumb($currentNavId, $menuList, $navStr = "") {
+        if (is_array($menuList)) {
+            foreach ($menuList as $key => $value) {
+                if ($value['menu_id'] == $currentNavId) {
+                    if (!$navStr) {
+                        $bread = '<li class="am-active">' . $value["title"] . '</li>';
+                    } else {
+                        $bread = '<li><a href="' . $value["url"] . '">' . $value["title"] . '</a></li>';
+                    }
+                    $navStr = $bread . $navStr;
+                    $navStr = $this->getBreadcrumb($value["parent_id"], $menuList, $navStr);
+
+                }
+
+            }
+        }
+        return $navStr;
     }
 
     public function getParentId($id, $data, $parentIds = array()) {
@@ -97,7 +119,7 @@ class Base extends Controller {
 
     protected function fetch($template = '', $vars = [], $replace = [], $config = []) {
         parent::assign(['webData' => $this->webData]);
-        return parent::fetch($template, $vars, $replace, $config);
+        return $this->view->fetch($template, $vars, $replace, $config);
     }
 }
 

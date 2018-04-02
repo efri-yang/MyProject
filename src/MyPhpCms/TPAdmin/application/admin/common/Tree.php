@@ -23,9 +23,9 @@ class Tree {
                     $sideMenuText .= "</ul></li>";
                 } else {
                     if ($value["menu_id"] == $currentId) {
-                        $sideMenuText .= '<li class="current"><a href="' . $value["url"] . '"><span class="fl">' . $repeatText . '</span><i class="iconfont f14">&#xe65d;</i><span class="txt">' . $value['title'] . '</span></a></li>';
+                        $sideMenuText .= '<li class="current"><a href="' . url($value["url"]) . '"><span class="fl">' . $repeatText . '</span><i class="iconfont f14">&#xe65d;</i><span class="txt">' . $value['title'] . '</span></a></li>';
                     } else {
-                        $sideMenuText .= '<li><a href="' . $value["url"] . '"><span class="fl">' . $repeatText . '</span><i class="iconfont f14">&#xe65d;</i><span class="txt">' . $value['title'] . '</span></a></li>';
+                        $sideMenuText .= '<li><a href="' . url($value["url"]) . '"><span class="fl">' . $repeatText . '</span><i class="iconfont f14">&#xe65d;</i><span class="txt">' . $value['title'] . '</span></a></li>';
                     }
                 }
             }

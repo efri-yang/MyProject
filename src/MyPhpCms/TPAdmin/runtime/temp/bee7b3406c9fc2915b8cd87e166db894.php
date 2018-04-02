@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:96:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPAdmin\public/../application/admin\view\index\index.html";i:1522685246;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:103:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPAdmin\public/../application/admin\view\admin_user\profile.html";i:1522685407;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 

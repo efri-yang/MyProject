@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:96:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPAdmin\public/../application/admin\view\index\index.html";i:1522685246;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:97:"G:\xampp\htdocs\MyProject\src\MyPhpCms\TPAdmin\public/../application/admin\view\logs\handler.html";i:1522676090;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,15 +26,29 @@
         <!-- 头部  start****************************************************** -->
         <div class="coms-layout-header">
             <a href="#" class="logo">小鱼生活消费大平台</a>
-            
+            <ul class="header-nav">
+                <li class="active"><a href="">首页</a></li>
+                <li><a href="">社区</a></li>
+                <li><a href="">好店</a></li>
+                <li><a href="">行业</a></li>
+                <li><a href="">白卡</a></li>
+            </ul>
             <div class="header-userinfo">
-                <a class="info-name" href="javascript:;"><?php echo $webData["userinfo"]['username']; ?><span class="arrow"></span></a>
+                <a class="info-name" href="javascript:;">onetao<span class="arrow"></span></a>
                 <ul class="dropdown-list">
-                    <li><a href="<?php echo url('admin/admin_user/profile'); ?>">修改资料</a></li>
-                    <li><a href="<?php echo url('login/loginout'); ?>">退出</a></li>
+                    <li><a href="#">操作1</a></li>
+                    <li><a href="#">操作2</a></li>
+                    <li><a href="#">操作3</a></li>
                 </ul>
             </div>
-            
+            <div class="header-notice">
+                <a class="tit" href="javascript:;">通知<b><i>8</i></b></a>
+                <ul class="dropdown-list">
+                    <li><a href="#">操作1</a></li>
+                    <li><a href="#">操作2</a></li>
+                    <li><a href="#">操作31</a></li>
+                </ul>
+            </div>
         </div>
         <!-- 头部  end****************************************************** -->
         <!-- side  start****************************************************** -->
@@ -80,7 +94,7 @@
         </script>
         <div class="coms-layout-body p15" id="J_coms-layout-body">
             <div class="coms-elem-quote am-cf">
-                <span class="fl f16"><?php echo $webData["webtitle"]; ?></span>
+                <span class="fl f16">通用框架示范</span>
                 <ol class="am-breadcrumb fr p0 m0">
                     <?php echo $webData["crumb"]; ?>
                 </ol>
