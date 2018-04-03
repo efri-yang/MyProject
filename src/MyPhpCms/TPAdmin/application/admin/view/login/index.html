@@ -1,8 +1,9 @@
+{__NOLAYOUT__}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title></title>
+    <title>登录</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
@@ -42,7 +43,9 @@
                         <input type="text" placeholder="输入密码" name="captcha" />
                     </div>
                     <div class="am-para-inline">
-                        <img src="{:captcha_src()}" style="height:37px;" id="J_captcha">
+                        <!-- <img src="{:captcha_src()}" style="height:37px;" id="J_captcha"> -->
+                        <img src="{:url('login/verify')}" style="height:37px;" id="J_captcha">
+
                     </div>
                     <div class="am-para-inline"><p class="yzm-kbq" id="J_captcha-kbq" style="height:37px;line-height:37px;">看不清</p></div>
                 </div>

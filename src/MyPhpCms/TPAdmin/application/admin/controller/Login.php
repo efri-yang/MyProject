@@ -7,9 +7,40 @@ use think\Loader;
 use think\Request;
 use think\Validate;
 
+
+use think\captcha\Captcha;
+
 class Login extends controller {
     public function index() {
         return $this->fetch();
+    }
+
+    //验证码
+    public function verify(){
+        $config =    [
+            // 验证码字符集合
+            'codeSet' => '0123456789',
+            // 验证码字体大小(px)
+            'fontSize' => 14,
+            // 是否画混淆曲线
+            'useCurve' => false,
+            // 验证码图片高度
+            'imageH' => 30,
+            // 验证码图片宽度
+            'imageW' => 100,
+            //
+            'fontttf' => '4.ttf',
+
+            // 验证码位数
+            'length' => 4,
+
+            'useNoise' => true,
+
+            // 验证成功后是否重置
+            'reset' => true
+        ];
+        $captcha = new Captcha($config);
+        return $captcha->entry();
     }
 
     public function login() {
