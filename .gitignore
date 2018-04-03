@@ -5,6 +5,7 @@ build/
 dist/
 .tmp/
 dev/
+runtime/
 Discuz/*
 *.dat
 *.sass-cache
