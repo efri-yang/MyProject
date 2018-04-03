@@ -30,4 +30,8 @@ return [
         // 验证成功后是否重置
         'reset' => true,
     ],
+    'template' => [
+        'layout_on' => true,
+        'layout_name' => 'layout'
+    ]
 ];
