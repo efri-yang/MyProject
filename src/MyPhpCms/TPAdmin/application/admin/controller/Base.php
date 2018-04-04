@@ -14,7 +14,7 @@ use think\Request;
 use think\Session;
 
 class Base extends Controller {
-    protected $request, $param, $module, $controller, $action, $urlMCA, $webData;
+    protected $request, $param, $module, $controller, $action, $urlMCA, $urlMC, $webData;
     public function __construct() {
         $this->request = Request::instance();
         //请求参数
@@ -25,6 +25,8 @@ class Base extends Controller {
         $this->action = $this->request->action();
 
         $this->urlMCA = $this->module . "/" . Loader::parseName($this->controller) . "/" . $this->action;
+
+        $this->urlMC = $this->module . "/" . Loader::parseName($this->controller);
 
         parent::__construct();
 
@@ -49,7 +51,6 @@ class Base extends Controller {
             //获取面包导航的信息
 
             //获取页面的标题
-            //
 
         } else {
             //没登录跳转到登录页面，跟上url

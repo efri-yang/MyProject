@@ -1,5 +1,5 @@
 <div class="p15">
-    {include file="common/breadcrumb"}
+    {include file="common/breadcrumb" /}
     <style type="text/css">
         .coms-table-bd td i.iconfont{
             margin-right:5px;
@@ -13,7 +13,7 @@
     
         <!--  no-border  去掉头部就有边控了-->
         <div class="clearfix mb15">
-            <a href="{:url('admin_menu/add')}" class="am-btn am-btn-success fr">添加菜单</a>
+            <a href="{:url('admin/admin_menu/add')}" class="am-btn am-btn-success fr">添加菜单</a>
         </div>
         <div class="coms-table-bd">
             <table class="am-table am-table-bordered">
@@ -43,13 +43,13 @@
 </div>
 
 <script type="text/javascript">
-		$(function(){
-			var $checkboxAll=$('input[name="tblCheckAll"]');
-			var $checkboxSingle=$('input[name="menus[]"]');
+        $(function(){
+            var $checkboxAll=$('input[name="tblCheckAll"]');
+            var $checkboxSingle=$('input[name="menus[]"]');
             var len=$checkboxSingle.length;
             var count=0;
-			
-			$checkboxAll.on("click",function(){
+            
+            $checkboxAll.on("click",function(){
                 var $this=$(this);
                 var isChecked=$this.prop("checked");
 
@@ -58,7 +58,7 @@
                 });
                 $checkboxAll.prop("checked",isChecked);
                 count=len;
-			});
+            });
             $.each($checkboxSingle,function(index,el){
                 $(el).on("change",function(){
                     var $this=$(this);
@@ -74,5 +74,5 @@
                     }
                 })
             });
-		})
+        })
 </script>
