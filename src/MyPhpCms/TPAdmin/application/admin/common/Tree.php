@@ -44,71 +44,52 @@ class Tree {
     }
 
     public function getMenu($levelId, $data, $str = "", $repeatNum = 0) {
+       
         $child = $this->getChild($levelId, $data);
-
-        $repeatText = str_repeat($this->repeatPlaceholder, $repeatNum);
+        $repeatText = str_repeat($this->repeatPlaceholder,$repeatNum);
+        if($repeatNum){
+            $repeatLine="|— ";
+        }else{
+            $repeatLine="";
+        }
+        $repeatNum++;
         if (is_array($child)) {
             foreach ($child as $key => $value) {
-                $subChild = $this->getChild($value["menu_id"], $data);
-
-                if ($subChild) {
-
-                    if ($repeatNum == 0) {
-                        $str .= '<tr>';
-                        $str .= '<td>' . $value["menu_id"] . '</td>';
-                        $str .= '<td class="align-l">' . $value["title"] . '</td>';
-                        $str .= '<td>' . $value["url"] . '</td>';
-                        $str .= '<td>0</td>';
-                        $str .= '<td>大图</td>';
-                        $str .= '<td>正常</td>';
-                        $str .= '<td>大图</td>';
-                        $str .= '<td>正常</td>';
-                        $str .= '<td><a href="#" class="am-btn am-btn-danger am-btn-xs">删除</a><a href="#" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
-                        $str .= '</tr>';
-                    } else {
-                        $str .= '<tr>';
-                        $str .= '<td>' . $value["menu_id"] . '</td>';
-                        $str .= '<td class="align-l">' . $repeatText . '|—— ' . $value["title"] . '</td>';
-                        $str .= '<td>' . $value["url"] . '</td>';
-                        $str .= '<td>0</td>';
-                        $str .= '<td>大图</td>';
-                        $str .= '<td>正常</td>';
-                        $str .= '<td>大图</td>';
-                        $str .= '<td>正常</td>';
-                        $str .= '<td><a href="#" class="am-btn am-btn-danger am-btn-xs">删除</a><a href="#" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
-                        $str .= '</tr>';
-                    }
-                    $repeatNum++;
-                    $str = $this->getMenu($value["menu_id"], $data, $str, $repeatNum);
-
-                } else {
-                    if ($repeatNum == 0) {
-                        $str .= '<tr>';
-                        $str .= '<td>' . $value["menu_id"] . '</td>';
-                        $str .= '<td class="align-l">' . $value["title"] . '</td>';
-                        $str .= '<td>' . $value["url"] . '</td>';
-                        $str .= '<td>0</td>';
-                        $str .= '<td>大图</td>';
-                        $str .= '<td>正常</td>';
-                        $str .= '<td>大图</td>';
-                        $str .= '<td>正常</td>';
-                        $str .= '<td><a href="#" class="am-btn am-btn-danger am-btn-xs">删除</a><a href="#" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
-                        $str .= '</tr>';
-                    } else {
-                        $str .= '<tr>';
-                        $str .= '<td>' . $value["menu_id"] . '</td>';
-                        $str .= '<td class="align-l">' . $repeatText . $value["title"] . '</td>';
-                        $str .= '<td>' . $value["url"] . '</td>';
-                        $str .= '<td>0</td>';
-                        $str .= '<td>大图</td>';
-                        $str .= '<td>正常</td>';
-                        $str .= '<td>大图</td>';
-                        $str .= '<td>正常</td>';
-                        $str .= '<td><a href="#" class="am-btn am-btn-danger am-btn-xs">删除</a><a href="#" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
-                        $str .= '</tr>';
-                    }
+                switch ($value["log_type"]) {
+                    case 1:
+                        $logType='get';
+                        break;
+                    case 2:
+                        $logType='post';
+                        break;
+                    case 3:
+                        $logType='input';
+                        break;
+                    case 1:
+                        $logType='delete';
+                        break;
+                    default:
+                        $logType='get';
 
                 }
+               
+                $str .= '<tr>';
+                $str .= '<td>' . $value["menu_id"] . '</td>';
+                $str .= '<td class="align-l">' . $repeatText .$repeatLine.$value["title"] . '</td>';
+                $str .= '<td class="align-l">' . $value["url"] . '</td>';
+                $str .= '<td>'.$value["parent_id"].'</td>';
+                $str .= '<td><i class="iconfont '.$value["icon"].'"></i>'.$value["icon"].'</td>';
+                $str .= '<td>'.$value["sort_id"].'</td>';
+                $str .= '<td>'.($value["status"]==1 ? "正常" :"禁用").'</td>';
+                $str .= '<td>'.$logType.'</td>';
+                $str .= '<td><a href="" class="am-btn am-btn-danger am-btn-xs mr5">删除</a><a href="'.url("admin/admin_menu/edit").'?id='.$value["menu_id"].'" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
+                $str .= '</tr>';
+
+                $subChild = $this->getChild($value["menu_id"], $data);
+                if($subChild){
+                    $str=$this->getMenu($value["menu_id"], $data,$str,$repeatNum);
+                }
+                
 
             }
         }

@@ -14,5 +14,9 @@ class AdminMenu extends Base {
         $this->assign('menuadmin', $menuList);
         return $this->fetch();
     }
+
+    public function add(){
+    	return $this->fetch();
+    }
 }
 ?>

@@ -393,7 +393,8 @@ small {
         margin-left: -24px; }
 
 html, body {
-  height: 100%; }
+  height: 100%;
+  overflow-x: hidden; }
 
 .coms-nodata-1 .hd {
   text-align: center;
