@@ -321,7 +321,7 @@ class Base extends Controller {
         // array 中的id 就是menu_id的值
         $menu = $auth->getMenuList(Session::get('user.user_id'), 1);
 
-        print_r($menu);
+        
         // print_r($menu);
         $max_level = 0;
         $current_id = 1;

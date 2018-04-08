@@ -14,7 +14,7 @@ use think\Request;
 use think\Session;
 
 class Base extends Controller {
-    protected $request, $param, $module, $controller, $action, $urlMCA, $urlMC, $webData;
+    protected $request, $param, $module, $controller, $action, $urlMCA, $urlMC, $webData, $sideMenuList,$parentIds;
     public function __construct() {
         $this->request = Request::instance();
         //请求参数
@@ -45,12 +45,35 @@ class Base extends Controller {
             //获取用户的信息
             $this->webData["userinfo"] = $this->getUserInfo($uid);
 
+
+            //获取当前url对应的menu的信息数组
+            $currentMenuInfo=$this->getCurrentMenuInfo();
+
+            //当前url的menu_id(来判断左侧菜单栏显示哪个项)
+            $currentMenuId=$currentMenuInfo['menu_id'];
+
+
+            $this->parentIds=$this->getParentId();
+
+
+
+
+            //获取当前的title
+            $this->webData["webtitle"] = $currentMenuInfo["title"];
+
+
             //获取左侧菜单的信息
 
             $this->webData["sidemenu"] = $this->getSideMenuInfo($uid, 1);
-            //获取面包导航的信息
-            $this->webData['data_add_url'] = url($this->urlMC . 'add');
-            //获取页面的标题
+
+
+            //获取面包导航屑
+            $this->webData["crumb"] = $this->getBreadcrumb($currentNavId, $menuList);
+
+
+
+            
+           
 
         } else {
             //没登录跳转到登录页面，跟上url
@@ -68,27 +91,22 @@ class Base extends Controller {
         $auth = new Auth();
 
         //根据uid 获取 权限的id 关联到menus 表然后读取要显示的选项(menu_id,title,url,icon,is_show,parent_id)
-        $menuList = $auth->getMenuList($uid, $type);
+        $this->sideMenuList = $auth->getMenuList($uid, $type);
 
-        print_r($menuList);
-        $currentNavId = 1;
+
+       
+       
         $parentIds = [];
 
-        //展示菜单选项（获取当前菜单id,所属的父元素(后面循环的时候方便判断)）
+        //展示菜单选项（获取当前菜单id,所属的父元素(后面循环的时候方便判断)
 
-        foreach ($menuList as $key => $value) {
-            echo $value['url'] . "<br/>";
-
-            echo $this->urlMCA . "<br/>";
+        foreach ($this->sideMenuList as $key => $value) {
             if ($value['url'] == $this->urlMCA) {
-
-                $currentNavId = $value["menu_id"];
-                $this->webData["webtitle"] = $value["title"];
-                $parentIds = $this->getParentId($value["menu_id"], $menuList);
+                $parentIds = $this->getParentId($value["menu_id"], $this->sideMenuList);
             }
         }
 
-        $this->webData["crumb"] = $this->getBreadcrumb($currentNavId, $menuList);
+       
 
         $tree = new Tree();
         $sideMenuText = $tree->getSideMenu(0, $currentNavId, $parentIds, $menuList);
@@ -127,6 +145,10 @@ class Base extends Controller {
     protected function fetch($template = '', $vars = [], $replace = [], $config = []) {
         parent::assign(['webData' => $this->webData]);
         return $this->view->fetch($template, $vars, $replace, $config);
+    }
+
+    protected function getCurrentMenuInfo() {
+       return Db::name('admin_menus')->where(['url' => $this->urlMCA])->find();
     }
 }
 
