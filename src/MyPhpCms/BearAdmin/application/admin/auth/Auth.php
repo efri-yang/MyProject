@@ -105,7 +105,6 @@ class Auth {
         foreach ($authList as $auth) {
             $query = preg_replace('/^.+\?/U', '', $auth);
 
-            print_r($query != $auth);
             if ('url' == $mode && $query != $auth) {
                 parse_str($query, $param); //解析规则中的param
                 $intersect = array_intersect_assoc($REQUEST, $param);

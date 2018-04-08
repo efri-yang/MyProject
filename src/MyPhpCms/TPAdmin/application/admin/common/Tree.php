@@ -44,7 +44,6 @@ class Tree {
     }
 
     public function getMenu($levelId, $data, $str = "", $repeatNum = 0) {
-
         $child = $this->getChild($levelId, $data);
         $repeatText = str_repeat($this->repeatPlaceholder, $repeatNum);
         if ($repeatNum) {
@@ -82,7 +81,7 @@ class Tree {
                 $str .= '<td>' . $value["sort_id"] . '</td>';
                 $str .= '<td>' . ($value["status"] == 1 ? "正常" : "禁用") . '</td>';
                 $str .= '<td>' . $logType . '</td>';
-                $str .= '<td><a href="" class="am-btn am-btn-danger am-btn-xs mr5">删除</a><a href="" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
+                $str .= '<td><a href="javascript:void(0);" class="am-btn am-btn-danger am-btn-xs mr5">删除</a><a href="" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
                 $str .= '</tr>';
 
                 $subChild = $this->getChild($value["menu_id"], $data);

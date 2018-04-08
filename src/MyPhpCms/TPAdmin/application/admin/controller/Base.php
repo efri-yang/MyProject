@@ -26,7 +26,7 @@ class Base extends Controller {
 
         $this->urlMCA = $this->module . "/" . Loader::parseName($this->controller) . "/" . $this->action;
 
-        $this->urlMC = $this->module . "/" . Loader::parseName($this->controller);
+        $this->urlMC = $this->module . "/" . Loader::parseName($this->controller) . "/";
 
         parent::__construct();
 
@@ -49,7 +49,7 @@ class Base extends Controller {
 
             $this->webData["sidemenu"] = $this->getSideMenuInfo($uid, 1);
             //获取面包导航的信息
-
+            $this->webData['data_add_url'] = url($this->urlMC . 'add');
             //获取页面的标题
 
         } else {
@@ -69,13 +69,19 @@ class Base extends Controller {
 
         //根据uid 获取 权限的id 关联到menus 表然后读取要显示的选项(menu_id,title,url,icon,is_show,parent_id)
         $menuList = $auth->getMenuList($uid, $type);
+
+        print_r($menuList);
         $currentNavId = 1;
         $parentIds = [];
 
         //展示菜单选项（获取当前菜单id,所属的父元素(后面循环的时候方便判断)）
 
         foreach ($menuList as $key => $value) {
+            echo $value['url'] . "<br/>";
+
+            echo $this->urlMCA . "<br/>";
             if ($value['url'] == $this->urlMCA) {
+
                 $currentNavId = $value["menu_id"];
                 $this->webData["webtitle"] = $value["title"];
                 $parentIds = $this->getParentId($value["menu_id"], $menuList);

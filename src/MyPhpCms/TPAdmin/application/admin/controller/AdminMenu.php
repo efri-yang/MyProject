@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 use app\admin\common\Auth;
 use app\admin\common\Tree;
+use think\Db;
 use think\Session;
 
 class AdminMenu extends Base {
@@ -11,15 +12,13 @@ class AdminMenu extends Base {
         $tree = new Tree();
 
         $result = Db::table("think_admin_menus")->order(["sort_id" => "asc", 'menu_id' => 'asc'])->column('*', 'menu_id');
-        echo "Sdfasdfasdf";
         $menuList = $tree->getMenu(0, $result);
-
-        print_r($menuList);
         $this->assign('menuadmin', $menuList);
         return $this->fetch();
     }
 
     public function add() {
+
         return $this->fetch("add");
     }
 
