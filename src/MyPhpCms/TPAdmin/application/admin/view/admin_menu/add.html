@@ -2,6 +2,7 @@
     {include file="common/breadcrumb" /}
     <div class="am-form am-form-horizontal">
     	<!--  data-am-validator -->
+
         
         <form data-am-validator  method="post" action="{:url('add')}">
             <div class="am-form-group">
@@ -17,14 +18,14 @@
             <div class="am-form-group">
                 <label class="am-para-label">菜单名称：</label>
                 <div class="am-para-input">
-                   <input type="text" required name="title" value="{}" />
+                   <input type="text" required name="title" value="" />
                 </div>
             </div>
 
             <div class="am-form-group">
                 <label class="am-para-label">URL：</label>
                 <div class="am-para-input">
-                   <input type="text" required name="url"  pattern="^[0-9a-zA-Z]+$" />
+                   <input type="text" required name="url"  pattern="^[0-9a-zA-Z//]+$" />
                 </div>
             </div>
 

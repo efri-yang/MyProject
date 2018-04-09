@@ -1,16 +1,15 @@
 <div class="p15">
     {include file="common/breadcrumb" /}
     <style type="text/css">
-        .coms-table-bd td i.iconfont{
-            margin-right:5px;
-            display: inline-block;
-            vertical-align:middle;
-            font-size:18px;
-            color:#666;    
-        }
+    .coms-table-bd td i.iconfont {
+        margin-right: 5px;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 18px;
+        color: #666;
+    }
     </style>
     <div class="coms-table-wrap  pl30 pr30 mb30">
-    
         <!--  no-border  去掉头部就有边控了-->
         <div class="clearfix mb15">
             <a href="{:url('add')}" class="am-btn am-btn-success fr">添加菜单</a>
@@ -32,46 +31,68 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {$menuadmin} 
-                    
+                    {$menuadmin}
                 </tbody>
             </table>
         </div>
-       
     </div>
 </div>
-
 <script type="text/javascript">
-        $(function(){
-            var $checkboxAll=$('input[name="tblCheckAll"]');
-            var $checkboxSingle=$('input[name="menus[]"]');
-            var len=$checkboxSingle.length;
-            var count=0;
-            
-            $checkboxAll.on("click",function(){
-                var $this=$(this);
-                var isChecked=$this.prop("checked");
+$(function() {
+    $(".coms-table-bd td .am-btn-danger").on("click", function(event) {
+        event.preventDefault();
+        var $this = $(this);
+        var layerIndex;
+        var href = $this.attr("href");
+        var tipTxt;
+        if ($this.data("roler") == "single") {
+            tipTxt = "您确定删除该菜单项？";
+        } else {
+            tipTxt = "删除该菜单项,其包含的子菜单也将被删除！"
+        }
+        layerIndex=layer.confirm(tipTxt, {
+            btn: ['取消', '确认'] //按钮
+        }, function() {
+            layer.close(layerIndex);
+        }, function() {
+            window.location.href = href;
+        });
 
-                $checkboxSingle.prop({
-                    checked:isChecked
-                });
-                $checkboxAll.prop("checked",isChecked);
-                count=len;
-            });
-            $.each($checkboxSingle,function(index,el){
-                $(el).on("change",function(){
-                    var $this=$(this);
-                    var isChecked=$this.prop("checked");
-                    if(!isChecked){
-                        $checkboxAll.prop("checked",isChecked);
-                        count--;
-                    }else{
-                        count++;
-                        if(count==len){
-                            $checkboxAll.prop("checked",true);
-                        }
-                    }
-                })
-            });
+        
+    })
+})
+</script>
+<script type="text/javascript">
+$(function() {
+    var $checkboxAll = $('input[name="tblCheckAll"]');
+    var $checkboxSingle = $('input[name="menus[]"]');
+    var len = $checkboxSingle.length;
+    var count = 0;
+
+    $checkboxAll.on("click", function() {
+        var $this = $(this);
+        var isChecked = $this.prop("checked");
+
+        $checkboxSingle.prop({
+            checked: isChecked
+        });
+        $checkboxAll.prop("checked", isChecked);
+        count = len;
+    });
+    $.each($checkboxSingle, function(index, el) {
+        $(el).on("change", function() {
+            var $this = $(this);
+            var isChecked = $this.prop("checked");
+            if (!isChecked) {
+                $checkboxAll.prop("checked", isChecked);
+                count--;
+            } else {
+                count++;
+                if (count == len) {
+                    $checkboxAll.prop("checked", true);
+                }
+            }
         })
+    });
+})
 </script>

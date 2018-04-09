@@ -2,11 +2,12 @@
 namespace app\admin\controller;
 use app\admin\common\Auth;
 use app\admin\common\Tree;
+use app\admin\model\AdminMenus;
+use app\admin\model\AuthRules;
 use think\Db;
 use think\Request;
 use think\Session;
 use think\Validate;
-use app\admin\model\AdminMenus;
 
 class AdminMenu extends Base {
 
@@ -27,7 +28,7 @@ class AdminMenu extends Base {
             'title' => 'require',
             'url' => 'require',
             'sort_id' => 'require|number',
-            'log_type', 'require'
+            'log_type', 'require',
 
         ];
         $message = [
@@ -38,8 +39,6 @@ class AdminMenu extends Base {
             'sort_id.number' => '排序id必须是数字',
             'log_type' => '日志记录方式不能为空',
         ];
-
-      
 
         $tree = new Tree();
 
@@ -54,26 +53,67 @@ class AdminMenu extends Base {
 
             $validate = new Validate($rule, $message);
             if (!$validate->check($params)) {
-
                 $this->error($validate->getError(), "add");
             } else {
                 //验证通过 就要插入
                 $adminMenus = new AdminMenus();
                 $adminMenus->data($params);
                 $adminMenus->save();
+                $rule_data = [
+                    'title' => $this->post['title'],
+                    'name' => $this->post['url'],
+                ];
+                if ($adminMenus->menu_id) {
+                    if ($adminMenus->authRule()->save($rule_data)) {
+                        return $this->success("添加成功！", "index");
+                    } else {
+                        return $this->error("关联权限添加失败", "index");
+                    }
 
-
-                if($adminMenus->menu_id){
-                   $this->assign('cdata',$params);
-                    $this->error("添加失败！", "add");
-                }else{
-                    $this->assign('cdata',$params);
-                    $this->error("添加失败！", "add");
+                } else {
+                    $this->redirect("add", $params);
                 }
             }
 
         }
         return $this->fetch("add");
+
+    }
+
+    public function del($id) {
+        //考虑删除父元素怎么办，所以del按钮 需要提示删除所有子元素
+
+        $arr = array($id);
+        foreach ($this->menuList as $k => $v) {
+            if ($v["parent_id"] == $id) {
+                $arr[] = $v["menu_id"];
+            }
+        }
+        $trans_result = true;
+
+        $adminMenus = new AdminMenus();
+        $adminMenus->startTrans();
+        $res = AdminMenus::destroy($arr);
+        if (!$res) {
+            $trans_result = false;
+        }
+        $authRules = new AuthRules();
+        $authRules->startTrans();
+        $res = AuthRules::where('menu_id', 'IN', $arr)->delete();
+        if (!$res) {
+            $trans_result = false;
+        }
+        if ($trans_result) {
+            $adminMenus->commit();
+            $authRules->commit();
+            $this->success("删除成功！", "index");
+        } else {
+            $adminMenus->rollBack();
+            $authRules->rollBack();
+            $this->error("删除失败！", "index");
+        }
+
+        // $adminRules->commit();
 
     }
 

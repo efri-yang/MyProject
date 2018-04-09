@@ -58,19 +58,20 @@ INSERT INTO `think_admin_menus` (`menu_id`, `parent_id`, `is_show`, `title`, `ur
 (8, 7, 0, '添加角色', 'admin/role/add', '', '', 0, 1, 0, 0, 1),
 (9, 7, 0, '修改角色', 'admin/role/edit', '', '', 0, 1, 0, 0, 1),
 (10, 7, 0, '删除角色', 'admin/role/del', '', '', 0, 1, 0, 0, 1),
-(11, 2, 1, '菜单管理', 'admin/admin_menu/index', '', '', 0, 1, 0, 0, 1),
-(12, 11, 0, '添加菜单', 'admin/admin_menu/add', '', '', 0, 1, 0, 0, 1),
-(13, 11, 0, '修改菜单', 'admin/admin_menu/edit', '', '', 0, 1, 0, 0, 1),
-(14, 11, 0, '删除菜单', 'admin/admin_menu/del', '', '', 0, 1, 0, 0, 1),
-(15, 2, 1, '日志管理', 'admin/logs', '', '', 0, 1, 0, 0, 1),
-(16, 15, 1, '操作日志', 'admin/logs/handler', '', '', 0, 1, 0, 0, 1),
-(17, 15, 1, '系统日志', 'admin/logs/sys', '', '', 0, 1, 0, 0, 1),
-(18, 2, 1, '系统设置', 'admin/sysconfig/index', '', '', 0, 1, 0, 0, 1),
-(19, 18, 0, '添加设置', 'admin/sysconfig/add', '', '', 0, 1, 0, 0, 1),
-(20, 18, 0, '编辑设置', 'admin/sysconfig/edit', '', '', 0, 1, 0, 0, 1),
-(21, 18, 0, '删除设置', 'admin/sysconfig/del', '', '', 0, 1, 0, 0, 1),
-(22, 2, 1, '个人资料', 'admin/admin_user/profile', '', '', 0, 1, 0, 0, 1),
-(23, 0, 1, '栏目管理', 'admin/column/index', '', '', 0, 1, 0, 0, 1);
+(11, 7, 0, '授权管理', 'admin/role/access', '', '', 0, 1, 0, 0, 1),
+(12, 2, 1, '菜单管理', 'admin/admin_menu/index', '', '', 0, 1, 0, 0, 1),
+(13, 11, 0, '添加菜单', 'admin/admin_menu/add', '', '', 0, 1, 0, 0, 1),
+(14, 11, 0, '修改菜单', 'admin/admin_menu/edit', '', '', 0, 1, 0, 0, 1),
+(15, 11, 0, '删除菜单', 'admin/admin_menu/del', '', '', 0, 1, 0, 0, 1),
+(16, 2, 1, '日志管理', 'admin/logs', '', '', 0, 1, 0, 0, 1),
+(17, 15, 1, '操作日志', 'admin/logs/handler', '', '', 0, 1, 0, 0, 1),
+(18, 15, 1, '系统日志', 'admin/logs/sys', '', '', 0, 1, 0, 0, 1),
+(19, 2, 1, '系统设置', 'admin/sysconfig/index', '', '', 0, 1, 0, 0, 1),
+(20, 18, 0, '添加设置', 'admin/sysconfig/add', '', '', 0, 1, 0, 0, 1),
+(21, 18, 0, '编辑设置', 'admin/sysconfig/edit', '', '', 0, 1, 0, 0, 1),
+(22, 18, 0, '删除设置', 'admin/sysconfig/del', '', '', 0, 1, 0, 0, 1),
+(23, 2, 1, '个人资料', 'admin/admin_user/profile', '', '', 0, 1, 0, 0, 1),
+(24, 0, 1, '栏目管理', 'admin/column/index', '', '', 0, 1, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -90,9 +91,9 @@ CREATE TABLE `think_auth_group` (
 --
 
 INSERT INTO `think_auth_group` (`id`, `title`, `status`, `rules`) VALUES
-(1, '管理员', 1, '1,2,3,4,5,6,7,8,9,10,11,15,14,17,18,19,20,21,22,23'),
-(2, '普通管理员', 1, '1,11,12,13,14,22,23'),
-(3, '用户', 1, '1,11,22,23');
+(1, '管理员', 1, '1,2,3,4,5,6,7,8,9,10,11,15,14,17,18,19,20,21,22,23,24'),
+(2, '普通管理员', 1, '1,2,7,9,12,13,14,15,23,24'),
+(3, '用户', 1, '1,2,23');
 
 -- --------------------------------------------------------
 
@@ -146,19 +147,20 @@ INSERT INTO `think_auth_rules` (`id`, `name`, `title`, `type`, `status`, `condit
 (8, 'admin/role/add', '添加角色', 1, 1, '', 8),
 (9, 'admin/role/edit', '修改角色', 1, 1, '', 9),
 (10, 'admin/role/del', '删除角色', 1, 1, '', 10),
-(11, 'admin/admin_menu/index', '菜单管理', 1, 1, '', 11),
-(12, 'admin/admin_menu/add', '添加菜单', 1, 1, '', 12),
-(13, 'admin/admin_menu/edit', '修改菜单', 1, 1, '', 13),
-(14, 'admin/admin_menu/del', '删除菜单', 1, 1, '', 14),
-(15, 'admin/logs', '日志管理', 1, 1, '', 15),
-(16, 'admin/logs/handler', '操作日志', 1, 1, '', 16),
-(17, 'admin/logs/sys', '系统日志', 1, 1, '', 17),
-(18, 'admin/sysconfig/index', '系统设置', 1, 1, '', 18),
-(19, 'admin/sysconfig/add', '添加设置', 1, 1, '', 19),
-(20, 'admin/sysconfig/edit', '编辑设置', 1, 1, '', 20),
-(21, 'admin/sysconfig/del', '删除设置', 1, 1, '', 21),
-(22, 'admin/admin_user/profile', '个人资料', 1, 1, '', 22),
-(23, 'admin/column/index', '栏目管理', 1, 1, '', 23);
+(11, 'admin/role/access', '授权管理', 1, 1, '', 10),
+(12, 'admin/admin_menu/index', '菜单管理', 1, 1, '', 11),
+(13, 'admin/admin_menu/add', '添加菜单', 1, 1, '', 12),
+(14, 'admin/admin_menu/edit', '修改菜单', 1, 1, '', 13),
+(15, 'admin/admin_menu/del', '删除菜单', 1, 1, '', 14),
+(16, 'admin/logs', '日志管理', 1, 1, '', 15),
+(17, 'admin/logs/handler', '操作日志', 1, 1, '', 16),
+(18, 'admin/logs/sys', '系统日志', 1, 1, '', 17),
+(19, 'admin/sysconfig/index', '系统设置', 1, 1, '', 18),
+(20, 'admin/sysconfig/add', '添加设置', 1, 1, '', 19),
+(21, 'admin/sysconfig/edit', '编辑设置', 1, 1, '', 20),
+(22, 'admin/sysconfig/del', '删除设置', 1, 1, '', 21),
+(23, 'admin/admin_user/profile', '个人资料', 1, 1, '', 22),
+(24, 'admin/column/index', '栏目管理', 1, 1, '', 23);
 
 -- --------------------------------------------------------
 

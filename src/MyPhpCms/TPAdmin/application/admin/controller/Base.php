@@ -14,7 +14,7 @@ use think\Request;
 use think\Session;
 
 class Base extends Controller {
-    protected $request, $param, $post,$get, $module, $controller, $action, $urlMCA, $urlMC, $webData, $sideMenuList, $menuList, $parentIds;
+    protected $request, $param, $post, $get, $module, $controller, $action, $urlMCA, $urlMC, $webData, $sideMenuList, $menuList, $parentIds;
     public function __construct() {
         $this->request = Request::instance();
         //请求参数

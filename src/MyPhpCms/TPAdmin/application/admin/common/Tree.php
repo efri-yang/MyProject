@@ -49,10 +49,13 @@ class Tree {
     public function getMenu($levelId, $data, $str = "", $repeatNum = 0) {
         $child = $this->getChild($levelId, $data);
         $repeatText = str_repeat($this->repeatPlaceholder, $repeatNum);
+
         if ($repeatNum) {
             $repeatLine = "|— ";
+
         } else {
             $repeatLine = "";
+
         }
         $repeatNum++;
         if (is_array($child)) {
@@ -74,7 +77,12 @@ class Tree {
                         $logType = 'get';
 
                 }
-
+                $subChild = $this->getChild($value["menu_id"], $data);
+                if ($subChild) {
+                    $roler = "parent";
+                } else {
+                    $roler = "single";
+                }
                 $str .= '<tr>';
                 $str .= '<td>' . $value["menu_id"] . '</td>';
                 $str .= '<td class="align-l">' . $repeatText . $repeatLine . $value["title"] . '</td>';
@@ -84,10 +92,9 @@ class Tree {
                 $str .= '<td>' . $value["sort_id"] . '</td>';
                 $str .= '<td>' . ($value["status"] == 1 ? "正常" : "禁用") . '</td>';
                 $str .= '<td>' . $logType . '</td>';
-                $str .= '<td><a href="javascript:void(0);" class="am-btn am-btn-danger am-btn-xs mr5">删除</a><a href="" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
+                $str .= '<td><a href="' . url("admin_menu/del", ["id" => $value["menu_id"]]) . '" class="am-btn am-btn-danger am-btn-xs mr5" data-roler="' . $roler . '">删除</a><a href="' . url("admin_menu/edit", ["id" => $value["menu_id"]]) . '" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
                 $str .= '</tr>';
 
-                $subChild = $this->getChild($value["menu_id"], $data);
                 if ($subChild) {
                     $str = $this->getMenu($value["menu_id"], $data, $str, $repeatNum);
                 }
