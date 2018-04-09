@@ -2,11 +2,12 @@
     {include file="common/breadcrumb" /}
     <div class="am-form am-form-horizontal">
     	<!--  data-am-validator -->
-        <form   method="post" action="{:url('add')}">
+        
+        <form data-am-validator  method="post" action="{:url('add')}">
             <div class="am-form-group">
                 <label class="am-para-label">上级菜单：</label>
                 <div class="am-para-input">
-                    <select name="parent_id" id="J_selmenu">
+                    <select name="parent_id">
                         <option value="0">根目录</option>
                         {$optionList}
                     </select>
@@ -16,14 +17,14 @@
             <div class="am-form-group">
                 <label class="am-para-label">菜单名称：</label>
                 <div class="am-para-input">
-                   <input type="text" required name="title" />
+                   <input type="text" required name="title" value="{}" />
                 </div>
             </div>
 
             <div class="am-form-group">
                 <label class="am-para-label">URL：</label>
                 <div class="am-para-input">
-                   <input type="text" required name="url" />
+                   <input type="text" required name="url"  pattern="^[0-9a-zA-Z]+$" />
                 </div>
             </div>
 
@@ -66,6 +67,7 @@
             <div class="am-form-group">
                 <label class="am-para-label"></label>
                 <div class="am-para-input">
+
                   	<input type="submit" class="am-btn am-btn-primary">
                   	<input type="reset" class="am-btn am-btn-default">
                 </div>

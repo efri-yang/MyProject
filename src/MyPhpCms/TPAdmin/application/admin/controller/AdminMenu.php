@@ -6,6 +6,7 @@ use think\Db;
 use think\Request;
 use think\Session;
 use think\Validate;
+use app\admin\model\AdminMenus;
 
 class AdminMenu extends Base {
 
@@ -26,17 +27,19 @@ class AdminMenu extends Base {
             'title' => 'require',
             'url' => 'require',
             'sort_id' => 'require|number',
-
-            'log_type', 'require',
+            'log_type', 'require'
 
         ];
         $message = [
             'parent_id' => '上级菜单不能为空',
             'title' => '标题不能为空',
             'url' => 'url不能为空',
-            'sort_id' => '请输入排序id',
+            'sort_id.require' => '请输入排序id',
+            'sort_id.number' => '排序id必须是数字',
             'log_type' => '日志记录方式不能为空',
         ];
+
+      
 
         $tree = new Tree();
 
@@ -49,11 +52,24 @@ class AdminMenu extends Base {
             //判断是否通过验证 验证通过就提示添加成功 然后跳转到index 如果失败
             $params = $this->request->param();
 
-            $validate = new Validate($rules, $message);
+            $validate = new Validate($rule, $message);
             if (!$validate->check($params)) {
+
                 $this->error($validate->getError(), "add");
             } else {
-                echo "ASdfasdfasdfasdf";
+                //验证通过 就要插入
+                $adminMenus = new AdminMenus();
+                $adminMenus->data($params);
+                $adminMenus->save();
+
+
+                if($adminMenus->menu_id){
+                   $this->assign('cdata',$params);
+                    $this->error("添加失败！", "add");
+                }else{
+                    $this->assign('cdata',$params);
+                    $this->error("添加失败！", "add");
+                }
             }
 
         }
