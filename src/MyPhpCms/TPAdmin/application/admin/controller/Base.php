@@ -14,7 +14,7 @@ use think\Request;
 use think\Session;
 
 class Base extends Controller {
-    protected $request, $param, $module, $controller, $action, $urlMCA, $urlMC, $webData, $sideMenuList,$parentIds;
+    protected $request, $param, $module, $controller, $action, $urlMCA, $urlMC, $webData, $sideMenuList, $menuList, $parentIds;
     public function __construct() {
         $this->request = Request::instance();
         //请求参数
@@ -33,6 +33,7 @@ class Base extends Controller {
     }
     public function _initialize() {
         $auth = new Auth();
+        $tree = new Tree();
         if ($auth->isLogin()) {
             $uid = Session::get('user.user_id');
             if ($uid != 1) {
@@ -45,35 +46,28 @@ class Base extends Controller {
             //获取用户的信息
             $this->webData["userinfo"] = $this->getUserInfo($uid);
 
-
             //获取当前url对应的menu的信息数组
-            $currentMenuInfo=$this->getCurrentMenuInfo();
+            $currentMenuInfo = $this->getCurrentMenuInfo();
 
             //当前url的menu_id(来判断左侧菜单栏显示哪个项)
-            $currentMenuId=$currentMenuInfo['menu_id'];
+            $currentMenuId = $currentMenuInfo['menu_id'];
+            $this->menuList = Db::table("think_admin_menus")->where('status', 1)->select();
 
+            //获取侧边栏目录结构数据
+            $this->sideMenuList = $auth->getMenuList($uid, 1);
 
-            $this->parentIds=$this->getParentId();
+            //获取当前url 的parent_id(这个parentid 的集合 是针对左侧栏)
 
-
-
+            $this->parentIds = $this->getParentId($currentMenuId, $this->menuList);
 
             //获取当前的title
             $this->webData["webtitle"] = $currentMenuInfo["title"];
 
-
             //获取左侧菜单的信息
-
-            $this->webData["sidemenu"] = $this->getSideMenuInfo($uid, 1);
-
+            $this->webData["sidemenu"] = $tree->getSideMenu(0, $currentMenuId, $this->parentIds, $this->sideMenuList);
 
             //获取面包导航屑
-            $this->webData["crumb"] = $this->getBreadcrumb($currentNavId, $menuList);
-
-
-
-            
-           
+            $this->webData["crumb"] = $this->getBreadcrumb($currentMenuId, $this->menuList);
 
         } else {
             //没登录跳转到登录页面，跟上url
@@ -86,33 +80,6 @@ class Base extends Controller {
         return $userInfo;
     }
 
-    protected function getSideMenuInfo($uid, $type) {
-        //去调用admin_menus当中
-        $auth = new Auth();
-
-        //根据uid 获取 权限的id 关联到menus 表然后读取要显示的选项(menu_id,title,url,icon,is_show,parent_id)
-        $this->sideMenuList = $auth->getMenuList($uid, $type);
-
-
-       
-       
-        $parentIds = [];
-
-        //展示菜单选项（获取当前菜单id,所属的父元素(后面循环的时候方便判断)
-
-        foreach ($this->sideMenuList as $key => $value) {
-            if ($value['url'] == $this->urlMCA) {
-                $parentIds = $this->getParentId($value["menu_id"], $this->sideMenuList);
-            }
-        }
-
-       
-
-        $tree = new Tree();
-        $sideMenuText = $tree->getSideMenu(0, $currentNavId, $parentIds, $menuList);
-        return $sideMenuText;
-    }
-
     public function getBreadcrumb($currentNavId, $menuList, $navStr = "") {
         if (is_array($menuList)) {
             foreach ($menuList as $key => $value) {
@@ -120,7 +87,12 @@ class Base extends Controller {
                     if (!$navStr) {
                         $bread = '<li class="am-active">' . $value["title"] . '</li>';
                     } else {
-                        $bread = '<li><a href="' . $value["url"] . '">' . $value["title"] . '</a></li>';
+                        if (!!$value["url"]) {
+                            $bread = '<li><a href="' . url($value["url"]) . '">' . $value["title"] . '</a></li>';
+                        } else {
+                            $bread = '<li>' . $value["title"] . '</li>';
+                        }
+
                     }
                     $navStr = $bread . $navStr;
                     $navStr = $this->getBreadcrumb($value["parent_id"], $menuList, $navStr);
@@ -148,7 +120,7 @@ class Base extends Controller {
     }
 
     protected function getCurrentMenuInfo() {
-       return Db::name('admin_menus')->where(['url' => $this->urlMCA])->find();
+        return Db::name('admin_menus')->where(['url' => $this->urlMCA])->find();
     }
 }
 

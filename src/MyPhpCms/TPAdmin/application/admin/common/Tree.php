@@ -22,9 +22,12 @@ class Tree {
 
                     $sideMenuText .= "</ul></li>";
                 } else {
-                    if ($value["menu_id"] == $currentId) {
+
+                    if ($value["menu_id"] == $currentId || array_search($value["menu_id"], $parentIds, true) !== false) {
+
                         $sideMenuText .= '<li class="current"><a href="' . url($value["url"]) . '"><span class="fl">' . $repeatText . '</span><i class="iconfont f14">&#xe65d;</i><span class="txt">' . $value['title'] . '</span></a></li>';
                     } else {
+
                         $sideMenuText .= '<li><a href="' . url($value["url"]) . '"><span class="fl">' . $repeatText . '</span><i class="iconfont f14">&#xe65d;</i><span class="txt">' . $value['title'] . '</span></a></li>';
                     }
                 }
@@ -87,6 +90,31 @@ class Tree {
                 $subChild = $this->getChild($value["menu_id"], $data);
                 if ($subChild) {
                     $str = $this->getMenu($value["menu_id"], $data, $str, $repeatNum);
+                }
+
+            }
+        }
+
+        return $str;
+    }
+
+    public function getOptions($levelId, $data, $str = "", $repeatNum = 1) {
+        $child = $this->getChild($levelId, $data);
+        $repeatText = str_repeat($this->repeatPlaceholder, $repeatNum);
+        if ($repeatNum) {
+            $repeatLine = "|— ";
+        } else {
+            $repeatLine = "";
+        }
+        $repeatNum++;
+        if (is_array($child)) {
+            foreach ($child as $key => $value) {
+
+                $str .= '<option value="' . $value["menu_id"] . '">' . $repeatText . $repeatLine . $value["title"] . '</option>';
+
+                $subChild = $this->getChild($value["menu_id"], $data);
+                if ($subChild) {
+                    $str = $this->getOptions($value["menu_id"], $data, $str, $repeatNum);
                 }
 
             }
