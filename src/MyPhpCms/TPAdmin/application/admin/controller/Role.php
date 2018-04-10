@@ -1,6 +1,8 @@
 <?php
 namespace app\admin\controller;
 use app\admin\model\AuthGroup;
+use think\Session;
+use think\Validate;
 
 class Role extends Base {
     public function index() {
@@ -16,6 +18,38 @@ class Role extends Base {
     }
 
     public function add() {
+        $rule = [
+            'title' => 'require'
+        ];
+        $message = [
+            'title' => '角色名不能为空'
+        ];
+
+
+        if($this->request->isPost()){
+            //如果是提交的时候
+            $param=$this->request->param();
+            //默认的就是只有首页和系统管理下的个人资料
+            $param["rules"]='1,2,23';
+
+
+            Session::set('form_info',$param);
+            $validate=new Validate($rule,$message);
+            if(!$validate->check($param)){
+                $this->error($validate->getError(),"add");
+            }else{
+                //验证通过，那么就要插入到数据库中
+                $authgroup = new AuthGroup();
+                $authgroup->data($param);
+                if($authgroup->save()){
+                    $this->success("添加成功！","index");
+                }else{
+                    $this->error("添加失败！","add");
+                }
+            }            
+        }else{
+            Session::set('form_info','');
+        }
         return $this->fetch();
     }
 
