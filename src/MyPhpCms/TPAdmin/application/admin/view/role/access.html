@@ -1,0 +1,93 @@
+<div class="p15">
+    {include file="common/breadcrumb" /}
+    <style type="text/css">
+    .authadmin-item-box {
+  border: 1px solid #e2e2e2;
+  margin-bottom: 20px; }
+  .authadmin-item-box .caption {
+    background: #ECECEC;
+    padding: 0 10px;
+    height: 40px;
+    line-height: 40px; }
+  .authadmin-item-box .mr5 {
+    margin-right: 5px !important; }
+
+.authadmin-item-list {
+  padding: 10px 30px 0;
+  margin: 0; }
+  .authadmin-item-list > li {
+    border: 1px solid #e2e2e2;
+    margin-bottom: 10px; }
+    .authadmin-item-list > li > .item {
+      padding: 5px 10px;
+      background: #f7f7f7; }
+    </style>
+    <div class="pl50 pr50 mt30">
+        <div class="authadmin-item-box">
+            <div class="caption">
+                <label>
+                    <input type="checkbox" name="auth[]" class="mr5" />后台管理首页</label>
+            </div>
+        </div>
+        <div class="authadmin-item-box">
+            <div class="caption">
+                <label>
+                    <input type="checkbox" name="auth[]" class="mr5" />系统管理</label>
+            </div>
+            <ul class="authadmin-item-list clearfix">
+                <li>
+                    <div class="item">
+                        <label class="fwnormal">
+                            <input type="checkbox" name="auth[]" class="mr5">用户管理</label>
+                    </div>
+                </li>
+                <li>
+                    <div class="item">
+                        <label class="fwnormal">
+                            <input type="checkbox" name="auth[]" class="mr5">角色管理</label>
+                    </div>
+                </li>
+                <li class="treeview">
+                    <div class="item">
+                        <label class="fwnormal">
+                            <input type="checkbox" name="auth[]" class="mr5">日志管理</label>
+                    </div>
+                    <ul class="authadmin-item-list clearfix">
+                        <li>
+                            <div class="item">
+                                <label class="fwnormal">
+                                    <input type="checkbox" name="auth[]" class="mr5">操作日志</label>
+                            </div>
+                        </li>
+                        <li class="treeview">
+                            <div class="item">
+                                <label class="fwnormal">
+                                    <input type="checkbox" name="auth[]" class="mr5">系统日志</label>
+                            </div>
+                            <ul class="authadmin-item-list clearfix">
+                                <li>
+                                    <div class="item">
+                                        <label class="fwnormal">
+                                            <input type="checkbox" name="auth[]" class="mr5">操作日志</label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item">
+                                        <label class="fwnormal">
+                                            <input type="checkbox" name="auth[]" class="mr5">系统日志</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="item">
+                        <label class="fwnormal">
+                            <input type="checkbox" name="auth[]" class="mr5">系统设置</label>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
