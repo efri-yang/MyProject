@@ -1,11 +1,11 @@
 <?php
 namespace app\admin\controller;
+use app\admin\common\Tree;
 use app\admin\model\AuthGroup;
 use app\admin\model\AuthRules;
 use think\Db;
 use think\Session;
 use think\Validate;
-use app\admin\common\Tree;
 
 class Role extends Base {
     public function index() {
@@ -66,40 +66,49 @@ class Role extends Base {
     public function access($id) {
         //$id角色id
         //获取角色id 对应的角色信息
-        $role=AuthGroup::get($id)->toArray();
-
+        $role = AuthGroup::get($id)->toArray();
 
         //获取角色 对应的权限id 数组
-        $ruleCheck=explode(",",$role["rules"]);
+        $ruleCheck = explode(",", $role["rules"]);
 
         //获取表中所有的权限(为什么menu而不是rules)
-        $menuAll=Db::table("think_admin_menus")->order(["sort_id"=>"asc","menu_id"=>"asc"])->column("*","menu_id");
-
+        $menuAll = Db::table("think_admin_menus")->order(["sort_id" => "asc", "menu_id" => "asc"])->column("*", "menu_id");
 
         //从auth_rules中判断哪些是在$ruleCheck 里面的，然后返回menu_id吗,然后在menus表中根据menu_id 整合数据
-        $authRules  = new AuthRules();
+        $authRules = new AuthRules();
         //从auth_rules当中获取当前角色拥有的menu_id
-        $roleRule=$authRules->whereIn('id',$ruleCheck)->column('menu_id');
+        $roleRule = $authRules->whereIn('id', $ruleCheck)->column('menu_id');
 
-       
         //从admin_menus 当中去
 
-        exit();
-        
         //获取所有的权限规则(id作为键值)
-        
-        $tree=new Tree();
-        
+
         //进行字符窜操作
-        function getStr($levelId,$ruleCheck,$data,$str = "", $num = 0) {
-            $child=$tree->getChild($levelId, $data);
-            print_r($child);
+        function getStr($levelId, $ruleCheck, $data, $str = "", $num = 0) {
+            $tree = new Tree();
+            $child = $tree->getChild($levelId, $data);
+
             foreach ($child as $key => $value) {
-                print_r($value);
-                
+                $subChild = $tree->getChild($value["menu_id"], $data);
+                if ($subChild) {
+                    if (!$num) {
+                        $str .= '<div class="authadmin-item-box">div class="caption"><label><input type="checkbox" name="auth[]" class="mr5" />后台管理首页</label></label></div><ul class="authadmin-item-list clearfix">';
+                    } else {
+                        $str .= '<ul class="authadmin-item-list clearfix"><li class="treeview"><div class="item"><label class="fwnormal"><input type="checkbox" name="auth[]" class="mr5">日志管理</label></div>';
+                    }
+                    $str=getStr($value["menu_id"], $ruleCheck, $data,)
+                    $str.="</ul></div>"
+                } else {
+                    //如果没有子元素 且第一个元素的时候
+                    if (!$num) {
+                        $str .= '<div class="authadmin-item-box">div class="caption"><label><input type="checkbox" name="auth[]" class="mr5" />后台管理首页</label></label></div></div>';
+                    } else {
+                        $str .= '<li><div class="item"><label class="fwnormal"><input type="checkbox" name="auth[]" class="mr5">用户管理</label></div></li>';
+                    }
+                }
             }
         }
-        getStr(0,$rules);
+        getStr(0, $ruleCheck, $menuAll);
 
         return $this->fetch();
     }
