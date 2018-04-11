@@ -92,24 +92,31 @@ class Role extends Base {
                 $subChild = $tree->getChild($value["menu_id"], $data);
                 if ($subChild) {
                     if (!$num) {
-                        $str .= '<div class="authadmin-item-box">div class="caption"><label><input type="checkbox" name="auth[]" class="mr5" />后台管理首页</label></label></div><ul class="authadmin-item-list clearfix">';
+                        $str .= '<div class="authadmin-item-box"><div class="caption"><label><input type="checkbox" name="auth[]" class="mr5" />'.$value['title'].'</label></div><ul class="authadmin-item-list clearfix">';
                     } else {
-                        $str .= '<ul class="authadmin-item-list clearfix"><li class="treeview"><div class="item"><label class="fwnormal"><input type="checkbox" name="auth[]" class="mr5">日志管理</label></div>';
+                        $str .= '<li class="treeview"><div class="item"><label class="fwnormal"><input type="checkbox" name="auth[]" class="mr5">'.$value['title'].'</label></div><ul class="authadmin-item-list clearfix">';
                     }
-                    $str=getStr($value["menu_id"], $ruleCheck, $data,)
-                    $str.="</ul></div>"
+                    $num++;
+                    $str=getStr($value["menu_id"], $ruleCheck, $data,$str,$num);
+                    $str.="</ul></div>";
+                    $num=0;
+                    
                 } else {
                     //如果没有子元素 且第一个元素的时候
                     if (!$num) {
-                        $str .= '<div class="authadmin-item-box">div class="caption"><label><input type="checkbox" name="auth[]" class="mr5" />后台管理首页</label></label></div></div>';
+                        $str .= '<div class="authadmin-item-box"><div class="caption"><label><input type="checkbox" name="auth[]" class="mr5" />'.$value['title'].'</label></div></div>';
                     } else {
-                        $str .= '<li><div class="item"><label class="fwnormal"><input type="checkbox" name="auth[]" class="mr5">用户管理</label></div></li>';
+                        $str .= '<li><div class="item"><label class="fwnormal"><input type="checkbox" name="auth[]" class="mr5">'.$value['title'].'</label></div></li>';
                     }
                 }
             }
-        }
-        getStr(0, $ruleCheck, $menuAll);
 
+            return $str;
+        }
+        $str=getStr(0, $ruleCheck, $menuAll);
+
+        
+        $this->assign("ruleList",$str);
         return $this->fetch();
     }
 }
