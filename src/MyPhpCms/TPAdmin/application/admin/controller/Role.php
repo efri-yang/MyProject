@@ -5,6 +5,7 @@ use app\admin\model\AuthRules;
 use think\Db;
 use think\Session;
 use think\Validate;
+use app\admin\common\Tree;
 
 class Role extends Base {
     public function index() {
@@ -63,16 +64,42 @@ class Role extends Base {
         }
     }
     public function access($id) {
+        //$id角色id
+        //获取角色id 对应的角色信息
+        $role=AuthGroup::get($id)->toArray();
+
+
+        //获取角色 对应的权限id 数组
+        $ruleCheck=explode(",",$role["rules"]);
+
+        //获取表中所有的权限(为什么menu而不是rules)
+        $menuAll=Db::table("think_admin_menus")->order(["sort_id"=>"asc","menu_id"=>"asc"])->column("*","menu_id");
+
+
+        //从auth_rules中判断哪些是在$ruleCheck 里面的，然后返回menu_id吗,然后在menus表中根据menu_id 整合数据
+        $authRules  = new AuthRules();
+        //从auth_rules当中获取当前角色拥有的menu_id
+        $roleRule=$authRules->whereIn('id',$ruleCheck)->column('menu_id');
+
+       
+        //从admin_menus 当中去
+
+        exit();
+        
         //获取所有的权限规则(id作为键值)
-        $rules = Db::table("think_auth_rules")->column("*", "id");
-
-        //边哭
+        
+        $tree=new Tree();
+        
         //进行字符窜操作
-        function getStr($data, $str = "", $num = 0) {
-            foreach ($data as $key => $value) {
-
+        function getStr($levelId,$ruleCheck,$data,$str = "", $num = 0) {
+            $child=$tree->getChild($levelId, $data);
+            print_r($child);
+            foreach ($child as $key => $value) {
+                print_r($value);
+                
             }
         }
+        getStr(0,$rules);
 
         return $this->fetch();
     }

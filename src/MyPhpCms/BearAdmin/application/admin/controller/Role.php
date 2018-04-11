@@ -155,16 +155,21 @@ class Role extends Base
             }
             return $this->do_error();
         } else {
-
+            //获取当前角色的id
             $role_id = $this->id;
+            //获取对应角色信息
             $role    = AuthGroups::get($role_id);
+            //获取menus 所有数据(menu_id 键值)
             $menu    = Db::name('admin_menus')
                 ->order(["sort_id" => "asc", 'menu_id' => 'asc'])
                 ->column('*', 'menu_id');
 
             $auth_group  = new AuthGroups();
+            //根据角色id获取对应的rule 并转成数组(这样我们就可以在显示列表的时候是知道哪些是需要选中的)
             $group_rules = explode(',', $auth_group->where('id', $this->id)->value('rules'));
+            //实例化Rules模型
             $auth_rules  = new AuthRules();
+            //角色当前拥有的那些规则
             $auth_menus  = $auth_rules->whereIn('id', $group_rules)->column('menu_id');
             $info        = self::authorizeHtml($menu, $auth_menus);
 

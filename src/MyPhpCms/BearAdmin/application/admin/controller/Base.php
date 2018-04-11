@@ -60,7 +60,6 @@ class Base extends Controller {
             if ($auth->is_login()) {
                 $user_id = Session::get('user.user_id');
                 if ($user_id != 1) {
-
                     if (!$auth->check($this->url, $user_id)) {
                         //未授权
                         $this->api_result['status'] = 403;
