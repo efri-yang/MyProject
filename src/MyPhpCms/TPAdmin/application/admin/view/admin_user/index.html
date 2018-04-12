@@ -2,6 +2,11 @@
     {include file="common/breadcrumb" /}
     <div class="pl30 pr30 mt20">
 	    <div class="coms-table-wrap">
+	    	<div class="coms-datatable-hd clearfix">
+				<div class="am-form-group fr">
+					<a href="{:url('add')}"  class="am-btn am-btn-success w100">添加用户</a>
+	            </div>
+	    	</div>
 	        <div class="coms-table-bd">
 	            <table class="am-table am-table-bordered">
 	                <thead>
@@ -19,21 +24,22 @@
 	                    </tr>
 	                </thead>
 	                <tbody>
+	                	{volist name="list" id="vo"}
 	                    <tr>
 	                        <td>
-	                            <input type="checkbox" />
+	                            <input type="checkbox" value="{$vo.id}" />
 	                        </td>
-	                        <td>1</td>
-	                        <td>yyh1</td>
-	                        <td>948061564@qq.com</td>
-	                        <td>13850502055</td>
-	                        <td>正常</td>
+	                        <td>{$vo.id}</td>
+	                        <td>{$vo.username}</td>
+	                        <td>{$vo.email}</td>
+	                        <td>{$vo.phone}</td>
+	                        <td>{eq name="$vo.status" value="1"} 正常 {else/} 禁用 {/eq}</td>
 	                        <td>
 	                            <a href="#" class="am-btn am-btn-danger am-btn-xs">删除</a>
 	                            <a href="#" class="am-btn am-btn-primary am-btn-xs">修改</a>
 	                        </td>
 	                    </tr>
-	                    
+	                    {/volist}
 	                </tbody>
 	            </table>
 	        </div>
