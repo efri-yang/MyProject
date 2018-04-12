@@ -43,6 +43,7 @@ class Role extends Base {
                 $authgroup = new AuthGroup();
                 $authgroup->data($param);
                 if ($authgroup->save()) {
+                    Session::set('form_info', '');
                     $this->success("添加成功！", "index");
                 } else {
                     $this->error("添加失败！", "add");
@@ -53,9 +54,7 @@ class Role extends Base {
         }
         return $this->fetch();
     }
-    public function edit($id) {
-        return $this->fetch();
-    }
+
     public function del($id) {
         if (AuthGroup::destroy($id)) {
             $this->success("删除成功！", "index");
@@ -136,6 +135,28 @@ class Role extends Base {
             return $this->fetch();
 
         }
+    }
+
+    public function edit($id) {
+        if ($this->request->isPost()) {
+            $param = $this->request->param();
+
+            $authGroup = AuthGroup::get($id);
+            $authGroup->title = $param["title"];
+            $authGroup->description = $param["description"];
+            $authGroup->status = $param["status"];
+            if ($authGroup->save() === false) {
+                $url = url('edit', ['id' => $id]);
+                $this->error("修改失败！", $url);
+            } else {
+                $this->success("修改成功！", "index");
+            }
+        } else {
+            $role = AuthGroup::get($id)->toArray();
+            Session::set('form_info', $role);
+            return $this->fetch();
+        }
+
     }
 }
 ?>
