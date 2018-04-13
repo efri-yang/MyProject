@@ -37,6 +37,6 @@ return [
     'paginate'               => [
         'type'      => 'page\Page',
         'var_page'  => 'page',
-        'list_rows' => 3,
+        'list_rows' =>10,
     ],
 ];

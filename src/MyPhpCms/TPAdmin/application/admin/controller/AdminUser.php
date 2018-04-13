@@ -11,7 +11,7 @@ class AdminUser extends Base {
         //获取auth_user 所有数据并展示
         $authUser = new AuthUser();
         $authUser->where('id', '<>', 1);
-        $lists = $authUser->paginate(1);
+        $lists = $authUser->paginate();
         $page = $lists->render();
         $this->assign("list", $lists);
         $this->assign('page', $page);
