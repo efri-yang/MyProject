@@ -11,6 +11,7 @@ class AdminUser extends Base {
         //获取auth_user 所有数据并展示
         $authUser = new AuthUser();
         $authUser->where('id', '<>', 1);
+        //分页的调用 无需要在使用select()
         $lists = $authUser->paginate();
         $page = $lists->render();
         $this->assign("list", $lists);
