@@ -33,5 +33,10 @@ return [
     'template' => [
         'layout_on' => true,
         'layout_name' => 'layout'
-    ]
+    ],
+    'paginate'               => [
+        'type'      => 'page\Page',
+        'var_page'  => 'page',
+        'list_rows' => 3,
+    ],
 ];
