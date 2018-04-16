@@ -7,12 +7,11 @@
 
 namespace app\admin\controller;
 
-use think\Db;
 use app\common\model\AdminUsers;
 use app\common\model\AuthGroups;
+use think\Db;
 
-class AdminUser extends Base
-{
+class AdminUser extends Base {
     public $validate = [
         ['parent_id|角色', 'require'],
         ['user_name|用户名', 'require|token'],
@@ -21,14 +20,13 @@ class AdminUser extends Base
     ];
 
     //后台用户列表
-    public function index()
-    {
+    public function index() {
         $admin_users = new AdminUsers();
         $admin_users->where(['user_id' => ['<>', '1']]);
         $page_param = ['query' => []];
         if (isset($this->get['keywords']) && !empty($this->get['keywords'])) {
             $page_param['query']['keywords'] = $this->get['keywords'];
-            $keywords                        = "%" . $this->get['keywords'] . "%";
+            $keywords = "%" . $this->get['keywords'] . "%";
             //做用户名/昵称/手机/邮箱查询处理
             $temp_key = $this->get['keywords'];
             if (filter_var($temp_key, FILTER_VALIDATE_EMAIL)) {
@@ -61,16 +59,15 @@ class AdminUser extends Base
         }
         $this->assign([
             'lists' => $lists,
-            'page'  => $lists->render(),
-            'total' => $lists->total()
+            'page' => $lists->render(),
+            'total' => $lists->total(),
         ]);
         return $this->fetch();
     }
 
     //增加
-    public function add()
-    {
-        
+    public function add() {
+
         if ($this->request->isPost()) {
             $post = $this->post;
 
@@ -97,14 +94,14 @@ class AdminUser extends Base
 
             $user_data['user_name'] = $post['user_name'];
             $user_data['nick_name'] = $post['nick_name'];
-            $user_data['password']  = md5($post['password']);
+            $user_data['password'] = md5($post['password']);
 
-            $profile_data           = [];
+            $profile_data = [];
             $profile_data['mobile'] = $post['mobile'];
-            $profile_data['email']  = $post['email'];
+            $profile_data['email'] = $post['email'];
 
             $save_name = '';
-            $file      = request()->file('avatar');
+            $file = request()->file('avatar');
             if ($file != null) {
                 $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads' . DS . 'admin' . DS . 'avatar');
                 if ($info) {
@@ -138,11 +135,10 @@ class AdminUser extends Base
     }
 
     //修改
-    public function edit()
-    {
+    public function edit() {
 
         if ($this->request->isPost()) {
-            if($this->id==24){
+            if ($this->id == 24) {
                 return $this->do_error('测试用户不能修改哦');
             }
             $post = $this->post;
@@ -165,8 +161,8 @@ class AdminUser extends Base
             }
 
             $admin_user = AdminUsers::get($post['user_id']);
-            $file       = request()->file('avatar');
-            $save_name  = '';
+            $file = request()->file('avatar');
+            $save_name = '';
             if ($file != null) {
                 $info = $file->move(config('admin_avatar.upload_path') . $post['user_id']);
                 if ($info) {
@@ -176,17 +172,17 @@ class AdminUser extends Base
                 }
             }
             $roles = $post['parent_id'];
-            $data  = array(
+            $data = array(
                 'user_name' => $post['user_name'],
                 'nick_name' => $post['nick_name'],
-                'status'    => $post['status'],
+                'status' => $post['status'],
             );
             if ($save_name != '') {
                 $data['avatar'] = $save_name;
             }
 
             $profile_data = array(
-                'email'  => $post['email'],
+                'email' => $post['email'],
                 'mobile' => $post['mobile'],
             );
 
@@ -207,12 +203,14 @@ class AdminUser extends Base
             }
             return $this->do_error();
         } else {
-            $id   = $this->id;
+            $id = $this->id;
             $info = AdminUsers::get($id);
+
+            print_r($info->toArray());
             if (!$info) {
                 return $this->do_error('用户不存在');
             }
-            $roles      =  AuthGroups::all(['status' => 1]);
+            $roles = AuthGroups::all(['status' => 1]);
             $user_roles = $info->adminroles()->column('group_id');
 
             foreach ($roles as $key => $value) {
@@ -224,21 +222,20 @@ class AdminUser extends Base
             }
             $this->assign([
                 'roles' => $roles,
-                'info'  => $info
+                'info' => $info,
             ]);
-            
+
             return $this->fetch();
         }
     }
 
     //删除
-    public function del()
-    {
-        if($this->id==24){
+    public function del() {
+        if ($this->id == 24) {
             return $this->do_error('测试用户不能删除哦');
         }
         if (is_array($this->id)) {
-            if(in_array(24,$this->id)){
+            if (in_array(24, $this->id)) {
                 return $this->do_error('当前包含测试用户，无法删除');
             }
 
@@ -270,8 +267,7 @@ class AdminUser extends Base
     }
 
     //用户个人资料页面
-    public function profile()
-    {
+    public function profile() {
         $user_id = $this->web_data['user_info']['user_id'];
         if (!$user_id) {
             return $this->do_error('无法获取用户信息');
@@ -280,8 +276,8 @@ class AdminUser extends Base
         //更新资料
         if ($this->request->isPost()) {
 
-            $post                = $this->post;
-            $user_update_data    = [];
+            $post = $this->post;
+            $user_update_data = [];
             $profile_update_data = [];
             if ($post['update_type'] == 'profile') {
                 $validate = [];
@@ -300,19 +296,19 @@ class AdminUser extends Base
                 }
                 $user_update_data['nick_name'] = $post['nick_name'];
                 $profile_update_data['mobile'] = $post['mobile'];
-                $profile_update_data['email']  = $post['email'];
-                $profile_update_data['city']   = $post['city'];
+                $profile_update_data['email'] = $post['email'];
+                $profile_update_data['city'] = $post['city'];
 
                 $profile_update_data['description'] = $post['description'];
 
             } else if ($post['update_type'] == 'social') {
-                $profile_update_data['qq']     = $post['qq'];
+                $profile_update_data['qq'] = $post['qq'];
                 $profile_update_data['wechat'] = $post['wechat'];
-                $profile_update_data['weibo']  = $post['weibo'];
-                $profile_update_data['zhihu']  = $post['zhihu'];
+                $profile_update_data['weibo'] = $post['weibo'];
+                $profile_update_data['zhihu'] = $post['zhihu'];
 
             } else if ($post['update_type'] == 'password') {
-                if($user_id==24){
+                if ($user_id == 24) {
                     return $this->do_error('测试用户不能修改资料哦');
                 }
                 $validate = [
@@ -320,7 +316,7 @@ class AdminUser extends Base
                     ['newpassword|新密码', 'require'],
                     ['newpassword_do|确认新密码', 'require|confirm:newpassword'],
                 ];
-                $result   = $this->validate($post, $validate);
+                $result = $this->validate($post, $validate);
                 if (true !== $result) {
                     return $this->do_error($result);
                 }
@@ -331,7 +327,7 @@ class AdminUser extends Base
                 $user_update_data['password'] = md5($post['newpassword']);
             } else if ($post['update_type'] == 'avatar') {
                 $save_name = '';
-                $file      = request()->file('avatar');
+                $file = request()->file('avatar');
                 if ($file != null) {
                     $info = $file->move(config('admin_avatar.upload_path') . DS . $user_id);
                     if ($info) {
@@ -354,7 +350,7 @@ class AdminUser extends Base
             return $this->do_error('修改密码失败');
         }
         $this->assign([
-            'user'     => $user
+            'user' => $user,
         ]);
         return $this->fetch();
     }

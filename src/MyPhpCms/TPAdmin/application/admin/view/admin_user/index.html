@@ -35,8 +35,8 @@
 	                        <td>{$vo.phone}</td>
 	                        <td>{eq name="$vo.status" value="1"} 正常 {else/} 禁用 {/eq}</td>
 	                        <td>
-	                            <a href="#" class="am-btn am-btn-danger am-btn-xs">删除</a>
-	                            <a href="#" class="am-btn am-btn-primary am-btn-xs">修改</a>
+	                            <a href="{:url('del',array('id'=>$vo.id))}" class="am-btn am-btn-danger am-btn-xs">删除</a>
+	                            <a href="{:url('edit',array('id'=>$vo.id))}" class="am-btn am-btn-primary am-btn-xs">修改</a>
 	                        </td>
 	                    </tr>
 	                    {/volist}
@@ -49,3 +49,11 @@
 	    </div>
     </div>
 </div>
+
+
+
+<script type="text/javascript">
+	$(function(){
+		
+	})
+</script>

@@ -5,6 +5,7 @@ use app\admin\model\AuthGroup;
 use app\admin\model\AuthGroupAccess;
 use app\admin\model\AuthUser;
 use think\Paginator;
+use think\Session;
 
 class AdminUser extends Base {
     public function index() {
@@ -29,6 +30,7 @@ class AdminUser extends Base {
             $trans_result = true;
             $param = $this->request->param();
             //
+            $data = [];
 
             $authUser = new AuthUser();
             $authUser->startTrans();
@@ -44,11 +46,14 @@ class AdminUser extends Base {
 
             $authGroupAccess = new AuthGroupAccess();
             $authGroupAccess->startTrans();
-            $authGroupAccess->data([
-                'uid' => $authUser->id,
-                'group_id' => $param["group_id"],
-            ]);
-            if ($authGroupAccess->save() === false) {
+            //group_id 可能是一个数组
+            //
+            foreach ($param["group_id"] as $key => $value) {
+                $data[$key]['uid'] = $authUser->id;
+                $data[$key]['group_id'] = $value;
+            }
+
+            if ($authGroupAccess->saveAll($data) === false) {
                 $trans_result = false;
             }
             if ($trans_result) {
@@ -65,6 +70,37 @@ class AdminUser extends Base {
             return $this->fetch();
         }
 
+    }
+
+    public function edit($id) {
+        if ($this->request->isPost()) {
+
+        } else {
+            //修改的时候
+
+            //获取用户的信息
+            $authUser = AuthUser::get($id)->toArray();
+            //获取角色分类
+            $groupList = AuthGroup::all()->toArray();
+
+            $groupId = AuthGroupAccess::where(["uid" => $id])->field('group_concat(group_id) as group_id')->group('uid')->find()->toArray();
+
+            foreach ($groupList as $key => $value) {
+                if (in_array($value["id"], explode(",", $groupId["group_id"]))) {
+
+                    $groupList[$key]["checked"] = 1;
+                } else {
+                    $groupList[$key]["checked"] = 0;
+                }
+            }
+
+            $this->assign("groupList", $groupList);
+            Session::set("form_info", $authUser);
+            //判断当前用户哪些角色是其拥有的(checkbox打钩)
+
+        }
+
+        return $this->fetch();
     }
 
 }
