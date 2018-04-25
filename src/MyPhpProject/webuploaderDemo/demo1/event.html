@@ -1,3 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>图片上传——事件</title>
+	<link rel="stylesheet" type="text/css" href="../css/base.css">
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
+	<link rel="stylesheet" type="text/css" href="../css/webuploader.css">
+</head>
+<body>
+	
+	<div class="container">
+		<div class="wrapper">
+			<div class="uploader-default-container">
+				<div class="uploader-no-pic"></div>
+				<div id="filePicker" class="filepicker-container"></div>
+				<p class="tip-1">或将照片拖到这里，单次最多可选300张</p>
+			</div>
+			<ul class="queue-list" id="J_queue-list">
+				<!-- <li>
+					<p class="imgWrap"><img src="image/body_bg.jpg"></p>
+					<p class="progress"><span style="width: 50%;"></span></p>
+					<p class="title">01.jpg</p>
+					<span class="success"></span>
+					<div class="file-panel">
+						<span class="cancel">删除</span>
+						<span class="rotateRight">向右旋转</span>
+						<span class="rotateLeft">向左旋转</span>
+					</div>
+				</li> -->
+			</ul>
+
+			<div class="statusBar" id="J_statusBar">
+				<div class="progress" id="J_statusBar-progress">
+                    <span class="text">0%</span>
+                    <span class="percentage"></span>
+                </div>
+
+                <div class="info" id="J_info">共0张（0B），已上传0张</div>
+                <div class="btns">
+                    <div id="filePicker2" class="filepicker2-container"></div>
+                    <div class="uploadBtn" id="J_uploadBtn">开始上传</div>
+                </div>
+
+			</div>
+		</div>
+	</div>
+	<div style="height: 150px"></div>
+	<script type="text/javascript" src="../dist/jquery.js"></script>
+	<script type="text/javascript" src="../dist/webuploader.js"></script>
+	<script type="text/javascript" src="../layer/layer.js"></script>
+	<script type="text/javascript">
 $(function() {
     // 添加的文件数量
     var fileCount = 0;
@@ -41,34 +93,13 @@ $(function() {
         server: '../server/fileupload.php',
         swf: '../../dist/Uploader.swf',
         //限制文件的大小
-        fileSingleSizeLimit:10,
+        fileSingleSizeLimit:2 * 1024 * 1024,
         fileNumLimit:20,
-        fileSizeLimit: 1024
+        fileSizeLimit: 4 * 1024 * 1024
     });
 
 
-    uploader.onError = function(code) {
-        //如果上传同一张图片，那么就会报错！！
-       switch(code){
-            case "F_EXCEED_SIZE":
-                layer.msg("单个文件大小不能超过2M");
-                break;
-            case "Q_EXCEED_SIZE_LIMIT":
-                layer.msg("总文件大小不能超过4M");
-                break;
-            case "Q_TYPE_DENIED":
-                layer.msg("请上传JPG、PNG、GIF、BMP格式文件");
-                break;
-            case "F_DUPLICATE":
-                layer.msg("不能重复上传文件！");
-                break;
-            case "Q_EXCEED_NUM_LIMIT":
-                layer.msg("单次上传文件总个数不能超过3个！");
-                break;
-            default:
-                layer.msg("上传文件错误！");
-       }
-    };
+    
 
     uploader.addButton({
         id: '#filePicker2',
@@ -76,7 +107,7 @@ $(function() {
     });
 
     uploader.on('ready', function() {
-        window.uploader = uploader;
+    	console.group("触发了：ready事件");
     });
 
 
@@ -110,13 +141,17 @@ $(function() {
     });
 
     uploader.on("filesQueued", function(file) {
-        console.dir(file);
+        
         console.group("触发了：filesQueued事件(当一批文件添加进队列以后触发)");
+        console.dir(file);
     });
 
     uploader.on("uploadStart", function(file) {
-
         console.group("触发了：uploadStart事件(某个文件开始上传前触发，一个文件只会触发一次)");
+    });
+
+    uploader.on("uploadBeforeSend", function(file) {
+        console.group("触发了：uploadBeforeSend事件");
     });
 
     uploader.on("uploadProgress", function(file, percentage) {
@@ -137,6 +172,31 @@ $(function() {
          console.group("触发了：uploadSuccess");
          $("#"+file.id).find(".file-panel").remove();
     });
+    uploader.on("error",function(code){
+    	//如果上传同一张图片，那么就会报错！！
+    	console.group("触发了：onError事件");
+      	console.dir(code);
+    });
+
+     uploader.on('all', function(type) {
+    	console.dir("all事件(这样所有的事件触发都会响应到)");
+       
+        console.dir(type)
+        //  var stats;
+        // switch (type) {
+        //     //uploader.upload(); 后就会触发 startUpload
+        //     case 'startUpload':
+        //         setState('uploading');
+        //         break;
+        //     case 'uploadFinished':
+        //             setState( 'finshed' );
+        //             break;
+        //     case 'uploadSuccess':
+        //         setState('uploadSuccess');
+        //         break;
+        // }
+    });
+    
 
 
     
@@ -285,22 +345,7 @@ $(function() {
 
     }
 
-    uploader.on('all', function(type) {
-        var stats;
-        console.dir(type)
-        switch (type) {
-            //uploader.upload(); 后就会触发 startUpload
-            case 'startUpload':
-                setState('uploading');
-                break;
-            case 'uploadFinished':
-                    setState( 'finshed' );
-                    break;
-            case 'uploadSuccess':
-                setState('uploadSuccess');
-                break;
-        }
-    });
+   
     $upload.on("click", function() {
         if ($(this).hasClass('disabled')) {
             return false;
@@ -318,3 +363,7 @@ $(function() {
 
 
 })
+
+	</script>
+</body>
+</html>
