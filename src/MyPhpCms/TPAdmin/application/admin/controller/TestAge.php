@@ -4,16 +4,13 @@ use app\admin\common\Auth;
 use think\Controller;
 use think\Session;
 
+class TestAge extends Controller {
+    // public function __construct(){
+    //     echo  "Index_construct"."<br/>";
+    // }
 
+    public function indexOne() {
 
-class TestAge extends Base {
-	// public function __construct(){
-	// 	echo  "Index_construct"."<br/>";
-	// }
-
-	
-    public function indexOne() {	
-    	
     }
 }
 ?>
