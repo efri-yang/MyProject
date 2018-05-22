@@ -9,7 +9,9 @@ use think\Request;
 use think\Validate;
 
 class Login extends controller {
+    public function index() {
 
+    }
     //验证码
     public function verify() {
         $config = [
@@ -39,7 +41,7 @@ class Login extends controller {
     }
 
     public function login() {
-
+        echo "Asdfasdfasdf";
         if ($this->request->isPost()) {
             $request = Request::instance();
             $params = $request->param();
@@ -73,6 +75,8 @@ class Login extends controller {
                     $this->error("用户名或者密码错误！", "login/login");
                 }
             }
+        } else {
+            echo "asdfasdf";
         }
         $this->assign([
             'url' => isset($this->param['uri']) ? $this->param['uri'] : '',
