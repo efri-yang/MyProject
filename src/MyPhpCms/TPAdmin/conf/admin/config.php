@@ -30,6 +30,8 @@ return [
         // 验证成功后是否重置
         'reset' => true,
     ],
+    //伪静态设置
+    'url_html_suffix'=>false,
     'template' => [
         'layout_on' => true,
         'layout_name' => 'layout'
@@ -39,4 +41,6 @@ return [
         'var_page'  => 'page',
         'list_rows' =>10,
     ],
+    'url_route_on' => true,
+    'url_route_must'=> false,
 ];
