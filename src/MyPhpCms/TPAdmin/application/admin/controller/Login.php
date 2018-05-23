@@ -6,7 +6,7 @@ use think\captcha\Captcha;
 use think\Controller;
 use think\Loader;
 use think\Request;
-use think\Validate;
+
 
 class Login extends controller {
     public function index() {
@@ -43,7 +43,9 @@ class Login extends controller {
     public function login() {
         $request = Request::instance();
         $params = $request->param();
+
         if ($this->request->isPost()) {
+
             $params["password"] = md5($params["password"]);
             $validate = Loader::validate("UserLogin");
 
@@ -54,6 +56,7 @@ class Login extends controller {
                 $authUser = new AuthUser;
                 //DB操作返回是数组。模型直接操作返回是对象
                 $user = $authUser::get(["email" => $params["email"], "password" => $params["password"]]);
+
                 //判断用户是否存在，存在判断是否已被禁用
                 if (!!$user->id) {
                     //获取数据对象原始数据:getData()
@@ -67,6 +70,7 @@ class Login extends controller {
                     } else {
                         Auth::login($user["id"], $user["username"], false);
                     }
+
                     $redirect_uri = isset($this->param['uri']) ? $this->param['uri'] : 'admin/index/index';
                     $this->success("登录成功！", $redirect_uri);
                 } else {

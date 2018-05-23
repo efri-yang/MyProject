@@ -14,8 +14,9 @@ use think\Request;
 use think\Session;
 
 class Base extends Controller {
-    protected $request, $param, $post, $get, $module, $controller, $action, $urlMCA, $urlMC, $webData, $sideMenuList, $menuList, $parentIds;
+    protected $request, $param, $post, $get, $module, $controller, $action, $urlMCA, $urlMC, $webData, $sideMenuList, $menuList, $parentIds, $auth;
     public function __construct() {
+
         $this->request = Request::instance();
         //请求参数
         $this->param = $this->request->param();
@@ -33,7 +34,9 @@ class Base extends Controller {
 
     }
     public function _initialize() {
+
         $auth = new Auth();
+        $this->auth = $auth;
         $tree = new Tree();
         if ($auth->isLogin()) {
             $uid = Session::get('user.user_id');
@@ -72,8 +75,8 @@ class Base extends Controller {
 
         } else {
             //没登录跳转到登录页面，跟上url
-            $this->redirect("login/login",['uri'=>$this->urlMCA]);
-          
+            $this->redirect("login/login", ['uri' => $this->urlMCA]);
+
         }
     }
 

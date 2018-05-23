@@ -4,9 +4,7 @@ namespace app\admin\controller;
 use app\admin\model\AuthGroup;
 use app\admin\model\AuthGroupAccess;
 use app\admin\model\AuthUser;
-use think\Paginator;
 use think\Session;
-
 
 class AdminUser extends Base {
     public function index() {
@@ -64,9 +62,11 @@ class AdminUser extends Base {
             } else {
                 $authUser->rollBack();
                 $authGroupAccess->rollBack();
+                Session::set("form_info", $param);
                 $this->error("添加失败！", "index");
             }
         } else {
+            Session::set("form_info", '');
             $this->assign("groupList", $groupList);
             return $this->fetch();
         }
@@ -86,6 +86,7 @@ class AdminUser extends Base {
                 'password' => md5($param["password"]),
                 'email' => $param['email'],
                 'phone' => $param["phone"],
+                'status' => $param["status"],
             ]);
             if ($authUser->save() === false) {
                 $trans_result = false;
@@ -93,12 +94,11 @@ class AdminUser extends Base {
             //用户角色表进行操作
             //两种方式  第一种修改已经有的 删除 没有的
             //第二种 直接删除原来的  添加现有的
-            $authGroupAccess=new AuthGroupAccess();
+            $authGroupAccess = new AuthGroupAccess();
             $authGroupAccess->startTrans();
-            
 
-            if($authGroupAccess->where('uid',$id)->delete()!==false){
-                 foreach ($param["group_id"] as $key => $value) {
+            if ($authGroupAccess->where('uid', $id)->delete() !== false) {
+                foreach ($param["group_id"] as $key => $value) {
                     $data[$key]['uid'] = $id;
                     $data[$key]['group_id'] = $value;
                 }
@@ -107,59 +107,56 @@ class AdminUser extends Base {
                     $trans_result = false;
                 }
 
-            }else{
+            } else {
                 $trans_result = false;
             }
-
-                
-            
-           
             if ($trans_result) {
                 $authUser->commit();
                 $authGroupAccess->commit();
+
                 $this->success("修改成功！", "index");
             } else {
                 $authUser->rollBack();
                 $authGroupAccess->rollBack();
+
                 $this->error("修改失败！", "index");
             }
-            
 
         } else {
             //修改的时候
 
             //获取用户的信息
             $authUser = AuthUser::get($id)->toArray();
+            //放到session当中
+            Session::set("form_info", $authUser);
             //获取角色分类
             $groupList = AuthGroup::all()->toArray();
-            $groupIdObj=AuthGroupAccess::where(["uid" => $id])->field('group_concat(group_id) as group_id')->group('uid')->find();
+            $groupIdObj = AuthGroupAccess::where(["uid" => $id])->field('group_concat(group_id) as group_id')->group('uid')->find();
 
-            if($groupIdObj){
-                $groupId=$groupIdObj->toArray();
-            }else{
-                $groupId=false;
+            if ($groupIdObj) {
+                $groupId = $groupIdObj->toArray();
+            } else {
+                $groupId = false;
             }
 
-           
-            
             foreach ($groupList as $key => $value) {
-                if(!!$groupId){
+                if (!!$groupId) {
                     if (in_array($value["id"], explode(",", $groupId["group_id"]))) {
                         $groupList[$key]["checked"] = 1;
                     } else {
                         $groupList[$key]["checked"] = 0;
                     }
-                }else{
+                } else {
                     $groupList[$key]["checked"] = 0;
                 }
-                
+
             }
 
             $this->assign([
                 "id" => $id,
                 "groupList" => $groupList,
             ]);
-            Session::set("form_info", $authUser);
+
             //判断当前用户哪些角色是其拥有的(checkbox打钩)
 
         }

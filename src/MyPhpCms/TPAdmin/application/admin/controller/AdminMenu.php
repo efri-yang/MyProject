@@ -3,6 +3,7 @@ namespace app\admin\controller;
 use app\admin\common\Auth;
 use app\admin\common\Tree;
 use app\admin\model\AdminMenus;
+use app\admin\model\AuthGroup;
 use app\admin\model\AuthRules;
 use think\Db;
 use think\Request;
@@ -19,10 +20,13 @@ class AdminMenu extends Base {
         $result = Db::table("think_admin_menus")->order(["sort_id" => "asc", 'menu_id' => 'asc'])->column('*', 'menu_id');
         $menuList = $tree->getMenu(0, $result);
         $this->assign('menuadmin', $menuList);
+
         return $this->fetch();
     }
 
     public function add() {
+        //超级管理员拥有全部的权限，所以添加的菜单要把id 添加到权限中
+        //而且要考虑事务处理(设计到多个表的数据操作)
         $rule = [
             'parent_id' => 'require',
             'title' => 'require',
@@ -64,11 +68,20 @@ class AdminMenu extends Base {
                     'name' => $this->post['url'],
                 ];
                 if ($adminMenus->menu_id) {
+
                     if ($adminMenus->authRule()->save($rule_data)) {
+                        $authGroup = AuthGroup::get(1);
+                        $adminRule = explode(",", $authGroup["rules"]);
+                        $adminRule[] = $adminMenus->menu_id;
+                        $authGroup->rules = implode(",", $adminRule);
+                        $authGroup->save();
+
                         return $this->success("添加成功！", "index");
                     } else {
                         return $this->error("关联权限添加失败", "index");
                     }
+
+                    //添加id到超级管理员的角色权限表中think_auth_group
 
                 } else {
                     $this->redirect("add", $params);
@@ -82,6 +95,8 @@ class AdminMenu extends Base {
 
     public function del($id) {
         //考虑删除父元素怎么办，所以del按钮 需要提示删除所有子元素
+        //删除了 要删除 menu 和rule中的对应的菜单
+        //同时要考虑到 auth_group中的
 
         $arr = array($id);
         foreach ($this->menuList as $k => $v) {
@@ -103,13 +118,30 @@ class AdminMenu extends Base {
         if (!$res) {
             $trans_result = false;
         }
+
+        $authGroup = new AuthGroup();
+        $authGroupList = AuthGroup::all()->toArray();
+        $authGroup->startTrans();
+        foreach ($authGroupList as $key => $value) {
+            $rule = explode(",", $value["rules"]);
+            if (($offfset = array_search($id, $rule)) !== false) {
+                array_splice($rule, $offfset, 1);
+                if ($authGroup->save(['rules' => implode(",", $rule)], ['id' => $value['id']]) === false) {
+                    $trans_result = false;
+                    break;
+                }
+            }
+        }
+
         if ($trans_result) {
             $adminMenus->commit();
             $authRules->commit();
+            $authGroup->commit();
             $this->success("删除成功！", "index");
         } else {
             $adminMenus->rollBack();
             $authRules->rollBack();
+            $authGroup->rollBack();
             $this->error("删除失败！", "index");
         }
 
