@@ -7,6 +7,7 @@ use app\admin\model\AuthUser;
 use think\Paginator;
 use think\Session;
 
+
 class AdminUser extends Base {
     public function index() {
         //获取auth_user 所有数据并展示
@@ -75,9 +76,10 @@ class AdminUser extends Base {
     public function edit($id) {
         if ($this->request->isPost()) {
             $trans_result = true;
+            $data = [];
             $param = $this->request->param();
             $authUser = AuthUser::get($id);
-            dump($param);
+            // dump($param);
             $authUser->startTrans();
             $authUser->data([
                 'username' => $param["username"],
@@ -88,9 +90,40 @@ class AdminUser extends Base {
             if ($authUser->save() === false) {
                 $trans_result = false;
             }
-
-            $authGroupAccess = AuthGroupAccess::get();
+            //用户角色表进行操作
+            //两种方式  第一种修改已经有的 删除 没有的
+            //第二种 直接删除原来的  添加现有的
+            $authGroupAccess=new AuthGroupAccess();
             $authGroupAccess->startTrans();
+            
+
+            if($authGroupAccess->where('uid',$id)->delete()!==false){
+                 foreach ($param["group_id"] as $key => $value) {
+                    $data[$key]['uid'] = $id;
+                    $data[$key]['group_id'] = $value;
+                }
+
+                if ($authGroupAccess->saveAll($data) === false) {
+                    $trans_result = false;
+                }
+
+            }else{
+                $trans_result = false;
+            }
+
+                
+            
+           
+            if ($trans_result) {
+                $authUser->commit();
+                $authGroupAccess->commit();
+                $this->success("修改成功！", "index");
+            } else {
+                $authUser->rollBack();
+                $authGroupAccess->rollBack();
+                $this->error("修改失败！", "index");
+            }
+            
 
         } else {
             //修改的时候
@@ -99,16 +132,27 @@ class AdminUser extends Base {
             $authUser = AuthUser::get($id)->toArray();
             //获取角色分类
             $groupList = AuthGroup::all()->toArray();
+            $groupIdObj=AuthGroupAccess::where(["uid" => $id])->field('group_concat(group_id) as group_id')->group('uid')->find();
 
-            $groupId = AuthGroupAccess::where(["uid" => $id])->field('group_concat(group_id) as group_id')->group('uid')->find()->toArray();
+            if($groupIdObj){
+                $groupId=$groupIdObj->toArray();
+            }else{
+                $groupId=false;
+            }
 
+           
+            
             foreach ($groupList as $key => $value) {
-                if (in_array($value["id"], explode(",", $groupId["group_id"]))) {
-
-                    $groupList[$key]["checked"] = 1;
-                } else {
+                if(!!$groupId){
+                    if (in_array($value["id"], explode(",", $groupId["group_id"]))) {
+                        $groupList[$key]["checked"] = 1;
+                    } else {
+                        $groupList[$key]["checked"] = 0;
+                    }
+                }else{
                     $groupList[$key]["checked"] = 0;
                 }
+                
             }
 
             $this->assign([

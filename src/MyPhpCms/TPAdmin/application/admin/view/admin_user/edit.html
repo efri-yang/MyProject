@@ -7,7 +7,7 @@
                     <label class="am-para-label">角色：</label>
                     <div class="am-para-input lh-default">
                     	{volist name="groupList" id="vo"}
-	                	<label class="pr15"><input type="checkbox" name="group_id" {$vo.checked ? "checked" :""} value="{$vo.id}" required>{$vo.title}</label>
+	                	<label class="pr15"><input type="checkbox" name="group_id[]" {$vo.checked ? "checked" :""} value="{$vo.id}" required>{$vo.title}</label>
                 		{/volist}
                         
                     </div>
