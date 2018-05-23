@@ -31,16 +31,16 @@ return [
         'reset' => true,
     ],
     //伪静态设置
-    'url_html_suffix'=>false,
+    'url_html_suffix' => false,
     'template' => [
         'layout_on' => true,
-        'layout_name' => 'layout'
+        'layout_name' => 'layout',
     ],
-    'paginate'               => [
-        'type'      => 'page\Page',
-        'var_page'  => 'page',
-        'list_rows' =>10,
+    'paginate' => [
+        'type' => 'page\Page',
+        'var_page' => 'page',
+        'list_rows' => 10,
     ],
     'url_route_on' => true,
-    'url_route_must'=> false,
+    'url_route_must' => false,
 ];

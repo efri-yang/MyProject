@@ -42,7 +42,7 @@ class Base extends Controller {
             //面包导航屑(根据当前menu_id 后去父元素);
         } else {
             //没有登录，重定向到登录页面，并且记录下页面 方便跳转
-            $this->redirect("login/index", ["uri" => $this->url]);
+            $this->redirect("login/login");
         }
 
     }

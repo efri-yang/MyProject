@@ -72,6 +72,7 @@ class Base extends Controller {
 
         } else {
             //没登录跳转到登录页面，跟上url
+
             $this->redirect('login/login', ['uri' => $this->urlMCA]);
         }
     }

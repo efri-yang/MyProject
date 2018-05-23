@@ -9,8 +9,8 @@ use think\Request;
 use think\Validate;
 
 class Login extends controller {
-    public function index(){
-        return $this->redirect('login/login');
+    public function index() {
+        return $this->redirect("login");
     }
     //验证码
     public function verify() {
@@ -41,10 +41,13 @@ class Login extends controller {
     }
 
     public function login() {
-        $request = Request::instance();
         $params = $request->param();
-       
+
+        dump($params);
+        die();
         if ($this->request->isPost()) {
+            $request = Request::instance();
+            $params = $request->param();
             $params["password"] = md5($params["password"]);
             $validate = Loader::validate("UserLogin");
 
@@ -76,14 +79,11 @@ class Login extends controller {
                 }
             }
         } else {
-                 
-           $redirect_uri = isset($this->param['uri']) ? $this->param['uri'] : '';
-           echo $redirect_uri;
-           $this->assign([
-                'url'=>$redirect_uri
-           ]);
+
         }
-        
+        $this->assign([
+            'url' => isset($this->param['uri']) ? $this->param['uri'] : '',
+        ]);
         return $this->fetch("index");
     }
 
