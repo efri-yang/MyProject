@@ -138,7 +138,8 @@ class Base extends Controller {
                     $auth->createLog($this->web_data['web_title'], $log_type, $this->id);
                 }
 
-            } else {
+            } else {        
+                
                 $this->redirect('pub/login', ['uri' => $this->url]);
             }
         }

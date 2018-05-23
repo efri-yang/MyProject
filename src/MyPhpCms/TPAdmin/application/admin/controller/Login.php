@@ -41,13 +41,9 @@ class Login extends controller {
     }
 
     public function login() {
+        $request = Request::instance();
         $params = $request->param();
-
-        dump($params);
-        die();
         if ($this->request->isPost()) {
-            $request = Request::instance();
-            $params = $request->param();
             $params["password"] = md5($params["password"]);
             $validate = Loader::validate("UserLogin");
 
@@ -79,11 +75,11 @@ class Login extends controller {
                 }
             }
         } else {
-
+            $this->assign([
+                'url' => isset($this->param['uri']) ? $this->param['uri'] : '',
+            ]);
         }
-        $this->assign([
-            'url' => isset($this->param['uri']) ? $this->param['uri'] : '',
-        ]);
+        
         return $this->fetch("index");
     }
 
