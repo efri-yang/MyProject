@@ -79,7 +79,7 @@ class Login extends controller {
                 'url' => isset($this->param['uri']) ? $this->param['uri'] : '',
             ]);
         }
-        
+
         return $this->fetch("index");
     }
 

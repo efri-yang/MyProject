@@ -29,7 +29,7 @@ class AdminUser extends Base {
         if ($this->request->isPost()) {
             $trans_result = true;
             $param = $this->request->param();
-            //
+
             $data = [];
 
             $authUser = new AuthUser();
@@ -74,6 +74,23 @@ class AdminUser extends Base {
 
     public function edit($id) {
         if ($this->request->isPost()) {
+            $trans_result = true;
+            $param = $this->request->param();
+            $authUser = AuthUser::get($id);
+            dump($param);
+            $authUser->startTrans();
+            $authUser->data([
+                'username' => $param["username"],
+                'password' => md5($param["password"]),
+                'email' => $param['email'],
+                'phone' => $param["phone"],
+            ]);
+            if ($authUser->save() === false) {
+                $trans_result = false;
+            }
+
+            $authGroupAccess = AuthGroupAccess::get();
+            $authGroupAccess->startTrans();
 
         } else {
             //修改的时候
@@ -94,7 +111,10 @@ class AdminUser extends Base {
                 }
             }
 
-            $this->assign("groupList", $groupList);
+            $this->assign([
+                "id" => $id,
+                "groupList" => $groupList,
+            ]);
             Session::set("form_info", $authUser);
             //判断当前用户哪些角色是其拥有的(checkbox打钩)
 

@@ -12,7 +12,7 @@ class Role extends Base {
         $authgroup = new AuthGroup();
 
         $result = $authgroup->select()->toArray();
-       
+
         //如果是数据集查询的话有两种情况，由于默认的数据集返回结果的类型是一个数组因此无法调用 toArray 方法，必须先转成数据集对象然后再使用 toArray 方法，系统提供了一个 collection 助手函数实现数据集对象的转换
 
         //如果设置了模型的数据集返回类型的话，则可以简化使用  protected $resultSetType = 'collection';
@@ -91,7 +91,7 @@ class Role extends Base {
             //获取角色 对应的权限id 数组
             $ruleCheck = explode(",", $role["rules"]);
 
-            //获取表中所有的权限(为什么menu而不是rules)
+            //获取表中所有的权限(为什么menu而不是rules),* 表示所有，column 第二个参数表示设置的键名
             $menuAll = Db::table("think_admin_menus")->order(["sort_id" => "asc", "menu_id" => "asc"])->column("*", "menu_id");
 
             //从auth_rules中判断哪些是在$ruleCheck 里面的，然后返回menu_id吗,然后在menus表中根据menu_id 整合数据
