@@ -65,7 +65,7 @@ class AdminMenu extends Base {
                 $adminMenus->save();
                 $rule_data = [
                     'title' => $this->post['title'],
-                    'name' => $this->post['url'],
+                    'name' => $this->post['url']
                 ];
                 if ($adminMenus->menu_id) {
 
@@ -149,5 +149,108 @@ class AdminMenu extends Base {
 
     }
 
+    public function  edit($id){
+
+        if ($this->request->isPost()) {
+            $rule = [
+                'parent_id' => 'require',
+                'title' => 'require',
+                'url' => 'require',
+                'sort_id' => 'require|number',
+                'log_type', 'require'
+            ];
+            $message = [
+                'parent_id' => '上级菜单不能为空',
+                'title' => '标题不能为空',
+                'url' => 'url不能为空',
+                'sort_id.require' => '请输入排序id',
+                'sort_id.number' => '排序id必须是数字',
+                'log_type' => '日志记录方式不能为空',
+            ];
+            $params = $this->request->param();
+            $rule_data = [
+                'title' => $this->post['title'],
+                'name' => $this->post['url']
+            ];
+            $validate = new Validate($rule, $message);
+            $flag=true;
+            if (!$validate->check($params)) {
+                Session::set('form_info', $params);
+                $this->error($validate->getError(), "edit");
+            }else{
+
+                $data["parent_id"]=$params["parent_id"];
+                $data["title"]=$params["title"];
+                $data["url"]=$params["url"];
+                $data["icon"]=$params["icon"];
+                $data["sort_id"]=$params["sort_id"];
+                $data["is_show"]=$params["is_show"];
+                $data["log_type"]=$params["log_type"];
+                //更新数据库
+                $adminM=new AdminMenus();
+                $adminR=new AuthRules();
+
+                $adminM->startTrans();
+                $adminR->startTrans();
+
+
+
+
+                if($adminM->save($data,['menu_id'=>$id])){
+
+                    if(!$adminR->save($rule_data,['id'=>$id])){
+                        $flag=false;
+                    }
+                }else{
+
+
+                    $flag=false;
+                }
+
+                if($flag){
+                    $adminM->commit();
+                    $adminR->commit();
+                    return $this->success("修改成功！", "index");
+                }else{
+                    $adminM->rollback();
+                    $adminR->rollback();
+                    return $this->error("修改失败", "index");
+                }
+
+
+
+
+
+            }
+
+
+
+        }else{
+            function getParentId($pid,$data){
+                if($pid==0){
+                    return 0;
+                }
+                foreach($data as $key =>$value){
+                    if($value['menu_id']==$pid){
+                        return $value["menu_id"];
+                    }
+                }
+            }
+
+
+            $currMenuInfo=Db::table("think_admin_menus")->where('menu_id',$id)->find();
+
+            Session::set('form_info',$currMenuInfo);
+            $tree = new Tree();
+            $result = Db::table("think_admin_menus")->order(["sort_id" => "asc", 'menu_id' => 'asc'])->column('*', 'menu_id');
+            $parentId=getParentId($currMenuInfo["parent_id"],$result);
+            $optionList = $tree->getOptions(0, $result,$parentId);
+            $this->assign('optionList', $optionList);
+        }
+
+
+
+        return $this->fetch();
+    }
 }
 ?>

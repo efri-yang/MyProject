@@ -105,7 +105,10 @@ class Tree {
         return $str;
     }
 
-    public function getOptions($levelId, $data, $str = "", $repeatNum = 1) {
+    public function getOptions($levelId, $data,$selectId=0,$str = "", $repeatNum = 1) {
+        if($levelId==0){
+            $str .= '<option value="0" '.($selectId==0 ? 'selected' :'').'>根目录</option>';
+        }
         $child = $this->getChild($levelId, $data);
         $repeatText = str_repeat($this->repeatPlaceholder, $repeatNum);
         if ($repeatNum) {
@@ -117,11 +120,11 @@ class Tree {
         if (is_array($child)) {
             foreach ($child as $key => $value) {
 
-                $str .= '<option value="' . $value["menu_id"] . '">' . $repeatText . $repeatLine . $value["title"] . '</option>';
+                $str .= '<option '.($selectId==$value['menu_id'] ? 'selected' :'').' value="' . $value["menu_id"] . '">' . $repeatText . $repeatLine . $value["title"] . '</option>';
 
                 $subChild = $this->getChild($value["menu_id"], $data);
                 if ($subChild) {
-                    $str = $this->getOptions($value["menu_id"], $data, $str, $repeatNum);
+                    $str = $this->getOptions($value["menu_id"], $data,$selectId,$str, $repeatNum);
                 }
 
             }
