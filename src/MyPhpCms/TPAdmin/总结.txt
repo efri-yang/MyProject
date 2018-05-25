@@ -47,4 +47,19 @@
 11、菜单的添加和删除  第一个menu 表要关联到 rule 表 同时添加同时删除，同时要关联到角色权限表，添加或者删除的时候对应的角色的id都要跟着添加删除（要特别注意管理员）
 
 
+12、DB和模型查询的一些区别：
+	DB操作返回是数组。模型直接操作返回是对象。所以模型查询的时候我们需要通过设置protected $resultSetType = 'collection'; 然后对于结果进行toArray();所以下面的两种方法都是可以的：
+		$user = $authUser->where(["email" => $params["email"], "password" => $params["password"]])->find(); 查询不到数据的时候返回null，注意的查询	
+		$user = $authUser::get(["email" => $params["email"], "password" => $params["password"]]);
+		Db::table("think_auth_user")->where("email",$params["email"])->where("password",$params["password"])->find();查询不到的时候返回的是null
+所以结论就是 模型的查询 Db数据库查询 如果没有查到数据就是返回null，有查到数据就是返回数据
+
+13、插入的时候：
+	模型的save操作会默认返回主键，如果插入失败就是返回false！
+	insert 方法添加数据成功返回添加成功的条数insert 正常情况返回 1
+	insertAll 返回的时候受影响记录条数，即插入数量
+
+14、更新数据的时候：如果数据发生了变化则会修改成功，返回1，如何数据还是原来的执行程序则会返回0.
+
+
 

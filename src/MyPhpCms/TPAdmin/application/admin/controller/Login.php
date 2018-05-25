@@ -6,7 +6,7 @@ use think\captcha\Captcha;
 use think\Controller;
 use think\Loader;
 use think\Request;
-
+use think\DB;
 
 class Login extends controller {
     public function index() {
@@ -41,11 +41,9 @@ class Login extends controller {
     }
 
     public function login() {
-        $request = Request::instance();
-        $params = $request->param();
-
         if ($this->request->isPost()) {
-
+            $request = Request::instance();
+            $params = $request->param();
             $params["password"] = md5($params["password"]);
             $validate = Loader::validate("UserLogin");
 
@@ -55,9 +53,12 @@ class Login extends controller {
                 //验证通过以后，就需要判断用户名或者密码是否正确！！！这里是模型
                 $authUser = new AuthUser;
                 //DB操作返回是数组。模型直接操作返回是对象
-                $user = $authUser::get(["email" => $params["email"], "password" => $params["password"]]);
+                //下面是使用模型数组查询的方式，也可以使用主键的方式get就是静态方法，查询单条数据！！
+                //$user = $authUser::get(["email" => $params["email"], "password" => $params["password"]]);
+                //$data=Db::table("think_auth_user")->where("email",$params["cemail"])->where("password",$params["password"])->find();
+                $user = $authUser->where(["email" =>$params["email"], "password" => $params["password"]])->find();
 
-                //判断用户是否存在，存在判断是否已被禁用
+                //判断用户是否存在，存在判断是否已被禁用 也可以直接!!$user因为查询不到的时候返回false
                 if (!!$user->id) {
                     //获取数据对象原始数据:getData()
                     //判断用户是否

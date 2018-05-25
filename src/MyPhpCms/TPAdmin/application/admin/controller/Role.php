@@ -62,6 +62,7 @@ class Role extends Base {
     }
 
     public function del($id) {
+        //删除一个角色的时候，think_auth_group_access表中所有用户拥有该角色的都要进行id删除
         if (AuthGroup::destroy($id)) {
             $this->success("删除成功！", "index");
         } else {
