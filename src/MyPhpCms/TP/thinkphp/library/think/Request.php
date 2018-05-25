@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -1265,7 +1265,7 @@ class Request
      * @param boolean   $adv 是否进行高级模式获取（有可能被伪装）
      * @return mixed
      */
-    public function ip($type = 0, $adv = false)
+    public function ip($type = 0, $adv = true)
     {
         $type      = $type ? 1 : 0;
         static $ip = null;
@@ -1466,11 +1466,12 @@ class Request
      */
     public function action($action = null)
     {
-        if (!is_null($action)) {
+        if (!is_null($action) && !is_bool($action)) {
             $this->action = $action;
             return $this;
         } else {
-            return $this->action ?: '';
+            $name = $this->action ?: '';
+            return true === $action ? $name : strtolower($name);
         }
     }
 

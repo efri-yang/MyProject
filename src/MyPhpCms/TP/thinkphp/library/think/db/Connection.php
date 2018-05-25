@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -354,15 +354,15 @@ abstract class Connection
             $this->bind = $bind;
         }
 
-        // 释放前次的查询结果
-        if (!empty($this->PDOStatement)) {
-            $this->free();
-        }
-
         Db::$queryTimes++;
         try {
             // 调试开始
             $this->debug(true);
+
+            // 释放前次的查询结果
+            if (!empty($this->PDOStatement)) {
+                $this->free();
+            }
             // 预处理
             if (empty($this->PDOStatement)) {
                 $this->PDOStatement = $this->linkID->prepare($sql);
@@ -386,6 +386,11 @@ abstract class Connection
                 return $this->close()->query($sql, $bind, $master, $pdo);
             }
             throw new PDOException($e, $this->config, $this->getLastsql());
+        } catch (\Throwable $e) {
+            if ($this->isBreak($e)) {
+                return $this->close()->query($sql, $bind, $master, $pdo);
+            }
+            throw $e;
         } catch (\Exception $e) {
             if ($this->isBreak($e)) {
                 return $this->close()->query($sql, $bind, $master, $pdo);
@@ -416,15 +421,15 @@ abstract class Connection
             $this->bind = $bind;
         }
 
-        //释放前次的查询结果
-        if (!empty($this->PDOStatement) && $this->PDOStatement->queryString != $sql) {
-            $this->free();
-        }
-
         Db::$executeTimes++;
         try {
             // 调试开始
             $this->debug(true);
+
+            //释放前次的查询结果
+            if (!empty($this->PDOStatement) && $this->PDOStatement->queryString != $sql) {
+                $this->free();
+            }
             // 预处理
             if (empty($this->PDOStatement)) {
                 $this->PDOStatement = $this->linkID->prepare($sql);
@@ -449,6 +454,11 @@ abstract class Connection
                 return $this->close()->execute($sql, $bind);
             }
             throw new PDOException($e, $this->config, $this->getLastsql());
+        } catch (\Throwable $e) {
+            if ($this->isBreak($e)) {
+                return $this->close()->execute($sql, $bind);
+            }
+            throw $e;
         } catch (\Exception $e) {
             if ($this->isBreak($e)) {
                 return $this->close()->execute($sql, $bind);
@@ -652,6 +662,11 @@ abstract class Connection
                 return $this->close()->startTrans();
             }
             throw $e;
+        } catch (\Error $e) {
+            if ($this->isBreak($e)) {
+                return $this->close()->startTrans();
+            }
+            throw $e;
         }
     }
 
@@ -808,6 +823,7 @@ abstract class Connection
             'SSL connection has been closed unexpectedly',
             'Error writing data to the connection',
             'Resource deadlock avoided',
+            'failed with errno',
         ];
 
         $error = $e->getMessage();

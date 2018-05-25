@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -443,6 +443,9 @@ if (!function_exists('view')) {
      */
     function view($template = '', $vars = [], $replace = [], $code = 200)
     {
+        if ('' === $template) {
+            $template = Loader::parseName(request()->action(true));
+        }
         return Response::create($template, 'view', $code)->replace($replace)->assign($vars);
     }
 }
