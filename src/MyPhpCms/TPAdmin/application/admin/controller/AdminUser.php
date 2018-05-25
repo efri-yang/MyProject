@@ -156,5 +156,33 @@ class AdminUser extends Base {
         return $this->fetch();
     }
 
+
+    public function del($id){
+        $trans_flag=true;
+        $authUser=new AuthUser();
+        $authUser->startTrans();
+        $authGroupAccess=new AuthGroupAccess();
+        $authGroupAccess->startTrans();
+        if($authUser->where('id',$id)->delete()){
+            if($authGroupAccess->where('uid',$id)->find() && !$authGroupAccess->where('uid',$id)->delete()){
+                $trans_flag=false;
+            }
+        }else{
+            $trans_flag=false;
+        }
+
+        if($trans_flag){
+            $authUser->commit();
+            $authGroupAccess->commit();
+            $this->success("删除成功！", "index");
+        }else{
+            $authUser->rollback();
+            $authGroupAccess->rollback();
+            $this->error("删除失败！", "index");
+        }
+
+
+    }
+
 }
 ?>

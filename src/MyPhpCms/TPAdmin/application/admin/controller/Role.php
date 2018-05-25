@@ -75,10 +75,9 @@ class Role extends Base {
         $authGroupAccess->startTrans();
 
         if ($authGroup->where("id",$id)->delete()) {
-            if($authGroupAccess->where("group_id",$id)->delete()===0){
+            if(!!$authGroupAccess->where("group_id",$id)->find() && $authGroupAccess->where("group_id",$id)->delete()===0){
                 $trans_flag=false;
             }
-
         }else{
             $trans_flag=false;
         }

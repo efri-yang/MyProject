@@ -196,9 +196,9 @@ class AdminMenu extends Base {
 
 
 
-                if($adminM->save($data,['menu_id'=>$id])){
+                if($adminM->save($data,['menu_id'=>$id]) !==false){
 
-                    if(!$adminR->save($rule_data,['id'=>$id])){
+                    if($adminR->save($rule_data,['id'=>$id]) ===false){
                         $flag=false;
                     }
                 }else{
