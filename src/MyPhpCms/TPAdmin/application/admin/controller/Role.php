@@ -3,6 +3,7 @@ namespace app\admin\controller;
 use app\admin\common\Auth;
 use app\admin\common\Tree;
 use app\admin\model\AuthGroup;
+use app\admin\model\AuthGroupAccess;
 use app\admin\model\AuthRules;
 use think\Db;
 use think\Paginator;
@@ -13,6 +14,7 @@ class Role extends Base {
     //因为要决定哪些是可以显示，哪些不能显示
 
     public function index() {
+
         $authgroup = new AuthGroup();
         // $result = $authgroup->select()->toArray();
 
@@ -63,11 +65,34 @@ class Role extends Base {
 
     public function del($id) {
         //删除一个角色的时候，think_auth_group_access表中所有用户拥有该角色的都要进行id删除
-        if (AuthGroup::destroy($id)) {
-            $this->success("删除成功！", "index");
-        } else {
-            $this->error("删除失败！", "index");
+        //所以这个地方需要用到事务操作
+        //问题来了，如果网站有很多用户，这下子要怎么办，需要遍历所有的用户然后对于每个进行删除
+        $trans_flag=true;
+        $authGroup=new AuthGroup();
+        $authGroup->startTrans();
+
+        $authGroupAccess=new AuthGroupAccess();
+        $authGroupAccess->startTrans();
+
+        if ($authGroup->where("id",$id)->delete()) {
+            if($authGroupAccess->where("group_id",$id)->delete()===0){
+                $trans_flag=false;
+            }
+
+        }else{
+            $trans_flag=false;
         }
+
+        if($trans_flag){
+            $authGroup->commit();
+            $authGroupAccess->commit();
+            $this->success('删除成功！', 'index');
+        }else{
+            $authGroup->rollback();
+            $authGroupAccess->rollback();
+            $this->error('删除失败！','index');
+        }
+
     }
     public function access($id) {
         //$id角色id
