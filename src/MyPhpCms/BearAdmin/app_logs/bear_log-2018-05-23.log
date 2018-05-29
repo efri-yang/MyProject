@@ -1,0 +1,1 @@
+{"message":"method not exists:app\\admin\\controller\\Pub-&gt;login.html() in G:\\xampp\\htdocs\\MyProject\\src\\MyPhpCms\\BearAdmin\\thinkphp\\library\\think\\App.php:590","context":[],"level":400,"level_name":"ERROR","channel":"bear_log","datetime":{"date":"2018-05-23 10:14:39.126064","timezone_type":3,"timezone":"PRC"},"extra":[]}

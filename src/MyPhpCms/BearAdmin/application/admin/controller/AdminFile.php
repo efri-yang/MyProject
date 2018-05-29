@@ -7,32 +7,54 @@
 
 namespace app\admin\controller;
 
-use net\Http;
-use think\Db;
-use app\common\model\AdminFiles;
-use think\Session;
+use app\admin\model\Attachments;
+use tools\Attachment;
+use tools\Http;
 
 class AdminFile extends Base
 {
+    protected $filetype = [
+        1 => ['jpg', 'bmp', 'png', 'jpeg', 'gif', 'svg'],
+        2 => ['txt', 'doc', 'docx', 'xls', 'xlsx', 'pdf'],
+        3 => ['rar', 'zip', '7z', 'tar'],
+        4 => ['mp3', 'ogg', 'flac', 'wma', 'ape'],
+        5 => ['mp4', 'wmv', 'avi', 'rmvb', 'mov', 'mpg'],
+        6 => '其他'
+    ];
+
     //文件列表
     public function index()
     {
-        $files      = new AdminFiles();
+        $model      = new Attachments();
         $page_param = ['query' => []];
         if (isset($this->param['keywords']) && !empty($this->param['keywords'])) {
             $page_param['query']['keywords'] = $this->param['keywords'];
             $keywords                        = "%" . $this->param['keywords'] . "%";
-            $files->whereLike('original_name', $keywords);
+            $model->whereLike('original_name', $keywords);
             $this->assign('keywords', $this->param['keywords']);
         }
 
-        $lists = $files->order('id desc')
-            ->paginate(10, false, $page_param);
+        if (isset($this->param['file_type']) && ($this->param['file_type'] > 0)) {
+
+            $page_param['query']['file_type'] = $this->param['file_type'];
+            $filetype = [];
+            foreach ($this->filetype as $key=>$value){
+                if($key==$this->param['file_type']){
+                    $filetype = $value;
+                    break;
+                }
+            }
+            $model->whereIn('extension', $filetype);
+            $this->assign('file_type', $this->param['file_type']);
+        }
+
+        $list = $model->order('id desc')
+            ->paginate($this->webData['list_rows'], false, $page_param);
 
         $this->assign([
-            'lists' => $lists,
-            'page'  => $lists->render(),
-            'total'=>$lists->total()
+            'list' => $list,
+            'page'  => $list->render(),
+            'total' => $list->total()
         ]);
         return $this->fetch();
     }
@@ -40,73 +62,121 @@ class AdminFile extends Base
     //删除文件
     public function del()
     {
-        $result = AdminFiles::destroy($this->id);
+        $id     = $this->id;
+        $result = Attachments::destroy(function ($query) use ($id) {
+            $query->whereIn('id', $id);
+        });
         if ($result) {
-            return $this->do_success();
+            return $this->deleteSuccess();
         }
-        return $this->do_error();
+        return $this->error();
     }
 
     //上传文件
     public function upload()
     {
-        if (!$this->request->isPost()) {
-            return $this->ajaxReturnError('请用post访问');
-        }
-        $user_id = Session::get('user.user_id');
-        if ($user_id > 0) {
-
-            $file = request()->file('file');
-            $info = $file->validate(
-                [
-                    'size' => config('file_upload_max_size'),
-                    'ext'  => config('file_upload_ext')
-                ]
-            )->move(config('file_upload_path') . $user_id);
-
-            if ($info) {
-                
-                $file_info = [
-                    'user_id'       => $user_id,
-                    'original_name' => $info->getInfo('name'),
-                    'save_name'     => $info->getFilename(),
-                    'save_path'     => config('file_upload_path') . $user_id . DS . $info->getSaveName(),
-                    'extension'     => $info->getExtension(),
-                    'mime'          => $info->getInfo('type'),
-                    'size'          => $info->getSize(),
-                    'md5'           => $info->hash('md5'),
-                    'sha1'          => $info->hash(),
-                    'url'           => config('file_upload_url') . $user_id . DS . $info->getSaveName()
-                ];
-
-                AdminFiles::create($file_info);
-
-                $this->api_result['status']  = 200;
-                $this->api_result['message'] = '上传成功';
-                $this->api_result['result']  = $file_info;
-                return $this->ajaxReturnData($this->api_result);
+        if ($this->request->isPost()) {
+            $attachment = new Attachment();
+            $file =  $attachment->upload('file');
+            if($file['code']==1){
+                return $this->success('上传成功');
+            }else{
+                $error = $file['msg'];
             }
-
-
-            return $this->ajaxReturnError($file->getError());
         }
-        return $this->ajaxReturnError('未登录或登录失效');
+        return $this->error($error);
     }
 
 
     //下载文件
     public function download()
     {
-        $admin_file = AdminFiles::get($this->id);
-        if ($admin_file) {
-            $path = $admin_file->save_path;
-            $name = $admin_file->original_name;
-
-            if (file_exists($path)) {
-                return Http::download($path, $name);
-            }
-            return $this->do_error('文件不存在');
+        $admin_file = Attachments::get($this->id);
+        if (!$admin_file) {
+            return $this->error('文件不存在');
         }
-        return $this->do_error('文件不存在');
+
+        $path = $admin_file->save_path;
+        $name = $admin_file->original_name;
+
+        if (file_exists($path)) {
+            return Http::download($path, $name);
+        }
+        return $this->error('文件不存在');
+    }
+    
+    //查看
+    public function view()
+    {
+        $info = Attachments::get($this->id);
+        $this->assign([
+            'info'=>$info
+        ]);
+        return $this->fetch();
+    }
+
+    //回收站
+    public function recycle()
+    {
+        $model      = new Attachments();
+        $page_param = ['query' => []];
+        if (isset($this->param['keywords']) && !empty($this->param['keywords'])) {
+            $page_param['query']['keywords'] = $this->param['keywords'];
+            $keywords                        = "%" . $this->param['keywords'] . "%";
+            $model->whereLike('original_name', $keywords);
+            $this->assign('keywords', $this->param['keywords']);
+        }
+
+        if (isset($this->param['file_type']) && ($this->param['file_type'] > 0)) {
+            $page_param['query']['file_type'] = $this->param['file_type'];
+            $filetype = [];
+            foreach ($this->filetype as $key=>$value){
+                if($key==$this->param['file_type']){
+                    $filetype = $value;
+                    break;
+                }
+            }
+            $model->whereIn('extension', $filetype);
+            $this->assign('file_type', $this->param['file_type']);
+        }
+
+        $list = $model->order('id desc')
+            ->useSoftDelete('delete_time', ['not null', ''])
+            ->paginate($this->webData['list_rows'], false, $page_param);
+
+        $this->assign([
+            'list' => $list,
+            'page'  => $list->render(),
+            'total' => $list->total()
+        ]);
+        return $this->fetch();
+    }
+
+
+    //还原
+    public function reduction()
+    {
+        $data = Attachments::onlyTrashed()->whereIn('id', $this->id)->select();
+        if ($data) {
+            foreach ($data as $d) {
+                $d->save(['delete_time' => null]);
+            }
+            return $this->success('还原成功',self::URL_RELOAD);
+        }
+        return $this->error('还原失败');
+    }
+
+    //永久删除
+    public function delete()
+    {
+        $data = Attachments::onlyTrashed()->whereIn('id', $this->id)->select();
+        if ($data) {
+            foreach ($data as $d) {
+                @unlink($d->save_path);
+                $d->delete(true);
+            }
+            return $this->deleteSuccess('永久删除成功');
+        }
+        return $this->error('永久删除失败');
     }
 }

@@ -1,7 +1,13 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box">
-           {include file="template/data_header" /}
+            <div class="box-header">
+                <div>
+                    <a title="新增" data-id="" class="AjaxButton btn btn-primary btn-sm" data-url="add.html">
+                        新增
+                    </a>
+                </div>
+            </div>
             <div class="box-body table-responsive">
                 <table id="datalist" class="table table-hover table-bordered datatable" width="100%">
                     <thead>
@@ -13,26 +19,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {foreach name="list" item="l"}
+                    {foreach name="list" item="item"}
                     <tr>
-                        <td>{$l.name}</td>
-                        <td>{$l.time}</td>
-                        <td>{$l.size}</td>
-                        <td>
-                            <a href="{:url($web_data['do_url'].'restore',['filename'=>$l.name])}"
-                               class="btn btn-warning btn-sm margin">
+                        <td>{$item.name}</td>
+                        <td>{$item.time}</td>
+                        <td>{$item.size}</td>
+                        <td class="td-do">
+                            <a data-url="restore.html" data-data='{"name":"{$item.name}"}' class="AjaxButton btn btn-warning btn-xs" title="还原">
                                 <i class="fa fa-mail-reply"></i>
-                                还原
                             </a>
-                            <a target="_blank" href="{:url($web_data['do_url'].'download',['filename'=>$l.name])}"
-                               class="btn btn-default btn-sm margin">
+                            <a target="_blank" href="download.html?name={$item.name}"
+                               class="btn btn-default btn-xs" title="下载">
                                 <i class="fa fa-download"></i>
-                                下载
                             </a>
-                            <a href="{:url($web_data['do_url'].'del',['filename'=>$l.name])}"
-                               class="btn btn-danger btn-sm margin">
-                                <i class="fa fa-close"></i>
-                                删除
+                            <a data-url="del.html" data-data='{"name":"{$item.name}"}'
+                               class="AjaxButton btn btn-danger btn-xs">
+                                <i class="fa fa-trash"></i>
                             </a>
                         </td>
                     </tr>
@@ -43,7 +45,6 @@
             <div class="box-footer">
                 <div>
                     <div class="dataTables_paginate paging_simple_numbers">
-
                     </div>
                 </div>
             </div>

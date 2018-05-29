@@ -18,12 +18,12 @@
  ```
  或
 ```
- git clone https://git.oschina.net/yupoxiong/BearAdmin
+ git clone https://gitee.com/yupoxiong/BearAdmin
 ```
  #### 第二步
  安装TP框架与项目用到的扩展
  ```
- composer update
+ composer install
  ```
  ### 第三步
  导入数据
@@ -60,7 +60,8 @@
  * 文件上传下载
  * Excel导入导出
  * 邮件发送(支持附件)
- * 还有许多待添加然而并没有来得及添加的功能
+ * 阿里云OSS
+ * 七牛云存储
 
  #### Api相关
 对于刚开始做api开发的同学，可能有些这方面的困惑，恰好本人也做过几个api开发的案例，
@@ -69,7 +70,15 @@
 具体代码在<kbd>application\api\controller</kbd>目录下,
 包括基于JWT的登录认证，友好的数据返回格式等等，更多可直接阅读源码。
 
-放一个demo地址：<https://bearadmin.yufuping.com/api/demo>
+>放一个demo
+
+ * 地址：<https://bearadmin.yufuping.com/api/demo>
+
+ * 访问方式：`GET/POST`
+ * 参数：
+
+![竟然无法设置表格？](http://p0ozp0sp4.bkt.clouddn.com/bearadmin/20180127/171d8d4f3a79ceba84b478c370a65796.png?9755)
+
 
  #### 其他说明
 本项目采用大量的开源代码，包括thinkphp，adminlte等等。
@@ -78,3 +87,4 @@
 
 交流QQ群：[480018279](//shang.qq.com/wpa/qunwpa?idkey=2e8674491df685dab9f634773b72ce8ed7df033aed7cbf194cda95dd4ad45737)
 
+:stuck_out_tongue::bear::heart:

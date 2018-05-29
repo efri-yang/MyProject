@@ -1,0 +1,1 @@
+{"message":"Fatal error: Call to a member function param() on null in G:\\xampp\\htdocs\\MyProject\\src\\MyPhpCms\\BearAdmin\\application\\admin\\controller\\Pub.php:23","context":[],"level":400,"level_name":"ERROR","channel":"bear_log","datetime":{"date":"2018-05-22 23:53:42.735116","timezone_type":3,"timezone":"PRC"},"extra":[]}
