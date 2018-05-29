@@ -1,0 +1,1 @@
+{"message":"Call to a member function param() on null in E:\\Xampp\\htdocs\\MyProject\\src\\MyPhpCms\\BearAdmin\\application\\admin\\controller\\Pub.php:25","context":[],"level":400,"level_name":"ERROR","channel":"bear_log","datetime":{"date":"2018-02-06 13:11:23.851080","timezone_type":3,"timezone":"PRC"},"extra":[]}

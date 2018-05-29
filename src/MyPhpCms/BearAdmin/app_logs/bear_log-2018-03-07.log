@@ -1,0 +1,1 @@
+{"message":"SQLSTATE[42S02]: Base table or view not found: 1146 Table 'thinkphp.bear_admin_menu' doesn't exist in E:\\Xampp\\htdocs\\MyProject\\src\\MyPhpCms\\BearAdmin\\thinkphp\\library\\think\\db\\Connection.php:388","context":[],"level":400,"level_name":"ERROR","channel":"bear_log","datetime":{"date":"2018-03-07 09:52:58.954281","timezone_type":3,"timezone":"PRC"},"extra":[]}
