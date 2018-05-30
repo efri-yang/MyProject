@@ -4,15 +4,16 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit73d5bf89285288576ea0882cc1337bd2
+class ComposerStaticInit43265740e72cfd781de1261e1e9b37bc
 {
     public static $files = array (
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
         'ddc3cd2a04224f9638c5d0de6a69c7e3' => __DIR__ . '/..' . '/topthink/think-migration/src/config.php',
-        '72c97b53391125cae04082a81029f42d' => __DIR__ . '/..' . '/topthink/think-testing/src/config.php',
         'cc56288302d9df745d97c934d6a6e5f0' => __DIR__ . '/..' . '/topthink/think-queue/src/common.php',
+        '72c97b53391125cae04082a81029f42d' => __DIR__ . '/..' . '/topthink/think-testing/src/config.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -41,6 +42,7 @@ class ComposerStaticInit73d5bf89285288576ea0882cc1337bd2
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\DomCrawler\\' => 29,
         ),
@@ -82,14 +84,14 @@ class ComposerStaticInit73d5bf89285288576ea0882cc1337bd2
         'think\\' => 
         array (
             0 => __DIR__ . '/../..' . '/thinkphp/library/think',
-            1 => __DIR__ . '/..' . '/topthink/think-queue/src',
-            2 => __DIR__ . '/..' . '/topthink/think-image/src',
+            1 => __DIR__ . '/..' . '/topthink/think-image/src',
+            2 => __DIR__ . '/..' . '/topthink/think-queue/src',
         ),
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'app\\' => 
         array (
@@ -102,6 +104,10 @@ class ComposerStaticInit73d5bf89285288576ea0882cc1337bd2
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
         'Symfony\\Component\\Yaml\\' => 
         array (
@@ -582,10 +588,10 @@ class ComposerStaticInit73d5bf89285288576ea0882cc1337bd2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit73d5bf89285288576ea0882cc1337bd2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit73d5bf89285288576ea0882cc1337bd2::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit73d5bf89285288576ea0882cc1337bd2::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit73d5bf89285288576ea0882cc1337bd2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit43265740e72cfd781de1261e1e9b37bc::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit43265740e72cfd781de1261e1e9b37bc::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit43265740e72cfd781de1261e1e9b37bc::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit43265740e72cfd781de1261e1e9b37bc::$classMap;
 
         }, null, ClassLoader::class);
     }

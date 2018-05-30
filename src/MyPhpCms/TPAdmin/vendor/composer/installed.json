@@ -1,34 +1,34 @@
 [
     {
         "name": "doctrine/instantiator",
-        "version": "1.0.5",
-        "version_normalized": "1.0.5.0",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/doctrine/instantiator.git",
-            "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
+            "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/doctrine/instantiator/8e884e78f9f0eb1329e445619e04456e64d8051d.zip",
-            "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
+            "url": "https://files.phpcomposer.com/files/doctrine/instantiator/185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda.zip",
+            "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.3,<8.0-DEV"
+            "php": "^7.1"
         },
         "require-dev": {
             "athletic/athletic": "~0.1.8",
             "ext-pdo": "*",
             "ext-phar": "*",
-            "phpunit/phpunit": "~4.0",
-            "squizlabs/php_codesniffer": "~2.0"
+            "phpunit/phpunit": "^6.2.3",
+            "squizlabs/php_codesniffer": "^3.0.2"
         },
-        "time": "2015-06-14T21:17:01+00:00",
+        "time": "2017-07-22T11:58:36+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.0.x-dev"
+                "dev-master": "1.2.x-dev"
             }
         },
         "installation-source": "dist",
@@ -113,31 +113,37 @@
     },
     {
         "name": "phpdocumentor/reflection-docblock",
-        "version": "4.1.1",
-        "version_normalized": "4.1.1.0",
+        "version": "4.3.0",
+        "version_normalized": "4.3.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-            "reference": "2d3d238c433cf69caeb4842e97a3223a116f94b2"
+            "reference": "94fd0001232e47129dd3504189fa1c7225010d08"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/phpDocumentor/ReflectionDocBlock/2d3d238c433cf69caeb4842e97a3223a116f94b2.zip",
-            "reference": "2d3d238c433cf69caeb4842e97a3223a116f94b2",
+            "url": "https://files.phpcomposer.com/files/phpDocumentor/ReflectionDocBlock/94fd0001232e47129dd3504189fa1c7225010d08.zip",
+            "reference": "94fd0001232e47129dd3504189fa1c7225010d08",
             "shasum": ""
         },
         "require": {
             "php": "^7.0",
-            "phpdocumentor/reflection-common": "^1.0@dev",
+            "phpdocumentor/reflection-common": "^1.0.0",
             "phpdocumentor/type-resolver": "^0.4.0",
             "webmozart/assert": "^1.0"
         },
         "require-dev": {
-            "mockery/mockery": "^0.9.4",
-            "phpunit/phpunit": "^4.4"
+            "doctrine/instantiator": "~1.0.5",
+            "mockery/mockery": "^1.0",
+            "phpunit/phpunit": "^6.4"
         },
-        "time": "2017-08-30T18:51:59+00:00",
+        "time": "2017-11-30T07:14:17+00:00",
         "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.x-dev"
+            }
+        },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
@@ -209,31 +215,31 @@
     },
     {
         "name": "phpspec/prophecy",
-        "version": "v1.7.2",
-        "version_normalized": "1.7.2.0",
+        "version": "1.7.6",
+        "version_normalized": "1.7.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/phpspec/prophecy.git",
-            "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6"
+            "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/phpspec/prophecy/c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6.zip",
-            "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
+            "url": "https://files.phpcomposer.com/files/phpspec/prophecy/33a7e3c4fda54e912ff6338c48823bd5c0f0b712.zip",
+            "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
             "shasum": ""
         },
         "require": {
             "doctrine/instantiator": "^1.0.2",
             "php": "^5.3|^7.0",
             "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
-            "sebastian/comparator": "^1.1|^2.0",
+            "sebastian/comparator": "^1.1|^2.0|^3.0",
             "sebastian/recursion-context": "^1.0|^2.0|^3.0"
         },
         "require-dev": {
             "phpspec/phpspec": "^2.5|^3.2",
-            "phpunit/phpunit": "^4.8 || ^5.6.5"
+            "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
         },
-        "time": "2017-09-04T11:05:03+00:00",
+        "time": "2018-04-18T13:57:24+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -338,23 +344,23 @@
     },
     {
         "name": "phpunit/php-file-iterator",
-        "version": "1.4.2",
-        "version_normalized": "1.4.2.0",
+        "version": "1.4.5",
+        "version_normalized": "1.4.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
-            "reference": "3cc8f69b3028d0f96a9078e6295d86e9bf019be5"
+            "reference": "730b01bc3e867237eaac355e06a36b85dd93a8b4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/sebastianbergmann/php-file-iterator/3cc8f69b3028d0f96a9078e6295d86e9bf019be5.zip",
-            "reference": "3cc8f69b3028d0f96a9078e6295d86e9bf019be5",
+            "url": "https://files.phpcomposer.com/files/sebastianbergmann/php-file-iterator/730b01bc3e867237eaac355e06a36b85dd93a8b4.zip",
+            "reference": "730b01bc3e867237eaac355e06a36b85dd93a8b4",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
-        "time": "2016-10-03T07:40:28+00:00",
+        "time": "2017-11-27T13:52:08+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -481,17 +487,17 @@
     },
     {
         "name": "phpunit/php-token-stream",
-        "version": "1.4.11",
-        "version_normalized": "1.4.11.0",
+        "version": "1.4.12",
+        "version_normalized": "1.4.12.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-            "reference": "e03f8f67534427a787e21a385a67ec3ca6978ea7"
+            "reference": "1ce90ba27c42e4e44e6d8458241466380b51fa16"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/sebastianbergmann/php-token-stream/e03f8f67534427a787e21a385a67ec3ca6978ea7.zip",
-            "reference": "e03f8f67534427a787e21a385a67ec3ca6978ea7",
+            "url": "https://files.phpcomposer.com/files/sebastianbergmann/php-token-stream/1ce90ba27c42e4e44e6d8458241466380b51fa16.zip",
+            "reference": "1ce90ba27c42e4e44e6d8458241466380b51fa16",
             "shasum": ""
         },
         "require": {
@@ -501,7 +507,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.2"
         },
-        "time": "2017-02-27T10:12:30+00:00",
+        "time": "2017-12-04T08:55:13+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1050,21 +1056,22 @@
     },
     {
         "name": "symfony/dom-crawler",
-        "version": "v2.8.28",
-        "version_normalized": "2.8.28.0",
+        "version": "v2.8.41",
+        "version_normalized": "2.8.41.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/dom-crawler.git",
-            "reference": "6433e25f338ff174dc9429283354faf06df05f67"
+            "reference": "a01b1fa5322847d1d51aa61f74c86b438c2f34e8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/symfony/dom-crawler/6433e25f338ff174dc9429283354faf06df05f67.zip",
-            "reference": "6433e25f338ff174dc9429283354faf06df05f67",
+            "url": "https://files.phpcomposer.com/files/symfony/dom-crawler/a01b1fa5322847d1d51aa61f74c86b438c2f34e8.zip",
+            "reference": "a01b1fa5322847d1d51aa61f74c86b438c2f34e8",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.9",
+            "symfony/polyfill-ctype": "~1.8",
             "symfony/polyfill-mbstring": "~1.0"
         },
         "require-dev": {
@@ -1073,7 +1080,7 @@
         "suggest": {
             "symfony/css-selector": ""
         },
-        "time": "2017-10-01T21:00:16+00:00",
+        "time": "2018-05-01T22:52:40+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1107,18 +1114,75 @@
         "homepage": "https://symfony.com"
     },
     {
-        "name": "symfony/polyfill-mbstring",
-        "version": "v1.6.0",
-        "version_normalized": "1.6.0.0",
+        "name": "symfony/polyfill-ctype",
+        "version": "v1.8.0",
+        "version_normalized": "1.8.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/polyfill-mbstring.git",
-            "reference": "2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296"
+            "url": "https://github.com/symfony/polyfill-ctype.git",
+            "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/symfony/polyfill-mbstring/2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296.zip",
-            "reference": "2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296",
+            "url": "https://files.phpcomposer.com/files/symfony/polyfill-ctype/7cc359f1b7b80fc25ed7796be7d96adc9b354bae.zip",
+            "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2018-04-30T19:57:29+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Ctype\\": ""
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            },
+            {
+                "name": "Gert de Pagter",
+                "email": "BackEndTea@gmail.com"
+            }
+        ],
+        "description": "Symfony polyfill for ctype functions",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compatibility",
+            "ctype",
+            "polyfill",
+            "portable"
+        ]
+    },
+    {
+        "name": "symfony/polyfill-mbstring",
+        "version": "v1.8.0",
+        "version_normalized": "1.8.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-mbstring.git",
+            "reference": "3296adf6a6454a050679cde90f95350ad604b171"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://files.phpcomposer.com/files/symfony/polyfill-mbstring/3296adf6a6454a050679cde90f95350ad604b171.zip",
+            "reference": "3296adf6a6454a050679cde90f95350ad604b171",
             "shasum": ""
         },
         "require": {
@@ -1127,11 +1191,11 @@
         "suggest": {
             "ext-mbstring": "For best performance"
         },
-        "time": "2017-10-11T12:05:26+00:00",
+        "time": "2018-04-26T10:06:28+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.6-dev"
+                "dev-master": "1.8-dev"
             }
         },
         "installation-source": "dist",
@@ -1169,33 +1233,37 @@
     },
     {
         "name": "symfony/yaml",
-        "version": "v3.3.10",
-        "version_normalized": "3.3.10.0",
+        "version": "v3.4.11",
+        "version_normalized": "3.4.11.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/yaml.git",
-            "reference": "8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46"
+            "reference": "c5010cc1692ce1fa328b1fb666961eb3d4a85bb0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/symfony/yaml/8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46.zip",
-            "reference": "8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46",
+            "url": "https://files.phpcomposer.com/files/symfony/yaml/c5010cc1692ce1fa328b1fb666961eb3d4a85bb0.zip",
+            "reference": "c5010cc1692ce1fa328b1fb666961eb3d4a85bb0",
             "shasum": ""
         },
         "require": {
-            "php": "^5.5.9|>=7.0.8"
+            "php": "^5.5.9|>=7.0.8",
+            "symfony/polyfill-ctype": "~1.8"
+        },
+        "conflict": {
+            "symfony/console": "<3.4"
         },
         "require-dev": {
-            "symfony/console": "~2.8|~3.0"
+            "symfony/console": "~3.4|~4.0"
         },
         "suggest": {
             "symfony/console": "For validating YAML files using the lint command"
         },
-        "time": "2017-10-05T14:43:42+00:00",
+        "time": "2018-05-03T23:18:14+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "3.3-dev"
+                "dev-master": "3.4-dev"
             }
         },
         "installation-source": "dist",
@@ -1226,17 +1294,17 @@
     },
     {
         "name": "topthink/framework",
-        "version": "v5.0.12",
-        "version_normalized": "5.0.12.0",
+        "version": "v5.0.20",
+        "version_normalized": "5.0.20.0",
         "source": {
             "type": "git",
             "url": "https://github.com/top-think/framework.git",
-            "reference": "0fb51680e8d62495d27f17a0e6cf889b763a6d3c"
+            "reference": "e20f6e8cadbbc6e246a0c121c89bfd278f30c76b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/framework/0fb51680e8d62495d27f17a0e6cf889b763a6d3c.zip",
-            "reference": "0fb51680e8d62495d27f17a0e6cf889b763a6d3c",
+            "url": "https://files.phpcomposer.com/files/top-think/framework/e20f6e8cadbbc6e246a0c121c89bfd278f30c76b.zip",
+            "reference": "e20f6e8cadbbc6e246a0c121c89bfd278f30c76b",
             "shasum": ""
         },
         "require": {
@@ -1251,7 +1319,7 @@
             "phpunit/phpunit": "4.8.*",
             "sebastian/phpcpd": "2.*"
         },
-        "time": "2017-11-06T01:19:03+00:00",
+        "time": "2018-05-11T08:02:47+00:00",
         "type": "think-framework",
         "installation-source": "dist",
         "autoload": {
@@ -1481,20 +1549,20 @@
     },
     {
         "name": "topthink/think-mongo",
-        "version": "v1.7",
-        "version_normalized": "1.7.0.0",
+        "version": "v1.8.4",
+        "version_normalized": "1.8.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/top-think/think-mongo.git",
-            "reference": "fc552c8fe5798679a52f4f0d7e60763f64aeb155"
+            "reference": "4ea4eaf8d7dc272122e124c6e795b3b5badb30ab"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/think-mongo/fc552c8fe5798679a52f4f0d7e60763f64aeb155.zip",
-            "reference": "fc552c8fe5798679a52f4f0d7e60763f64aeb155",
+            "url": "https://files.phpcomposer.com/files/top-think/think-mongo/4ea4eaf8d7dc272122e124c6e795b3b5badb30ab.zip",
+            "reference": "4ea4eaf8d7dc272122e124c6e795b3b5badb30ab",
             "shasum": ""
         },
-        "time": "2017-05-05T07:52:33+00:00",
+        "time": "2018-04-01T11:14:58+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1517,24 +1585,24 @@
     },
     {
         "name": "topthink/think-queue",
-        "version": "v1.1.4",
-        "version_normalized": "1.1.4.0",
+        "version": "v1.1.5",
+        "version_normalized": "1.1.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/top-think/think-queue.git",
-            "reference": "ad709611d516e13d6760234bc98e91faa901cae8"
+            "reference": "465320c9cb7811df22d4ff8f29f58ead7d104348"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/top-think/think-queue/ad709611d516e13d6760234bc98e91faa901cae8.zip",
-            "reference": "ad709611d516e13d6760234bc98e91faa901cae8",
+            "url": "https://files.phpcomposer.com/files/top-think/think-queue/465320c9cb7811df22d4ff8f29f58ead7d104348.zip",
+            "reference": "465320c9cb7811df22d4ff8f29f58ead7d104348",
             "shasum": ""
         },
         "require": {
             "topthink/think-helper": ">=1.0.4",
             "topthink/think-installer": ">=1.0.10"
         },
-        "time": "2017-06-25T00:49:56+00:00",
+        "time": "2018-05-04T05:29:53+00:00",
         "type": "think-extend",
         "extra": {
             "think-config": {
@@ -1607,17 +1675,17 @@
     },
     {
         "name": "webmozart/assert",
-        "version": "1.2.0",
-        "version_normalized": "1.2.0.0",
+        "version": "1.3.0",
+        "version_normalized": "1.3.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/webmozart/assert.git",
-            "reference": "2db61e59ff05fe5126d152bd0655c9ea113e550f"
+            "reference": "0df1908962e7a3071564e857d86874dad1ef204a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://files.phpcomposer.com/files/webmozart/assert/2db61e59ff05fe5126d152bd0655c9ea113e550f.zip",
-            "reference": "2db61e59ff05fe5126d152bd0655c9ea113e550f",
+            "url": "https://files.phpcomposer.com/files/webmozart/assert/0df1908962e7a3071564e857d86874dad1ef204a.zip",
+            "reference": "0df1908962e7a3071564e857d86874dad1ef204a",
             "shasum": ""
         },
         "require": {
@@ -1627,7 +1695,7 @@
             "phpunit/phpunit": "^4.6",
             "sebastian/version": "^1.0.1"
         },
-        "time": "2016-11-23T20:04:58+00:00",
+        "time": "2018-01-29T19:49:41+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
