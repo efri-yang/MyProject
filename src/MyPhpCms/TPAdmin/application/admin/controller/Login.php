@@ -42,8 +42,8 @@ class Login extends Controller {
         return $captcha->entry();
     }
 
-    public function login($uri="") {
-        die($uri);
+    public function login() {
+
         if ($this->request->isPost()) {
             $request = Request::instance();
             $params = $request->param();
