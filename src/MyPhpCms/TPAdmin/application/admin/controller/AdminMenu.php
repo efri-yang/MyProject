@@ -14,7 +14,7 @@ class AdminMenu extends Base {
 
     public function index() {
         //column( '字段列表', '数组键名'  )
-        //获取menus 中的的所有数据
+        //理想的状态就是 当前控制器提供 template 和数据 然后通过方法返回
         $tree = new Tree();
 
         $result = Db::table("think_admin_menus")->order(["sort_id" => "desc", 'menu_id' => 'asc'])->column('*', 'menu_id');
