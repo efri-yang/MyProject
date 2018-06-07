@@ -8,6 +8,7 @@ use think\DB;
 use think\Loader;
 use think\Request;
 
+
 class Login extends Controller {
     public function index() {
         return $this->redirect("login");
@@ -47,11 +48,13 @@ class Login extends Controller {
             $request = Request::instance();
             $params = $request->param();
             $params["password"] = md5($params["password"]);
-            $validate = Loader::validate("UserLogin");
 
-            if (!$validate->check($params)) {
-                $this->error($validate->getError(), "login/index");
+            $result = $this->validate($params,'UserLogin');
+
+            if (true !== $result){
+                $this->error($result, "login/login");
             } else {
+
                 //验证通过以后，就需要判断用户名或者密码是否正确！！！这里是模型
                 $authUser = new AuthUser;
                 //DB操作返回是数组。模型直接操作返回是对象
@@ -61,7 +64,8 @@ class Login extends Controller {
                 $user = $authUser->where(["email" => $params["email"], "password" => $params["password"]])->find();
 
                 //判断用户是否存在，存在判断是否已被禁用 也可以直接!!$user因为查询不到的时候返回false
-                if (!!$user->id) {
+                if (!!$user) {
+
                     //获取数据对象原始数据:getData()
                     //判断用户是否
                     if ($user->status != 1) {
@@ -77,8 +81,9 @@ class Login extends Controller {
                     $redirect_uri = isset($this->param['uri']) ? $this->param['uri'] : 'admin/index/index';
                     $this->success("登录成功！", $redirect_uri);
                 } else {
+                    $redirect_uri = isset($this->param['uri']) ? $this->param['uri'] : 'admin/index/index';
                     //用户不存在
-                    $this->error("用户名或者密码错误！", "login/login");
+                    $this->error("用户名或者密码错误！", url($redirect_uri));
                 }
             }
         } else {
