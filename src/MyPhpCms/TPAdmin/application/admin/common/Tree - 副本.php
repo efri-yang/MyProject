@@ -4,6 +4,49 @@ namespace app\admin\common;
 class Tree {
     protected $repeatPlaceholder = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
+    /**
+     * 数据排序
+     */
+    static public function sort($arr, $cols) {
+        foreach ($arr as $k => &$v) {
+            if (!empty($v['sub'])) {
+                $v['sub'] = self::sort($v['sub'], $cols);
+            }
+            $sort[$k] = $v[$cols];
+        }
+        if(isset($sort)){
+            array_multisort($sort, SORT_DESC, $arr);
+        }
+        return $arr;
+    }
+    /**
+     * 横向分类树
+     */
+    static public function hTree($arr, $pid = 0) {
+        foreach ($arr as $k => $v) {
+            if ($v['pid'] == $pid) {
+                $data[$v['id']] = $v;
+                $data[$v['id']]['sub'] = self::hTree($arr, $v['id']);
+            }
+        }
+        return isset($data) ? $data : array();
+    }
+    /**
+     * 纵向分类树
+     */
+    static public function vTree($arr, $pid = 0) {
+        foreach ($arr as $k => $v) {
+            if ($v['pid'] == $pid) {
+                $data[$v['id']] = $v;
+                $data += self::vTree($arr, $v['id']);
+            }
+        }
+        return isset($data) ? $data : array();
+    }
+
+
+
+
     public function getSideMenu($levelId, $currentId, $parentIds, $data, $sideMenuText = "", $repeatNum = 0) {
         $child = $this->getChild($levelId, $data);
         $repeatText = str_repeat($this->repeatPlaceholder, $repeatNum);
@@ -94,7 +137,6 @@ class Tree {
                 $str .= '<td>' . $logType . '</td>';
                 $str .= '<td><a href="' . url("admin_menu/del", ["id" => $value["menu_id"]]) . '" class="am-btn am-btn-danger am-btn-xs mr5" data-roler="' . $roler . '">删除</a><a href="' . url("admin_menu/edit", ["id" => $value["menu_id"]]) . '" class="am-btn am-btn-primary am-btn-xs">修改</a></td>';
                 $str .= '</tr>';
-
                 if ($subChild) {
                     $str = $this->getMenu($value["menu_id"], $data, $str, $repeatNum);
                 }
@@ -132,6 +174,11 @@ class Tree {
 
         return $str;
     }
+
+
+
+
+
 
 }
 

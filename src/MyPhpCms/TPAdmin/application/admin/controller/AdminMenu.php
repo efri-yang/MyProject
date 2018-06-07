@@ -17,7 +17,8 @@ class AdminMenu extends Base {
         //获取menus 中的的所有数据
         $tree = new Tree();
 
-        $result = Db::table("think_admin_menus")->order(["sort_id" => "asc", 'menu_id' => 'asc'])->column('*', 'menu_id');
+        $result = Db::table("think_admin_menus")->order(["sort_id" => "desc", 'menu_id' => 'asc'])->column('*', 'menu_id');
+        dump($result);
         $menuList = $tree->getMenu(0, $result);
         $this->assign('menuadmin', $menuList);
 
