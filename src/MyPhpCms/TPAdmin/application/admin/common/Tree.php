@@ -4,9 +4,14 @@ namespace app\admin\common;
 class Tree {
     protected $repeatPlaceholder = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
+
     /**
      * 数据排序
      */
+
+
+
+
     static public function sort($arr, $cols) {
         foreach ($arr as $k => &$v) {
             if (!empty($v['sub'])) {
@@ -24,7 +29,7 @@ class Tree {
      */
     static public function hTree($arr, $pid = 0) {
         foreach ($arr as $k => $v) {
-            if ($v['pid'] == $pid) {
+            if ($v['parent_id'] == $pid) {
                 $data[$v['id']] = $v;
                 $data[$v['id']]['sub'] = self::hTree($arr, $v['id']);
             }
@@ -36,13 +41,25 @@ class Tree {
      */
     static public function vTree($arr, $pid = 0) {
         foreach ($arr as $k => $v) {
-            if ($v['pid'] == $pid) {
+            if ($v['parent_id'] == $pid) {
                 $data[$v['id']] = $v;
                 $data += self::vTree($arr, $v['id']);
             }
         }
         return isset($data) ? $data : array();
     }
+
+    /**
+        *传进来模板字符算,还有节点,选择的id
+     */
+    public function  getTree($nodeNum,$data,$tplStr="",$selId="",$reStr=""){
+        //获取传进来节点的所有子元素(例如传进来的是0，那么表示获取所有根节点元素)
+        $realData=self::vTree($data,$nodeNum);
+    }
+
+
+
+
 
 
 
