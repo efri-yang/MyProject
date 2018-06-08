@@ -1,6 +1,0 @@
-.idea
-composer.lock
-composer.json
-*.log
-thinkphp
-vendor
