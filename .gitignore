@@ -10,3 +10,4 @@ Discuz/*
 *.dat
 *.sass-cache
 remove/*
+src/MyPhpCms/TPAdmin/
