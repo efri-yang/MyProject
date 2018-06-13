@@ -172,6 +172,11 @@ function CheckForm(obj){
     <tr> 
       <td height="25" colspan="2">页面设置</td>
     </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">文件名</td>
+      <td height="25" bgcolor="#FFFFFF"><input name="tfile" type="text" id="tfile" value="<?=$r[tfile]?>" size="38">
+        <font color="#666666">(不设置系统自动生成命名为：type+子类ID)</font></td>
+    </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF">文件扩展名</td>
       <td height="25" bgcolor="#FFFFFF"><input name="ttype" type="text" id="ttype" value="<?=$r[ttype]?>" size="38"> 
@@ -196,8 +201,7 @@ function CheckForm(obj){
       <td height="25" bgcolor="#FFFFFF">所用列表模板</td>
       <td height="25" bgcolor="#FFFFFF"> <select name="listtempid" id="listtempid">
           <?=$listtemp_options?>
-        </select> <input type="button" name="Submit622" value="管理列表模板" onclick="window.open('../template/ListListtemp.php?gid=<?=$thegid?><?=$ecms_hashur['ehref']?>');"> 
-      </td>
+        </select> <input type="button" name="Submit622" value="管理列表模板" onclick="window.open('../template/ListListtemp.php?gid=<?=$thegid?><?=$ecms_hashur['ehref']?>');">      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF">列表式页面排序方式</td>

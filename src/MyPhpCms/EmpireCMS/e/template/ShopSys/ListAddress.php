@@ -35,7 +35,7 @@ require(ECMS_PATH.'e/template/incfile/header.php');
 		}
 	?>
     <tr bgcolor="#FFFFFF">
-      <td height="25"><div align="center"><?=$r['addressname']?></div></td>
+      <td height="25"><div align="center"><?=stripSlashes($r['addressname'])?></div></td>
       <td><div align="center"><?=$isdefault?></div></td>
       <td><div align="center">[<a href="AddAddress.php?enews=EditAddress&addressid=<?=$r['addressid']?>">修改</a>] [<a href="../doaction.php?enews=DefAddress&addressid=<?=$r['addressid']?>" onclick="return confirm('确认要设为默认?');">默认</a>] [<a href="../doaction.php?enews=DelAddress&addressid=<?=$r['addressid']?>" onclick="return confirm('确认要删除?');">删除</a>]</div></td>
     </tr>

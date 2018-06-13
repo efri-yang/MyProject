@@ -47,6 +47,7 @@ function AddAdminstyle($add,$userid,$username){
 	{
 		printerror("EmptyAdminStylePath","history.go(-1)");
 	}
+	$add['stylename']=hRepPostStr($add['stylename'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsadminstyle(stylename,path,isdefault) values('$add[stylename]',$path,0);");
 	if($sql)
 	{
@@ -79,6 +80,7 @@ function EditAdminStyle($add,$userid,$username){
 	{
 		printerror("EmptyAdminStylePath","history.go(-1)");
 	}
+	$add['stylename']=hRepPostStr($add['stylename'],1);
 	$sql=$empire->query("update {$dbtbpre}enewsadminstyle set stylename='$add[stylename]',path=$path where styleid=$styleid");
 	if($sql)
 	{

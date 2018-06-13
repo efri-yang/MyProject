@@ -50,6 +50,7 @@ $userid=(int)getcvar('mluserid');
 $username=RepPostVar(getcvar('mlusername'));
 if($userid)
 {
+	islogin();
 	$rnd=RepPostVar(getcvar('mlrnd'));
 	$user=$empire->fetch1("select ".eReturnSelectMemberF('userid,money,userfen,groupid')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' and ".egetmf('rnd')."='$rnd' limit 1");
 	if(!$user['userid'])

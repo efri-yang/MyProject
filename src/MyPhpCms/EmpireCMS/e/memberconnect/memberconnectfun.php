@@ -3,6 +3,7 @@
 //验证登录方式
 function MemberConnect_CheckApptype($apptype){
 	global $empire,$dbtbpre;
+	$apptype=RepPostVar($apptype);
 	$appr=$empire->fetch1("select * from {$dbtbpre}enewsmember_connect_app where apptype='$apptype' and isclose=0 limit 1");
 	if(!$appr['id'])
 	{
@@ -16,6 +17,8 @@ function MemberConnect_CheckOpenid($apptype,$openid){
 	global $empire,$dbtbpre;
 	$mcr['id']=0;
 	$mcr['userid']=0;
+	$apptype=RepPostVar($apptype);
+	$openid=RepPostVar($openid);
 	if(!$apptype||!trim($openid))
 	{
 		return $mcr;
@@ -68,6 +71,8 @@ function MemberConnect_InsertBind($apptype,$openid,$userid){
 //验证是否绑定过
 function MemberConnect_CheckReBind($apptype,$userid){
 	global $empire,$dbtbpre;
+	$userid=(int)$userid;
+	$apptype=RepPostVar($apptype);
 	$num=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsmember_connect where userid='$userid' and apptype='$apptype' limit 1");
 	if($num)
 	{
@@ -80,6 +85,7 @@ function MemberConnect_DelBind($id){
 	global $empire,$dbtbpre,$public_r;
 	$user_r=islogin();//是否登陆
 	$id=(int)$id;
+	$user_r[userid]=(int)$user_r[userid];
 	$sql=$empire->query("delete from {$dbtbpre}enewsmember_connect where id='$id' and userid='$user_r[userid]';");
 	if($sql)
 	{
@@ -94,6 +100,7 @@ function MemberConnect_DelBind($id){
 //原帐号绑定登录
 function MemberConnect_BindUser($userid){
 	global $empire,$dbtbpre,$public_r;
+	$userid=(int)$userid;
 	$apptype=RepPostVar($_SESSION['apptype']);
 	$openid=RepPostVar($_SESSION['openid']);
 	if(!trim($apptype)||!trim($openid))
@@ -118,7 +125,7 @@ function MemberConnect_CheckBindKey($apptype,$openid){
 	global $ecms_config;
 	$pass=md5(md5('check-'.$apptype.'-empirecms-'.$openid).'-#empire.cms!-'.$openid.'-|-empirecms-|-'.$ecms_config['cks']['ckrndtwo']);
 	$checkpass=$_SESSION['openidkey'];
-	if($pass!=$checkpass)
+	if('dg'.$pass!='dg'.$checkpass)
 	{
 		printerror2('来自的链接不存在','../../../');
 	}

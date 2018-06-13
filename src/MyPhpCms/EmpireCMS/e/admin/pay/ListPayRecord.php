@@ -122,8 +122,9 @@ $returnpage=page2($num,$line,$page_line,$start,$page,$search);
 <html>
 <head>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css"> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>在线支付</title>
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 <script>
 function CheckAll(form)
   {
@@ -135,7 +136,6 @@ function CheckAll(form)
     }
   }
 </script>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1">
   <tr> 
@@ -154,9 +154,9 @@ function CheckAll(form)
   <?=$ecms_hashur['eform']?>
     <tr> 
       <td height="25"> <div align="center">时间从 
-          <input name="startday" type="text" value="<?=$startday?>" size="12" onclick="setday(this)">
+          <input name="startday" type="text" value="<?=$startday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           到 
-          <input name="endday" type="text" value="<?=$endday?>" size="12" onclick="setday(this)">
+          <input name="endday" type="text" value="<?=$endday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           ，关键字： 
           <input name="keyboard" type="text" id="keyboard" value="<?=$keyboard?>">
           <select name="show" id="show">

@@ -20,6 +20,9 @@ $loginrnd=$lur['rnd'];
 $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
 hCheckEcmsRHash();
+
+@set_time_limit(0);
+
 require("../class/hplfun.php");
 if($enews=="DelPl_all")//删除评论
 {

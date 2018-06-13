@@ -42,6 +42,7 @@ if(!$path_r[$pathid])
 }
 $showdown_r=explode("::::::",$path_r[$pathid]);
 //下载权限
+$nockpass='';
 $user=array();
 $downgroup=$showdown_r[2];
 if($downgroup)
@@ -54,6 +55,7 @@ if($downgroup)
 		echo"<script>alert('同一帐号，只能一人在线');window.close();</script>";
         exit();
     }
+	$nockpass=qReturnLoginPassNoCK($user['userid'],$user['username'],$user['rnd'],0);
 	//下载次数限制
 	if($level_r[$u['groupid']]['daydown'])
 	{
@@ -64,10 +66,23 @@ if($downgroup)
 			exit();
 		}
 	}
-	if($level_r[$downgroup][level]>$level_r[$u['groupid']][level])
+	if($downgroup>0)//会员组
 	{
-		echo"<script>alert('您的会员级别不足(".$level_r[$downgroup][groupname].")，没有下载此软件的权限!');window.close();</script>";
-		exit();
+		if($level_r[$downgroup][level]>$level_r[$u['groupid']][level])
+		{
+			echo"<script>alert('您的会员级别不足(".$level_r[$downgroup][groupname].")，没有下载权限!');window.close();</script>";
+			exit();
+		}
+	}
+	else//访问组
+	{
+		$vgroupid=0-$downgroup;
+		$ckvgresult=eMember_ReturnCheckViewGroup($u,$vgroupid);
+		if($ckvgresult<>'empire.cms')
+		{
+			echo"<script>alert('您的会员级别不足，没有下载权限!');window.close();</script>";
+			exit();
+		}
 	}
 	//点数是否足够
 	if($showdown_r[3])
@@ -86,7 +101,7 @@ if($downgroup)
 			{
 				if($showdown_r[3]>$u['userfen'])
 			    {
-					echo"<script>alert('您的点数不足 $showdown_r[3] 点，无法下载此软件');window.close();</script>";
+					echo"<script>alert('您的点数不足 $showdown_r[3] 点，无法下载');window.close();</script>";
 					exit();
 			    }
 			}
@@ -102,11 +117,11 @@ $titleurl=sys_ReturnBqTitleLink($r);	//信息链接
 $newstime=date('Y-m-d H:i:s',$r['newstime']);
 $titlepic=$r['titlepic']?$r['titlepic']:$public_r[newsurl]."e/data/images/notimg.gif";
 $ip=egetip();
-$pass=md5(ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$user[userid]);	//验证码
-$url="../doaction.php?enews=DownSoft&classid=$classid&id=$id&pathid=$pathid&pass=".$pass."&p=".$user[userid].":::".$user[rnd];	//下载地址
+$pass=md5(md5($classid."-!ecms!".$id."-!ecms!".$pathid).ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$user[userid]);	//验证码
+$url="../doaction.php?enews=DownSoft&classid=$classid&id=$id&pathid=$pathid&pass=".$pass."&p=".$user[userid].":::".$user[rnd].":::".$nockpass;	//下载地址
 $trueurl=ReturnDSofturl($showdown_r[1],$showdown_r[4],'../../',1);	//真实文件地址
 $fen=$showdown_r[3];	//下载点数
-$downuser=$level_r[$downgroup][groupname];	//下载等级
+$downuser=$downgroup?$level_r[$downgroup][groupname]:'游客';	//下载等级
 @include('../../data/template/downpagetemp.php');
 db_close();
 $empire=null;

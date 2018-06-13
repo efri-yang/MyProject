@@ -28,6 +28,25 @@ require(ECMS_PATH.'e/template/incfile/header.php');
       <td height="23"><div align="left">报告内容(*):</div></td>
       <td height="23"><textarea name="errortext" cols="60" rows="12" id="name4"></textarea></td>
     </tr>
+	<?php
+	if($public_r['reportkey'])
+	{
+	?>
+	<tr bgcolor="#FFFFFF"> 
+       <td height="23">验证码：</td>
+       <td height="23">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr> 
+                  <td width="52"><input name="key" type="text" id="key" size="6"> 
+                  </td>
+                  <td id="reportshowkey"><a href="#EmpireCMS" onclick="edoshowkey('reportshowkey','report','<?=$public_r['newsurl']?>');" title="点击显示验证码">点击显示验证码</a></td>
+                </tr>
+            </table>
+       </td>
+    </tr>
+	<?php
+	}
+	?>
     <tr bgcolor="#FFFFFF"> 
       <td height="23">&nbsp;</td>
       <td height="23"><input type="submit" name="Submit" value="提交"> <input type="reset" name="Submit2" value="重置"> 

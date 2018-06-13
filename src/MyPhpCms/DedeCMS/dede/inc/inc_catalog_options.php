@@ -23,9 +23,9 @@ function GetOptionList($selid=0, $userCatalog=0, $channeltype=0)
     global $OptionArrayList, $channels, $dsql, $cfg_admin_channel, $admin_catalogs;
 
     $dsql->SetQuery("SELECT id,typename FROM `#@__channeltype` ");
-    $dsql->Execute('dd');
+    $dsql->Execute();
     $channels = Array();
-    while($row = $dsql->GetObject('dd')) $channels[$row->id] = $row->typename;
+    while($row = $dsql->GetObject()) $channels[$row->id] = $row->typename;
 
     $OptionArrayList = '';
 
@@ -48,9 +48,9 @@ function GetOptionList($selid=0, $userCatalog=0, $channeltype=0)
         {
             $admin_catalog = join(',', $admin_catalogs);
             $dsql->SetQuery("SELECT reid FROM `#@__arctype` WHERE id IN($admin_catalog) GROUP BY reid ");
-            $dsql->Execute('qq');
+            $dsql->Execute();
             $topidstr = '';
-            while($row = $dsql->GetObject('qq'))
+            while($row = $dsql->GetObject())
             {
                 if($row->reid==0) continue;
                 $topidstr .= ($topidstr=='' ? $row->reid : ','.$row->reid);
@@ -69,9 +69,9 @@ function GetOptionList($selid=0, $userCatalog=0, $channeltype=0)
     }
 
     $dsql->SetQuery($query);
-    $dsql->Execute('cc');
+    $dsql->Execute();
 
-    while($row=$dsql->GetObject('cc'))
+    while($row=$dsql->GetObject())
     {
         $sonCats = '';
         LogicGetOptionArray($row->id, '─', $channeltype, $dsql, $sonCats);
@@ -90,7 +90,7 @@ function GetOptionList($selid=0, $userCatalog=0, $channeltype=0)
                 $OptionArrayList .= "<option value='".$row->id."' class='option3'>".$row->typename."</option>\r\n";
             } else if($row->ispart==0 && empty($channeltype) )
             { 
-                // 专题 
+                // 专题
                 $OptionArrayList .= "<option value='".$row->id."' class='option3'>".$row->typename."</option>\r\n";
             }
         }

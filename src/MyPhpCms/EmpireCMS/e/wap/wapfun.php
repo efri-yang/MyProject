@@ -7,6 +7,10 @@ if(!defined('InEmpireCMS'))
 //-------- 编码转换
 function DoWapIconvVal($str){
 	global $ecms_config,$iconv,$pr;
+	if($pr['wapchar']==2)
+	{
+		return $str;
+	}
 	if($ecms_config['sets']['pagechar']!='utf-8')
 	{
 		$char=$ecms_config['sets']['pagechar']=='big5'?'BIG5':'GB2312';
@@ -163,6 +167,10 @@ function DoWapCode($string){
 //-------- 返回使用模板
 function ReturnWapStyle($add,$style){
 	global $empire,$dbtbpre,$pr,$class_r;
+	if(!$pr['wapchstyle'])
+	{
+		$style=0;
+	}
 	$style=(int)$style;
 	$styleid=$pr['wapdefstyle'];
 	$classid=0;
@@ -582,15 +590,34 @@ function ewap_UrlAddCs(){
 	return $addcs;
 }
 
+//返回WAP模板参数
+function ewap_UrlCsReturnStyle($ecms=0,$style=0){
+	global $pr,$wapstyle;
+	if(!$style)
+	{
+		$style=$wapstyle;
+	}
+	$style=(int)$style;
+	if(!$style||$style==$pr['wapdefstyle'])
+	{
+		return '';
+	}
+	$cs=$ecms?'?style='.$style:'&style='.$style;
+	return $cs;
+}
 
-$pr=$empire->fetch1("select wapopen,wapdefstyle,wapshowmid,waplistnum,wapsubtitle,wapshowdate,wapchar from {$dbtbpre}enewspublic limit 1");
+
+$pr=$empire->fetch1("select sitekey,siteintro,wapopen,wapdefstyle,wapshowmid,waplistnum,wapsubtitle,wapshowdate,wapchar,wapchstyle from {$dbtbpre}enewspublic limit 1");
 
 //导入编码文件
 $iconv='';
 if($ecms_config['sets']['pagechar']!='utf-8')
 {
-	@include_once("../class/doiconv.php");
-	$iconv=new Chinese('');
+	if($pr['wapchar']!=2)
+	{
+		@include_once("../class/doiconv.php");
+		$iconv=new Chinese('');
+	}
 }
 
 if(empty($pr['wapopen']))
@@ -598,6 +625,10 @@ if(empty($pr['wapopen']))
 	DoWapShowMsg('网站没有开启WAP功能','index.php');
 }
 
+if(!$pr['wapchstyle'])
+{
+	$_GET['style']=0;
+}
 $wapstyle=intval($_GET['style']);
 //返回使用模板
 $usewapstyle=ReturnWapStyle($_GET,$wapstyle);

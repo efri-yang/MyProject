@@ -311,8 +311,7 @@ function DoCheckAll(form,chf)
         <input name="add[mid]" type="hidden" id="add[mid]" value="<?=$mid?>"> 
         <input name="enews" type="hidden" id="enews" value="<?=$enews?>"> <input name="add[tbname]" type="hidden" id="add[tbname]" value="<?=$tbname?>"> 
         <input name="add[tid]" type="hidden" id="add[tid]" value="<?=$tid?>"> 
-		<?=$ecms_hashur['form']?>
-      </td>
+		<?=$ecms_hashur['form']?>      </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td width="23%" height="25">模型名称</td>
@@ -389,11 +388,30 @@ function DoCheckAll(form,chf)
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td rowspan="2" valign="top">信息列表名称</td>
-      <td height="25"><input name="add[listfile]" type="text" id="add[listfile]" value="<?=$r[listfile]?>" size="43"> 
-      </td>
+      <td height="25"><input name="add[listfile]" type="text" id="add[listfile]" value="<?=$r[listfile]?>" size="43">      </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25"><font color="#666666">(不设置为使用默认列表，增加列表可在e/data/html/list里增加文件，<a href="../../data/html/list/ReadMe.txt" target="_blank">点击这里</a>查看说明)</font></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">后台增加信息后处理函数</td>
+      <td height="25"><input name="add[maddfun]" type="text" id="add[maddfun]" value="<?=$r[maddfun]?>">
+        <font color="#666666">(一般不设置，格式“函数名##参数”参数可不设置)</font></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">后台修改信息后处理函数</td>
+      <td height="25"><input name="add[meditfun]" type="text" id="add[meditfun]" value="<?=$r[meditfun]?>">
+        <font color="#666666">(一般不设置，格式“函数名##参数”参数可不设置)</font></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">前台增加信息后处理函数</td>
+      <td height="25"><input name="add[qmaddfun]" type="text" id="add[qmaddfun]" value="<?=$r[qmaddfun]?>">
+        <font color="#666666">(一般不设置，格式“函数名##参数”参数可不设置)</font></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">前台修改信息后处理函数</td>
+      <td height="25"><input name="add[qmeditfun]" type="text" id="add[qmeditfun]" value="<?=$r[qmeditfun]?>">
+        <font color="#666666">(一般不设置，格式“函数名##参数”参数可不设置)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">信息预设投票</td>

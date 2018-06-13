@@ -69,11 +69,11 @@ require(ECMS_PATH.'e/template/incfile/header.php');
 		}
 		if($r[isgood])//推荐
 		{
-			$st.="<font color=red>[".$ignamer[$r[isgood]-1]."]</font>";
+			$st.="<font color=red>[".$ignamer[$r['isgood']]."]</font>";
 		}
 		if($r[firsttitle])//头条
 		{
-			$st.="<font color=red>[".$ftnamer[$r[firsttitle]-1]."]</font>";
+			$st.="<font color=red>[".$ftnamer[$r['firsttitle']]."]</font>";
 		}
 		//时间
 		$newstime=date("Y-m-d",$r[newstime]);

@@ -26,7 +26,7 @@ function DoPostInfoTypeVar($add){
 	{
 		$add['ttype']='.html';
 	}
-	$add['tname']=eaddslashes(ehtmlspecialchars($add['tname']));
+	$add['tname']=hRepPostStr($add['tname'],1);
 	$add['mid']=(int)$add['mid'];
 	$add['myorder']=(int)$add['myorder'];
 	$add['yhid']=(int)$add['yhid'];
@@ -45,10 +45,12 @@ function DoPostInfoTypeVar($add){
 	$add['nrejs']=(int)$add['nrejs'];
 	$add['listdt']=(int)$add['listdt'];
 	$add['repagenum']=(int)$add['repagenum'];
+	$add['ttype']=hRepPostStr($add['ttype'],1);
+	$add['timg']=hRepPostStr($add['timg'],1);
 	//目录
 	$add['tpath']=trim($add['tpath']);
 	$add['tpath']=$add['pripath'].$add['tpath'];
-	$add['tpath']=eaddslashes($add['tpath']);
+	$add['tpath']=hRepPostStr($add['tpath'],1);
 	return $add;
 }
 
@@ -69,9 +71,10 @@ function AddInfoType($add,$userid,$username){
 	}
 	CreateInfoTypePath($add[tpath]);//建立目录
 	//取得表名
+	$ecms_fclast=time();
 	$tabler=GetModTable($add[mid]);
 	$tabler[tid]=(int)$tabler[tid];
-	$sql=$empire->query("insert into {$dbtbpre}enewsinfotype(tname,mid,myorder,yhid,tnum,listtempid,tpath,ttype,maxnum,reorder,tid,tbname,timg,intro,pagekey,newline,hotline,goodline,hotplline,firstline,jstempid,nrejs,listdt,repagenum) values('$add[tname]','$add[mid]','$add[myorder]','$add[yhid]','$add[tnum]','$add[listtempid]','$add[tpath]','$add[ttype]','$add[maxnum]','$add[reorder]','$tabler[tid]','$tabler[tbname]','$add[timg]','$add[intro]','$add[pagekey]','$add[newline]','$add[hotline]','$add[goodline]','$add[hotplline]','$add[firstline]','$add[jstempid]','$add[nrejs]','$add[listdt]','$add[repagenum]');");
+	$sql=$empire->query("insert into {$dbtbpre}enewsinfotype(tname,mid,myorder,yhid,tnum,listtempid,tpath,ttype,maxnum,reorder,tid,tbname,timg,intro,pagekey,newline,hotline,goodline,hotplline,firstline,jstempid,nrejs,listdt,repagenum,fclast) values('$add[tname]','$add[mid]','$add[myorder]','$add[yhid]','$add[tnum]','$add[listtempid]','$add[tpath]','$add[ttype]','$add[maxnum]','$add[reorder]','$tabler[tid]','$tabler[tbname]','$add[timg]','$add[intro]','$add[pagekey]','$add[newline]','$add[hotline]','$add[goodline]','$add[hotplline]','$add[firstline]','$add[jstempid]','$add[nrejs]','$add[listdt]','$add[repagenum]','$ecms_fclast');");
 	$typeid=$empire->lastid();
 	//生成页面
 	if($add[listdt]==0)
@@ -118,10 +121,11 @@ function EditInfoType($add,$userid,$username){
 		}
     }
 	//取得表名
+	$ecms_fclast=time();
 	$tabler=GetModTable($add[mid]);
 	$tabler[tid]=(int)$tabler[tid];
 	//修改
-	$sql=$empire->query("update {$dbtbpre}enewsinfotype set tname='$add[tname]',mid='$add[mid]',myorder='$add[myorder]',yhid='$add[yhid]',tnum='$add[tnum]',listtempid='$add[listtempid]',tpath='$add[tpath]',ttype='$add[ttype]',maxnum='$add[maxnum]',reorder='$add[reorder]',tid='$tabler[tid]',tbname='$tabler[tbname]',timg='$add[timg]',intro='$add[intro]',pagekey='$add[pagekey]',newline='$add[newline]',hotline='$add[hotline]',goodline='$add[goodline]',hotplline='$add[hotplline]',firstline='$add[firstline]',jstempid='$add[jstempid]',nrejs='$add[nrejs]',listdt='$add[listdt]',repagenum='$add[repagenum]' where typeid='$typeid'");
+	$sql=$empire->query("update {$dbtbpre}enewsinfotype set tname='$add[tname]',mid='$add[mid]',myorder='$add[myorder]',yhid='$add[yhid]',tnum='$add[tnum]',listtempid='$add[listtempid]',tpath='$add[tpath]',ttype='$add[ttype]',maxnum='$add[maxnum]',reorder='$add[reorder]',tid='$tabler[tid]',tbname='$tabler[tbname]',timg='$add[timg]',intro='$add[intro]',pagekey='$add[pagekey]',newline='$add[newline]',hotline='$add[hotline]',goodline='$add[goodline]',hotplline='$add[hotplline]',firstline='$add[firstline]',jstempid='$add[jstempid]',nrejs='$add[nrejs]',listdt='$add[listdt]',repagenum='$add[repagenum]',fclast='$ecms_fclast' where typeid='$typeid'");
 	GetClass();//更新缓存
 	//生成页面
 	if($add[listdt]==0)
@@ -153,10 +157,16 @@ function DelInfoType($add,$userid,$username){
 	{
 		printerror("NotDelInfoTypeid","history.go(-1)");
 	}
-	//删除专题
+	//删除标题分类
 	$sql=$empire->query("delete from {$dbtbpre}enewsinfotype where typeid='$typeid'");
 	$delpath=ECMS_PATH.$r[tpath];
 	$del=DelPath($delpath);
+	//moreportdo
+	if($r['tpath'])
+	{
+		$eautodofname='delpath|'.$r['tpath'].'||';
+		eAutodo_AddDo('eDelFileTT',0,0,0,0,0,$eautodofname);
+	}
 	//改变信息分类值
 	$usql=$empire->query("update {$dbtbpre}ecms_".$r[tbname]." set ttid=0 where ttid='$typeid'");
 	$usql=$empire->query("update {$dbtbpre}ecms_".$r[tbname]."_check set ttid=0 where ttid='$typeid'");
@@ -185,7 +195,7 @@ function EditInfoTypeOrder($typeid,$myorder,$userid,$username){
     }
 	//操作日志
 	insert_dolog("");
-	printerror("EditInfoTypeOrderSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("EditInfoTypeOrderSuccess",EcmsGetReturnUrl());
 }
 
 $enews=$_POST['enews'];

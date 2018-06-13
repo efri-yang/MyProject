@@ -25,6 +25,7 @@ function AddPicClass($classname,$userid,$username){
 	{printerror("EmptyPicNewsClass","history.go(-1)");}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"picnews");
+	$classname=hRepPostStr($classname,1);
 	$sql=$empire->query("insert into {$dbtbpre}enewspicclass(classname) values('$classname');");
 	$classid=$empire->lastid();
 	if($sql)
@@ -45,6 +46,7 @@ function EditPicClass($classid,$classname,$userid,$username){
 	{printerror("EmptyPicNewsClass","history.go(-1)");}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"picnews");
+	$classname=hRepPostStr($classname,1);
 	$sql=$empire->query("update {$dbtbpre}enewspicclass set classname='$classname' where classid='$classid'");
 	if($sql)
 	{

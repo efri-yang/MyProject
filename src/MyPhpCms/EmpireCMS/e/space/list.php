@@ -68,6 +68,10 @@ $offset=$page*$line;
 $query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$mr['tbname']." where ".$yhadd.$add." and ismember=1";
 $totalquery="select count(*) as total from {$dbtbpre}ecms_".$mr['tbname']." where ".$yhadd.$add." and ismember=1";
 $totalnum=intval($_GET['totalnum']);
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 if($totalnum<1)
 {
 	$num=$empire->gettotal($totalquery);//取得总条数
@@ -76,7 +80,12 @@ else
 {
 	$num=$totalnum;
 }
-$search.="&totalnum=$num";
+if($public_r['usetotalnum'])
+{
+	$search.="&totalnum=$num";
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 $query.=" order by newstime desc limit $offset,$line";
 $sql=$empire->query($query);
 $returnpage=page1($num,$line,$page_line,$start,$page,$search);

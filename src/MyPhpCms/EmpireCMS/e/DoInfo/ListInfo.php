@@ -22,6 +22,10 @@ if(!$mr['tbname']||InfoIsInTable($mr['tbname']))
 }
 esetcookie("qdelinfo","dgcms");
 $totalnum=(int)$_GET['totalnum'];
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 $start=0;
 $page=(int)$_GET['page'];
 $page=RepPIntvar($page);
@@ -83,7 +87,12 @@ else
 {
 	$num=$totalnum;
 }
-$search.="&totalnum=$num";
+if($public_r['usetotalnum'])
+{
+	$search.="&totalnum=$num";
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 $returnpage=page1($num,$line,$page_line,$start,$page,$search);
 //导入页面
 $deftempfile=ECMS_PATH.'e/data/html/list/qlistinfo.php';

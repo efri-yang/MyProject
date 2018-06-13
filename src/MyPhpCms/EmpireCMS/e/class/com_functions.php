@@ -26,6 +26,7 @@ function AddGbookClass($add,$do=0,$userid,$username){
 	}
 	//验证权限
 	CheckLevel($userid,$username,$classid,$level);
+	$add['bname']=hRepPostStr($add['bname'],1);
 	$sql=$empire->query("insert into ".$table."(bname".$mychecked.") values('$add[bname]'".$mycheckedvalue.");");
 	if($sql)
 	{
@@ -64,6 +65,7 @@ function EditGbookClass($add,$do=0,$userid,$username){
 	}
 	//验证权限
 	CheckLevel($userid,$username,$classid,$level);
+	$add['bname']=hRepPostStr($add['bname'],1);
 	$sql=$empire->query("update ".$table." set bname='$add[bname]'".$mychecked." where bid='$add[bid]';");
 	if($sql)
 	{
@@ -147,6 +149,7 @@ function ReGbook($lyid,$retext,$bid,$userid,$username){
     }
 	//验证权限
 	CheckLevel($userid,$username,$classid,"gbook");
+	$retext=hRepPostStr2($retext);
 	$sql=$empire->query("update {$dbtbpre}enewsgbook set retext='$retext' where lyid='$lyid';");
 	if($sql)
 	{
@@ -175,7 +178,7 @@ function DelGbook($lyid,$bid,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("lyid=".$lyid);
-		printerror("DelGbookSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelGbookSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -201,7 +204,7 @@ function DelGbook_all($lyid,$bid,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("");
-		printerror("DelGbookSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelGbookSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -227,7 +230,7 @@ function CheckGbook_all($lyid,$bid,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("");
-		printerror("CheckLysuccess",$_SERVER['HTTP_REFERER']);
+		printerror("CheckLysuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -291,7 +294,7 @@ function DelFeedback($id,$bid,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("id=".$id."<br>title=$r[title]");
-		printerror("DelFeedbackSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelFeedbackSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -331,7 +334,7 @@ function DelFeedback_all($id,$bid,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("");
-		printerror("DelFeedbackSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelFeedbackSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -669,7 +672,7 @@ function ReturnFeedbackBtemp($cname,$center,$mustenter){
 	for($i=0;$i<count($center);$i++)
 	{
 		$v=$center[$i];
-		$fr=$empire->fetch1("select fform,fformsize,fvalue from {$dbtbpre}enewsfeedbackf where f='$v' limit 1");
+		$fr=$empire->fetch1("select fform,fformsize,fvalue from {$dbtbpre}enewsfeedbackf where f='".RepPostVar($v)."' limit 1");
 		if($fr['fform']=="file")
 		{
 			$fsize=$fr[fformsize]?" size='".$fr[fformsize]."'":"";
@@ -705,6 +708,7 @@ function ReturnFeedbackBtemp($cname,$center,$mustenter){
 //生成反馈表单文件
 function ReFeedbackClassFile($bid){
 	global $empire,$dbtbpre;
+	$bid=(int)$bid;
 	$r=$empire->fetch1("select btemp from {$dbtbpre}enewsfeedbackclass where bid='$bid'");
 	//替换公共变量
 	$url="<?=\$url?>";
@@ -714,7 +718,7 @@ function ReFeedbackClassFile($bid){
 	$btemp=str_replace("[!--cp.footer--]","<? include(\"../../data/template/cp_2.php\");?>",$btemp);
 	$btemp=str_replace("[!--member.header--]","<? include(\"../../template/incfile/header.php\");?>",$btemp);
 	$btemp=str_replace("[!--member.footer--]","<? include(\"../../template/incfile/footer.php\");?>",$btemp);
-	$file="../../tool/feedback/temp/feedback".$bid.".php";
+	$file=eReturnTrueEcmsPath()."e/tool/feedback/temp/feedback".$bid.".php";
 	$btemp="<?
 if(!defined('InEmpireCMS'))
 {exit();}
@@ -786,6 +790,12 @@ function AddFeedbackClass($add,$userid,$username){
 	{
 		$add['usernames']=','.$add['usernames'].',';
 	}
+	$add['bname']=hRepPostStr($add['bname'],1);
+	$enter=eaddslashes($enter);
+	$mustenter=eaddslashes($mustenter);
+	$filef=eaddslashes($filef);
+	$checkboxf=eaddslashes($checkboxf);
+	$add['usernames']=eaddslashes($add['usernames']);
 	$sql=$empire->query("insert into {$dbtbpre}enewsfeedbackclass(bname,btemp,bzs,enter,mustenter,filef,groupid,checkboxf,usernames) values('$add[bname]','".eaddslashes2($add[btemp])."','".eaddslashes($add[bzs])."','$enter','$mustenter','$filef',$groupid,'$checkboxf','$add[usernames]');");
 	$bid=$empire->lastid();
 	//生成表单页面
@@ -822,6 +832,12 @@ function EditFeedbackClass($add,$userid,$username){
 	{
 		$add['usernames']=','.$add['usernames'].',';
 	}
+	$add['bname']=hRepPostStr($add['bname'],1);
+	$enter=eaddslashes($enter);
+	$mustenter=eaddslashes($mustenter);
+	$filef=eaddslashes($filef);
+	$checkboxf=eaddslashes($checkboxf);
+	$add['usernames']=eaddslashes($add['usernames']);
 	$sql=$empire->query("update {$dbtbpre}enewsfeedbackclass set bname='$add[bname]',btemp='".eaddslashes2($add[btemp])."',bzs='".eaddslashes($add[bzs])."',enter='$enter',mustenter='$mustenter',filef='$filef',groupid=$groupid,checkboxf='$checkboxf',usernames='$add[usernames]' where bid=$bid");
 	//生成表单页面
 	ReFeedbackClassFile($bid);
@@ -1063,6 +1079,7 @@ function DoSendMsg($add,$ecms=0,$userid,$username){
 	{
 		$b=1;
 		$newstart=$r['userid'];
+		$r['email']=RepPostVar($r['email']);
 		if($ecms==1)
 		{
 			$mailer->AddAddress($r['email']);
@@ -1115,10 +1132,12 @@ function EchoSendMsgForm($enews,$returnurl,$start,$line,$checkbox,$add){
 //发送站内短消息
 function SendSiteMsg($title,$msgtext,$msgtime,$userid,$username,$havemsg){
 	global $empire,$dbtbpre;
-	$isql=$empire->query("insert into {$dbtbpre}enewsqmsg(title,msgtext,haveread,msgtime,to_username,from_userid,from_username,isadmin,issys) values('".addslashes($title)."','".addslashes($msgtext)."',0,'$msgtime','$username',0,'',1,1);");
+	$userid=(int)$userid;
+	$isql=$empire->query("insert into {$dbtbpre}enewsqmsg(title,msgtext,haveread,msgtime,to_username,from_userid,from_username,isadmin,issys) values('".addslashes($title)."','".addslashes($msgtext)."',0,'".addslashes($msgtime)."','".addslashes($username)."',0,'',1,1);");
 	if(!$havemsg)
 	{
 		$newhavemsg=eReturnSetHavemsg($havemsg,0);
+		$newhavemsg=(int)$newhavemsg;
 		$usql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('havemsg')."='$newhavemsg' where ".egetmf('userid')."='".$userid."' limit 1");
 	}
 }

@@ -111,11 +111,12 @@ while($level_r=$empire->fetch($sql))
         <font color="#666666">(值越小显示越前面)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
-      <td height="25">可购买的会员：</td>
+      <td height="25">可购买的会员组：</td>
       <td height="25"><select name="buygroupid" id="buygroupid">
           <option value=0>不设置</option>
           <?=$buygroup?>
-        </select></td>
+        </select>
+        <font color="#666666">(会员组权限值大于选择的会员组都可以购买)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">类型说明：</td>

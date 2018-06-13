@@ -48,7 +48,7 @@ $empire=null;
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>清理会员</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -87,9 +87,9 @@ $empire=null;
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25" valign="top">注册时间 介于：</td>
-      <td height="25"><input name="startregtime" type="text" id="startregtime" onclick="setday(this)">
+      <td height="25"><input name="startregtime" type="text" id="startregtime" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         -- 
-        <input name="endregtime" type="text" id="endregtime" onclick="setday(this)">
+        <input name="endregtime" type="text" id="endregtime" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         <font color="#666666">(格式：2011-01-27)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF">

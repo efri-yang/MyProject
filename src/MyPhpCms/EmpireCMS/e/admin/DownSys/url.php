@@ -26,7 +26,9 @@ function AddDownurl($add,$userid,$username){
 	//验证权限
 	CheckLevel($userid,$username,$classid,"downurl");
 	$downtype=(int)$add['downtype'];
-	$sql=$empire->query("insert into {$dbtbpre}enewsdownurlqz(urlname,url,downtype) values('$add[urlname]','$add[url]',$downtype);");
+	$add['urlname']=hRepPostStr($add['urlname'],1);
+	$add['url']=AddAddsData($add['url']);
+	$sql=$empire->query("insert into {$dbtbpre}enewsdownurlqz(urlname,url,downtype) values('$add[urlname]','$add[url]','$downtype');");
 	$urlid=$empire->lastid();
 	if($sql)
 	{
@@ -47,7 +49,9 @@ function EditDownurl($add,$userid,$username){
 	//验证权限
 	CheckLevel($userid,$username,$classid,"downurl");
 	$downtype=(int)$add['downtype'];
-	$sql=$empire->query("update {$dbtbpre}enewsdownurlqz set urlname='$add[urlname]',url='$add[url]',downtype=$downtype where urlid='$add[urlid]'");
+	$add['urlname']=hRepPostStr($add['urlname'],1);
+	$add['url']=AddAddsData($add['url']);
+	$sql=$empire->query("update {$dbtbpre}enewsdownurlqz set urlname='$add[urlname]',url='$add[url]',downtype='$downtype' where urlid='$add[urlid]'");
 	if($sql)
 	{
 		//操作日志

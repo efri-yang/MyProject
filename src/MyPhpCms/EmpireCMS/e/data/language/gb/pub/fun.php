@@ -27,7 +27,7 @@ $fun_r=array
 	'CjTitleKey'=>'此文件的标题不在关键字内，不采集',
 	'CjReTitleWriter'=>'标题与作者完全一样不采集',
 	'CjEmptyTitle'=>'标题为空不采集',
-	'CjEmptyNewstext'=>'内容(newstext)为空不采集',
+	'CjEmptyNewstext'=>' 字段内容为空不采集',
 	'CjSingTitlelen'=>'标题相似大于',
 	'CjSingTitlelenL'=>'，不采集',
 	'OneCjLoadDbSuccess'=>'单组采集入库完毕，正在进入下一组......',
@@ -88,7 +88,7 @@ $fun_r=array
 	'TagsInfoList'=>'TAG信息列表',
 	'OneClearTagsSuccess'=>'一组数据整理完毕,正进入下一组.....',
 
-	'index'=>'首页11111',
+	'index'=>'首页',
 	'navfh'=>'>',
 	'pripage'=>'上一页',
 	'nextpage'=>'下一页',

@@ -26,6 +26,8 @@ $noplnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewspl_".$p
 $nomembernum=$empire->gettotal("select count(*) as total from ".eReturnMemberTable()." where ".egetmf('checked')."=0");
 //过期广告
 $outtimeadnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsad where endtime<'$date' and endtime<>'0000-00-00'");
+//签发信息
+$qfinfonum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewswfinfo where checktno=0 and (groupid like '%,".$lur['groupid'].",%' or userclass like '%,".$lur['classid'].",%' or username like '%,".$lur['username'].",%')");
 //系统信息
 	if(function_exists('ini_get')){
         $onoff = ini_get('register_globals');
@@ -102,11 +104,9 @@ if($public_r[addnews_ok])
                   </b> 次登录，上次登录时间：
                   <?=$user_r[pretime]?date('Y-m-d H:i:s',$user_r[pretime]):'---'?>
                   ，登录IP：
-                  <?=$user_r[preip]?$user_r[preip].':'.$user_r[preipport]:'---'?>
-                </td>
+                  <?=$user_r[preip]?$user_r[preip].':'.$user_r[preipport]:'---'?>                </td>
               </tr>
-            </table>
-          </td>
+            </table>          </td>
         </tr>
       </table></td>
   </tr>
@@ -127,14 +127,13 @@ if($public_r[addnews_ok])
         <tr> 
           <td height="25" bgcolor="#FFFFFF"><strong>信息操作</strong>：&nbsp;&nbsp;<a href="AddInfoChClass.php<?=$ecms_hashur['whehref']?>">增加信息</a>&nbsp;&nbsp; 
             <a href="ListAllInfo.php<?=$ecms_hashur['whehref']?>">管理信息</a>&nbsp;&nbsp; <a href="ListAllInfo.php?ecmscheck=1<?=$ecms_hashur['ehref']?>">审核信息</a> 
-            &nbsp;&nbsp; <a href="workflow/ListWfInfo.php<?=$ecms_hashur['whehref']?>">签发信息</a>&nbsp;&nbsp; <a href="openpage/AdminPage.php?leftfile=<?=urlencode('../pl/PlNav.php'.$ecms_hashur['whehref'])?>&mainfile=<?=urlencode('../pl/PlMain.php'.$ecms_hashur['whehref'])?>&title=<?=urlencode('管理评论')?><?=$ecms_hashur['ehref']?>">管理评论</a>&nbsp;&nbsp; <a href="sp/UpdateSp.php<?=$ecms_hashur['whehref']?>">更新碎片</a>&nbsp;&nbsp; 
-            <a href="ReHtml/ChangeData.php<?=$ecms_hashur['whehref']?>">数据更新中心</a></td>
-           </tr>
+            &nbsp;&nbsp; <a href="workflow/ListWfInfo.php<?=$ecms_hashur['whehref']?>">签发信息</a>(<strong><font color="#FF0000"><?=$qfinfonum?></font></strong>)&nbsp;&nbsp; <a href="openpage/AdminPage.php?leftfile=<?=urlencode('../pl/PlNav.php'.$ecms_hashur['whehref'])?>&mainfile=<?=urlencode('../pl/PlMain.php'.$ecms_hashur['whehref'])?>&title=<?=urlencode('管理评论')?><?=$ecms_hashur['ehref']?>">管理评论</a>&nbsp;&nbsp; <a href="sp/UpdateSp.php<?=$ecms_hashur['whehref']?>">更新碎片</a>&nbsp;&nbsp; <a href="special/UpdateZt.php<?=$ecms_hashur['whehref']?>">更新专题</a>&nbsp;&nbsp; <a href="info/InfoMain.php<?=$ecms_hashur['whehref']?>">数据统计</a></td>
+        </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF"><strong>栏目操作</strong>：&nbsp;&nbsp;<a href="ListClass.php<?=$ecms_hashur['whehref']?>">管理栏目</a>&nbsp;&nbsp; 
             <a href="special/ListZt.php<?=$ecms_hashur['whehref']?>">管理专题</a>&nbsp;&nbsp; <a href="ListInfoClass.php<?=$ecms_hashur['whehref']?>">管理采集</a> 
             &nbsp;&nbsp; <a href="openpage/AdminPage.php?leftfile=<?=urlencode('../file/FileNav.php'.$ecms_hashur['whehref'])?>&title=<?=urlencode('管理附件')?><?=$ecms_hashur['ehref']?>">附件管理</a>&nbsp;&nbsp; 
-            <a href="SetEnews.php<?=$ecms_hashur['whehref']?>">系统参数设置</a></td>
+            <a href="SetEnews.php<?=$ecms_hashur['whehref']?>">系统参数设置</a>&nbsp;&nbsp; <a href="ReHtml/ChangeData.php<?=$ecms_hashur['whehref']?>">数据更新中心</a></td>
         </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF"><strong>用户操作</strong>：&nbsp;&nbsp;<a href="member/ListMember.php?sear=1&schecked=1<?=$ecms_hashur['ehref']?>">审核会员</a>&nbsp;&nbsp; 
@@ -151,12 +150,12 @@ if($public_r[addnews_ok])
       </table></td>
   </tr>
   <tr> 
-    <td><table width="98%" border="0" align="center" cellpadding="3" cellspacing="1">
+    <td height="102">
+      <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
         <tr> 
-          <td height="42"> <div align="center"><strong><font color="#0000FF" size="3">帝国网站管理系统全面开源 
-              － 最安全、最稳定的开源CMS系统</font></strong></div></td>
+          <td bgcolor="#FFFFFF"><div align="center"><img src="loginimg/ecmsbanner.gif" border="0"></div></td>
         </tr>
-      </table></td>
+    </table>	</td>
   </tr>
   <tr> 
     <td><table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
@@ -164,7 +163,7 @@ if($public_r[addnews_ok])
           <td height="25" colspan="2"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr> 
                 <td width="50%"><a href="#"><strong>系统信息</strong></a></td>
-                <td><div align="right"><a href="http://www.phome.net/ebak2010/" target="_blank"><strong>帝国MYSQL备份王下载</strong></a></div></td>
+                <td><div align="right"><a href="http://ebak.phome.net" target="_blank"><strong>帝国MYSQL备份王下载</strong></a></div></td>
               </tr>
             </table></td>
         </tr>
@@ -177,14 +176,12 @@ if($public_r[addnews_ok])
               <tr> 
                 <td width="28%" height="23">会员注册:</td>
                 <td width="72%"> 
-                  <?=$register_ok?>
-                </td>
+                  <?=$register_ok?>                </td>
               </tr>
               <tr> 
                 <td height="23">会员投稿:</td>
                 <td> 
-                  <?=$addnews_ok?>
-                </td>
+                  <?=$addnews_ok?>                </td>
               </tr>
               <tr> 
                 <td height="23">管理员个数:</td>
@@ -220,8 +217,7 @@ if($public_r[addnews_ok])
               <tr> 
                 <td width="25%" height="23">服务器软件:</td>
                 <td width="75%"> 
-                  <?=$_SERVER['SERVER_SOFTWARE']?>
-                </td>
+                  <?=$_SERVER['SERVER_SOFTWARE']?>                </td>
               </tr>
               <tr> 
                 <td height="23">操作系统:</td>
@@ -233,7 +229,7 @@ if($public_r[addnews_ok])
               </tr>
               <tr> 
                 <td height="23">MYSQL版本:</td>
-                <td><? echo @mysql_get_server_info();?></td>
+                <td><? echo do_eGetDBVer(0);?></td>
               </tr>
               <tr> 
                 <td height="23">全局变量:</td>
@@ -260,8 +256,7 @@ if($public_r[addnews_ok])
               <tr> 
                 <td height="23">使用域名:</td>
                 <td> 
-                  <?=$_SERVER['HTTP_HOST']?>
-                </td>
+                  <?=$_SERVER['HTTP_HOST']?>                </td>
               </tr>
             </table></td>
         </tr>
@@ -272,61 +267,57 @@ if($public_r[addnews_ok])
   </tr>
   <tr> 
     <td><table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
-        <tr class="header"> 
-          <td height="25" colspan="2">官方信息</td>
-        </tr>
-        <tr> 
-          <td width="43%" bgcolor="#FFFFFF"> 
-            <table width="100%" border="0" cellpadding="3" cellspacing="1">
-              <tr bgcolor="#FFFFFF"> 
-                <td width="28%" height="25">帝国官方主页</td>
-                <td width="72%" height="25"><a href="http://www.phome.net" target="_blank">http://www.phome.net</a></td>
-              </tr>
-              <tr bgcolor="#FFFFFF"> 
-                <td height="25">帝国官方论坛</td>
-                <td height="25"><a href="http://bbs.phome.net" target="_blank">http://bbs.phome.net</a></td>
-              </tr>
-              <tr bgcolor="#FFFFFF"> 
-                <td height="25">帝国产品中心</td>
-                <td height="25"><a href="http://www.phome.net/product/" target="_blank">http://www.phome.net/product/</a></td>
-              </tr>
-              <tr bgcolor="#FFFFFF"> 
-                <td height="25">公司网站</td>
-                <td height="25"><a href="http://www.digod.com" target="_blank">http://www.digod.com</a></td>
-              </tr>
-            </table>
-          </td>
-          <td width="57%" height="125" valign="top" bgcolor="#FFFFFF"> 
-            <IFRAME frameBorder="0" name="getinfo" scrolling="no" src="ginfo.php<?=$ecms_hashur['whehref']?>" style="HEIGHT:100%;VISIBILITY:inherit;WIDTH:100%;Z-INDEX:2"></IFRAME></td>
-        </tr>
-      </table></td>
+      <tr class="header">
+        <td height="25" colspan="2">官方信息</td>
+      </tr>
+      <tr>
+        <td width="43%" bgcolor="#FFFFFF"><table width="100%" border="0" cellpadding="3" cellspacing="1">
+            <tr bgcolor="#FFFFFF">
+              <td width="28%" height="25">帝国官方主页</td>
+              <td width="72%" height="25"><a href="http://www.phome.net" target="_blank">http://www.phome.net</a></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+              <td height="25">帝国官方论坛</td>
+              <td height="25"><a href="http://bbs.phome.net" target="_blank">http://bbs.phome.net</a></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+              <td height="25">帝国产品中心</td>
+              <td height="25"><a href="http://www.phome.net/product/" target="_blank">http://www.phome.net/product/</a></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+              <td height="25">公司网站</td>
+              <td height="25"><a href="http://www.digod.com" target="_blank">http://www.digod.com</a></td>
+            </tr>
+        </table></td>
+        <td width="57%" height="125" valign="top" bgcolor="#FFFFFF"><IFRAME frameBorder="0" name="getinfo" scrolling="no" src="ginfo.php<?=$ecms_hashur['whehref']?>" style="HEIGHT:100%;VISIBILITY:inherit;WIDTH:100%;Z-INDEX:2"></IFRAME></td>
+      </tr>
+    </table></td>
   </tr>
   <tr> 
     <td>&nbsp;</td>
   </tr>
-  <tr> 
+  <tr>
     <td><table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
-        <tr class="header"> 
-          <td height="25">EmpireCMS 开发团队</td>
-        </tr>
-        <tr> 
-          <td bgcolor="#FFFFFF"><table width="80%" border="0" cellpadding="3" cellspacing="1">
-              <tr bgcolor="#FFFFFF"> 
-                <td width="15%" height="25">版权所有</td>
-                <td width="85%"><a href="http://www.digod.com" target="_blank">漳州市芗城帝兴软件开发有限公司</a></td>
-              </tr>
-              <tr bgcolor="#FFFFFF"> 
-                <td height="25">开发与支持团队</td>
-                <td>wm_chief、amt、帝兴、小游、zeedy</td>
-              </tr>
-              
-              <tr bgcolor="#FFFFFF"> 
-                <td height="25">特别感谢</td>
-                <td>禾火木风、yingnt、hicode、sooden、老鬼、小林、天浪歌、TryLife、5starsgeneral</td>
-              </tr>
-            </table></td>
-        </tr>
-      </table></td>
+      <tr class="header">
+        <td height="25">EmpireCMS 开发团队</td>
+      </tr>
+      <tr>
+        <td bgcolor="#FFFFFF"><table width="80%" border="0" cellpadding="3" cellspacing="1">
+            <tr bgcolor="#FFFFFF">
+              <td width="15%" height="25">版权所有</td>
+              <td width="85%"><a href="http://www.digod.com" target="_blank">漳州市芗城帝兴软件开发有限公司</a></td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+              <td height="25">开发与支持团队</td>
+              <td>wm_chief、amt、帝兴、小游、zeedy</td>
+            </tr>
+            <tr bgcolor="#FFFFFF">
+              <td height="25">特别感谢</td>
+              <td>禾火木风、yingnt、hicode、sooden、老鬼、小林、天浪歌、TryLife、5starsgeneral</td>
+            </tr>
+        </table></td>
+      </tr>
+    </table></td>
   </tr>
   <tr>
     <td>&nbsp;</td>

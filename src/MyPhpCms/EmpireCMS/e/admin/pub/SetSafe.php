@@ -54,7 +54,7 @@ $empire=null;
       <div align="right"> </div></td>
   </tr>
 </table>
-<form name="setform" method="post" action="SetSafe.php" onsubmit="return confirm('确认设置?');">
+<form name="setform" method="post" action="SetSafe.php" onsubmit="return confirm('确认设置?');" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 
@@ -65,7 +65,7 @@ $empire=null;
       <td height="25" colspan="2">后台安全相关配置</td>
     </tr>
     <tr> 
-      <td width="17%" height="25" bgcolor="#FFFFFF"> <div align="left">后台登陆认证码</div></td>
+      <td width="17%" height="25" bgcolor="#FFFFFF"> <div align="left">后台登录认证码</div></td>
       <td width="83%" height="25" bgcolor="#FFFFFF"> <input name="loginauth" type="password" id="loginauth" value="<?=$ecms_config['esafe']['loginauth']?>" size="35"> 
         <font color="#666666">(如果设置登录需要输入此认证码才能通过)</font></td>
     </tr>
@@ -110,6 +110,9 @@ $empire=null;
           <option value="1"<?=$ecms_config['esafe']['ckfromurl']==1?' selected':''?>>开启前后台验证</option>
           <option value="2"<?=$ecms_config['esafe']['ckfromurl']==2?' selected':''?>>仅开启后台验证</option>
           <option value="3"<?=$ecms_config['esafe']['ckfromurl']==3?' selected':''?>>仅开启前台验证</option>
+		  <option value="4"<?=$ecms_config['esafe']['ckfromurl']==4?' selected':''?>>开启前后台验证(严格)</option>
+		  <option value="5"<?=$ecms_config['esafe']['ckfromurl']==5?' selected':''?>>仅开启后台验证(严格)</option>
+		  <option value="6"<?=$ecms_config['esafe']['ckfromurl']==6?' selected':''?>>仅开启前台验证(严格)</option>
         </select>
         <font color="#666666">(设置禁止非本站访问地址来源)</font></td>
     </tr>
@@ -122,6 +125,19 @@ $empire=null;
       </select>
         <font color="#666666">(推荐启用“金刚模式”，对外部访问与提交进行防御)</font></td>
     </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">&nbsp;</td>
+      <td height="25" bgcolor="#FFFFFF">访问变量名：
+        <input name="ckhashename" type="text" id="ckhashename" value="<?=$ecms_config['esafe']['ckhashename']?>" size="12">
+      ，提交变量名：
+      <input name="ckhashrname" type="text" id="ckhashrname" value="<?=$ecms_config['esafe']['ckhashrname']?>" size="12">
+      <font color="#666666">(必须字母开头,并且只能由字母、数字、下划线组成)</font></td>
+    </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">后台访问的UserAgent包含</td>
+      <td height="25" bgcolor="#FFFFFF"><input name="ckhuseragent" type="text" id="ckhuseragent" value="<?=$ecms_config['esafe']['ckhuseragent']?>" size="35">
+        <font color="#666666">(区分大小写，多个用“||”半角双竖线隔开，设置后UserAgent信息必须包含这些字符才能访问后台)</font></td>
+    </tr>
     <tr> 
       <td height="25" colspan="2">COOKIE配置</td>
     </tr>
@@ -132,6 +148,26 @@ $empire=null;
     <tr> 
       <td height="25" bgcolor="#FFFFFF">COOKIE作用路径</td>
       <td height="25" bgcolor="#FFFFFF"><input name="cookiepath" type="text" id="cookiedomain" value="<?=$ecms_config['cks']['ckpath']?>" size="35"></td>
+    </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">COOKIE的HttpOnly属性</td>
+      <td height="25" bgcolor="#FFFFFF"><select name="ckhttponly" id="ckhttponly">
+        <option value="0"<?=$ecms_config['cks']['ckhttponly']==0?' selected':''?>>关闭</option>
+        <option value="1"<?=$ecms_config['cks']['ckhttponly']==1?' selected':''?>>开启</option>
+        <option value="2"<?=$ecms_config['cks']['ckhttponly']==2?' selected':''?>>只后台开启</option>
+        <option value="3"<?=$ecms_config['cks']['ckhttponly']==3?' selected':''?>>只前台开启</option>
+      </select>      </td>
+    </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">COOKIE的secure属性</td>
+      <td height="25" bgcolor="#FFFFFF"><select name="cksecure" id="cksecure">
+        <option value="0"<?=$ecms_config['cks']['cksecure']==0?' selected':''?>>自动识别</option>
+		<option value="1"<?=$ecms_config['cks']['cksecure']==1?' selected':''?>>关闭</option>
+        <option value="2"<?=$ecms_config['cks']['cksecure']==2?' selected':''?>>开启</option>
+        <option value="3"<?=$ecms_config['cks']['cksecure']==3?' selected':''?>>只后台开启</option>
+        <option value="4"<?=$ecms_config['cks']['cksecure']==4?' selected':''?>>只前台开启</option>
+      </select>
+        <font color="#666666">(开启需要https支持)</font></td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF">前台COOKIE变量前缀</td>
@@ -153,6 +189,24 @@ $empire=null;
       <td height="25" bgcolor="#FFFFFF">COOKIE验证随机码2</td>
       <td height="25" bgcolor="#FFFFFF"><input name="cookieckrndtwo" type="text" id="cookieckrndtwo" value="<?=$ecms_config['cks']['ckrndtwo']?>" size="35">
         <input type="button" name="Submit322" value="随机" onclick="document.setform.cookieckrndtwo.value='<?=make_password(36)?>';">
+        <font color="#666666">(填写10~50个任意字符，最好多种字符组合)</font></td>
+    </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">COOKIE验证随机码3</td>
+      <td height="25" bgcolor="#FFFFFF"><input name="cookieckrndthree" type="text" id="cookieckrndthree" value="<?=$ecms_config['cks']['ckrndthree']?>" size="35">
+        <input type="button" name="Submit3222" value="随机" onclick="document.setform.cookieckrndthree.value='<?=make_password(36)?>';">
+        <font color="#666666">(填写10~50个任意字符，最好多种字符组合)</font></td>
+    </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">COOKIE验证随机码4</td>
+      <td height="25" bgcolor="#FFFFFF"><input name="cookieckrndfour" type="text" id="cookieckrndfour" value="<?=$ecms_config['cks']['ckrndfour']?>" size="35">
+        <input type="button" name="Submit32222" value="随机" onclick="document.setform.cookieckrndfour.value='<?=make_password(36)?>';">
+        <font color="#666666">(填写10~50个任意字符，最好多种字符组合)</font></td>
+    </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">COOKIE验证随机码5</td>
+      <td height="25" bgcolor="#FFFFFF"><input name="cookieckrndfive" type="text" id="cookieckrndfive" value="<?=$ecms_config['cks']['ckrndfive']?>" size="35">
+        <input type="button" name="Submit322222" value="随机" onclick="document.setform.cookieckrndfive.value='<?=make_password(36)?>';">
         <font color="#666666">(填写10~50个任意字符，最好多种字符组合)</font></td>
     </tr>
     <tr> 

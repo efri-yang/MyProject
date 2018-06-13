@@ -17,48 +17,48 @@ require(ECMS_PATH.'e/template/incfile/header.php');
     </tr>
     <tr bgcolor="#FFFFFF">
       <td width="22%" height="25">地址名称：</td>
-      <td width="78%" height="25"><input name="addressname" type="text" id="title2" value="<?=$r[addressname]?>" size="42">
+      <td width="78%" height="25"><input name="addressname" type="text" id="title2" value="<?=stripSlashes($r[addressname])?>" size="42">
       *</td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">姓名：</td>
-      <td height="25"><input name="truename" type="text" id="addressname" value="<?=$r[truename]?>" size="42"></td>
+      <td height="25"><input name="truename" type="text" id="addressname" value="<?=stripSlashes($r[truename])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">邮箱地址：</td>
-      <td height="25"><input name="email" type="text" id="truename" value="<?=$r[email]?>" size="42"></td>
+      <td height="25"><input name="email" type="text" id="truename" value="<?=stripSlashes($r[email])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">固定电话：</td>
-      <td height="25"><input name="mycall" type="text" id="email" value="<?=$r[mycall]?>" size="42"></td>
+      <td height="25"><input name="mycall" type="text" id="email" value="<?=stripSlashes($r[mycall])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">手机号码：</td>
-      <td height="25"><input name="phone" type="text" id="mycall" value="<?=$r[phone]?>" size="42"></td>
+      <td height="25"><input name="phone" type="text" id="mycall" value="<?=stripSlashes($r[phone])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">QQ号码：</td>
-      <td height="25"><input name="oicq" type="text" id="oicq" value="<?=$r[oicq]?>" size="42"></td>
+      <td height="25"><input name="oicq" type="text" id="oicq" value="<?=stripSlashes($r[oicq])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">MSN：</td>
-      <td height="25"><input name="msn" type="text" id="msn" value="<?=$r[msn]?>" size="42"></td>
+      <td height="25"><input name="msn" type="text" id="msn" value="<?=stripSlashes($r[msn])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">收货地址：</td>
-      <td height="25"><input name="address" type="text" id="phone" value="<?=$r[address]?>" size="42"></td>
+      <td height="25"><input name="address" type="text" id="phone" value="<?=stripSlashes($r[address])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">邮编：</td>
-      <td height="25"><input name="zip" type="text" id="address" value="<?=$r[zip]?>" size="42"></td>
+      <td height="25"><input name="zip" type="text" id="address" value="<?=stripSlashes($r[zip])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">地址周边标志性建筑：</td>
-      <td height="25"><input name="signbuild" type="text" id="zip" value="<?=$r[signbuild]?>" size="42"></td>
+      <td height="25"><input name="signbuild" type="text" id="zip" value="<?=stripSlashes($r[signbuild])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">最佳收货时间：</td>
-      <td height="25"><input name="besttime" type="text" id="signbuild" value="<?=$r[besttime]?>" size="42"></td>
+      <td height="25"><input name="besttime" type="text" id="signbuild" value="<?=stripSlashes($r[besttime])?>" size="42"></td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">&nbsp;</td>

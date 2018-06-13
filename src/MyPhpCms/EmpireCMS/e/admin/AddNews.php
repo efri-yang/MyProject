@@ -71,6 +71,17 @@ $modid=$class_r[$classid][modid];
 $enter=$emod_r[$modid]['enter'];
 //导航
 $url=AdminReturnClassLink($classid).'&nbsp;>&nbsp;'.$word;
+//访问组
+$ygroup='';
+$vgsql=$empire->query("select vgid,gname from {$dbtbpre}enewsvg order by vgid");
+while($vgr=$empire->fetch($vgsql))
+{
+	$ygroup.="<option value=-".$vgr['vgid'].">".$vgr['gname']."</option>";
+}
+if($ygroup)
+{
+	$ygroup="<option value=''>--- 访问组 ---</option>".$ygroup."<option value=''>--- 会员组 ---</option>";
+}
 //会员组
 $sql1=$empire->query("select groupid,groupname from {$dbtbpre}enewsmembergroup order by level");
 while($l_r=$empire->fetch($sql1))
@@ -124,9 +135,11 @@ if(strstr($enter,',downpath,')||strstr($enter,',onlinepath,'))
 	}
 }
 //html编辑器
+$loadeditorjs='';
 if($emod_r[$modid]['editorf']&&$emod_r[$modid]['editorf']!=',')
 {
-	include('ecmseditor/infoeditor/fckeditor.php');
+	include('ecmseditor/eshoweditor.php');
+	$loadeditorjs=ECMS_ShowEditorJS('ecmseditor/infoeditor/');
 }
 
 //预设投票
@@ -334,6 +347,51 @@ $thegid=GetDoTempGid();
 $phpmyself=urlencode(eReturnSelfPage(1));
 //返回头条和推荐级别名称
 $ftnr=ReturnFirsttitleNameList($r['firsttitle'],$r['isgood']);
+
+//信息状态
+$einfochecked=$index_r['checked'];
+$einfoismember=$r['ismember'];
+
+//------ 编辑器内容显示 ------
+
+$seteshoweditorhtml=3;
+
+$eshoweditorhtml=0;
+if($seteshoweditorhtml&&$r['id'])
+{
+	if($seteshoweditorhtml==1)//所有
+	{
+		$eshoweditorhtml=1;
+	}
+	elseif($seteshoweditorhtml==2)//所有未审核
+	{
+		if(!$einfochecked)
+		{
+			$eshoweditorhtml=1;
+		}
+	}
+	elseif($seteshoweditorhtml==3)//所有投稿
+	{
+		if($einfoismember)
+		{
+			$eshoweditorhtml=1;
+		}
+	}
+	elseif($seteshoweditorhtml==4)//所有未审核投稿
+	{
+		if($einfoismember&&!$einfochecked)
+		{
+			$eshoweditorhtml=1;
+		}
+	}
+	else
+	{
+		$eshoweditorhtml=1;
+	}
+}
+
+//------ 编辑器内容显示 ------
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -346,7 +404,7 @@ $ftnr=ReturnFirsttitleNameList($r['firsttitle'],$r['isgood']);
 <!-- the id is not needed. It is used here to be able to change css file at runtime -->
 <style type="text/css"> 
    .dynamic-tab-pane-control .tab-page { 
-          width:                100%;
+          width:                98%;
  } 
   .dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page { 
          height:                150px; 
@@ -451,7 +509,8 @@ function eTranMoreForMorepic(htmlstr,fnum){
 }
 
 </script>
-<script src="ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="ecmseditor/js/jstime/WdatePicker.js"></script>
+<script type="text/javascript" src="ecmseditor/js/jscolor/jscolor.js"></script>
 <script src="../data/html/postinfo.js"></script>
 <script>
 function bs(){
@@ -460,26 +519,40 @@ function bs(){
 }
 function foreColor(){
   if(!Error())	return;
-  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) document.add.titlecolor.value=arr;
   else document.add.titlecolor.focus();
 }
 function FieldChangeColor(obj){
   if(!Error())	return;
-  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) obj.value=arr;
   else obj.focus();
 }
 </script>
+<?=$loadeditorjs?>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" onload="document.add.title.focus();">
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1">
   <tr> 
-    <td width="62%" height="25">位置： 
+    <td width="55%" height="25">位置： 
       <?=$url?>
     </td>
-    <td width="38%"><div align="right">
+    <td width="45%"><div align="right">
+	<?php
+	if($enews=='EditNews'&&$r['eckuid'])
+	{
+		$eckuid=(int)$r['eckuid'];
+		$eckuser_r=$empire->fetch1("select username,wname from {$dbtbpre}enewsuser where userid='$eckuid'");
+		if($eckuser_r['username'])
+		{
+		?>
+			[审核人UID：<b><?=$eckuid?></b>，审核人UNAME：<b><?=$eckuser_r['username']?></b>]&nbsp;&nbsp;&nbsp;
+		<?php
+		}
+	}
+	?>
 	<?=$enews=='EditNews'?'[<a href="user/ListDolog.php?classid='.$classid.'&id='.$id.$ecms_hashur['ehref'].'" target="_blank">查看本信息操作日志</a>]':''?>
       </div></td>
   </tr>
@@ -621,9 +694,9 @@ function FieldChangeColor(obj){
               </tr>
               <tr> 
                 <td height="25" bgcolor="#FFFFFF"> 文件名&nbsp;&nbsp;&nbsp;: 
-                  <input name="newspath" type="text" id="newspath" value="<?=$r[newspath]?>">
+                  <input name="newspath" type="text" id="newspath" value="<?=$r[newspath]?>"<?=$doselfinfo['doinfofile']?'':' readonly'?>>
                   / 
-                  <input name="filename" type="text" value="<?=$r[filename]?>">
+                  <input name="filename" type="text" value="<?=$r[filename]?>"<?=$doselfinfo['doinfofile']?'':' readonly'?>>
                   <font color="#666666">(日期目录/文件名)</font></td>
               </tr>
               <?php
@@ -634,7 +707,7 @@ function FieldChangeColor(obj){
 			  	if(strstr($public_r['chtags'],','.$modid.','))
 				{
 					$infotag_readonly=' readonly';
-					$infotag_copykeyboard='';
+					$infotag_copykeyboard='&nbsp;&nbsp;<input type="button" name="Submit3" value="清除选择" onclick="if(confirm(\'确认要清除已选TAGS？\')){document.add.infotags.value=\'\';}">';
 				}
 			  ?>
               <tr> 
@@ -680,11 +753,11 @@ function FieldChangeColor(obj){
               <tr> 
                 <td height="25" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="1" cellpadding="3">
                     <tr> 
-                      <td>上线时间： <input name="info_infouptime" type="text" id="info_infouptime" value="<?=$voter[infouptime]?date('Y-m-d H:i:s',$voter[infouptime]):''?>">
+                      <td>上线时间： <input name="info_infouptime" type="text" id="info_infouptime" value="<?=$voter[infouptime]?date('Y-m-d H:i:s',$voter[infouptime]):''?>" size="28" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                         [<a href="#empirecms" onclick="document.add.info_infouptime.value='<?=$todaytime?>'">当前时间</a>]</td>
                     </tr>
                     <tr> 
-                      <td>下线时间： <input name="info_infodowntime" type="text" id="info_infodowntime" value="<?=$voter[infodowntime]?date('Y-m-d H:i:s',$voter[infodowntime]):''?>">
+                      <td>下线时间： <input name="info_infodowntime" type="text" id="info_infodowntime" value="<?=$voter[infodowntime]?date('Y-m-d H:i:s',$voter[infodowntime]):''?>" size="28" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                         [<a href="#empirecms" onclick="document.add.info_infodowntime.value='<?=$todaytime?>'">当前时间</a>]</td>
                     </tr>
                   </table></td>
@@ -851,7 +924,7 @@ function FieldChangeColor(obj){
         <tr bgcolor="#FFFFFF"> 
           <td height="25">过期时间</td>
           <td height="25"> <input name="vote_olddotime" type=hidden value="<?=$voter[dotime]?>"> 
-            <input name="vote_dotime" type="text" value="<?=$voter[dotime]?>" size="12" onClick="setday(this)">
+            <input name="vote_dotime" type="text" value="<?=$voter[dotime]?>" size="12" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
             (超过此期限,将不能投票,0000-00-00为不限制)</td>
         </tr>
 		<tr bgcolor="#FFFFFF"> 

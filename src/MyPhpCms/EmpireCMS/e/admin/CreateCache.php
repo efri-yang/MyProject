@@ -78,7 +78,7 @@ function CreateClassCache($bclassid,$exp,$expjs,$expmodjs,$adminclass,$doall,$mi
 				$start_tbody="<tbody id='classdiv".$r[classid]."'>";
 				$end_tbody="</tbody>";
 				//缩
-				$start_tbody1="<tbody id='classdiv".$r[classid]."' style='display=none'>";
+				$start_tbody1="<tbody id='classdiv".$r[classid]."' style='display:none'>";
 		    }
 			else
 			{$bgcolor="#ffffff";}
@@ -130,7 +130,7 @@ function CreateClassCache($bclassid,$exp,$expjs,$expmodjs,$adminclass,$doall,$mi
 		//JS颜色
 		if($r[islast])
 		{
-			$jscolor=" style='background:".$public_r['chclasscolor']."'";
+			$jscolor=" style='background:#".$public_r['chclasscolor']."'";
 		}
 		else
 		{
@@ -332,7 +332,7 @@ if(stristr($enews,',doinfo,'))
 	{
 		$jsfile="../data/fc/cmsclass.js";
 		$search_jsfile="../data/fc/searchclass.js";
-		$search_jsstr=str_replace(" style='background:".$public_r['chclasscolor']."'","",$cacher['jsstr']);
+		$search_jsstr=str_replace(" style='background:#".$public_r['chclasscolor']."'","",$cacher['jsstr']);
 		WriteFiletext_n($jsfile,"document.write(\"".addslashes($cacher['jsstr'])."\");");
 		WriteFiletext_n($search_jsfile,"document.write(\"".addslashes($search_jsstr)."\");");
 		InsertNavClassCache('jsclass',0,0);

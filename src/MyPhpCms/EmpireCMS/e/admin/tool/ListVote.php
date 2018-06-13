@@ -40,6 +40,9 @@ function AddVote($title,$votename,$votenum,$delvid,$vid,$voteclass,$doip,$dotime
 	$height=(int)$height;
 	$doip=(int)$doip;
 	$tempid=(int)$tempid;
+	$title=hRepPostStr($title,1);
+	$votetext=AddAddsData($votetext);
+	$dotime=hRepPostStr($dotime,1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsvote(title,votetext,votenum,voteip,voteclass,doip,votetime,dotime,width,height,addtime,tempid) values('$title','$votetext',$t_votenum,'',$voteclass,$doip,$votetime,'$dotime',$width,$height,'$addtime',$tempid);");
 	//生成投票js
 	$voteid=$empire->lastid();
@@ -77,6 +80,9 @@ function EditVote($voteid,$title,$votename,$votenum,$delvid,$vid,$voteclass,$doi
 	$height=(int)$height;
 	$doip=(int)$doip;
 	$tempid=(int)$tempid;
+	$title=hRepPostStr($title,1);
+	$votetext=AddAddsData($votetext);
+	$dotime=hRepPostStr($dotime,1);
 	$sql=$empire->query("update {$dbtbpre}enewsvote set title='$title',votetext='$votetext',votenum=$t_votenum,voteclass=$voteclass,doip=$doip,dotime='$dotime',votetime=$votetime,width=$width,height=$height,tempid=$tempid where voteid='$voteid'");
 	//生成投票js
 	GetVoteJs($voteid);
@@ -115,6 +121,12 @@ function DelVote($voteid,$userid,$username){
 //批量生成投票
 function ReVoteJs_all($start=0,$from,$userid,$username){
 	global $empire,$public_r,$fun_r,$dbtbpre;
+	$moreportpid=(int)$_GET['moreportpid'];
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	$sql=$empire->query("select voteid from {$dbtbpre}enewsvote where voteid>$start order by voteid limit ".$public_r['revotejsnum']);
@@ -130,7 +142,7 @@ function ReVoteJs_all($start=0,$from,$userid,$username){
 	    insert_dolog("");
 		printerror("ReVoteJsSuccess",$from);
 	}
-	echo $fun_r['OneReVoteJsSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ListVote.php?enews=ReVoteJs_all&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+	echo $fun_r['OneReVoteJsSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ListVote.php?enews=ReVoteJs_all&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
 }
 
@@ -143,7 +155,7 @@ function GetVoteJs($voteid){
 	$votetemp=RepVoteTempAllvar($votetemp,$r);
 	$listexp="[!--empirenews.listtemp--]";
 	$listtemp_r=explode($listexp,$votetemp);
-	$file="../../../d/js/vote/vote".$voteid.".js";
+	$file=eReturnTrueEcmsPath()."d/js/vote/vote".$voteid.".js";
 	$r_exp="\r\n";
 	$f_exp="::::::";
 	//项目数
@@ -170,6 +182,12 @@ if(empty($enews))
 if($enews)
 {
 	hCheckEcmsRHash();
+}
+//设置访问端
+$moreportpid=0;
+if($enews=='ReVoteJs_all')
+{
+	$moreportpid=Moreport_hDoSetSelfPath(0);
 }
 //增加投票
 if($enews=="AddVote")

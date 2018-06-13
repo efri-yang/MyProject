@@ -11,6 +11,11 @@ if(empty($enews))
 {
 	$enews=$_GET['enews'];
 }
+//关闭
+if($public_r['openspace']==1)
+{
+	printerror('CloseMemberSpace','',1);
+}
 //导入文件
 if($enews=='ChangeSpaceStyle'||$enews=='DoSetSpace')
 {

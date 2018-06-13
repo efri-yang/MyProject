@@ -4,138 +4,11 @@ if(!defined('empirecms'))
 	exit();
 }
 
-//返回权限列表
-function ShowViewInfoLevels($groupid){
-	global $level_r;
-	if(empty($groupid))
-	{
-		return '至少会员';
-	}
-	$r=explode(',',$groupid);
-	$count=count($r)-1;
-	$groups='';
-	$dh='';
-	for($i=1;$i<$count;$i++)
-	{
-		$groups.=$dh.$level_r[$r[$i]][groupname];
-		$dh=',';
-	}
-	return $groups;
-}
-
-//显示提示页面
-function ShowViewInfoMsg($r,$msg){
-	global $public_r,$check_path,$level_r,$class_r,$public_diyr;
-	//查看权限
-	if(empty($r['userfen']))
-	{
-		if($class_r[$r[classid]]['cgtoinfo'])//栏目设置
-		{
-			$ViewLevel="需要 [".ShowViewInfoLevels($r['eclass_cgroupid'])."] 级别才能查看。";
-		}
-		else
-		{
-			$ViewLevel="需要 [".$level_r[$r[groupid]][groupname]."] 级别以上才能查看。";
-		}
-	}
-	else
-	{
-		if($class_r[$r[classid]]['cgtoinfo'])//栏目设置
-		{
-			$ViewLevel="需要 [".ShowViewInfoLevels($r['eclass_cgroupid'])."] 级别与扣除 ".$r['userfen']." 点积分才能查看。";
-		}
-		else
-		{
-			$ViewLevel="需要 [".$level_r[$r[groupid]][groupname]."] 级别以上与扣除 ".$r['userfen']." 点积分才能查看。";
-		}
-	}
-	$r['title']=stripSlashes($r['title']);
-	$public_diyr['pagetitle']=$r['title'];
-	$url="<a href='".$public_r[newsurl]."'>首页</a>&nbsp;>&nbsp;<a href='".$public_r[newsurl]."e/member/cp/'>会员中心</a>&nbsp;>&nbsp;查看信息：".$r['title'];
-	include($check_path."e/data/template/cp_1.php");
-	?>
-	<table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
-  <tr class="header"> 
-    <td height="25">提示信息</td>
-  </tr>
-  <tr bgcolor="#FFFFFF"> 
-    <td height="25"><?=$msg?></td>
-  </tr>
-</table>
-<br>
-<table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
-  <tr class="header"> 
-    <td height="25" colspan="2">标题：
-      <?=$r[title]?>
-    </td>
-  </tr>
-  <tr bgcolor="#FFFFFF"> 
-    <td height="25">查看权限：</td>
-    <td height="25">
-      <?=$ViewLevel?>
-    </td>
-  </tr>
-  <tr bgcolor="#FFFFFF"> 
-    <td width="17%" height="25">发布时间：</td>
-    <td width="83%" height="25"> 
-      <?=date("Y-m-d H:i:s",$r[newstime])?>
-    </td>
-  </tr>
-  <tr bgcolor="#FFFFFF"> 
-    <td height="25">信息简介：</td>
-    <td height="25"> 
-      <?=ReturnTheIntroField($r)?>
-    </td>
-  </tr>
-	</table>
-	<?php
-	include($check_path."e/data/template/cp_2.php");
-	exit();
-}
-
-//返回简介字段
-function ReturnTheIntroField($r){
-	global $public_r,$class_r,$emod_r,$check_tbname;
-	$sublen=120;//截取120个字
-	$mid=$class_r[$r[classid]]['modid'];
-	$smalltextf=$emod_r[$mid]['smalltextf'];
-	$stf=$emod_r[$mid]['savetxtf'];
-	//简介
-	$value='';
-	$showf='';
-	if($smalltextf&&$smalltextf<>',')
-	{
-		$smr=explode(',',$smalltextf);
-		$smcount=count($smr)-1;
-		for($i=1;$i<$smcount;$i++)
-		{
-			$smf=$smr[$i];
-			if($r[$smf])
-			{
-				$value=$r[$smf];
-				$showf=$smf;
-				break;
-			}
-		}
-	}
-	if(empty($showf))
-	{
-		$value=strip_tags($r['newstext']);
-		$value=esub($value,$sublen);
-		$showf='newstext';
-	}
-	//存文本
-	if($stf==$showf)
-	{
-		$value='';
-	}
-	return stripSlashes($value);
-}
-
 //是否登陆
 function ViewCheckLogin($infor){
 	global $empire,$public_r,$ecms_config,$toreturnurl,$gotourl;
 	$userid=(int)getcvar('mluserid');
+	$username=RepPostVar(getcvar('mlusername'));
 	$rnd=RepPostVar(getcvar('mlrnd'));
 	if(!$userid)
 	{
@@ -143,10 +16,21 @@ function ViewCheckLogin($infor){
 		{
 			esetcookie("returnurl",$toreturnurl,0);
 		}
-		$msg="您还未登陆，<a href='$gotourl'><u>点击这里</u></a>进行登陆操作；注册请<a href='".$public_r['newsurl']."e/member/register/'><u>点击这里</u></a>。";
-		ShowViewInfoMsg($infor,$msg);
+		eCheckLevelInfo_ViewInfoMsg($ckuser,$infor,'NotLogin');
 	}
-	$cr=$empire->fetch1("select ".eReturnSelectMemberF('checked,userid,username,groupid,userfen,userdate,zgroupid')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' and ".egetmf('rnd')."='$rnd' limit 1");
+	//ck
+	$qcklgr=qCheckLoginAuthstr();
+	if(!$qcklgr['islogin'])
+	{
+		EmptyEcmsCookie();
+		if(!getcvar('returnurl'))
+		{
+			esetcookie("returnurl",$toreturnurl,0);
+		}
+		eCheckLevelInfo_ViewInfoMsg($ckuser,$infor,'NotLogin');
+	}
+	//db
+	$cr=$empire->fetch1("select ".eReturnSelectMemberF('checked,userid,username,groupid,userfen,userdate,zgroupid,ingid,agid,isern')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' and ".egetmf('username')."='$username' and ".egetmf('rnd')."='$rnd' limit 1");
 	if(!$cr['userid'])
 	{
 		EmptyEcmsCookie();
@@ -154,8 +38,7 @@ function ViewCheckLogin($infor){
 		{
 			esetcookie("returnurl",$toreturnurl,0);
 		}
-		$msg="同一帐号只能一人在线，<a href='$gotourl'><u>点击这里</u></a>重新登陆；注册请<a href='".$public_r['newsurl']."e/member/register/'><u>点击这里</u></a>。";
-		ShowViewInfoMsg($infor,$msg);
+		eCheckLevelInfo_ViewInfoMsg($cr,$infor,'SingleLogin');
 	}
 	if($cr['checked']==0)
 	{
@@ -164,8 +47,7 @@ function ViewCheckLogin($infor){
 		{
 			esetcookie("returnurl",$toreturnurl,0);
 		}
-		$msg="您的帐号还未审核通过，<a href='$gotourl'><u>点击这里</u></a>重新登陆；注册请<a href='".$public_r['newsurl']."e/member/register/'><u>点击这里</u></a>。";
-		ShowViewInfoMsg($infor,$msg);
+		eCheckLevelInfo_ViewInfoMsg($cr,$infor,'NotCheckUser');
 	}
 	//默认会员组
 	if(empty($cr['groupid']))
@@ -188,12 +70,16 @@ function ViewCheckLogin($infor){
 			}
 		}
 	}
-	$re[userid]=$cr['userid'];
-	$re[username]=$cr['username'];
-	$re[userfen]=$cr['userfen'];
-	$re[groupid]=$cr['groupid'];
-	$re[userdate]=$cr['userdate'];
-	$re[zgroupid]=$cr['zgroupid'];
+	$re['userid']=$cr['userid'];
+	$re['username']=$cr['username'];
+	$re['userfen']=$cr['userfen'];
+	$re['groupid']=$cr['groupid'];
+	$re['userdate']=$cr['userdate'];
+	$re['zgroupid']=$cr['zgroupid'];
+	$re['ingid']=$cr['ingid'];
+	$re['agid']=$cr['agid'];
+	$re['isern']=$cr['isern'];
+	$re['checked']=$cr['checked'];
 	return $re;
 }
 
@@ -219,21 +105,35 @@ function CheckShowNewsLevel($infor){
 				{
 					esetcookie("returnurl",$toreturnurl,0);
 				}
-				$msg="您没有足够权限查看此信息! <a href='$gotourl'><u>点击这里</u></a>重新登陆；注册请<a href='".$public_r['newsurl']."e/member/register/'><u>点击这里</u></a>。";
-				ShowViewInfoMsg($infor,$msg);
+				eCheckLevelInfo_ViewInfoMsg($user_r,$infor,'NotLevelClass');
 			}
 		}
 	}
 	if($groupid)//信息设置
 	{
-		if($level_r[$groupid][level]>$level_r[$user_r[groupid]][level])
+		if($groupid>0)//会员组
 		{
-			if(!getcvar('returnurl'))
+			if($level_r[$groupid][level]>$level_r[$user_r[groupid]][level])
 			{
-				esetcookie("returnurl",$toreturnurl,0);
+				if(!getcvar('returnurl'))
+				{
+					esetcookie("returnurl",$toreturnurl,0);
+				}
+				eCheckLevelInfo_ViewInfoMsg($user_r,$infor,'NotLevelGroup');
 			}
-			$msg="您的会员级别不足(您的当前级别：".$level_r[$user_r[groupid]][groupname].")，没有查看此信息的权限! <a href='$gotourl'><u>点击这里</u></a>重新登陆；注册请<a href='".$public_r['newsurl']."e/member/register/'><u>点击这里</u></a>。";
-			ShowViewInfoMsg($infor,$msg);
+		}
+		else//访问组
+		{
+			$vgroupid=0-$groupid;
+			$ckvgresult=eMember_ReturnCheckViewGroup($user_r,$vgroupid);
+			if($ckvgresult<>'empire.cms')
+			{
+				if(!getcvar('returnurl'))
+				{
+					esetcookie("returnurl",$toreturnurl,0);
+				}
+				eCheckLevelInfo_ViewInfoMsg($user_r,$infor,'NotLevelViewGroup');
+			}
 		}
 	}
 	//扣点
@@ -255,8 +155,7 @@ function CheckShowNewsLevel($infor){
 					{
 						esetcookie("returnurl",$toreturnurl,0);
 					}
-					$msg="您的点数不足(您当前拥有的点数 ".$user_r[userfen]." 点)，没有查看此信息的权限! <a href='$gotourl'><u>点击这里</u></a>重新登陆；注册请<a href='".$public_r['newsurl']."e/member/register/'><u>点击这里</u></a>。";
-					ShowViewInfoMsg($infor,$msg);
+					eCheckLevelInfo_ViewInfoMsg($user_r,$infor,'NotUserfen');
 				}
 				//扣点
 				$usql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('userfen')."=".egetmf('userfen')."-".$userfen." where ".egetmf('userid')."='$user_r[userid]'");
@@ -271,14 +170,14 @@ $check_infoid=(int)$check_infoid;
 $check_classid=(int)$check_classid;
 if(!defined('PageCheckLevel'))
 {
-	require_once($check_path.'e/class/connect.php');
+	include_once($check_path.'e/class/connect.php');
 	if(!defined('InEmpireCMS'))
 	{
 		exit();
 	}
-	require_once(ECMS_PATH.'e/class/db_sql.php');
-	require_once(ECMS_PATH.'e/data/dbcache/class.php');
-	require_once(ECMS_PATH.'e/data/dbcache/MemberLevel.php');
+	include_once(ECMS_PATH.'e/class/db_sql.php');
+	include_once(ECMS_PATH.'e/data/dbcache/class.php');
+	include_once(ECMS_PATH.'e/data/dbcache/MemberLevel.php');
 	$link=db_connect();
 	$empire=new mysqlquery();
 	$check_tbname=RepPostVar($check_tbname);
@@ -300,8 +199,9 @@ else
 require_once(ECMS_PATH.'e/member/class/user.php');
 //验证IP
 eCheckAccessDoIp('showinfo');
-if($checkinfor['groupid']||$class_r[$checkinfor[classid]]['cgtoinfo'])
+if($checkinfor['groupid']||$class_r[$checkinfor['classid']]['cgtoinfo'])
 {
+	include_once(ECMS_PATH.'e/template/public/checklevel/info1.php');
 	$toreturnurl=eReturnSelfPage(1);	//返回页面地址
 	$gotourl=$ecms_config['member']['loginurl']?$ecms_config['member']['loginurl']:$public_r['newsurl']."e/member/login/";	//登陆地址
 	CheckShowNewsLevel($checkinfor);

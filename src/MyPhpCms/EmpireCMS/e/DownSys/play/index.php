@@ -20,8 +20,15 @@ $classid=(int)$_GET['classid'];
 //扣点函数
 function ViewOnlineKFen($showdown_r,$u,$userid,$classid,$id,$pathid,$r){
 	global $level_r,$class_r,$dbtbpre,$public_r,$empire,$have_bak,$have_fen;
+	$userid=(int)$userid;
+	$classid=(int)$classid;
+	$id=(int)$id;
+	$pathid=(int)$pathid;
 	if($showdown_r[2])
 	{
+		$u['groupid']=(int)$u['groupid'];
+		$u['username']=RepPostVar($u['username']);
+		$r[title]=RepPostStr($r[title]);
 		//下载次数限制
 		$setuserday="";
 		if($level_r[$u['groupid']][daydown])
@@ -63,7 +70,7 @@ if(!strstr($_SERVER['HTTP_REFERER'],$public_r[newsurl]))
 */
 if(!$classid||empty($class_r[$classid][tbname])||!$id)
 {
-	echo"<script>alert('此影片不存在');window.close();</script>";
+	echo"<script>alert('此视频不存在');window.close();</script>";
 	exit();
 }
 $mid=$class_r[$classid][modid];
@@ -72,7 +79,7 @@ $query="select * from {$dbtbpre}ecms_".$tbname." where id='$id' limit 1";
 $r=$empire->fetch1($query);
 if(!$r['id']||$r['classid']!=$classid)
 {
-	echo"<script>alert('此影片不存在');window.close();</script>";
+	echo"<script>alert('此视频不存在');window.close();</script>";
 	exit();
 }
 //副表
@@ -82,11 +89,15 @@ $r=array_merge($r,$finfor);
 $path_r=explode("\r\n",$r[onlinepath]);
 if(!$path_r[$pathid])
 {
-	echo"<script>alert('此影片不存在');window.close();</script>";
+	echo"<script>alert('此视频不存在');window.close();</script>";
 	exit();
 }
 $showdown_r=explode("::::::",$path_r[$pathid]);
 //下载权限
+$have_bak=0;
+$have_fen=0;
+$setuserday="";
+$nockpass='';
 $user=array();
 $u=array();
 $downgroup=$showdown_r[2];
@@ -100,6 +111,7 @@ if($downgroup)
 		echo"<script>alert('同一帐号，只能一人在线');window.close();</script>";
         exit();
     }
+	$nockpass=qReturnLoginPassNoCK($user['userid'],$user['username'],$user['rnd'],0);
 	//下载次数限制
 	if($level_r[$u['groupid']][daydown])
 	{
@@ -110,10 +122,23 @@ if($downgroup)
 			exit();
 		}
 	}
-	if($level_r[$downgroup][level]>$level_r[$u['groupid']][level])
+	if($downgroup>0)//会员组
 	{
-		echo"<script>alert('您的会员级别不足(".$level_r[$downgroup][groupname].")，没有观看此影片的权限!');window.close();</script>";
-            exit();
+		if($level_r[$downgroup][level]>$level_r[$u['groupid']][level])
+		{
+			echo"<script>alert('您的会员级别不足(".$level_r[$downgroup][groupname].")，没有观看此视频的权限!');window.close();</script>";
+			exit();
+		}
+	}
+	else//访问组
+	{
+		$vgroupid=0-$downgroup;
+		$ckvgresult=eMember_ReturnCheckViewGroup($u,$vgroupid);
+		if($ckvgresult<>'empire.cms')
+		{
+			echo"<script>alert('您的会员级别不足，没有观看此视频的权限!');window.close();</script>";
+			exit();
+		}
 	}
 	//点数是否足够
 	$have_bak=0;
@@ -136,7 +161,7 @@ if($downgroup)
 				{
 			       if($showdown_r[3]>$u['userfen'])
 			       {
-					echo"<script>alert('您的点数不足 $showdown_r[3] 点，无法观看此影片');window.close();</script>";
+					echo"<script>alert('您的点数不足 $showdown_r[3] 点，无法观看此视频');window.close();</script>";
 					exit();
 			       }
 				   $have_fen=1;
@@ -146,12 +171,15 @@ if($downgroup)
 }
 //验证码
 $ip=egetip();
-$pass=md5(ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$user[userid]);
+$pass=md5(md5($classid."-!ecms!".$id."-!ecms!".$pathid).ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$user[userid]);
 $op=GetOnlinePass();
-$url="../doaction.php?enews=GetSofturl&classid=$classid&id=$id&pathid=$pathid&pass=".$pass."&p=".$user[userid].":::".$user[rnd]."&onlinetime=".$op[0]."&onlinepass=".$op[1];
+$url="../doaction.php?enews=GetSofturl&classid=$classid&id=$id&pathid=$pathid&pass=".$pass."&p=".$user[userid].":::".$user[rnd].":::".$nockpass."&onlinetime=".$op[0]."&onlinepass=".$op[1];
 $trueurl=ReturnDSofturl($showdown_r[1],$showdown_r[4],'../../',0);//实际地址
 $playerpass="wm_chief";
 //自动识别播放器
+$jwplayertype=',.flv,.mp4,';
+$htmlvideotype=',.ogg,.mp4,.webm,';
+$htmlaudiotype=',.ogg,.mp3,.wav,';
 if(empty($r[playerid]))
 {
 	$ftype=GetFiletype($showdown_r[1]);
@@ -159,11 +187,23 @@ if(empty($r[playerid]))
 	{
 		@include("flasher.php");
 	}
+	elseif(stristr($htmlvideotype,','.$ftype.','))
+	{
+		@include("htmlvideo.php");
+	}
+	elseif(stristr($htmlaudiotype,','.$ftype.','))
+	{
+		@include("htmlaudio.php");
+	}
+	elseif(stristr($jwplayertype,','.$ftype.','))
+	{
+		@include("jwplayer.php");
+	}
 	elseif($ftype=='.flv')
 	{
 		@include("flver.php");
 	}
-	elseif(strstr($ecms_config['sets']['realplayertype'],','.$ftype.','))
+	elseif(stristr($ecms_config['sets']['realplayertype'],','.$ftype.','))
 	{
 		@include("realplayer.php");
 	}

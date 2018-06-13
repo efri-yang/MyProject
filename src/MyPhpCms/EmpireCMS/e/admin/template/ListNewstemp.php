@@ -32,7 +32,7 @@ function AddNewsTemplate($add,$userid,$username){
 	$add[temptext]=RepTemplateJsUrl($add[temptext],1,0);//替换JS地址
 	$add[modid]=(int)$add[modid];
 	$gid=(int)$add['gid'];
-	$sql=$empire->query("insert into ".GetDoTemptb("enewsnewstemp",$gid)."(tempname,temptext,showdate,modid,classid,isdefault) values('$add[tempname]','".eaddslashes2($add[temptext])."','$add[showdate]',$add[modid],$classid,0);");
+	$sql=$empire->query("insert into ".GetDoTemptb("enewsnewstemp",$gid)."(tempname,temptext,showdate,modid,classid,isdefault) values('$add[tempname]','".eaddslashes2($add[temptext])."','".eaddslashes($add[showdate])."',$add[modid],$classid,0);");
 	$tempid=$empire->lastid();
 	//备份模板
 	AddEBakTemp('newstemp',$gid,$tempid,$add[tempname],$add[temptext],0,0,'',0,$add[modid],$add[showdate],0,$classid,0,$userid,$username);
@@ -60,7 +60,7 @@ function EditNewsTemplate($add,$userid,$username){
 	$add[temptext]=RepTemplateJsUrl($add[temptext],1,0);//替换JS地址
 	$add[modid]=(int)$add[modid];
 	$gid=(int)$add['gid'];
-	$sql=$empire->query("update ".GetDoTemptb("enewsnewstemp",$gid)." set tempname='$add[tempname]',temptext='".eaddslashes2($add[temptext])."',showdate='$add[showdate]',modid=$add[modid],classid=$classid where tempid='$add[tempid]'");
+	$sql=$empire->query("update ".GetDoTemptb("enewsnewstemp",$gid)." set tempname='$add[tempname]',temptext='".eaddslashes2($add[temptext])."',showdate='".eaddslashes($add[showdate])."',modid=$add[modid],classid=$classid where tempid='$add[tempid]'");
 	//将信息设为未生成
 	$mr=$empire->fetch1("select tbname from {$dbtbpre}enewsmod where mid='$add[modid]'");
 	//$usql=$empire->query("update {$dbtbpre}ecms_".$mr[tbname]." set havehtml=0 where newstempid='$add[tempid]'");
@@ -259,7 +259,7 @@ while($mr=$empire->fetch($msql))
   ?>
   <tr bgcolor="ffffff" onmouseout="this.style.backgroundColor='#ffffff'" onmouseover="this.style.backgroundColor='#C3EFFF'"> 
     <td height="25"><div align="center"> 
-        <?=$r[tempid]?>
+        <a href="EditTempid.php?tempno=4&tempid=<?=$r['tempid']?>&gid=<?=$gid?><?=$ecms_hashur['ehref']?>" target="_blank" title="修改模板ID"><?=$r[tempid]?></a>
       </div></td>
     <td height="25"><div align="center"> 
         <?=$r[tempname]?>

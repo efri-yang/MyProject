@@ -1546,7 +1546,7 @@ function sys_ForSonclassData($classid,$line,$strlen,$have_class=0,$enews=0,$temp
 	else
 	{
 		//当前栏目
-		if($classid=="selfinfo")
+		if('dg'.$classid=='dgselfinfo')
 		{
 			$classid=$navclassid;
 		}
@@ -1581,7 +1581,7 @@ function sys_ForSonclassData($classid,$line,$strlen,$have_class=0,$enews=0,$temp
 function sys_ShowClassByTemp($classid,$tempid,$show=0,$cline=0){
 	global $navclassid,$empire,$class_r,$public_r,$dbtbpre;
 	//当前栏目
-	if($classid=="selfinfo")
+	if('dg'.$classid=='dgselfinfo')
 	{
 		if(empty($navclassid))
 		{$classid=0;}
@@ -1666,7 +1666,7 @@ function sys_ForShowSonClass($classid,$tempid,$show=0,$cline=0){
 	}
 	else
 	{
-		if($classid=="selfinfo")//当前栏目
+		if('dg'.$classid=='dgselfinfo')//当前栏目
 		{
 			$classid=intval($navclassid);
 		}
@@ -1846,16 +1846,17 @@ function sys_ShowLyInfo($line,$tempid,$bid=0){
 //替换留言标签
 function ReplaceShowLyVars($no,$listtemp,$r,$formatdate,$subnews=0){
 	global $public_r;
+	$r['lytext']=stripSlashes($r['lytext']);
 	if($subnews)
 	{
 		$r['lytext']=sub($r['lytext'],0,$subnews,false);
 	}
 	$listtemp=str_replace("[!--lyid--]",$r['lyid'],$listtemp);//id
 	$listtemp=str_replace("[!--lytext--]",nl2br($r['lytext']),$listtemp);//留言内容
-	$listtemp=str_replace("[!--retext--]",nl2br($r['retext']),$listtemp);//回复
+	$listtemp=str_replace("[!--retext--]",nl2br(stripSlashes($r['retext'])),$listtemp);//回复
 	$listtemp=str_replace("[!--lytime--]",format_datetime($r['lytime'],$formatdate),$listtemp);
-	$listtemp=str_replace("[!--name--]",$r['name'],$listtemp);
-	$listtemp=str_replace("[!--email--]",$r['email'],$listtemp);
+	$listtemp=str_replace("[!--name--]",stripSlashes($r['name']),$listtemp);
+	$listtemp=str_replace("[!--email--]",stripSlashes($r['email']),$listtemp);
 	//序号
 	$listtemp=str_replace("[!--no--]",$no,$listtemp);
 	return $listtemp;
@@ -2220,14 +2221,27 @@ function sys_eShowTags($cid,$num=0,$line=0,$order='',$isgood='',$isgoodshow='',$
 					$br='<br>';
 				}
 			}
-			if(empty($cs))
+			//TAGSID
+			if($vartype=='tagid')
 			{
-				$rewriter=eReturnRewriteTagsUrl(0,$r[$i],1);
-				$tagsurl=$rewriter['pageurl'];
+				$tagr=$empire->fetch1("select tagid from {$dbtbpre}enewstags where tagname='".RepPostVar($r[$i])."' limit 1");
+			}
+			if(empty($cs)&&!empty($public_r['rewritetags']))
+			{
+				if($vartype=='tagid')
+				{
+					$rewriter=eReturnRewriteTagsUrl($tagr['tagid'],'etagid'.$tagr['tagid'],1);
+					$tagsurl=$rewriter['pageurl'];
+				}
+				else
+				{
+					$rewriter=eReturnRewriteTagsUrl(0,$r[$i],1);
+					$tagsurl=$rewriter['pageurl'];
+				}
 			}
 			else
 			{
-				$tagsurl=$public_r[newsurl].'e/tags/?tagname='.urlencode($r[$i]).$cs;
+				$tagsurl=$public_r[newsurl].'e/tags/?'.($vartype=='tagid'?'tagid='.$tagr['tagid']:'tagname='.urlencode($r[$i])).$cs;
 			}
 			$str.=$jg.'<a href="'.$tagsurl.'" target="_blank">'.$r[$i].'</a>'.$br;
 			$jg=$br?'':$showjg;
@@ -2297,9 +2311,9 @@ function sys_eShowTags($cid,$num=0,$line=0,$order='',$isgood='',$isgoodshow='',$
 					$br='<br>';
 				}
 			}
-			if(empty($cs)&&$vartype<>'tagid')
+			if(empty($cs)&&!empty($public_r['rewritetags']))
 			{
-				$rewriter=eReturnRewriteTagsUrl($r['tagid'],$r['tagname'],1);
+				$rewriter=eReturnRewriteTagsUrl($r['tagid'],$vartype=='tagid'?'etagid'.$r['tagid']:$r['tagname'],1);
 				$tagsurl=$rewriter['pageurl'];
 			}
 			else

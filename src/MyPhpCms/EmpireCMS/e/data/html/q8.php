@@ -5,8 +5,7 @@ if(!defined('InEmpireCMS'))
 }
 ?><table width=100% align=center cellpadding=3 cellspacing=1 class="tableborder"><tr>
     <td width=16% height=25 bgcolor=ffffff>信息标题(*)</td>
-    <td bgcolor=ffffff>
-<input name="title" type="text" size="42" value="<?=$ecmsfirstpost==1?"":DoReqValue($mid,'title',stripSlashes($r[title]))?>">
+    <td bgcolor=ffffff><input name="title" type="text" size="42" value="<?=$ecmsfirstpost==1?"":DoReqValue($mid,'title',stripSlashes($r[title]))?>">
 </td></tr><tr>
     <td width=16% height=25 bgcolor=ffffff>信息内容(*)</td>
     <td bgcolor=ffffff><textarea name="smalltext" cols="60" rows="10" id="smalltext"><?=$ecmsfirstpost==1?"":DoReqValue($mid,'smalltext',stripSlashes($r[smalltext]))?></textarea>

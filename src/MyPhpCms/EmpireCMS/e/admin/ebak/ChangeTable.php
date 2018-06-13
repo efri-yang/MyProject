@@ -39,7 +39,7 @@ if($keyboard)
 }
 $sql=$empire->query("SHOW TABLE STATUS".$and);
 //存放目录
-$mypath=$mydbname."_".date("YmdHis");
+$mypath=$mydbname."_".date("YmdHis").make_password(6);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -125,7 +125,7 @@ function check()
   </tr>
 </form>
 </table>
-<form action="phome.php" method="post" name="ebakchangetb" target="_blank" onsubmit="return check();">
+<form action="phome.php" method="post" name="ebakchangetb" target="_blank" onsubmit="return check();" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 
@@ -172,9 +172,9 @@ function check()
           </tr>
           <tr>
             <td valign="top">数据存放格式</td>
-            <td height="23"><input name="bakdatatype" type="radio" value="0" checked>
+            <td height="23"><input name="bakdatatype" type="radio" value="0">
               正常 
-              <input type="radio" name="bakdatatype" value="1">
+              <input type="radio" name="bakdatatype" value="1" checked>
               十六进制方式<font color="#666666">(十六进制备份文件会占用更多的空间)</font></td>
           </tr>
           <tr> 

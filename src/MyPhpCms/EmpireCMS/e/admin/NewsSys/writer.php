@@ -26,6 +26,8 @@ function AddWriter($writer,$email,$userid,$username){
 	{printerror("EmptyWriter","history.go(-1)");}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"writer");
+	$writer=hRepPostStr($writer,1);
+	$email=hRepPostStr($email,1);
 	$sql=$empire->query("insert into {$dbtbpre}enewswriter(writer,email) values('$writer','$email');");
 	$lastid=$empire->lastid();
 	GetConfig();//更新缓存
@@ -47,6 +49,8 @@ function EditWriter($wid,$writer,$email,$userid,$username){
 	//验证权限
 	CheckLevel($userid,$username,$classid,"writer");
 	$wid=(int)$wid;
+	$writer=hRepPostStr($writer,1);
+	$email=hRepPostStr($email,1);
 	$sql=$empire->query("update {$dbtbpre}enewswriter set writer='$writer',email='$email' where wid='$wid'");
 	GetConfig();//更新缓存
 	if($sql)

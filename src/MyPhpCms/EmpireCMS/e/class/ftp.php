@@ -87,7 +87,7 @@ class EmpireCMSFTP{
 	//建立目录
 	function fMkdir($path){
 		$path=$this->wipespecial($path);
-		@ftp_mkdir($this->ftpconnectid,$path);
+		return @ftp_mkdir($this->ftpconnectid,$path);
     }
 
 	//向服务器发送 SITE 命令

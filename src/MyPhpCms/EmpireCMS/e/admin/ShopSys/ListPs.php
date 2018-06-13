@@ -30,6 +30,8 @@ function AddPs($add,$userid,$username){
 	CheckLevel($userid,$username,$classid,"shopps");
 	$add[price]=(float)$add[price];
 	$add['isclose']=(int)$add['isclose'];
+	$add['pname']=ehtmlspecialchars($add['pname']);
+	$add['otherprice']=hRepPostStr($add['otherprice'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsshopps(pname,price,otherprice,psay,isclose) values('".eaddslashes($add[pname])."','$add[price]','$add[otherprice]','".eaddslashes($add[psay])."','$add[isclose]');");
 	$pid=$empire->lastid();
 	if($sql)
@@ -56,6 +58,8 @@ function EditPs($add,$userid,$username){
 	CheckLevel($userid,$username,$classid,"shopps");
 	$add[price]=(float)$add[price];
 	$add['isclose']=(int)$add['isclose'];
+	$add['pname']=ehtmlspecialchars($add['pname']);
+	$add['otherprice']=hRepPostStr($add['otherprice'],1);
 	$sql=$empire->query("update {$dbtbpre}enewsshopps set pname='".eaddslashes($add[pname])."',price='$add[price]',otherprice='$add[otherprice]',psay='".eaddslashes($add[psay])."',isclose='$add[isclose]' where pid='$add[pid]'");
 	if($sql)
 	{

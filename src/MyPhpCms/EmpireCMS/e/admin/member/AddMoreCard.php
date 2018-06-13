@@ -32,7 +32,7 @@ while($level_r=$empire->fetch($sql))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>批量增加点卡</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -95,7 +95,7 @@ while($level_r=$empire->fetch($sql))
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">到期时间：</td>
-      <td height="25"><input name="endtime" type="text" id="endtime" value="0000-00-00" size="20" onclick="setday(this)">
+      <td height="25"><input name="endtime" type="text" id="endtime" value="0000-00-00" size="20" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         (0000-00-00为不限制)</td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

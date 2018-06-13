@@ -6,6 +6,7 @@ require("../../data/dbcache/class.php");
 $link=db_connect();
 $empire=new mysqlquery();
 $editor=1;
+eCheckCloseMods('error');//关闭模块
 $id=(int)$_GET['id'];
 $classid=(int)$_GET['classid'];
 if(!$id||!$classid||!$class_r[$classid][tbname]||InfoIsInTable($class_r[$classid][tbname]))

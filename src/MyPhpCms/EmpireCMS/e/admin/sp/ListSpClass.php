@@ -28,6 +28,8 @@ function AddSpClass($add,$userid,$username){
 	}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"sp");
+	$add['classname']=hRepPostStr($add['classname'],1);
+	$add['classsay']=hRepPostStr($add['classsay'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsspclass(classname,classsay) values('$add[classname]','$add[classsay]');");
 	$classid=$empire->lastid();
 	if($sql)
@@ -50,6 +52,8 @@ function EditSpClass($add,$userid,$username){
 	}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"sp");
+	$add['classname']=hRepPostStr($add['classname'],1);
+	$add['classsay']=hRepPostStr($add['classsay'],1);
 	$sql=$empire->query("update {$dbtbpre}enewsspclass set classname='$add[classname]',classsay='$add[classsay]' where classid='$classid'");
 	if($sql)
 	{

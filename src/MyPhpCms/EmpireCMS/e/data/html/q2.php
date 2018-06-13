@@ -23,8 +23,7 @@ document.add.softfj.value=a.replace("/"+str,"");
 <table width=100% align=center cellpadding=3 cellspacing=1 class="tableborder">
   <tr> 
     <td width=16% height=25 bgcolor=ffffff>软件名称(*)</td>
-    <td bgcolor=ffffff>
-<input name="title" type="text" size="42" value="<?=$ecmsfirstpost==1?"":DoReqValue($mid,'title',stripSlashes($r[title]))?>">
+    <td bgcolor=ffffff><input name="title" type="text" size="42" value="<?=$ecmsfirstpost==1?"":DoReqValue($mid,'title',stripSlashes($r[title]))?>">
 </td>
   </tr>
   <tr>

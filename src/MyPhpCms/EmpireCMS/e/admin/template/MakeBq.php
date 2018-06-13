@@ -1551,11 +1551,11 @@ function ShowBqFun(){
       <td width="50%" height="25" bgcolor="#FFFFFF"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr> 
             <td width="24%">操作类型：</td>
-            <td width="76%"><select name="dotype" id="dotype" onchange="var addurl='';if(this.options[this.selectedIndex].value==0){addurl='&defchangeobject=1';}else if(this.options[this.selectedIndex].value==1){addurl='&doobject=4';}else if(this.options[this.selectedIndex].value==2){addurl='&doobject=2';}else if(this.options[this.selectedIndex].value==5){addurl='&doobject=5';}self.location.href='MakeBq.php?<?=$ecms_hashur['ehref']?>&bqname=<?=$bqname?>&addselfinfo=1&mydotype='+this.options[this.selectedIndex].value+addurl;">
+            <td width="76%"><select name="dotype" id="dotype" onchange="var addurl='';if(this.options[this.selectedIndex].value==0){addurl='&defchangeobject=1';}else if(this.options[this.selectedIndex].value==1){addurl='&doobject=4';}else if(this.options[this.selectedIndex].value==2){addurl='&doobject=2';}else if(this.options[this.selectedIndex].value==3){addurl='&doobject=5';}self.location.href='MakeBq.php?<?=$ecms_hashur['ehref']?>&bqname=<?=$bqname?>&addselfinfo=1&mydotype='+this.options[this.selectedIndex].value+addurl;">
                 <option value="0"<?=$mydotype==0?' selected':''?>>默认</option>
                 <option value="1"<?=$mydotype==1?' selected':''?>>按数据表</option>
                 <option value="2"<?=$mydotype==2?' selected':''?>>按栏目</option>
-                <option value="5"<?=$mydotype==5?' selected':''?>>按标题分类</option>
+                <option value="3"<?=$mydotype==3?' selected':''?>>按标题分类</option>
               </select></td>
           </tr>
         </table></td>

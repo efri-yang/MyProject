@@ -35,6 +35,9 @@ function AddCard($add,$userid,$username){
 	$add[carddate]=(int)$add[carddate];
 	$add[cdgroupid]=(int)$add[cdgroupid];
 	$add[cdzgroupid]=(int)$add[cdzgroupid];
+	$add['card_no']=hRepPostStr($add['card_no'],1);
+	$add['password']=hRepPostStr($add['password'],1);
+	$add['endtime']=hRepPostStr($add['endtime'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewscard(card_no,password,cardfen,money,cardtime,endtime,carddate,cdgroupid,cdzgroupid) values('$add[card_no]','$add[password]',$add[cardfen],$add[money],'$cardtime','$add[endtime]',$add[carddate],$add[cdgroupid],$add[cdzgroupid]);");
 	$cardid=$empire->lastid();
 	if($sql)
@@ -58,6 +61,7 @@ function AddMoreCard($add,$userid,$username){
 	$add[carddate]=(int)$add[carddate];
 	$add[cdgroupid]=(int)$add[cdgroupid];
 	$add[cdzgroupid]=(int)$add[cdzgroupid];
+	$add['endtime']=hRepPostStr($add['endtime'],1);
 	if(!$donum||!$cardnum||!$passnum||!$add[money])
 	{printerror("EmptyMoreCard","history.go(-1)");}
 	//验证权限
@@ -102,6 +106,9 @@ function EditCard($add,$userid,$username){
 	$add[carddate]=(int)$add[carddate];
 	$add[cdgroupid]=(int)$add[cdgroupid];
 	$add[cdzgroupid]=(int)$add[cdzgroupid];
+	$add['card_no']=hRepPostStr($add['card_no'],1);
+	$add['password']=hRepPostStr($add['password'],1);
+	$add['endtime']=hRepPostStr($add['endtime'],1);
 	$sql=$empire->query("update {$dbtbpre}enewscard set card_no='$add[card_no]',password='$add[password]',cardfen=$add[cardfen],money=$add[money],endtime='$add[endtime]',carddate=$add[carddate],cdgroupid=$add[cdgroupid],cdzgroupid=$add[cdzgroupid] where cardid='$add[cardid]'");
 	if($sql)
 	{

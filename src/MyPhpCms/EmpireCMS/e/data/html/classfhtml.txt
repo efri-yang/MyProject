@@ -30,10 +30,13 @@
 <a onclick="window.open('[!--enews.path--]ecmseditor/FileMain.php?modtype=[!--enews.modtype--]&type=0&classid=&filepass=<?=$filepass?>&sinfo=1&doing=2&field=[!--enews.var--]<?=$ecms_hashur[ehref]?>','','width=700,height=550,scrollbars=yes');" title="选择已上传的文件"><img src="[!--enews.path--]../data/images/changefile.gif" border="0" align="absbottom"></a>
 [!--file--]
 [!--date--]
-<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars($addr[[!--enews.var--]])?>" size="[!--fsize.w--]" onclick="setday(this);">
+<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars($addr[[!--enews.var--]])?>" size="[!--fsize.w--]" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
 [!--date--]
+[!--datetime--]
+<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars($addr[[!--enews.var--]])?>" size="[!--fsize.w--]" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+[!--datetime--]
 [!--color--]
-<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars($addr[[!--enews.var--]])?>" size="[!--fsize.w--]" onclick="FieldChangeColor(this);">
+<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars($addr[[!--enews.var--]])?>" size="[!--fsize.w--]" class="color">
 [!--color--]
 [!--editor--]
 <?=ECMS_ShowEditorVar("[!--enews.var--]",$ecmsfirstpost==1?"[!--enews.def.val--]":$addr[[!--enews.var--]],"[!--editor.type--]","[!--editor.basepath--]","[!--fsize.h--]","[!--fsize.w--]")?>

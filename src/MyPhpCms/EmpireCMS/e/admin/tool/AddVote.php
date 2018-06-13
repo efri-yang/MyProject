@@ -107,7 +107,7 @@ str=str+"<tr><td width=9% height=20> <div align=center>"+j+"</div></td><td width
 document.getElementById("addvote").innerHTML="<table width=100% border=0 cellspacing=1 cellpadding=3>"+str+"</table>";
 }
 </script>
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -253,7 +253,7 @@ document.getElementById("addvote").innerHTML="<table width=100% border=0 cellspa
     <tr bgcolor="#FFFFFF"> 
       <td height="25">过期时间:</td>
       <td height="25"> <input name=olddotime type=hidden value="<?=$r[dotime]?>"> 
-        <input name="dotime" type="text" id="dotime2" value="<?=$r[dotime]?>" size="12" onClick="setday(this)">
+        <input name="dotime" type="text" id="dotime2" value="<?=$r[dotime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         <font color="#666666">(超过此期限,将不能投票,0000-00-00为不限制)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

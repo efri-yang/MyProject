@@ -65,6 +65,13 @@ function AddSp($add,$userid,$username){
 	$add['spfileline']=(int)$add['spfileline'];
 	$add['spfilesub']=(int)$add['spfilesub'];
 	$add['filepass']=(int)$add['filepass'];
+	$add['spname']=hRepPostStr($add['spname'],1);
+	$add['sppic']=hRepPostStr($add['sppic'],1);
+	$add['spsay']=hRepPostStr($add['spsay'],1);
+	$groupid=hRepPostStr($groupid,1);
+	$userclass=hRepPostStr($userclass,1);
+	$username=hRepPostStr($username,1);
+	$add['spfile']=hRepPostStr($add['spfile'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewssp(spname,varname,sppic,spsay,sptype,cid,classid,tempid,maxnum,sptime,groupid,userclass,username,isclose,cladd,refile,spfile,spfileline,spfilesub) values('$add[spname]','$add[varname]','$add[sppic]','$add[spsay]','$add[sptype]','$add[cid]','$add[classid]','$add[tempid]','$add[maxnum]','$sptime','$groupid','$userclass','$username','$add[isclose]','$add[cladd]','$add[refile]','$add[spfile]','$add[spfileline]','$add[spfilesub]');");
 	$spid=$empire->lastid();
 	//更新附件
@@ -72,6 +79,7 @@ function AddSp($add,$userid,$username){
 	//生成碎片文件
 	if($add['refile'])
 	{
+		$add['spid']=$spid;
 		DoSpReFile($add,0);
 	}
 	if($sql)
@@ -117,6 +125,13 @@ function EditSp($add,$userid,$username){
 	$add['spfileline']=(int)$add['spfileline'];
 	$add['spfilesub']=(int)$add['spfilesub'];
 	$add['filepass']=(int)$add['filepass'];
+	$add['spname']=hRepPostStr($add['spname'],1);
+	$add['sppic']=hRepPostStr($add['sppic'],1);
+	$add['spsay']=hRepPostStr($add['spsay'],1);
+	$groupid=hRepPostStr($groupid,1);
+	$userclass=hRepPostStr($userclass,1);
+	$username=hRepPostStr($username,1);
+	$add['spfile']=hRepPostStr($add['spfile'],1);
 	$sql=$empire->query("update {$dbtbpre}enewssp set spname='$add[spname]',varname='$add[varname]',sppic='$add[sppic]',spsay='$add[spsay]',sptype='$add[sptype]',cid='$add[cid]',classid='$add[classid]',tempid='$add[tempid]',maxnum='$add[maxnum]',groupid='$groupid',userclass='$userclass',username='$username',isclose='$add[isclose]',cladd='$add[cladd]',refile='$add[refile]',spfile='$add[spfile]',spfileline='$add[spfileline]',spfilesub='$add[spfilesub]' where spid='$spid'");
 	//更新附件
 	UpdateTheFileEditOther(7,$spid,'other');
@@ -128,6 +143,7 @@ function EditSp($add,$userid,$username){
 		{
 			DelSpReFile($add['oldspfile']);
 		}
+		$add['spid']=$spid;
 		DoSpReFile($add,0);
 	}
 	if($sql)
@@ -188,6 +204,12 @@ function DelSpReFile($file){
 	if($file&&file_exists($filename)&&!stristr('/'.$file,'/e/'))
 	{
 		DelFiletext($filename);
+		//moreportdo
+		if($file)
+		{
+			$eautodofname='delfile|'.$file.'||';
+			eAutodo_AddDo('eDelFileSp',0,0,0,0,0,$eautodofname);
+		}
 	}
 }
 

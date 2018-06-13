@@ -4,6 +4,8 @@ require("../class/connect.php");
 require("../class/db_sql.php");
 require("../class/functions.php");
 require LoadLang("pub/fun.php");
+require("../class/delpath.php");
+require("../class/copypath.php");
 require("../class/t_functions.php");
 require("../data/dbcache/class.php");
 require("../data/dbcache/MemberLevel.php");
@@ -20,6 +22,19 @@ $loginadminstyleid=$lur['adminstyleid'];
 $ecms_hashur=hReturnEcmsHashStrAll();
 
 @set_time_limit(0);
+
+//加载
+$incftp=0;
+if($public_r['phpmode'])
+{
+	include("../class/ftp.php");
+	$incftp=1;
+}
+//防采集
+if($public_r['opennotcj'])
+{
+	@include("../data/dbcache/notcj.php");
+}
 
 //定时刷新任务
 function DoTimeRepage($time){

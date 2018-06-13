@@ -30,6 +30,11 @@ $addimg="images/add.gif";
 }
 $ecms=RepPostVar(RepPathStr($_GET['ecms']));
 $menus=',system,classdata,template,usercp,tool,extend,other,fastmenu,';
+$ecms=str_replace(',','',$ecms);
+if(!strstr($menus,','.$ecms.','))
+{
+	exit();
+}
 $showmenu='menu/'.$ecms.'.php';
 if($ecms&&strstr($menus,','.$ecms.',')&&file_exists($showmenu))
 {

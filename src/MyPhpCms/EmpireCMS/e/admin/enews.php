@@ -23,6 +23,8 @@ $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
 hCheckEcmsRHash();
 
+@set_time_limit(0);
+
 $incftp=0;
 if($public_r['phpmode'])
 {
@@ -33,6 +35,17 @@ if($public_r['phpmode'])
 if($public_r['opennotcj'])
 {
 	@include("../data/dbcache/notcj.php");
+}
+//设置访问端
+$moreportpid=0;
+if($enews=='ChangeEnewsData')
+{
+	$moreportpid=Moreport_hDoSetSelfPath(0);
+}
+//用户
+if($enews=="exit")
+{
+	include('../class/adminfun.php');
 }
 
 if($enews=="ReListHtml")//刷新信息列表
@@ -54,6 +67,15 @@ elseif($enews=="PostUrlData")//远程发布
 elseif($enews=="ChangeEnewsData")//更新缓存
 {
 	ChangeEnewsData($logininid,$loginin);
+}
+elseif($enews=="exit")//退出系统
+{
+	loginout($logininid,$loginin,$loginrnd);
+}
+elseif($enews=="ChangeMoreportAdmin")//切换访问端
+{
+	$changemoreportid=(int)$_POST['moreportid'];
+	Moreport_eChangeMoreportAdmin($changemoreportid,0,$logininid,$loginin);
 }
 else
 {

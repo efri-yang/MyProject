@@ -28,7 +28,7 @@ include("header.temp.php");
 		$titleurl=sys_ReturnBqTitleLink($r);//链接
 	?>
 		<tr> 
-          <td height="23"><img src="template/default/images/li.gif" width="15" height="10"><a href="<?=$titleurl?>" target="_blank"><?=$r[title]?></a>&nbsp;&nbsp;<font color="#666666">(<?=date("Y-m-d H:i:s",$r[newstime])?>)</font></td>
+          <td height="23"><img src="template/default/images/li.gif" width="15" height="10"><a href="<?=$titleurl?>" target="_blank"><?=stripSlashes($r[title])?></a>&nbsp;&nbsp;<font color="#666666">(<?=date("Y-m-d H:i:s",$r[newstime])?>)</font></td>
         </tr>
 	<?php
 	}

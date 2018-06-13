@@ -20,16 +20,31 @@ function AddPl($username,$password,$nomember,$key,$saytext,$id,$classid,$repid,$
 	$muserid=(int)getcvar('mluserid');
 	$musername=RepPostVar(getcvar('mlusername'));
 	$mgroupid=(int)getcvar('mlgroupid');
+	$mrnd=RepPostVar(getcvar('mlrnd'));
+	$ur=array();
+	$cklgr=array();
 	if($muserid)//已登陆
 	{
 		$cklgr=qCheckLoginAuthstr();
 		if($cklgr['islogin'])
 		{
+			$ur=$empire->fetch1("select ".eReturnSelectMemberF('userid,checked,groupid,isern')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$muserid' and ".egetmf('username')."='$musername' and ".egetmf('rnd')."='$mrnd' limit 1");
+			if(empty($ur['userid']))
+			{
+				printerror("NotSingleLogin",'',1);
+			}
+			if($ur['checked']==0)
+			{
+				printerror("NotCheckedUser",'',1);
+			}
 			$username=$musername;
+			$muserid=$ur['userid'];
+			$mgroupid=$ur['groupid'];
 		}
 		else
 		{
 			$muserid=0;
+			$mgroupid=0;
 		}
 	}
 	else
@@ -40,7 +55,7 @@ function AddPl($username,$password,$nomember,$key,$saytext,$id,$classid,$repid,$
 			{
 				printerror("FailPassword","history.go(-1)",1);
 			}
-			$ur=$empire->fetch1("select ".eReturnSelectMemberF('userid,salt,password,checked,groupid')." from ".eReturnMemberTable()." where ".egetmf('username')."='$username' limit 1");
+			$ur=$empire->fetch1("select ".eReturnSelectMemberF('userid,salt,password,checked,groupid,isern')." from ".eReturnMemberTable()." where ".egetmf('username')."='$username' limit 1");
 			if(empty($ur['userid']))
 			{
 				printerror("FailPassword","history.go(-1)",1);
@@ -59,6 +74,7 @@ function AddPl($username,$password,$nomember,$key,$saytext,$id,$classid,$repid,$
 		else
 		{
 			$muserid=0;
+			$mgroupid=0;
 		}
 	}
 	if($public_r['plgroupid'])
@@ -72,6 +88,9 @@ function AddPl($username,$password,$nomember,$key,$saytext,$id,$classid,$repid,$
 			printerror("NotLevelToPl","history.go(-1)",1);
 		}
 	}
+	//实名验证
+	eCheckHaveTruename('pl',$ur['userid'],$ur['username'],$ur['isern'],$ur['checked'],0);
+
 	//专题
 	$doaction=$add['doaction'];
 	if($doaction=='dozt')
@@ -159,7 +178,7 @@ function AddPl($username,$password,$nomember,$key,$saytext,$id,$classid,$repid,$
 	$sayip=egetip();
 	$eipport=egetipport();
 	$username=str_replace("\r\n","",$username);
-	$username=RepPostStr($username);
+	$username=dgdb_tosave($username);
 	$saytext=nl2br(RepFieldtextNbsp(RepPostStr($saytext)));
 	if($repid)
 	{
@@ -334,11 +353,11 @@ function DoForPl($add){
 		if($doajax==1)
 		{
 			$nr=$empire->fetch1("select ".$f." from {$dbtbpre}enewspl_".$infor['restb']." where plid='$plid' and pubid='$pubid'");
-			ajax_printerror($nr[$f],$add['ajaxarea'],$msg,1);
+			ajax_printerror($nr[$f],RepPostVar($add['ajaxarea']),$msg,1);
 		}
 		else
 		{
-			printerror($msg,$_SERVER['HTTP_REFERER'],1);
+			printerror($msg,EcmsGetReturnUrl(),1);
 		}
 	}
 	else

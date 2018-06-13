@@ -36,7 +36,7 @@ function DelTags($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("tagid=$tagid&tagname=$r[tagname]");
-		printerror("DelTagsSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelTagsSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -69,7 +69,7 @@ function DelTags_all($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("");
-		printerror("DelTagsSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelTagsSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -101,7 +101,7 @@ function DelLessTags($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("num=$num");
-		printerror("DelLessTagsSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelLessTagsSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -129,7 +129,7 @@ function DelOldTagsInfo($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("newstime=$add[newstime]");
-		printerror("DelOldTagsInfoSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelOldTagsInfoSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -158,6 +158,7 @@ function MergeTags($add,$userid,$username){
 	{
 		printerror("NotMergeTagname","history.go(-1)");
 	}
+	$ecms_fclast=time();
 	$ids='';
 	$dh='';
 	$allnum=0;
@@ -181,14 +182,14 @@ function MergeTags($add,$userid,$username){
 	{
 		printerror("EmptyTagid","history.go(-1)");
 	}
-	$sql=$empire->query("update {$dbtbpre}enewstags set num=num+$allnum where tagid='$r[tagid]'");
+	$sql=$empire->query("update {$dbtbpre}enewstags set num=num+$allnum,fclast='$ecms_fclast' where tagid='$r[tagid]'");
 	$sql2=$empire->query("update {$dbtbpre}enewstagsdata set tagid='$r[tagid]' where tagid in ($ids)");
 	$sql3=$empire->query("delete from {$dbtbpre}enewstags where tagid in ($ids)");
 	if($sql&&$sql2&&$sql3)
 	{
 		//操作日志
 		insert_dolog("newtagname=$newtagname");
-		printerror("MergeTagsSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("MergeTagsSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -207,12 +208,16 @@ function AddTags($add,$userid,$username){
 	}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"tags");
+	$ecms_fclast=time();
+	$add['tagtitle']=hRepPostStr(RepPhpAspJspcode($add['tagtitle']));
+	$add['tagkey']=hRepPostStr(RepPhpAspJspcode($add['tagkey']));
+	$add['tagdes']=hRepPostStr(RepPhpAspJspcode($add['tagdes']));
 	$num=$empire->gettotal("select count(*) as total from {$dbtbpre}enewstags where tagname='$tagname' limit 1");
 	if($num)
 	{
 		printerror("HaveTagname","history.go(-1)");
 	}
-	$sql=$empire->query("insert into {$dbtbpre}enewstags(tagname,num,isgood,cid) values('$tagname',0,0,'$cid');");
+	$sql=$empire->query("insert into {$dbtbpre}enewstags(tagname,num,isgood,cid,tagtitle,tagkey,tagdes,fclast) values('$tagname',0,0,'$cid','$add[tagtitle]','$add[tagkey]','$add[tagdes]','$ecms_fclast');");
 	if($sql)
 	{
 		$tagid=$empire->lastid();
@@ -238,12 +243,16 @@ function EditTags($add,$userid,$username){
 	}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"tags");
+	$ecms_fclast=time();
+	$add['tagtitle']=hRepPostStr(RepPhpAspJspcode($add['tagtitle']));
+	$add['tagkey']=hRepPostStr(RepPhpAspJspcode($add['tagkey']));
+	$add['tagdes']=hRepPostStr(RepPhpAspJspcode($add['tagdes']));
 	$num=$empire->gettotal("select count(*) as total from {$dbtbpre}enewstags where tagname='$tagname' and tagid<>$tagid limit 1");
 	if($num)
 	{
 		printerror("HaveTagname","history.go(-1)");
 	}
-	$sql=$empire->query("update {$dbtbpre}enewstags set tagname='$tagname',cid='$cid' where tagid='$tagid'");
+	$sql=$empire->query("update {$dbtbpre}enewstags set tagname='$tagname',cid='$cid',tagtitle='$add[tagtitle]',tagkey='$add[tagkey]',tagdes='$add[tagdes]',fclast='$ecms_fclast' where tagid='$tagid'");
 	if($sql)
 	{
 		//操作日志
@@ -281,7 +290,7 @@ function GoodTags($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("");
-		printerror("GoodTagsSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("GoodTagsSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -299,6 +308,8 @@ function SetTags($add,$userid,$username){
 	$usetags=eReturnRDataStr($add['umid']);
 	$chtags=eReturnRDataStr($add['cmid']);
 	$tagslistnum=(int)$add['tagslistnum'];
+	$usetags=hRepPostStr($usetags,1);
+	$chtags=hRepPostStr($chtags,1);
 	$sql=$empire->query("update {$dbtbpre}enewspublic set opentags='$opentags',tagstempid='$tagstempid',usetags='$usetags',chtags='$chtags',tagslistnum='$tagslistnum' limit 1");
 	if($sql)
 	{
@@ -516,21 +527,30 @@ function CheckAll(form)
 	{
 		$classname='未分类';
 	}
-	$rewriter=eReturnRewriteTagsUrl($r['tagid'],$r['tagname'],1);
-	$tagsurl=$rewriter['pageurl'];
+	if(!empty($public_r['rewritetags']))
+	{
+		$rewriter=eReturnRewriteTagsUrl($r['tagid'],$r['tagname'],1);
+		$tagsurl=$rewriter['pageurl'];
+		$rewriterid=eReturnRewriteTagsUrl($r['tagid'],'etagid'.$r['tagid'],1);
+		$tagsidurl=$rewriterid['pageurl'];
+	}
+	else
+	{
+		$tagsurl='../../tags/?tagname='.urlencode($r['tagname']);
+		$tagsidurl='../../tags/?tagid='.$r['tagid'];
+	}
   ?>
     <tr bgcolor="#FFFFFF" onmouseout="this.style.backgroundColor='#ffffff'" onmouseover="this.style.backgroundColor='#C3EFFF'"> 
       <td><div align="center"> 
           <input name="tagid[]" type="checkbox" id="tagid[]" value="<?=$r[tagid]?>">
         </div></td>
       <td height="25"> <div align="center"> 
-          <?=$r[tagid]?>
+          <a href="<?=$tagsidurl?>" target="_blank"><?=$r[tagid]?></a>
         </div></td>
       <td height="25"> 
         <?=$st?>
-        <a href="<?=$tagsurl?>" target="_blank">
-        <?=$r[tagname]?>
-        </a> </td>
+        <a href="<?=$tagsurl?>" target="_blank"><?=$r[tagname]?></a> 
+	  </td>
       <td height="25"> <div align="center">
           <?=$r[num]?>
         </div></td>

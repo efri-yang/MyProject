@@ -22,6 +22,9 @@ $loginrnd=$lur['rnd'];
 $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
 hCheckEcmsRHash();
+
+@set_time_limit(0);
+
 $incftp=0;
 if($public_r['phpmode'])
 {
@@ -32,6 +35,12 @@ if($public_r['phpmode'])
 if($public_r['opennotcj'])
 {
 	@include("../data/dbcache/notcj.php");
+}
+//设置访问端
+$moreportpid=0;
+if($enews=='ClearTmpFileData')
+{
+	$moreportpid=Moreport_hDoSetSelfPath(0);
 }
 require("../class/comdofun.php");
 if($enews=="AddUserpage")//增加自定义页面

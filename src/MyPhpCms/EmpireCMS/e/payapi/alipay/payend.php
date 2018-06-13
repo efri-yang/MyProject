@@ -3,6 +3,7 @@ require("../../class/connect.php");
 require("../../class/db_sql.php");
 require("../../class/q_functions.php");
 require("../../member/class/user.php");
+eCheckCloseMods('pay');//关闭模块
 $link=db_connect();
 $empire=new mysqlquery();
 $editor=1;
@@ -39,6 +40,10 @@ if($phome=='PayToFen'||$phome=='PayToMoney'||$phome=='BuyGroupPay')
 
 $paytype='alipay';
 $payr=$empire->fetch1("select * from {$dbtbpre}enewspayapi where paytype='$paytype' limit 1");
+if(!$payr['payid']||$payr['isclose'])
+{
+	printerror('您来自的链接不存在','',1,0,1);
+}
 
 $bargainor_id=$payr['payuser'];//商户号
 
@@ -73,7 +78,7 @@ foreach($_GET AS $key=>$val)
 }
 
 $sign=md5(substr($sign,0,-1).$paykey);
-if($sign!=$_GET['sign'])
+if('dg'.$sign!='dg'.$_GET['sign'])
 {
 	printerror('验证MD5签名失败.','../../../',1,0,1);
 }

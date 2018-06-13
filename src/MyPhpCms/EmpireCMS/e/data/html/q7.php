@@ -3,8 +3,7 @@ if(!defined('InEmpireCMS'))
 {
 	exit();
 }
-?><table width=100% align=center cellpadding=3 cellspacing=1 class="tableborder"><tr><td width='16%' height=25 bgcolor='ffffff'>标题(*)</td><td bgcolor='ffffff'>
-<input name="title" type="text" size="42" value="<?=$ecmsfirstpost==1?"":DoReqValue($mid,'title',stripSlashes($r[title]))?>">
+?><table width=100% align=center cellpadding=3 cellspacing=1 class="tableborder"><tr><td width='16%' height=25 bgcolor='ffffff'>标题(*)</td><td bgcolor='ffffff'><input name="title" type="text" size="42" value="<?=$ecmsfirstpost==1?"":DoReqValue($mid,'title',stripSlashes($r[title]))?>">
 </td></tr><tr><td width='16%' height=25 bgcolor='ffffff'>副标题</td><td bgcolor='ffffff'><input name="ftitle" type="text" id="ftitle" value="<?=$ecmsfirstpost==1?"":DoReqValue($mid,'ftitle',stripSlashes($r[ftitle]))?>" size="42">
 </td></tr><tr><td width='16%' height=25 bgcolor='ffffff'>关键字</td><td bgcolor='ffffff'>
 <input name="keyboard" type="text" size=42 value="<?=stripSlashes($r[keyboard])?>">

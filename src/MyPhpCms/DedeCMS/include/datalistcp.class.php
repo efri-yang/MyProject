@@ -63,18 +63,12 @@ class DataListCP
      */
     function __construct($tplfile='')
     {
-        if ( $GLOBALS['cfg_dbtype'] =='mysql' )
+        if ($GLOBALS['cfg_mysql_type'] == 'mysqli' && function_exists("mysqli_init"))
         {
-            if ($GLOBALS['cfg_mysql_type'] == 'mysqli' && function_exists("mysqli_init"))
-            {
-                $dsql = $GLOBALS['dsqli'];
-            } else {
-                $dsql = $GLOBALS['dsql'];
-            }
+            $dsql = $GLOBALS['dsqli'];
         } else {
-            $dsql = $GLOBALS['dsqlitete'];
+            $dsql = $GLOBALS['dsql'];
         }
-    
         $this->sourceSql='';
         $this->pageSize=25;
         $this->queryTime=0;
@@ -154,7 +148,6 @@ class DataListCP
         {
             $countQuery = preg_replace("#SELECT[ \r\n\t](.*)[ \r\n\t]FROM#is", 'SELECT COUNT(*) AS dd FROM', $this->sourceSql);
             $countQuery = preg_replace("#ORDER[ \r\n\t]{1,}BY(.*)#is", '', $countQuery);
-            
             $row = $this->dsql->GetOne($countQuery);
             if(!is_array($row)) $row['dd'] = 0;
             $this->totalResult = isset($row['dd'])? $row['dd'] : 0;
@@ -203,7 +196,7 @@ class DataListCP
 	
 	function RemoveXss($val) {
 		global $cfg_soft_lang;
-		if($cfg_soft_lang=='gb2312') $val = gb2utf8($val);
+		if($cfg_soft_lang=='gb2312') gb2utf8($val);
 		$val = preg_replace('/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/', '', $val);
 		$search = 'abcdefghijklmnopqrstuvwxyz';
 		$search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -248,7 +241,7 @@ class DataListCP
 			 }
 		  }
 		}
-		if($cfg_soft_lang=='gb2312') $val = utf82gb($val);
+		if($cfg_soft_lang=='gb2312') utf82gb($val);
 		return $val;
 	}
 

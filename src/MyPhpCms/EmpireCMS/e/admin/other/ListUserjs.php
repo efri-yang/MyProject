@@ -38,12 +38,14 @@ function AddUserjs($add,$userid,$username){
 	$add[jssql]=ClearAddsData($add[jssql]);
 	$add[jsname]=hRepPostStr($add[jsname],1);
 	$add['classid']=(int)$add['classid'];
+	$add['jsfilename']=hRepPostStr($add['jsfilename'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsuserjs(jsname,jssql,jstempid,jsfilename,classid) values('$add[jsname]','".addslashes($add[jssql])."',$jstempid,'$add[jsfilename]','$add[classid]');");
+	$jsid=$empire->lastid();
 	//刷新js
+	$add['jsid']=$jsid;
 	ReUserjs($add,"../");
 	if($sql)
 	{
-		$jsid=$empire->lastid();
 		//操作日志
 		insert_dolog("jsid=$jsid&jsname=$add[jsname]");
 		printerror("AddUserjsSuccess","AddUserjs.php?enews=AddUserjs&classid=$cid".hReturnEcmsHashStrHref2(0));
@@ -79,8 +81,10 @@ function EditUserjs($add,$userid,$username){
 	$add[jssql]=ClearAddsData($add[jssql]);
 	$add[jsname]=hRepPostStr($add[jsname],1);
 	$add['classid']=(int)$add['classid'];
-	$sql=$empire->query("update {$dbtbpre}enewsuserjs set jsname='$add[jsname]',jssql='".addslashes($add[jssql])."',jstempid=$jstempid,jsfilename='$add[jsfilename]',classid='$add[classid]' where jsid=$jsid");
+	$add['jsfilename']=hRepPostStr($add['jsfilename'],1);
+	$sql=$empire->query("update {$dbtbpre}enewsuserjs set jsname='$add[jsname]',jssql='".addslashes($add[jssql])."',jstempid=$jstempid,jsfilename='$add[jsfilename]',classid='$add[classid]' where jsid='$jsid'");
 	//刷新js
+	$add['jsid']=$jsid;
 	ReUserjs($add,"../");
 	if($sql)
 	{
@@ -109,6 +113,13 @@ function DelUserjs($jsid,$userid,$username){
 	$sql=$empire->query("delete from {$dbtbpre}enewsuserjs where jsid=$jsid");
 	//删除文件
 	DelFiletext("../".$r['jsfilename']);
+	//moreportdo
+	$eautodofile=str_replace('../../','',$r['jsfilename']);
+	if($eautodofile)
+	{
+		$eautodofname='delfile|'.$eautodofile.'||';
+		eAutodo_AddDo('eDelFileUserjs',0,0,0,0,0,$eautodofname);
+	}
 	if($sql)
 	{
 		//操作日志
@@ -144,7 +155,7 @@ function DoReUserjs($add,$userid,$username){
 	}
 	//操作日志
 	insert_dolog("");
-	printerror("DoReUserjsSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("DoReUserjsSuccess",EcmsGetReturnUrl());
 }
 
 $enews=$_POST['enews'];

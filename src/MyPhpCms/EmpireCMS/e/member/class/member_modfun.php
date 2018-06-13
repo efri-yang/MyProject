@@ -16,6 +16,7 @@ function DelYMemberTranFile($file,$tf,$username=''){
 	$r=explode("/",$file);
 	$count=count($r);
 	$filename=$r[$count-1];
+	$filename=addslashes(RepPostStr($filename));
 	$fr=$empire->fetch1("select filename,path,fileid,fpath,classid from {$dbtbpre}enewsfile_member where no='Member[".$tf."]' and filename='$filename' and adduser='[EditInfo]".$username."' limit 1");
 	if($fr['fileid'])
 	{

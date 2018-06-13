@@ -54,7 +54,7 @@ $empire=null;
       <div align="right"> </div></td>
   </tr>
 </table>
-<form name="setform" method="post" action="SetFirewall.php" onsubmit="return confirm('确认设置?');">
+<form name="setform" method="post" action="SetFirewall.php" onsubmit="return confirm('确认设置?');" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 
@@ -182,8 +182,9 @@ $empire=null;
     <tr bgcolor="#FFFFFF"> 
       <td height="25">
 <div align="left">屏蔽提交敏感字符<br>
-          <font color="#666666">(多个用半角逗号格开;<br>
-          设置屏蔽前台所有提交内容及后台登陆内容)</font></div></td>
+          <font color="#666666">(设置屏蔽前台所有提交内容及后台登陆内容)<br>
+          (1)、多个用“,”半角逗号隔开。<br>
+          (2)、同时包含多字时屏蔽可用双“#”隔开，如“upd##te,select”。</font></div></td>
       <td height="25"><textarea name="fw_cleargettext" cols="80" rows="8" style="WIDTH: 100%" id="fw_cleargettext"><?=ehtmlspecialchars($ecms_config['fw']['cleargettext'])?></textarea></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

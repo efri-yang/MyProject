@@ -29,6 +29,7 @@ if(!$r['id']||$classid!=$r[classid])
 {
 	DoWapShowMsg('您来自的链接不存在',$listurl);
 }
+$GLOBALS['navclassid']=$classid;
 if($r['groupid']||$class_r[$classid]['cgtoinfo'])
 {
 	DoWapShowMsg('此信息不能查看',$listurl);
@@ -43,7 +44,9 @@ $ret_r=ReturnAddF($modid,1);
 $empire->query("update {$dbtbpre}ecms_".$class_r[$classid]['tbname']." set onclick=onclick+1 where id='$id' limit 1");
 $r['onclick']=$r['onclick']+1;
 
-$pagetitle=DoWapClearHtml($r['title']);
+$pagetitle=$r['title'];
+$pagekey=$pagetitle;
+$pagedes=$pagetitle;
 //存文本内容
 $savetxtf=$emod_r[$modid]['savetxtf'];
 if($savetxtf&&$r[$savetxtf])

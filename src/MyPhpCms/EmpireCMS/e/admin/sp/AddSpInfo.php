@@ -144,7 +144,7 @@ if($ecms=='InfoidGetData')
 <script>
 function foreColor(){
   if(!Error())	return;
-  var arr = showModalDialog("../../data/html/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../../data/html/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) document.form1.titlecolor.value=arr;
   else document.form1.titlecolor.focus();
 }
@@ -160,6 +160,8 @@ function ToGetInfo(){
 	self.location.href='AddSpInfo.php?<?=$ecms_hashur['ehref']?>&enews=<?=$enews?>&spid=<?=$spid?>&sid=<?=$sid?>&ecms=InfoidGetData&getinfoid='+infoid;
 }
 </script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jscolor/jscolor.js"></script>
 </head>
 
 <body>
@@ -200,8 +202,8 @@ if($spr['sptype']==1)
               斜体 
               <input name="titlefont[s]" type="checkbox" value="s"<?=$titlefonts?>>
               删除线 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;颜色: 
-              <input name="titlecolor" type="text" value="<?=stripSlashes($r[titlecolor])?>" size="10"> 
-              <a onclick="foreColor();"><img src="../../data/images/color.gif" width="21" height="21" align="absbottom"></a></td>
+              <input name="titlecolor" type="text" value="<?=stripSlashes($r[titlecolor])?>" size="10" class="color"> 
+              </td>
           </tr>
           <tr> 
             <td>左边: 
@@ -224,7 +226,7 @@ if($spr['sptype']==1)
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">发布时间：</td>
-      <td height="25"><input name="newstime" type="text" id="title3" size="60" value="<?=$newstime?>">
+      <td height="25"><input name="newstime" type="text" id="title3" size="60" value="<?=$newstime?>" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:ss'})">
         <input type="button" name="Submit3" value="当前时间" onclick="document.form1.newstime.value='<?=$todaytime?>';"></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
@@ -262,7 +264,7 @@ elseif($spr['sptype']==2)
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">发布时间：</td>
-      <td height="25"><input name="newstime" type="text" id="newstime" size="60" value="<?=$newstime?>"> 
+      <td height="25"><input name="newstime" type="text" id="newstime" size="60" value="<?=$newstime?>" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:ss'})"> 
         <input type="button" name="Submit32" value="当前时间" onclick="document.form1.newstime.value='<?=$todaytime?>';"></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

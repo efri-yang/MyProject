@@ -57,10 +57,10 @@ include("header.temp.php");
           </tr>
           <tr>
             <td height="25">验证码</td>
-            <td><table width="160" border="0" cellspacing="0" cellpadding="0">
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr> 
-                  <td width="75"><input name="key" type="text" size="10" /></td>
-                  <td width="85"><img src="<?=$public_r[newsurl]?>e/ShowKey/?v=spacefb" name="spacefbKeyImg" id="spacefbKeyImg" onclick="spacefbKeyImg.src='<?=$public_r[newsurl]?>e/ShowKey/?v=spacefb&t='+Math.random()" title="看不清楚,点击刷新" /></td>
+                  <td width="52"><input name="key" type="text" id="key" size="6" /></td>
+                  <td id="spacefbshowkey"><a href="#EmpireCMS" onclick="edoshowkey('spacefbshowkey','spacefb','<?=$public_r['newsurl']?>');" title="点击显示验证码">点击显示验证码</a></td>
                 </tr>
               </table></td>
           </tr>

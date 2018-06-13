@@ -33,13 +33,17 @@ function AddVoteMod($ysvotename,$title,$votename,$votenum,$delvid,$vid,$voteclas
 	{
 		$t_votenum+=$votenum[$i];
 	}
-	$dotime=date("Y-m-d");
+	//$dotime=date("Y-m-d");
 	$t_votenum=(int)$t_votenum;
 	$voteclass=(int)$voteclass;
 	$width=(int)$width;
 	$height=(int)$height;
 	$doip=(int)$doip;
 	$tempid=(int)$tempid;
+	$title=hRepPostStr($title,1);
+	$votetext=AddAddsData($votetext);
+	$ysvotename=hRepPostStr($ysvotename,1);
+	$dotime=hRepPostStr($dotime,1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsvotemod(title,votetext,voteclass,doip,dotime,tempid,width,height,votenum,ysvotename) values('$title','$votetext',$voteclass,$doip,'$dotime',$tempid,$width,$height,$t_votenum,'$ysvotename');");
 	$voteid=$empire->lastid();
 	if($sql)
@@ -76,6 +80,10 @@ function EditVoteMod($voteid,$ysvotename,$title,$votename,$votenum,$delvid,$vid,
 	$height=(int)$height;
 	$doip=(int)$doip;
 	$tempid=(int)$tempid;
+	$title=hRepPostStr($title,1);
+	$votetext=AddAddsData($votetext);
+	$ysvotename=hRepPostStr($ysvotename,1);
+	$dotime=hRepPostStr($dotime,1);
 	$sql=$empire->query("update {$dbtbpre}enewsvotemod set title='$title',votetext='$votetext',voteclass=$voteclass,doip=$doip,dotime='$dotime',tempid=$tempid,width=$width,height=$height,votenum=$t_votenum,ysvotename='$ysvotename' where voteid='$voteid'");
 	if($sql)
 	{

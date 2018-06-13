@@ -16,16 +16,20 @@ $loginadminstyleid=$lur['adminstyleid'];
 //ehash
 $ecms_hashur=hReturnEcmsHashStrAll();
 
+@set_time_limit(1000);
+
 //今日信息
-$pur=$empire->fetch1("select lasttimeinfo,lastnuminfo,lastnuminfotb,todaytimeinfo,todaytimepl,todaynuminfo,yesterdaynuminfo from {$dbtbpre}enewspublic_update limit 1");
+$pur=$empire->fetch1("select lasttimeinfo,lastnuminfo,lastnuminfotb,todaytimeinfo,todaytimepl,todaynuminfo,yesterdaynuminfo from {$dbtbpre}enewspublic_up limit 1");
 //更新昨日信息
 $todaydate=date('Y-m-d');
 if(date('Y-m-d',$pur['todaytimeinfo'])<>$todaydate||date('Y-m-d',$pur['todaytimepl'])<>$todaydate)
 {
 	DoUpdateYesterdayAddDataNum();
-	$pur=$empire->fetch1("select lasttimeinfo,lastnuminfo,lastnuminfotb,todaytimeinfo,todaytimepl,todaynuminfo,yesterdaynuminfo from {$dbtbpre}enewspublic_update limit 1");
+	$pur=$empire->fetch1("select lasttimeinfo,lastnuminfo,lastnuminfotb,todaytimeinfo,todaytimepl,todaynuminfo,yesterdaynuminfo from {$dbtbpre}enewspublic_up limit 1");
 }
 $sql=$empire->query("select tid,tbname,tname,isdefault from {$dbtbpre}enewstable order by tid");
+//签发信息
+$qfinfonum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewswfinfo where checktno=0 and (groupid like '%,".$lur['groupid'].",%' or userclass like '%,".$lur['classid'].",%' or username like '%,".$lur['username'].",%')");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -54,7 +58,7 @@ $sql=$empire->query("select tid,tbname,tname,isdefault from {$dbtbpre}enewstable
 </table>
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <tr class="header"> 
-    <td height="25" colspan="6">信息发布统计 (今日信息数：<?=$pur['todaynuminfo']?>，昨天信息数：<?=$pur['yesterdaynuminfo']?>) </td>
+    <td height="25" colspan="6">信息发布统计 (今日信息数：<?=$pur['todaynuminfo']?>，昨天信息数：<?=$pur['yesterdaynuminfo']?>，待我签发的信息数：<a href="../workflow/ListWfInfo.php<?=$ecms_hashur['whehref']?>" target="_blank"><?=$qfinfonum?></a>) </td>
   </tr>
   <tr class="header">
     <td width="14%" height="25"><div align="center">表名</div></td>

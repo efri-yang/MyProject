@@ -235,7 +235,7 @@ $returnpage=page2($num,$line,$page_line,$start,$page,$search);
   ?>
   <tr bgcolor="<?=$color?>"<?=$movejs?>> 
     <td height="25"><div align="center"> 
-        <?=$r[tempid]?>
+        <a href="EditTempid.php?tempno=10&tempid=<?=$r['tempid']?>&gid=<?=$gid?><?=$ecms_hashur['ehref']?>" target="_blank" title="修改模板ID"><?=$r[tempid]?></a>
       </div></td>
     <td height="25"><div align="center"> 
         <?=$r[tempname]?>

@@ -22,7 +22,7 @@ $url="<a href=ListUser.php".$ecms_hashur['whehref'].">管理用户</a>&nbsp;>增
 if($enews=="EditUser")
 {
 	$userid=(int)$_GET['userid'];
-	$r=$empire->fetch1("select username,adminclass,groupid,checked,styleid,filelevel,truename,email,classid from {$dbtbpre}enewsuser where userid='$userid'");
+	$r=$empire->fetch1("select username,adminclass,groupid,checked,styleid,filelevel,truename,email,classid,wname,tel,wxno,qq from {$dbtbpre}enewsuser where userid='$userid'");
 	$addur=$empire->fetch1("select equestion,openip from {$dbtbpre}enewsuseradd where userid='$userid'");
 	$url="<a href=ListUser.php".$ecms_hashur['whehref'].">管理用户</a>&nbsp;>修改用户：<b>".$r[username]."</b>";
 	if($r[checked])
@@ -103,7 +103,7 @@ function selectalls(doselect,formvar)
     <td>位置：<?=$url?></td>
   </tr>
 </table>
-<form name="form1" method="post" action="ListUser.php">
+<form name="form1" method="post" action="ListUser.php" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 
@@ -131,6 +131,11 @@ function selectalls(doselect,formvar)
       <td height="25"><input name="repassword" type="password" id="repassword" size="32">
         * <font color="#666666">(不想修改请留空)</font></td>
     </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">&nbsp;</td>
+      <td height="25"><font color="#666666">(说明：密码设置6位以上，区分大小写，且密码不能包含：$ 
+      &amp; * # &lt; &gt; ' &quot; / \ % ; 空格)</font></td>
+    </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">安全提问：</td>
       <td height="25"> <select name="equestion" id="equestion">
@@ -149,15 +154,32 @@ function selectalls(doselect,formvar)
     <tr bgcolor="#FFFFFF"> 
       <td height="25">安全回答：</td>
       <td height="25"><input name="eanswer" type="text" id="eanswer" size="32"> 
-        <font color="#666666">(如果修改答案，请在此输入新答案)</font></td>
+        <font color="#666666">(如果修改答案，请在此输入新答案。区分大小写)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">姓名：</td>
       <td height="25"><input name="truename" type="text" id="truename" value="<?=$r[truename]?>" size="32"></td>
     </tr>
+	<tr bgcolor="#FFFFFF">
+      <td height="25">网名：</td>
+      <td height="25"><input name="wname" type="text" id="wname" value="<?=$r[wname]?>" size="32">
+        <font color="#666666">(信息操作反馈给会员将采用此名称，不填为显示“管理员”)</font></td>
+    </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">邮箱：</td>
       <td height="25"><input name="email" type="text" id="email" value="<?=$r[email]?>" size="32"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">手机号：</td>
+      <td height="25"><input name="tel" type="text" id="tel" value="<?=$r[tel]?>" size="32"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">QQ号码：</td>
+      <td height="25"><input name="qq" type="text" id="qq" value="<?=$r[qq]?>" size="32"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">微信：</td>
+      <td height="25"><input name="wxno" type="text" id="wxno" value="<?=$r[wxno]?>" size="32"></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">用户组(*)：</td>
@@ -190,8 +212,7 @@ function selectalls(doselect,formvar)
       <td height="25" valign="top"> <select name="adminclass[]" size="12" multiple id="adminclassselect" style="width:270;">
           <?=$class?>
         </select>
-        [<a href="#empirecms" onclick="selectalls(0,'adminclassselect')">全部取消</a>] 
-      </td>
+        [<a href="#empirecms" onclick="selectalls(0,'adminclassselect')">全部取消</a>]      </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25" valign="top"> 注意事项：<font color="#FF0000">选择父栏目会应用于子栏目，并且如果选择父栏目，请勿选择其子栏目</font>)</td>
@@ -207,7 +228,7 @@ function selectalls(doselect,formvar)
       <td height="25"><input type="submit" name="Submit" value="提交"> <input type="reset" name="Submit2" value="重置"></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
-      <td height="25" colspan="2"><font color="#666666">说明：密码设置6位以上，且密码不能包含：$ 
+      <td height="25" colspan="2"><font color="#666666">说明：密码设置6位以上，区分大小写，且密码不能包含：$ 
         &amp; * # &lt; &gt; ' &quot; / \ % ; 空格</font></td>
     </tr>
   </table>

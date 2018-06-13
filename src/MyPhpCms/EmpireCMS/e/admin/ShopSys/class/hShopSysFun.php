@@ -51,6 +51,8 @@ function ShopSys_set($add,$userid,$username){
 	{
 		$shoptbs.=',';
 	}
+	$ddmuststr=hRepPostStr2($ddmuststr);
+	$shoptbs=hRepPostStr2($shoptbs);
 	$sql=$empire->query("update {$dbtbpre}enewsshop_set set shopddgroupid='$add[shopddgroupid]',buycarnum='$add[buycarnum]',havefp='$add[havefp]',fpnum='$add[fpnum]',fpname='".eaddslashes($add[fpname])."',ddmust='$ddmuststr',haveatt='$add[haveatt]',shoptbs='$shoptbs',buystep='$add[buystep]',shoppsmust='$add[shoppsmust]',shoppayfsmust='$add[shoppayfsmust]',dddeltime='$add[dddeltime]',cutnumtype='$add[cutnumtype]',cutnumtime='$add[cutnumtime]',freepstotal='$add[freepstotal]',singlenum='$add[singlenum]' limit 1");
 	if($sql)
 	{
@@ -171,7 +173,7 @@ function Shopsys_DoCutMaxnum($add,$userid,$username){
 		ShopSys_DdInsertLog($doddid,$log_ecms,$log_bz,$log_addbz);
 	}
 	insert_dolog("ddid=$ids<br>ecms=$ecms");//操作日志
-	printerror('CutMaxnumSuccess',$_SERVER['HTTP_REFERER']);
+	printerror('CutMaxnumSuccess',EcmsGetReturnUrl());
 }
 
 //减少库存

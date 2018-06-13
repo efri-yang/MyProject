@@ -9,7 +9,7 @@ if(!defined('InEmpireCMS'))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>帝国网站管理系统 - Powered by EmpireCMS</title>
 <meta name="keywords" content="帝国网站管理系统,EmpireCMS" />
-<meta name="description" content="　　帝国软件是一家专注于网络软件开发的科技公司，其主营产品“帝国网站管理系统(EmpireCMS)”是目前国内应用最广泛的CMS程序。通过十多年的不断创新与完善，使系统集安全、稳定、强大、灵活于一身。目前EmpireCMS程序已经广泛应用在国内上百万家网站，覆盖国内上千万上网人群，并经过上千家知名网站的严格检测，被称为国内最安全、最稳定的开源CMS系统。" />
+<meta name="description" content="　　帝国软件是一家专注于网络软件开发的科技公司，其主营产品“帝国网站管理系统(EmpireCMS)”是目前国内应用超高广泛的CMS程序。通过十多年的不断创新与完善，使系统集安全、稳定、强大、灵活于一身。目前EmpireCMS程序已经广泛应用在国内上百万家网站，覆盖国内数千万上网人群，并经过上千家知名网站的严格检测，被称为国内超高安全、超高稳定的开源CMS系统。" />
 <link href="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="/MyProject/src/MyPhpCms/EmpireCMS/skin/default/js/tabs.js"></script>
 </head>
@@ -252,7 +252,7 @@ document.write('<script src="/MyProject/src/MyPhpCms/EmpireCMS/e/member/login/lo
         </tr>
         <tr> 
           <td align="center">Powered by <strong><a href="http://www.phome.net" target="_blank">EmpireCMS</a></strong> 
-            <strong><font color="#FF9900">7.2</font></strong>&nbsp; &copy; 2002-2015 
+            <strong><font color="#FF9900">7.5</font></strong>&nbsp; &copy; 2002-2018 
             <a href="http://www.digod.com" target="_blank">EmpireSoft Inc.</a></td>
         </tr>
 	</table>

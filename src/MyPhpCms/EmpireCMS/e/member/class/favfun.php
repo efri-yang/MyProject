@@ -90,7 +90,7 @@ function AddFavaClass($add){
     }
 	//是否登陆
 	$user_r=islogin();
-	$add[cname]=RepPostStr($add[cname]);
+	$add[cname]=dgdb_tosave($add[cname]);
 	$sql=$empire->query("insert into {$dbtbpre}enewsfavaclass(cname,userid) values('$add[cname]','$user_r[userid]');");
 	if($sql)
 	{
@@ -112,7 +112,7 @@ function EditFavaClass($add){
     }
 	//是否登陆
 	$user_r=islogin();
-	$add[cname]=RepPostStr($add[cname]);
+	$add[cname]=dgdb_tosave($add[cname]);
 	$sql=$empire->query("update {$dbtbpre}enewsfavaclass set cname='$add[cname]' where cid='$add[cid]' and userid='$user_r[userid]'");
 	if($sql)
 	{
@@ -148,6 +148,7 @@ function DelFavaClass($cid){
 //返回收藏夹分类
 function ReturnFavaclass($userid,$cid){
 	global $empire,$dbtbpre;
+	$userid=(int)$userid;
 	$sql=$empire->query("select cid,cname from {$dbtbpre}enewsfavaclass where userid='$userid' order by cid");
 	$select='';
 	while($r=$empire->fetch($sql))

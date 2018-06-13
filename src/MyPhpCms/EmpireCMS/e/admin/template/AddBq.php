@@ -43,7 +43,8 @@ db_close();
 $empire=null;
 
 //--------------------html编辑器
-include('../ecmseditor/infoeditor/fckeditor.php');
+include('../ecmseditor/eshoweditor.php');
+$loadeditorjs=ECMS_ShowEditorJS('../ecmseditor/infoeditor/');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -52,6 +53,7 @@ include('../ecmseditor/infoeditor/fckeditor.php');
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <title>标签管理</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
+<?=$loadeditorjs?>
 <script>
 function on()
 {
@@ -66,9 +68,7 @@ function br(){
 if(!confirm("是否复位？")){return false;}
 document.add.title.select()
 }
-</script><noscript>
-<iframe src=*.htm></iframe>
-</noscript>
+</script>
 </head>
 
 <body>

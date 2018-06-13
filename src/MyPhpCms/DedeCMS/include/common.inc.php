@@ -7,18 +7,10 @@
  * @link           http://www.dedecms.com
  */
 
-
-
-// 生产环境使用production
-define('DEDE_ENVIRONMENT', 'production');
-
-
-if ( DEDE_ENVIRONMENT == 'production' )
-{
-    error_reporting(E_ALL || ~E_NOTICE);
-} else {
-    error_reporting(E_ALL);
-}
+// 报错级别设定,一般在开发环境中用E_ALL,这样能够看到所有错误提示
+// 系统正常运行后,直接设定为E_ALL || ~E_NOTICE,取消错误显示
+//error_reporting(E_ALL);
+error_reporting(E_ALL || ~E_NOTICE);
 define('DEDEINC', str_replace("\\", '/', dirname(__FILE__) ) );
 define('DEDEROOT', str_replace("\\", '/', substr(DEDEINC,0,-8) ) );
 define('DEDEDATA', DEDEROOT.'/data');
@@ -95,7 +87,7 @@ if (!defined('DEDEREQUEST'))
             }
         } else
         {
-            if( strlen($val)>0 && preg_match('#^(cfg_|GLOBALS|_GET|_POST|_COOKIE|_SESSION)#',$val)  )
+            if( strlen($val)>0 && preg_match('#^(cfg_|GLOBALS|_GET|_POST|_COOKIE)#',$val)  )
             {
                 exit('Request var not allow!');
             }
@@ -150,11 +142,6 @@ if($_FILES)
 
 //数据库配置文件
 require_once(DEDEDATA.'/common.inc.php');
-
-if ( !isset($cfg_dbtype)  )
-{
-    $cfg_dbtype = 'mysql';
-}
 
 //载入系统验证安全配置
 if(file_exists(DEDEDATA.'/safe/inc_safe_config.php'))
@@ -341,18 +328,12 @@ function __autoload($classname)
 }
 
 //引入数据库类
-if ( $GLOBALS['cfg_dbtype'] =='mysql' )
+if ($GLOBALS['cfg_mysql_type'] == 'mysqli' && function_exists("mysqli_init") || !function_exists('mysql_connect'))
 {
-    if ($GLOBALS['cfg_mysql_type'] == 'mysqli' && function_exists("mysqli_init") || !function_exists('mysql_connect'))
-    {
-        require_once(DEDEINC.'/dedesqli.class.php');
-    } else {
-        require_once(DEDEINC.'/dedesql.class.php');
-    }
+    require_once(DEDEINC.'/dedesqli.class.php');
 } else {
-    require_once(DEDEINC.'/dedesqlite.class.php');
+    require_once(DEDEINC.'/dedesql.class.php');
 }
-    
 
 
 //全局常用函数

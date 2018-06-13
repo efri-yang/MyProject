@@ -59,7 +59,7 @@ $empire=null;
     <td>位置：<a href="ReData.php<?=$ecms_hashur['whehref']?>">恢复数据</a></td>
   </tr>
 </table>
-<form action="phome.php" method="post" name="ebakredata" target="_blank" onsubmit="return confirm('确认要恢复？');">
+<form action="phome.php" method="post" name="ebakredata" target="_blank" onsubmit="return confirm('确认要恢复？');" autocomplete="off">
   <table width="70%" border="0" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 

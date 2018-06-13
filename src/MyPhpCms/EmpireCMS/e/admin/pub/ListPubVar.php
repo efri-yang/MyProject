@@ -35,6 +35,8 @@ function AddPubVar($add,$userid,$username){
 	{
 		printerror("RePubVar","history.go(-1)");
 	}
+	$add['varname']=hRepPostStr($add['varname'],1);
+	$add['varsay']=hRepPostStr($add['varsay'],1);
 	$classid=(int)$add[classid];
 	$tocache=(int)$add[tocache];
 	$add[myorder]=(int)$add[myorder];
@@ -74,6 +76,8 @@ function EditPubVar($add,$userid,$username){
 			printerror("RePubVar","history.go(-1)");
 		}
 	}
+	$add['varname']=hRepPostStr($add['varname'],1);
+	$add['varsay']=hRepPostStr($add['varsay'],1);
 	$add[varvalue]=AddAddsData(RepPhpAspJspcode($add[varvalue]));
 	$classid=(int)$add[classid];
 	$tocache=(int)$add[tocache];

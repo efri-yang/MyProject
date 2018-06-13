@@ -3,8 +3,7 @@ if(!defined('InEmpireCMS'))
 {
 	exit();
 }
-?><tr><td bgcolor=ffffff>商品名称</td><td bgcolor=ffffff>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#DBEAF5">
+?><tr><td bgcolor=ffffff>商品名称</td><td bgcolor=ffffff><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#DBEAF5">
 <tr> 
   <td height="25" bgcolor="#FFFFFF">
 	<?=$tts?"<select name='ttid'><option value='0'>标题分类</option>$tts</select>":""?>
@@ -17,12 +16,11 @@ if(!defined('InEmpireCMS'))
 	<input name="titlefont[b]" type="checkbox" value="b"<?=$titlefontb?>>粗体
 	<input name="titlefont[i]" type="checkbox" value="i"<?=$titlefonti?>>斜体
 	<input name="titlefont[s]" type="checkbox" value="s"<?=$titlefonts?>>删除线
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;颜色: <input name="titlecolor" type="text" value="<?=stripSlashes($r[titlecolor])?>" size="10"><a onclick="foreColor();"><img src="../data/images/color.gif" width="21" height="21" align="absbottom"></a>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;颜色: <input name="titlecolor" type="text" value="<?=stripSlashes($r[titlecolor])?>" size="10" class="color">
   </td>
 </tr>
 </table>
-</td></tr><tr><td bgcolor=ffffff>发布时间</td><td bgcolor=ffffff>
-<input name="newstime" type="text" value="<?=$r[newstime]?>"><input type=button name=button value="设为当前时间" onclick="document.add.newstime.value='<?=$todaytime?>'">
+</td></tr><tr><td bgcolor=ffffff>发布时间</td><td bgcolor=ffffff><input name="newstime" type="text" value="<?=$r[newstime]?>" size="28" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:ss'})"><input type=button name=button value="设为当前时间" onclick="document.add.newstime.value='<?=$todaytime?>'">
 </td></tr><tr><td bgcolor=ffffff>商品编号</td><td bgcolor=ffffff><input name="productno" type="text" id="productno" value="<?=$ecmsfirstpost==1?"":ehtmlspecialchars(stripSlashes($r[productno]))?>" size="60">
 </td></tr><tr><td bgcolor=ffffff>品牌</td><td bgcolor=ffffff><input name="pbrand" type="text" id="pbrand" value="<?=$ecmsfirstpost==1?"":ehtmlspecialchars(stripSlashes($r[pbrand]))?>" size="60">
 </td></tr><tr><td bgcolor=ffffff>简单描述</td><td bgcolor=ffffff><textarea name="intro" cols="80" rows="10" id="intro"><?=$ecmsfirstpost==1?"":ehtmlspecialchars(stripSlashes($r[intro]))?></textarea>

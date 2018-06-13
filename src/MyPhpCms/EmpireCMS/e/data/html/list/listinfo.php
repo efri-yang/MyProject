@@ -6,12 +6,30 @@ if(!defined('InEmpireCMS'))
 ?>
 <?php
 //查询SQL，如果要显示自定义字段记得在SQL里增加查询字段
-$query="select id,classid,isurl,titleurl,isqf,havehtml,istop,isgood,firsttitle,ismember,userid,username,plnum,totaldown,onclick,newstime,truetime,lastdotime,titlepic,title from ".$infotb.$ewhere." order by ".$doorder." limit $offset,$line";
+$query="select id,classid,isurl,titleurl,isqf,havehtml,istop,isgood,firsttitle,ismember,userid,username,eckuid,plnum,totaldown,onclick,newstime,truetime,lastdotime,titlepic,title from ".$infotb.$ewhere." order by ".$doorder." limit $offset,$line";
 $sql=$empire->query($query);
 //返回头条和推荐级别名称
 $ftnr=ReturnFirsttitleNameList(0,0);
 $ftnamer=$ftnr['ftr'];
 $ignamer=$ftnr['igr'];
+$searchisgoods='';
+$searchfirsttitles='';
+if($showisgood>0)
+{
+	$searchisgoods=str_replace('<option value="'.$showisgood.'">','<option value="'.$showisgood.'" selected>',$ftnr['igname']);
+}
+else
+{
+	$searchisgoods=$ftnr['igname'];
+}
+if($showfirsttitle>0)
+{
+	$searchfirsttitles=str_replace('<option value="'.$showfirsttitle.'">','<option value="'.$showfirsttitle.'" selected>',$ftnr['ftname']);
+}
+else
+{
+	$searchfirsttitles=$ftnr['ftname'];
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -88,29 +106,30 @@ function PushInfoToZt(form)
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <form name="searchinfo" method="GET" action="ListNews.php">
   <?=$ecms_hashur['eform']?>
-    <tr> 
-      <td width="35%">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td colspan="2">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr> 
-            <td width="23%"> <div align="left" class="emenubutton"> 
+            <td width="24%"> <div align="left" class="emenubutton"> 
                 <input type=button name=button value="增加信息" onClick="self.location.href='AddNews.php?enews=AddNews&ecmsnfrom=1<?=$addecmscheck?>&bclassid=<?=$bclassid?>&classid=<?=$classid?><?=$ecms_hashur['ehref']?>'">
               </div></td>
-            <td width="77%" title="增加信息后使用本操作将信息显示到前台"> <div align="right"> 
-                <select name="dore">
-                  <option value="1">刷新当前栏目</option>
-                  <option value="2">刷新首页</option>
-                  <option value="3">刷新父栏目</option>
-                  <option value="4">刷新当前栏目与父栏目</option>
-                  <option value="5">刷新父栏目与首页</option>
-                  <option value="6" selected>刷新当前栏目、父栏目与首页</option>
-                </select>
-                <input type="button" name="Submit12" value="提交" onclick="self.location.href='ecmsinfo.php?<?=$ecms_hashur['href']?>&enews=AddInfoToReHtml<?=$addecmscheck?>&classid=<?=$classid?>&dore='+document.searchinfo.dore.value;">
-              </div></td>
+            <td width="76%"> </td>
           </tr>
-        </table>
-      </td>
-      <td width="65%">
-<div align="right">搜索: 
+        </table></td> 
+    </tr>
+    <tr>
+      <td width="24%" bgcolor="#FFFFFF" title="增加信息后使用本操作将信息显示到前台"> 
+        <div align="left">
+          <select name="dore">
+            <option value="1">刷新当前栏目</option>
+            <option value="2">刷新首页</option>
+            <option value="3">刷新父栏目</option>
+            <option value="4">刷新当前栏目与父栏目</option>
+            <option value="5">刷新父栏目与首页</option>
+            <option value="6" selected>刷新当前栏目、父栏目与首页</option>
+          </select>
+          <input type="button" name="Submit12" value="提交" onclick="self.location.href='ecmsinfo.php?<?=$ecms_hashur['href']?>&enews=AddInfoToReHtml<?=$addecmscheck?>&classid=<?=$classid?>&dore='+document.searchinfo.dore.value;">
+          </div></td><td width="76%" height="32" bgcolor="#FFFFFF"><div align="right">搜索: 
           <select name="showspecial" id="showspecial">
             <option value="0"<?=$showspecial==0?' selected':''?>>不限属性</option>
 			<option value="1"<?=$showspecial==1?' selected':''?>>置顶</option>
@@ -119,6 +138,16 @@ function PushInfoToZt(form)
 			<option value="7"<?=$showspecial==7?' selected':''?>>投稿</option>
             <option value="5"<?=$showspecial==5?' selected':''?>>签发</option>
 			<option value="8"<?=$showspecial==8?' selected':''?>>我的信息</option>
+          </select>
+		  <select name="showisgood" id="showisgood">
+            <option value="0"<?=$showisgood==0?' selected':''?>>不限推荐</option>
+	    	<option value="-1"<?=$showisgood==-1?' selected':''?>>所有推荐</option>
+	    	<?=$searchisgoods?>
+          </select>
+          <select name="showfirsttitle" id="showfirsttitle">
+            <option value="0"<?=$showfirsttitle==0?' selected':''?>>不限头条</option>
+	    	<option value="-1"<?=$showfirsttitle==-1?' selected':''?>>所有头条</option>
+	    	<?=$searchfirsttitles?>
           </select>
           <input name="keyboard" type="text" id="keyboard" value="<?=$keyboard?>" size="16">
           <select name="show">
@@ -146,7 +175,7 @@ function PushInfoToZt(form)
           <input name="bclassid" type="hidden" id="bclassid" value="<?=$bclassid?>">
           <input name="classid" type="hidden" id="classid" value="<?=$classid?>">
 		  <input name="ecmscheck" type="hidden" id="ecmscheck" value="<?=$ecmscheck?>">
-        </div></td>
+      </div></td>
     </tr>
   </form>
 </table>
@@ -206,11 +235,11 @@ function PushInfoToZt(form)
 		}
 		if($r[isgood])//推荐
 		{
-			$st.="<font color=red>[".$ignamer[$r[isgood]-1]."]</font>";
+			$st.="<font color=red>[".$ignamer[$r['isgood']]."]</font>";
 		}
 		if($r[firsttitle])//头条
 		{
-			$st.="<font color=red>[".$ftnamer[$r[firsttitle]-1]."]</font>";
+			$st.="<font color=red>[".$ftnamer[$r['firsttitle']]."]</font>";
 		}
 		//时间
 		$truetime=date("Y-m-d H:i:s",$r[truetime]);
@@ -260,7 +289,7 @@ function PushInfoToZt(form)
 		$showtitlepic="";
 		if($r[titlepic])
 		{
-			$showtitlepic="<a href='".$r[titlepic]."' title='预览标题图片' target=_blank><img src='../data/images/showimg.gif' border=0></a>";
+			$showtitlepic="<a href='".$r['titlepic']."' title='预览标题图片' target=_blank><img src='../data/images/showimg.gif' border=0></a>";
 		}
 		//未生成
 		$myid="<a href='ecmschtml.php?enews=ReSingleInfo&classid=$r[classid]&id[]=".$r[id].$ecms_hashur['href']."'>".$r['id']."</a>";
@@ -280,12 +309,12 @@ function PushInfoToZt(form)
       <td height="25"> <div align="left"> 
           <?=$st?>
           <?=$showtitlepic?>
-          <a href='<?=$titleurl?>' target=_blank title="<?=$oldtitle?>"> 
+          <a href="<?=$titleurl?>" target=_blank title="<?=$oldtitle?>"> 
           <?=$r[title]?>
           </a> 
           <?=$qf?>
         </div></td>
-      <td height="25"> <div align="center"> 
+      <td height="25"<?=$r['eckuid']?' title="审核人UID：'.$r['eckuid'].'"':''?>> <div align="center"> 
           <?=$r[username]?>
         </div></td>
       <td height="25" title="<? echo"增加时间：".$truetime."\r\n最后修改：".$lastdotime;?>"> <div align="center"> 

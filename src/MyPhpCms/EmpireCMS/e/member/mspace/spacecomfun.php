@@ -30,8 +30,8 @@ function ChangeSpaceStyle($add){
 function DoSetSpace($add){
 	global $empire,$dbtbpre;
 	$user_r=islogin();//是否登陆
-	$spacename=RepPostStr($add['spacename']);
-	$spacegg=RepPostStr($add['spacegg']);
+	$spacename=dgdb_tosave($add['spacename']);
+	$spacegg=dgdb_tosave($add['spacegg']);
 	$sql=$empire->query("update {$dbtbpre}enewsmemberadd set spacename='$spacename',spacegg='$spacegg' where userid='$user_r[userid]' limit 1");
 	if($sql)
 	{

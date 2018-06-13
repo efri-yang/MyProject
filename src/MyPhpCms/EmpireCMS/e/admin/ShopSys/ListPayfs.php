@@ -31,6 +31,7 @@ function AddPayfs($add,$userid,$username){
 	$add[userpay]=(int)$add[userpay];
 	$add[userfen]=(int)$add[userfen];
 	$add['isclose']=(int)$add['isclose'];
+	$add['payname']=ehtmlspecialchars($add['payname']);
 	$sql=$empire->query("insert into {$dbtbpre}enewsshoppayfs(payname,payurl,paysay,userpay,userfen,isclose) values('".eaddslashes($add[payname])."','".eaddslashes($add[payurl])."','".eaddslashes($add[paysay])."','$add[userpay]','$add[userfen]','$add[isclose]');");
 	$payid=$empire->lastid();
 	if($sql)
@@ -58,6 +59,7 @@ function EditPayfs($add,$userid,$username){
 	$add[userpay]=(int)$add[userpay];
 	$add[userfen]=(int)$add[userfen];
 	$add['isclose']=(int)$add['isclose'];
+	$add['payname']=ehtmlspecialchars($add['payname']);
 	$sql=$empire->query("update {$dbtbpre}enewsshoppayfs set payname='".eaddslashes($add[payname])."',payurl='".eaddslashes($add[payurl])."',paysay='".eaddslashes($add[paysay])."',userpay='$add[userpay]',userfen='$add[userfen]',isclose='$add[isclose]' where payid='$add[payid]'");
 	if($sql)
 	{

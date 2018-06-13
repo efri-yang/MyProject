@@ -50,6 +50,15 @@ $enter=$mr['enter'];
 $savetxtf=$emod_r[$mid]['savetxtf'];
 //导航
 $url=AdminReturnClassLink($classid).'&nbsp;>&nbsp;查看信息';
+//状态
+$addecmscheck='';
+$ecmscheck=(int)$_GET['ecmscheck'];
+$indexchecked=1;
+if($ecmscheck)
+{
+	$addecmscheck='&ecmscheck='.$ecmscheck;
+	$indexchecked=0;
+}
 
 //索引表
 $index_r=$empire->fetch1("select id,classid,checked from {$dbtbpre}ecms_".$tbname."_index where id='$id' limit 1");
@@ -103,7 +112,7 @@ if($r[firsttitle])//头条
 }
 //标题
 $titleurl=sys_ReturnBqTitleLink($r);
-$r[title]="<a href='$titleurl' target='_blank'>".DoTitleFont($r[titlefont],$r[title])."</a>";
+//$r[title]="<a href='$titleurl' target='_blank'>".DoTitleFont($r[titlefont],$r[title])."</a>";
 //权限
 $group='';
 if($r[groupid])
@@ -134,6 +143,78 @@ if($r[ztid]&&$r[ztid]<>'|')
 }
 //标题分类
 $titletype=$class_tr[$r[ttid]]['tname'];
+
+//信息状态
+$einfochecked=$index_r['checked'];
+$einfoismember=$r['ismember'];
+
+//------ 编辑器内容显示 ------
+
+$seteshoweditorhtml=3;
+
+$eshoweditorhtml=0;
+if($seteshoweditorhtml)
+{
+	if($seteshoweditorhtml==1)//所有
+	{
+		$eshoweditorhtml=1;
+	}
+	elseif($seteshoweditorhtml==2)//所有未审核
+	{
+		if(!$einfochecked)
+		{
+			$eshoweditorhtml=1;
+		}
+	}
+	elseif($seteshoweditorhtml==3)//所有投稿
+	{
+		if($einfoismember)
+		{
+			$eshoweditorhtml=1;
+		}
+	}
+	elseif($seteshoweditorhtml==4)//所有未审核投稿
+	{
+		if($einfoismember&&!$einfochecked)
+		{
+			$eshoweditorhtml=1;
+		}
+	}
+	else
+	{
+		$eshoweditorhtml=1;
+	}
+}
+
+$toshowhtmlbutton=0;
+if($eshoweditorhtml)
+{
+	$toshowhtmlbutton=1;
+}
+
+//------ 编辑器内容显示 ------
+
+//显示编辑器内容
+$eckshowhtml=(int)$_GET['ckshowhtml'];
+$ethisshowhtml='1'.date("md").$logininid;
+$ethisshowhtml=(int)$ethisshowhtml;
+if($ethisshowhtml==$eckshowhtml)
+{
+	$eshoweditorhtml=0;
+}
+
+//切换地址
+if(!$eckshowhtml)
+{
+	$showhtmlbutton='点击可视化模式显示';
+	$showhtmlurl='ShowInfo.php?classid='.$r['classid'].'&id='.$r['id'].$addecmscheck.$ecms_hashur['ehref'].'&ckshowhtml='.$ethisshowhtml;
+}
+else
+{
+	$showhtmlbutton='点击源码模式显示';
+	$showhtmlurl='ShowInfo.php?classid='.$r['classid'].'&id='.$r['id'].$addecmscheck.$ecms_hashur['ehref'];
+}
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -153,22 +234,36 @@ $titletype=$class_tr[$r[ttid]]['tname'];
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder" style="word-wrap: break-word">
   <?=$ecms_hashur['eform']?>
     <tr class="header"> 
-      <td height="25" colspan="2"><div align="center">查看信息</div></td>
+      <td height="25" colspan="2"><div align="center">
+        <table width="100%" border="0" cellspacing="1" cellpadding="3">
+          <tr>
+            <td width="50%"><strong><font color="#FFFFFF">查看信息</font></strong></td>
+            <td width="50%"><div align="right">
+			<?php
+			if($toshowhtmlbutton)
+			{
+			?>
+              <input name="button" type="button" id="button" value="<?=$showhtmlbutton?>" onclick="self.location.href='<?=$showhtmlurl?>';">
+			<?php
+			}
+			?>
+            </div></td>
+          </tr>
+        </table>
+      </div></td>
     </tr>
     <tr> 
-      <td width="5%" height="25" bgcolor="#FFFFFF">
+      <td width="13%" height="25" bgcolor="#FFFFFF">
 <div align="right"><strong>发布者</strong></div></td>
       <td bgcolor="#FFFFFF"> 
-        <?=$username?>
-      </td>
+        <?=$username?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>发布时间</strong></div></td>
       <td bgcolor="#FFFFFF">增加时间： 
         <?=date("Y-m-d H:i:s",$r[truetime])?>
         ，最后修改： 
-        <?=date("Y-m-d H:i:s",$r[lastdotime])?>
-      </td>
+        <?=date("Y-m-d H:i:s",$r[lastdotime])?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>人气</strong></div></td>
@@ -177,50 +272,42 @@ $titletype=$class_tr[$r[ttid]]['tname'];
         ，评论数： 
         <?=$r[plnum]?>
         ，下载数： 
-        <?=$r[totaldown]?>
-      </td>
+        <?=$r[totaldown]?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>信息状态</strong></div></td>
       <td bgcolor="#FFFFFF"> 
-        <?=$st?>
-      </td>
+        <?=$st?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>栏目</strong></div></td>
       <td bgcolor="#FFFFFF"> 
-        <?=$classes?>
-      </td>
+        <?=$classes?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>专题</strong></div></td>
       <td bgcolor="#FFFFFF"> 
-        <?=$zts?>
-      </td>
+        <?=$zts?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>标题分类</strong></div></td>
       <td bgcolor="#FFFFFF">
-        <?=$titletype?>
-      </td>
+        <?=$titletype?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>关键字</strong></div></td>
       <td bgcolor="#FFFFFF"> 
-        <?=$r[keyboard]?>
-      </td>
+        <?=$r[keyboard]?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>相关信息ID</strong></div></td>
       <td bgcolor="#FFFFFF"> 
-        <?=$r[keyid]?>
-      </td>
+        <?=$r[keyid]?>      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>查看权限</strong></div></td>
       <td bgcolor="#FFFFFF"> 
-        <?=$group?>
-      </td>
+        <?=$group?>      </td>
     </tr>
     <tr>
       <td height="25" bgcolor="#FFFFFF"><div align="right"><strong>页面链接</strong></div></td>
@@ -244,12 +331,45 @@ $titletype=$class_tr[$r[ttid]]['tname'];
           <?=$fname?>
           </strong> </div></td>
       <td width="87%" bgcolor="#FFFFFF"> 
+	  <?php
+	  if(!$eshoweditorhtml)
+	  {
+	  ?>
         <?=stripSlashes($r[$f])?>
-      </td>
+	  <?php
+	  }
+	  else
+	  {
+	  ?>
+        <?=nl2br(eDoRepShowStr(stripSlashes($r[$f]),1))?>
+	  <?php
+	  }
+	  ?> 
+		</td>
     </tr>
     <?php
 	}
 	?>
+	<tr class="header"> 
+      <td height="25" colspan="2">
+<div align="right">
+  <table width="100%" border="0" cellspacing="1" cellpadding="3">
+    <tr>
+      <td width="50%">&nbsp;</td>
+      <td width="50%"><div align="right">
+	  	<?php
+		if($toshowhtmlbutton)
+		{
+		?>
+        <input name="button2" type="button" id="button2" value="<?=$showhtmlbutton?>" onclick="self.location.href='<?=$showhtmlurl?>';">
+		<?php
+		}
+		?>
+      </div></td>
+    </tr>
+  </table>
+</div></td>
+    </tr>
   </table>
 </form>
 </body>

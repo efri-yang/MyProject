@@ -29,6 +29,12 @@ function EditPayApi($add,$userid,$username){
 	$add[isclose]=(int)$add[isclose];
 	$add[myorder]=(int)$add[myorder];
 	$add[paymethod]=(int)$add[paymethod];
+	$add['payname']=hRepPostStr($add['payname'],1);
+	$add['paysay']=hRepPostStr2($add['paysay']);
+	$add['payuser']=hRepPostStr2($add['payuser']);
+	$add['paykey']=hRepPostStr2($add['paykey']);
+	$add['payfee']=hRepPostStr($add['payfee'],1);
+	$add['payemail']=hRepPostStr($add['payemail'],1);
 	$sql=$empire->query("update {$dbtbpre}enewspayapi set isclose='$add[isclose]',payname='$add[payname]',paysay='$add[paysay]',payuser='$add[payuser]',paykey='$add[paykey]',payfee='$add[payfee]',payemail='$add[payemail]',myorder='$add[myorder]',paymethod='$add[paymethod]' where payid='$add[payid]'");
 	if($sql)
 	{
@@ -116,7 +122,7 @@ $sql=$empire->query("select payid,paytype,payfee,paylogo,paysay,payname,isclose 
   {
 	  if($r[paytype]=='alipay')
 	  {
-		  $r[payname]="<font color='red'><b>".$r[payname]."</b></font>";
+		  //$r[payname]="<font color='red'><b>".$r[payname]."</b></font>";
 	  }
   ?>
   <tr bgcolor="#FFFFFF" onmouseout="this.style.backgroundColor='#ffffff'" onmouseover="this.style.backgroundColor='#C3EFFF'"> 
@@ -124,7 +130,7 @@ $sql=$empire->query("select payid,paytype,payfee,paylogo,paysay,payname,isclose 
       <?=$r[payname]?>
     </td>
     <td>
-      <?=$r[paysay]?>
+      <?=ehtmlspecialchars($r[paysay])?>
     </td>
     <td><div align="center">
         <?=$r[isclose]==0?'开启':'关闭'?>

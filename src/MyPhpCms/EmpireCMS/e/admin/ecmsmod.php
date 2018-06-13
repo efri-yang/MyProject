@@ -20,7 +20,16 @@ $loginrnd=$lur['rnd'];
 $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
 hCheckEcmsRHash();
+
+@set_time_limit(0);
+
 require("../class/moddofun.php");
+//设置访问端
+$moreportpid=0;
+if($enews=='ChangeAllModForm')
+{
+	$moreportpid=Moreport_hDoSetSelfPath(0);
+}
 //增加字段
 if($enews=="AddF")
 {

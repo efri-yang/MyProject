@@ -45,7 +45,7 @@ function ReturnSearchOptions($enter,$field,$record){
 	$count=count($r)-1;
 	for($i=0;$i<$count;$i++)
 	{
-		if($i==0)
+		if(!$sr['searchallfield'])
 		{
 			$or="";
 		}
@@ -75,7 +75,7 @@ if(empty($infomod_r['tbname']))
 {
 	printerror("ErrorUrl","history.go(-1)");
 }
-$infomod_r['enter'].='发布者<!--field--->username<!--record-->ID<!--field--->id<!--record-->';
+$infomod_r['enter'].='发布者<!--field--->username<!--record-->ID<!--field--->id<!--record-->关键字<!--field--->keyboard<!--record-->';
 $searchoptions_r=ReturnSearchOptions($infomod_r['enter'],$fieldexp,$recordexp);
 //审核表
 $search='';
@@ -102,6 +102,8 @@ $search.="&bclassid=$bclassid&classid=$classid";
 $add='';
 $ewhere='';
 //搜索
+$showisgood=(int)$_GET['showisgood'];
+$showfirsttitle=(int)$_GET['showfirsttitle'];
 $sear=(int)$_GET['sear'];
 if($sear)
 {
@@ -148,13 +150,37 @@ if($sear)
 	{
 		$add.=" and userid='$logininid' and ismember=0";
 	}
+	//推荐
+	if($showisgood)
+	{
+		if($showisgood>0)
+		{
+			$add.=" and isgood='$showisgood'";
+		}
+		else
+		{
+			$add.=' and isgood>0';
+		}
+	}
+	//头条
+	if($showfirsttitle)
+	{
+		if($showfirsttitle>0)
+		{
+			$add.=" and firsttitle='$showfirsttitle'";
+		}
+		else
+		{
+			$add.=' and firsttitle>0';
+		}
+	}
 	//标题分类
 	$ttid=(int)$_GET['ttid'];
 	if($ttid)
 	{
 		$add.=" and ttid='$ttid'";
 	}
-	$search.="&sear=1&keyboard=$keyboard&show=$show&showspecial=$showspecial&ttid=$ttid";
+	$search.="&sear=1&keyboard=$keyboard&show=$show&showspecial=$showspecial&ttid=$ttid&showisgood=$showisgood&showfirsttitle=$showfirsttitle";
 }
 //显示重复标题
 if($_GET['showretitle']==1)
@@ -219,6 +245,10 @@ if(empty($yhadd))
 	{
 		$ckinfolday=time()-$infolday;
 		$yhadd.="newstime>'$ckinfolday'";
+		$search.="&infolday=$infolday";
+	}
+	if($infolday==1)
+	{
 		$search.="&infolday=$infolday";
 	}
 }

@@ -285,7 +285,7 @@ $returnpage=page2($num,$line,$page_line,$start,$page,$search);
 <head>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css"> 
 <title>管理登陆日志</title>
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 <script>
 function CheckAll(form)
   {
@@ -314,9 +314,9 @@ function CheckAll(form)
   <?=$ecms_hashur['eform']?>
     <tr> 
       <td height="25"> <div align="center">时间从 
-          <input name="startday" type="text" value="<?=$startday?>" size="12" onclick="setday(this)">
+          <input name="startday" type="text" value="<?=$startday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           到 
-          <input name="endday" type="text" value="<?=$endday?>" size="12" onclick="setday(this)">
+          <input name="endday" type="text" value="<?=$endday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           ，关键字： 
           <input name="keyboard" type="text" id="keyboard" value="<?=$keyboard?>">
           <select name="show" id="show">
@@ -395,9 +395,9 @@ function CheckAll(form)
       <td><div align="center">
           <input name="enews" type="hidden" id="enews" value="DelLog_date">
           删除从 
-          <input name="startday" type="text" id="startday" onclick="setday(this)" value="<?=$startday?>" size="12">
+          <input name="startday" type="text" id="startday" value="<?=$startday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           到 
-          <input name="endday" type="text" id="endday" onclick="setday(this)" value="<?=$endday?>" size="12">
+          <input name="endday" type="text" id="endday" value="<?=$endday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           之间的日志
 <input type="submit" name="Submit2" value="提交">
           </div></td>

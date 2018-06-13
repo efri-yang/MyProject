@@ -24,6 +24,12 @@ if($enews)
 	hCheckEcmsRHash();
 	include("../../class/com_functions.php");
 }
+//设置访问端
+$moreportpid=0;
+if($enews=='ReMoreFeedbackClassFile')
+{
+	$moreportpid=Moreport_hDoSetSelfPath(0);
+}
 if($enews=="ReMoreFeedbackClassFile")
 {
 	ReMoreFeedbackClassFile(0,$logininid,$loginin);

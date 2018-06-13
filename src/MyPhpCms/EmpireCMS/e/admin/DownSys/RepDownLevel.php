@@ -30,6 +30,17 @@ while($tr=$empire->fetch($tsql))
 	$table.="<option value='".$tr[tbname]."'>".$tr[tname]."</option>";
 }
 $table="<select name='tbname'><option value='0'>--- 选择数据表 ---</option>".$table."</select>";
+//访问组
+$ygroup='';
+$vgsql=$empire->query("select vgid,gname from {$dbtbpre}enewsvg order by vgid");
+while($vgr=$empire->fetch($vgsql))
+{
+	$ygroup.="<option value=-".$vgr['vgid'].">".$vgr['gname']."</option>";
+}
+if($ygroup)
+{
+	$ygroup="<option value=''>--- 访问组 ---</option>".$ygroup."<option value=''>--- 会员组 ---</option>";
+}
 //----------会员组
 $sql1=$empire->query("select groupid,groupname from {$dbtbpre}enewsmembergroup order by level");
 while($l_r=$empire->fetch($sql1))

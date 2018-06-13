@@ -42,19 +42,22 @@ function AddUserlist($add,$userid,$username){
 	{
 		$add['pagetitle']=$add['listname'];
 	}
-	$add['listname']=ehtmlspecialchars($add['listname']);
+	$add['listname']=hRepPostStr($add['listname'],1);
 	$add['pagetitle']=AddAddsData(RepPhpAspJspcode($add['pagetitle']));
 	$add['pagekeywords']=AddAddsData(RepPhpAspJspcode($add['pagekeywords']));
 	$add['pagedescription']=AddAddsData(RepPhpAspJspcode($add['pagedescription']));
 	$add[totalsql]=ClearAddsData($add[totalsql]);
 	$add[listsql]=ClearAddsData($add[listsql]);
 	$add['classid']=(int)$add['classid'];
+	$add['filepath']=hRepPostStr($add['filepath'],1);
+	$add['filetype']=hRepPostStr($add['filetype'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsuserlist(listname,pagetitle,filepath,filetype,totalsql,listsql,maxnum,lencord,listtempid,pagekeywords,pagedescription,classid) values('$add[listname]','".$add[pagetitle]."','$add[filepath]','$add[filetype]','".addslashes($add[totalsql])."','".addslashes($add[listsql])."',$maxnum,$lencord,$listtempid,'".$add[pagekeywords]."','".$add[pagedescription]."','$add[classid]');");
+	$listid=$empire->lastid();
 	//刷新列表
+	$add['listid']=$listid;
 	ReUserlist($add,"../");
 	if($sql)
 	{
-		$listid=$empire->lastid();
 		//操作日志
 		insert_dolog("listid=$listid&listname=$add[listname]");
 		printerror("AddUserlistSuccess","AddUserlist.php?enews=AddUserlist&classid=$cid".hReturnEcmsHashStrHref2(0));
@@ -96,15 +99,18 @@ function EditUserlist($add,$userid,$username){
 	{
 		$add['pagetitle']=$add['listname'];
 	}
-	$add['listname']=ehtmlspecialchars($add['listname']);
+	$add['listname']=hRepPostStr($add['listname'],1);
 	$add['pagetitle']=AddAddsData(RepPhpAspJspcode($add['pagetitle']));
 	$add['pagekeywords']=AddAddsData(RepPhpAspJspcode($add['pagekeywords']));
 	$add['pagedescription']=AddAddsData(RepPhpAspJspcode($add['pagedescription']));
 	$add[totalsql]=ClearAddsData($add[totalsql]);
 	$add[listsql]=ClearAddsData($add[listsql]);
 	$add['classid']=(int)$add['classid'];
-	$sql=$empire->query("update {$dbtbpre}enewsuserlist set listname='$add[listname]',pagetitle='$add[pagetitle]',filepath='$add[filepath]',filetype='$add[filetype]',totalsql='".addslashes($add['totalsql'])."',listsql='".addslashes($add['listsql'])."',maxnum=$maxnum,lencord=$lencord,listtempid=$listtempid,pagekeywords='$add[pagekeywords]',pagedescription='$add[pagedescription]',classid='$add[classid]' where listid=$listid");
+	$add['filepath']=hRepPostStr($add['filepath'],1);
+	$add['filetype']=hRepPostStr($add['filetype'],1);
+	$sql=$empire->query("update {$dbtbpre}enewsuserlist set listname='$add[listname]',pagetitle='$add[pagetitle]',filepath='$add[filepath]',filetype='$add[filetype]',totalsql='".addslashes($add['totalsql'])."',listsql='".addslashes($add['listsql'])."',maxnum=$maxnum,lencord=$lencord,listtempid=$listtempid,pagekeywords='$add[pagekeywords]',pagedescription='$add[pagedescription]',classid='$add[classid]' where listid='$listid'");
 	//刷新列表
+	$add['listid']=$listid;
 	ReUserlist($add,"../");
 	if($sql)
 	{
@@ -166,7 +172,7 @@ function DoReUserlist($add,$userid,$username){
 	}
 	//操作日志
 	insert_dolog("");
-	printerror("DoReUserlistSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("DoReUserlistSuccess",EcmsGetReturnUrl());
 }
 
 $addgethtmlpath="../";

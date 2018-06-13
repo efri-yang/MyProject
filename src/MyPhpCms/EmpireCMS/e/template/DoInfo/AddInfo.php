@@ -9,7 +9,8 @@ $public_diyr['pagetitle']=$word;
 $url="<a href='../../'>首页</a>&nbsp;>&nbsp;<a href='../member/cp/'>会员中心</a>&nbsp;>&nbsp;<a href='ListInfo.php?mid=".$mid."'>管理信息</a>&nbsp;>&nbsp;".$word."&nbsp;(".$mr[qmname].")";
 require(ECMS_PATH.'e/template/incfile/header.php');
 ?>
-<script src="../data/html/setday.js"></script>
+<script type="text/javascript" src="../data/js/jstime/WdatePicker.js"></script>
+<script type="text/javascript" src="../data/js/jscolor/jscolor.js"></script>
 <script>
 function bs(){
 	var f=document.add
@@ -18,18 +19,19 @@ function bs(){
 }
 function foreColor(){
   if(!Error())	return;
-  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) document.add.titlecolor.value=arr;
   else document.add.titlecolor.focus();
 }
 function FieldChangeColor(obj){
   if(!Error())	return;
-  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) obj.value=arr;
   else obj.focus();
 }
 </script>
 <script src="../data/html/postinfo.js"></script>
+<?=$loadeditorjs?>
 <form name="add" method="POST" enctype="multipart/form-data" action="ecms.php" onsubmit="return EmpireCMSQInfoPostFun(document.add,'<?=$mid?>');">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
           <tr class="header"> 

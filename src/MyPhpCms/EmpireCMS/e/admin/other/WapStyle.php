@@ -32,6 +32,7 @@ function AddWapStyle($add,$userid,$username){
 	{
 		printerror("EmptyWapStylePath","history.go(-1)");
 	}
+	$add['stylename']=hRepPostStr($add['stylename'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewswapstyle(stylename,path) values('$add[stylename]',$path);");
 	if($sql)
 	{
@@ -61,6 +62,7 @@ function EditWapStyle($add,$userid,$username){
 	{
 		printerror("EmptyWapStylePath","history.go(-1)");
 	}
+	$add['stylename']=hRepPostStr($add['stylename'],1);
 	$sql=$empire->query("update {$dbtbpre}enewswapstyle set stylename='$add[stylename]',path=$path where styleid=$styleid");
 	if($sql)
 	{

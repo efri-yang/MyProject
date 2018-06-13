@@ -35,6 +35,8 @@ function CopyNewTable($add,$userid,$username){
 	}
 	CheckLevel($userid,$username,$classid,"table");//操作权限
 	$add[yhid]=(int)$add[yhid];
+	$add['tname']=hRepPostStr($add['tname'],1);
+	$add['tsay']=hRepPostStr($add['tsay'],1);
 	$tr=$empire->fetch1("select tbname,intb from {$dbtbpre}enewstable where tid='$tid'");
 	if(!$tr[tbname])
 	{
@@ -90,6 +92,8 @@ function AddTable($add,$userid,$username){
 	CheckLevel($userid,$username,$classid,"table");
 	$add[yhid]=(int)$add[yhid];
 	$add['intb']=(int)$add['intb'];
+	$add['tname']=hRepPostStr($add['tname'],1);
+	$add['tsay']=hRepPostStr($add['tsay'],1);
 	$num=$empire->gettotal("select count(*) as total from {$dbtbpre}enewstable where tbname='$add[tbname]' limit 1");
 	if($num)
 	{
@@ -125,6 +129,8 @@ function EditTable($add,$userid,$username){
 	CheckLevel($userid,$username,$classid,"table");
 	$add[yhid]=(int)$add[yhid];
 	$add['intb']=(int)$add['intb'];
+	$add['tname']=hRepPostStr($add['tname'],1);
+	$add['tsay']=hRepPostStr($add['tsay'],1);
 	//改变数据表名
 	if($add[tbname]!=$add[oldtbname])
 	{
@@ -578,7 +584,7 @@ function GetCjform($type,$f){
 	{
 		$type=$f;
 	}
-	if($type=="password"||$type=="select"||$type=="radio"||$type=="checkbox"||$type=="date"||$type=="color"||$type=="linkfield"||$type=="editor"||$type=="ubbeditor"||$type=="linkfieldselect"||$type=="morevaluefield")
+	if($type=="password"||$type=="select"||$type=="radio"||$type=="checkbox"||$type=="date"||$type=="color"||$type=="linkfield"||$type=="editor"||$type=="ubbeditor"||$type=="linkfieldselect"||$type=="morevaluefield"||$type=="datetime")
 	{
 		$type="text";
 	}
@@ -723,6 +729,10 @@ function ReturnDefFformSize($f,$type,$fformsize){
 		{
 			$fformsize='12';
 		}
+		elseif($type=='datetime')
+		{
+			$fformsize='28';
+		}
 		elseif($type=='color')
 		{
 			$fformsize='10';
@@ -815,6 +825,20 @@ function DoPostFVar($add){
 	{
 		$add['fmvnum']='';
 	}
+	$add['fname']=hRepPostStr($add['fname'],1);
+	$add['fform']=hRepPostStr($add['fform'],1);
+	$add['fzs']=hRepPostStr($add['fzs'],1);
+	$add['ftype']=hRepPostStr($add['ftype'],1);
+	$add['flen']=hRepPostStr($add['flen'],1);
+	$add['linkfieldval']=hRepPostStr($add['linkfieldval'],1);
+	$add['fformsize']=hRepPostStr($add['fformsize'],1);
+	$add['adddofun']=hRepPostStr($add['adddofun'],0);
+	$add['editdofun']=hRepPostStr($add['editdofun'],0);
+	$add['qadddofun']=hRepPostStr($add['qadddofun'],0);
+	$add['qeditdofun']=hRepPostStr($add['qeditdofun'],0);
+	$add['linkfieldtb']=hRepPostStr($add['linkfieldtb'],1);
+	$add['linkfieldshow']=hRepPostStr($add['linkfieldshow'],1);
+	$add['fmvnum']=hRepPostStr($add['fmvnum'],1);
 	return $add;
 }
 
@@ -1330,6 +1354,21 @@ function EditSysF($add,$userid,$username){
 		printerror("EmptyF","history.go(-1)");
 	}
 	CheckLevel($userid,$username,$classid,"f");//验证权限
+	$add['fname']=hRepPostStr($add['fname'],1);
+	$add['fform']=hRepPostStr($add['fform'],1);
+	$add['fzs']=hRepPostStr($add['fzs'],1);
+	$add['ftype']=hRepPostStr($add['ftype'],1);
+	$add['flen']=hRepPostStr($add['flen'],1);
+	$add['linkfieldval']=hRepPostStr($add['linkfieldval'],1);
+	$add['fformsize']=hRepPostStr($add['fformsize'],1);
+	$add['adddofun']=hRepPostStr($add['adddofun'],0);
+	$add['editdofun']=hRepPostStr($add['editdofun'],0);
+	$add['qadddofun']=hRepPostStr($add['qadddofun'],0);
+	$add['qeditdofun']=hRepPostStr($add['qeditdofun'],0);
+	$add['linkfieldtb']=hRepPostStr($add['linkfieldtb'],1);
+	$add['linkfieldshow']=hRepPostStr($add['linkfieldshow'],1);
+	$add['fmvnum']=hRepPostStr($add['fmvnum'],1);
+	$add[samedata]=(int)$add[samedata];
 	//字段
 	$addupdate='';
 	if($f=='title'||$f=='titlepic')
@@ -1634,7 +1673,8 @@ function EditFOrder($fid,$myorder,$tid,$tbname,$userid,$username){
 	for($i=0;$i<count($myorder);$i++)
 	{
 		$newmyorder=(int)$myorder[$i];
-		$usql=$empire->query("update {$dbtbpre}enewsf set myorder=$newmyorder where fid='$fid[$i]'");
+		$fid[$i]=(int)$fid[$i];
+		$usql=$empire->query("update {$dbtbpre}enewsf set myorder='$newmyorder' where fid='$fid[$i]'");
     }
 	printerror("EditFOrderSuccess","db/ListF.php?tid=$tid&tbname=$tbname".hReturnEcmsHashStrHref2(0));
 }
@@ -1928,7 +1968,7 @@ function UpdateTbDefMod($tid,$tbname,$mid){
 //更新模型表单
 function ChangeMForm($mid,$tid,$mtemp){
 	global $empire,$dbtbpre;
-	$file="../data/html/".$mid.".php";
+	$file=eReturnTrueEcmsPath()."e/data/html/".$mid.".php";
 	$sql=$empire->query("select f,fhtml from {$dbtbpre}enewsf where tid='$tid'");
 	while($r=$empire->fetch($sql))
 	{
@@ -1941,7 +1981,7 @@ function ChangeMForm($mid,$tid,$mtemp){
 //更新投稿表单
 function ChangeQmForm($mid,$tid,$mtemp){
 	global $empire,$dbtbpre;
-	$file="../data/html/q".$mid.".php";
+	$file=eReturnTrueEcmsPath()."e/data/html/q".$mid.".php";
 	$sql=$empire->query("select f,qfhtml from {$dbtbpre}enewsf where tid='$tid'");
 	while($r=$empire->fetch($sql))
 	{
@@ -1958,8 +1998,8 @@ function ChangeMCj($mid,$tid,$cj){
 	$field="<!--field--->";
 	//读取修改采集表单
 	$data="<tr><td bgcolor=ffffff>[!--enews.name--]</td><td bgcolor=ffffff>[!--enews.var--]</td></tr>";
-	$file1="../data/html/editcj".$mid.".php";
-	$file="../data/html/cj".$mid.".php";
+	$file1=eReturnTrueEcmsPath()."e/data/html/editcj".$mid.".php";
+	$file=eReturnTrueEcmsPath()."e/data/html/cj".$mid.".php";
 	$r=explode($record,$cj);
 	for($i=0;$i<count($r)-1;$i++)
 	{
@@ -2169,7 +2209,25 @@ function AddM($add,$cname,$cchange,$schange,$center,$cqenter,$menter,$listand,$l
 	$usemod=(int)$add['usemod'];
 	$myorder=(int)$add['myorder'];
 	$add[printtempid]=(int)$add[printtempid];
-	$sql=$empire->query("insert into {$dbtbpre}enewsmod(mname,mtemp,mzs,cj,enter,tempvar,sonclass,searchvar,tid,tbname,qenter,mustqenterf,qmtemp,listandf,setandf,listtempvar,qmname,canaddf,caneditf,definfovoteid,showmod,usemod,myorder,orderf,isdefault,listfile,printtempid) values('$add[mname]','".eaddslashes2($add[mtemp])."','$add[mzs]','$cj','$enter','$tempvar','','$searchvar',$tid,'$tbname','$qenter','$mustqenterf','".eaddslashes2($add[qmtemp])."','".addslashes($listandf)."','$setandf','$listtempvar','$add[qmname]','$canaddf','$caneditf',$add[definfovoteid],'$showmod','$usemod','$myorder','$orderf',0,'$listfile','$add[printtempid]');");
+	$add['mname']=hRepPostStr($add['mname'],1);
+	$add['mzs']=hRepPostStr($add['mzs'],1);
+	$cj=AddAddsData($cj);
+	$enter=AddAddsData($enter);
+	$tempvar=AddAddsData($tempvar);
+	$searchvar=AddAddsData($searchvar);
+	$qenter=AddAddsData($qenter);
+	$mustqenterf=AddAddsData($mustqenterf);
+	$listtempvar=AddAddsData($listtempvar);
+	$add['qmname']=hRepPostStr($add['qmname'],0);
+	$canaddf=AddAddsData($canaddf);
+	$caneditf=AddAddsData($caneditf);
+	$orderf=AddAddsData($orderf);
+	$listfile=AddAddsData($listfile);
+	$add['maddfun']=hRepPostStr($add['maddfun'],0);
+	$add['meditfun']=hRepPostStr($add['meditfun'],0);
+	$add['qmaddfun']=hRepPostStr($add['qmaddfun'],0);
+	$add['qmeditfun']=hRepPostStr($add['qmeditfun'],0);
+	$sql=$empire->query("insert into {$dbtbpre}enewsmod(mname,mtemp,mzs,cj,enter,tempvar,sonclass,searchvar,tid,tbname,qenter,mustqenterf,qmtemp,listandf,setandf,listtempvar,qmname,canaddf,caneditf,definfovoteid,showmod,usemod,myorder,orderf,isdefault,listfile,printtempid,maddfun,meditfun,qmaddfun,qmeditfun) values('$add[mname]','".eaddslashes2($add[mtemp])."','$add[mzs]','$cj','$enter','$tempvar','','$searchvar',$tid,'$tbname','$qenter','$mustqenterf','".eaddslashes2($add[qmtemp])."','".addslashes($listandf)."','$setandf','$listtempvar','$add[qmname]','$canaddf','$caneditf',$add[definfovoteid],'$showmod','$usemod','$myorder','$orderf',0,'$listfile','$add[printtempid]','$add[maddfun]','$add[meditfun]','$add[qmaddfun]','$add[qmeditfun]');");
 	$mid=$empire->lastid();
 	UpdateTbDefMod($tid,$tbname,$mid);
 	//更新表单
@@ -2238,7 +2296,25 @@ function EditM($add,$cname,$cchange,$schange,$center,$cqenter,$menter,$listand,$
 	$usemod=(int)$add['usemod'];
 	$myorder=(int)$add['myorder'];
 	$add[printtempid]=(int)$add[printtempid];
-	$sql=$empire->query("update {$dbtbpre}enewsmod set mname='$add[mname]',mtemp='".eaddslashes2($add[mtemp])."',mzs='$add[mzs]',cj='$cj',enter='$enter',tempvar='$tempvar',searchvar='$searchvar',qenter='$qenter',mustqenterf='$mustqenterf',qmtemp='".eaddslashes2($add[qmtemp])."',listandf='".addslashes($listandf)."',setandf=$setandf,listtempvar='$listtempvar',qmname='$add[qmname]',canaddf='$canaddf',caneditf='$caneditf',definfovoteid=$add[definfovoteid],showmod='$showmod',usemod='$usemod',myorder='$myorder',orderf='$orderf',listfile='$listfile',printtempid='$add[printtempid]' where mid='$add[mid]'");
+	$add['mname']=hRepPostStr($add['mname'],1);
+	$add['mzs']=hRepPostStr($add['mzs'],1);
+	$cj=AddAddsData($cj);
+	$enter=AddAddsData($enter);
+	$tempvar=AddAddsData($tempvar);
+	$searchvar=AddAddsData($searchvar);
+	$qenter=AddAddsData($qenter);
+	$mustqenterf=AddAddsData($mustqenterf);
+	$listtempvar=AddAddsData($listtempvar);
+	$add['qmname']=hRepPostStr($add['qmname'],0);
+	$canaddf=AddAddsData($canaddf);
+	$caneditf=AddAddsData($caneditf);
+	$orderf=AddAddsData($orderf);
+	$listfile=AddAddsData($listfile);
+	$add['maddfun']=hRepPostStr($add['maddfun'],0);
+	$add['meditfun']=hRepPostStr($add['meditfun'],0);
+	$add['qmaddfun']=hRepPostStr($add['qmaddfun'],0);
+	$add['qmeditfun']=hRepPostStr($add['qmeditfun'],0);
+	$sql=$empire->query("update {$dbtbpre}enewsmod set mname='$add[mname]',mtemp='".eaddslashes2($add[mtemp])."',mzs='$add[mzs]',cj='$cj',enter='$enter',tempvar='$tempvar',searchvar='$searchvar',qenter='$qenter',mustqenterf='$mustqenterf',qmtemp='".eaddslashes2($add[qmtemp])."',listandf='".addslashes($listandf)."',setandf=$setandf,listtempvar='$listtempvar',qmname='$add[qmname]',canaddf='$canaddf',caneditf='$caneditf',definfovoteid=$add[definfovoteid],showmod='$showmod',usemod='$usemod',myorder='$myorder',orderf='$orderf',listfile='$listfile',printtempid='$add[printtempid]',maddfun='$add[maddfun]',meditfun='$add[meditfun]',qmaddfun='$add[qmaddfun]',qmeditfun='$add[qmeditfun]' where mid='$add[mid]'");
 	//更新表单
 	ChangeMForm($add[mid],$tid,$add[mtemp]);
 	ChangeQmForm($add[mid],$tid,$add[qmtemp]);
@@ -2439,7 +2515,7 @@ function LoadOutMod($add,$userid,$username){
 ";
 	}
 	//模型
-	$loadmod.="\$empire->query(\"insert into \".\$dbtbpre.\"enewsmod(mname,mtemp,mzs,cj,enter,tempvar,sonclass,searchvar,tid,tbname,qenter,mustqenterf,qmtemp,listandf,setandf,listtempvar,qmname,canaddf,caneditf,definfovoteid,showmod,usemod,myorder,orderf,isdefault,listfile,printtempid) values('$mr[mname]','".LMEscape_str($mr[mtemp])."','".LMEscape_str($mr[mzs])."','".LMEscape_str($mr[cj])."','".LMEscape_str($mr[enter])."','".LMEscape_str($mr[tempvar])."','','".LMEscape_str($mr[searchvar])."',\$tid,'\$tbname','".LMEscape_str($mr[qenter])."','".LMEscape_str($mr[mustqenterf])."','".LMEscape_str($mr[qmtemp])."','".LMEscape_str($mr[listandf])."',$mr[setandf],'".LMEscape_str($mr[listtempvar])."','".LMEscape_str($mr[qmname])."','".LMEscape_str($mr[canaddf])."','".LMEscape_str($mr[caneditf])."',0,0,0,0,'".LMEscape_str($mr[orderf])."',0,'',0);\");
+	$loadmod.="\$empire->query(\"insert into \".\$dbtbpre.\"enewsmod(mname,mtemp,mzs,cj,enter,tempvar,sonclass,searchvar,tid,tbname,qenter,mustqenterf,qmtemp,listandf,setandf,listtempvar,qmname,canaddf,caneditf,definfovoteid,showmod,usemod,myorder,orderf,isdefault,listfile,printtempid,maddfun,meditfun,qmaddfun,qmeditfun) values('$mr[mname]','".LMEscape_str($mr[mtemp])."','".LMEscape_str($mr[mzs])."','".LMEscape_str($mr[cj])."','".LMEscape_str($mr[enter])."','".LMEscape_str($mr[tempvar])."','','".LMEscape_str($mr[searchvar])."',\$tid,'\$tbname','".LMEscape_str($mr[qenter])."','".LMEscape_str($mr[mustqenterf])."','".LMEscape_str($mr[qmtemp])."','".LMEscape_str($mr[listandf])."',$mr[setandf],'".LMEscape_str($mr[listtempvar])."','".LMEscape_str($mr[qmname])."','".LMEscape_str($mr[canaddf])."','".LMEscape_str($mr[caneditf])."',0,0,0,0,'".LMEscape_str($mr[orderf])."',0,'',0,'".LMEscape_str($mr[maddfun])."','".LMEscape_str($mr[meditfun])."','".LMEscape_str($mr[qmaddfun])."','".LMEscape_str($mr[qmeditfun])."');\");
 \$mid=\$empire->lastid();
 ?>";
 	$file=$tr['tbname'].time().".mod";
@@ -2520,7 +2596,16 @@ function LoadModToMysqlFour($query){
 
 //字符过虑
 function LMEscape_str($str){
-	$str=mysql_real_escape_string($str);
+	global $empire,$dbtbpre,$public_r;
+	if($public_r['bakescapetype']==2)//real_escape_string
+	{
+		$str=$empire->EDbEscapeStr($str);
+
+	}
+	else//addslashes
+	{
+		$str=addslashes($str);
+	}
 	$str=str_replace('\\\'','\'\'',$str);
 	$str=str_replace("\\\\","\\\\\\\\",$str);
 	$str=str_replace('$','\$',$str);

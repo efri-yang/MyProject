@@ -561,7 +561,7 @@ if($r[dobq])
 ?>
 
 <?
-if($r[dotempgroup])
+if($r['dotempgroup']||$r['dotemplate'])
 {
 ?>
   <tr> 
@@ -572,11 +572,30 @@ if($r[dotempgroup])
   <tr id="itemtempgroup" style="display:none"> 
     <td class="list">
 		<table border='0' cellspacing='0' cellpadding='0'>
+	<?php
+	if($r['dotemplate'])
+	{
+	?>
+		<tr> 
+          <td class="file">
+			<a href="../../template/EditTempid.php?gid=<?=$gid?><?=$ecms_hashur['ehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">修改模板ID</a>
+          </td>
+        </tr>
+	<?php
+	}
+	?>
+	<?php
+	if($r['dotempgroup'])
+	{
+	?>
 		<tr> 
           <td class="file1">
 			<a href="../../template/TempGroup.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">导入/导出模板组</a>
           </td>
         </tr>
+	<?php
+	}
+	?>
       </table>
 	</td>
   </tr>

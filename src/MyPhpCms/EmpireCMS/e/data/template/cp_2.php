@@ -48,7 +48,7 @@ if(!defined('InEmpireCMS'))
         </tr>
         <tr> 
           <td align="center">Powered by <strong><a href="http://www.phome.net" target="_blank">EmpireCMS</a></strong> 
-            <strong><font color="#FF9900">7.2</font></strong>&nbsp; &copy; 2002-2015 
+            <strong><font color="#FF9900">7.5</font></strong>&nbsp; &copy; 2002-2018 
             <a href="http://www.digod.com" target="_blank">EmpireSoft Inc.</a></td>
         </tr>
 	</table>

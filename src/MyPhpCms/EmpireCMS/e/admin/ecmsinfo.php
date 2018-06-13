@@ -23,7 +23,15 @@ $loginin=$lur['username'];
 $loginrnd=$lur['rnd'];
 $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
+//spurl
+if($enews=='AddNews'||$enews=='EditNews'||$enews=='EditInfoSimple'||$enews=='AddInfoToReHtml'||$enews=='DoInfoAndSendNotice'||$enews=='CheckNews_all'||$enews=='NoCheckNews_all')
+{
+	hSetSpFromUrl();
+}
 hCheckEcmsRHash();
+
+@set_time_limit(0);
+
 $incftp=0;
 if($public_r['phpmode'])
 {

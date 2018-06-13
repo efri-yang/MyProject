@@ -22,6 +22,7 @@ $enews=$_POST['enews'];
 if($enews)
 {
 	hCheckEcmsRHash();
+	@set_time_limit(0);
 }
 if($enews=="GetFen")
 {

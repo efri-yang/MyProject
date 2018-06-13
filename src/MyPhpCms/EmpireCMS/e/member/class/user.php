@@ -39,7 +39,7 @@ function eReturnSelectMemberF($f,$tb=''){
 	}
 	if($f=='*')
 	{
-		$f='userid,username,password,rnd,email,registertime,groupid,userfen,userdate,money,zgroupid,havemsg,checked,salt,userkey';
+		$f='userid,username,password,rnd,email,registertime,groupid,userfen,userdate,money,zgroupid,havemsg,checked,salt,userkey,ingid,agid,isern';
 	}
 	$r=explode(',',$f);
 	$count=count($r);
@@ -120,14 +120,14 @@ function eDoCkMemberPw($oldpw,$pw,$salt){
 	if($ecms_config['member']['pwtype']==0)//单重md5
 	{
 		$oldpw=md5($oldpw);
-		if($oldpw==$pw)
+		if('dg'.$oldpw=='dg'.$pw)
 		{
 			$istrue=1;
 		}
 	}
 	elseif($ecms_config['member']['pwtype']==1)//明码
 	{
-		if($oldpw==$pw)
+		if('dg'.$oldpw=='dg'.$pw)
 		{
 			$istrue=1;
 		}
@@ -135,7 +135,7 @@ function eDoCkMemberPw($oldpw,$pw,$salt){
 	elseif($ecms_config['member']['pwtype']==3)//16位md5
 	{
 		$oldpw=substr(md5($oldpw),8,16);
-		if($oldpw==$pw)
+		if('dg'.$oldpw=='dg'.$pw)
 		{
 			$istrue=1;
 		}
@@ -143,7 +143,7 @@ function eDoCkMemberPw($oldpw,$pw,$salt){
 	else//双重md5
 	{
 		$oldpw=md5(md5($oldpw).$salt);
-		if($oldpw==$pw)
+		if('dg'.$oldpw=='dg'.$pw)
 		{
 			$istrue=1;
 		}
@@ -242,6 +242,7 @@ function GetMemberFormId($groupid){
 //取得邮件地址
 function GetUserEmail($userid,$username){
 	global $empire,$dbtbpre;
+	$userid=(int)$userid;
 	$r=$empire->fetch1("select ".eReturnSelectMemberF('email')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' limit 1");
 	return $r['email'];
 }
@@ -249,7 +250,8 @@ function GetUserEmail($userid,$username){
 //返回修改资料
 function ReturnUserInfo($userid){
 	global $empire,$dbtbpre;
-	$r=$empire->fetch1("select ".eReturnSelectMemberF('username,email,groupid,userfen,money,userdate,zgroupid,checked,registertime')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' limit 1");
+	$userid=(int)$userid;
+	$r=$empire->fetch1("select ".eReturnSelectMemberF('username,email,groupid,userfen,money,userdate,zgroupid,checked,registertime,ingid,agid,isern')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' limit 1");
 	return $r;
 }
 
@@ -283,10 +285,21 @@ function EmptyEcmsCookie(){
 	$set5=esetcookie("mlauth","",0);
 }
 
+//登录加密验证2
+function qReturnLoginPassNoCK($userid,$username,$rnd,$ecms=0){
+	global $ecms_config;
+	if(!$userid||!$rnd)
+	{
+		return '';
+	}
+	$checkpass=md5(md5($ecms_config['cks']['ckrndthree'].'e.c-m-s-'.$userid.'-(em!pi.re!-)'.$rnd.'-d-i-g.o*d').'-#em.pire.cms!-'.$ecms_config['cks']['ckrndthree']);
+	return $checkpass;
+}
+
 //登录验证符
 function qGetLoginAuthstr($userid,$username,$rnd,$groupid,$cookietime=0){
 	global $ecms_config;
-	$checkpass=md5(md5($rnd.'-'.$userid.'-'.$username.'-'.$groupid).'-#empire.cms!-'.$ecms_config['cks']['ckrndtwo']);
+	$checkpass=md5(md5($rnd.'--d-i!'.$userid.'-(g*od-'.$username.$ecms_config['cks']['ckrndtwo'].'-'.$groupid).'-#empire.cms!--p)h-o!me-'.$ecms_config['cks']['ckrndtwo']);
 	esetcookie('mlauth',$checkpass,$cookietime);
 }
 
@@ -307,8 +320,12 @@ function qCheckLoginAuthstr(){
 	$re['username']=RepPostVar(getcvar('mlusername'));
 	$re['rnd']=RepPostVar(getcvar('mlrnd'));
 	$re['groupid']=(int)getcvar('mlgroupid');
-	$pass=md5(md5($re['rnd'].'-'.$re['userid'].'-'.$re['username'].'-'.$re['groupid']).'-#empire.cms!-'.$ecms_config['cks']['ckrndtwo']);
-	if($pass!=$checkpass)
+	if(!$re['userid']||!$re['username']||!$re['rnd'])
+	{
+		return $re;
+	}
+	$pass=md5(md5($re['rnd'].'--d-i!'.$re['userid'].'-(g*od-'.$re['username'].$ecms_config['cks']['ckrndtwo'].'-'.$re['groupid']).'-#empire.cms!--p)h-o!me-'.$ecms_config['cks']['ckrndtwo']);
+	if('dg'.$pass!='dg'.$checkpass)
 	{
 		return $re;
 	}
@@ -345,7 +362,7 @@ function islogin($uid=0,$uname='',$urnd=''){
 	{
 		if(!getcvar('returnurl'))
 		{
-			esetcookie("returnurl",RepPostStrUrl($_SERVER['HTTP_REFERER']),0);
+			esetcookie("returnurl",EcmsGetReturnUrl(),0);
 		}
 		if($ecmsreurl==1)
 		{
@@ -360,13 +377,38 @@ function islogin($uid=0,$uname='',$urnd=''){
 		}
 		printerror("NotLogin",$gotourl,$petype);
 	}
-	$cr=$empire->fetch1("select ".eReturnSelectMemberF('userid,username,email,groupid,userfen,money,userdate,zgroupid,havemsg,checked,registertime')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' and ".egetmf('username')."='$username' and ".egetmf('rnd')."='$rnd' limit 1");
+	//cookie
+	if(getcvar('mluserid'))
+	{
+		$qcklgr=qCheckLoginAuthstr();
+		if(!$qcklgr['islogin'])
+		{
+			EmptyEcmsCookie();
+			if(!getcvar('returnurl'))
+			{
+				esetcookie("returnurl",EcmsGetReturnUrl(),0);
+			}
+			if($ecmsreurl==1)
+			{
+				$gotourl="history.go(-1)";
+				$petype=9;
+			}
+			elseif($ecmsreurl==2)
+			{
+				$phpmyself=urlencode(eReturnSelfPage(1));
+				$gotourl=$public_r['newsurl']."e/member/login/login.php?prt=1&from=".$phpmyself;
+				$petype=9;
+			}
+			printerror("NotSingleLogin",$gotourl,$petype);
+		}
+	}
+	$cr=$empire->fetch1("select ".eReturnSelectMemberF('userid,username,email,groupid,userfen,money,userdate,zgroupid,havemsg,checked,registertime,ingid,agid,isern')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' and ".egetmf('username')."='$username' and ".egetmf('rnd')."='$rnd' limit 1");
 	if(!$cr['userid'])
 	{
 		EmptyEcmsCookie();
 		if(!getcvar('returnurl'))
 		{
-			esetcookie("returnurl",RepPostStrUrl($_SERVER['HTTP_REFERER']),0);
+			esetcookie("returnurl",EcmsGetReturnUrl(),0);
 		}
 		if($ecmsreurl==1)
 		{
@@ -429,6 +471,10 @@ function islogin($uid=0,$uname='',$urnd=''){
 	$re[zgroupid]=$cr['zgroupid'];
 	$re[havemsg]=$cr['havemsg'];
 	$re[registertime]=$cr['registertime'];
+	$re[ingid]=$cr['ingid'];
+	$re[agid]=$cr['agid'];
+	$re[isern]=$cr['isern'];
+	$re['checked']=$cr['checked'];
 	return $re;
 }
 
@@ -493,6 +539,208 @@ function DoEcmsMemberCheckUserPass($add){
 	return $r;
 }
 
+//返回管理组级别
+function eMember_ReturnAgidLevel($userid,$agid){
+	global $empire,$dbtbpre,$public_r,$ecms_config,$aglevel_r;
+	$userid=(int)$userid;
+	$agid=(int)$agid;
+	$glevel=0;
+	$ckstr=','.$userid.',';
+	if(!$agid)
+	{
+		return 0;
+	}
+	if(!$aglevel_r[$agid]['agid'])
+	{
+		return 0;
+	}
+	if(strstr($public_r['qmotheruids'],$ckstr))
+	{
+		$glevel=1;
+	}
+	elseif(strstr($public_r['qmforumuids'],$ckstr))
+	{
+		$glevel=5;
+	}
+	elseif(strstr($public_r['qmadminuids'],$ckstr))
+	{
+		$glevel=9;
+	}
+	else
+	{
+		$glevel=0;
+	}
+	if($aglevel_r[$agid]['isadmin']!=$glevel)
+	{
+		$glevel=0;
+	}
+	return $glevel;
+}
+
+//返回验证访问组权限
+function eMember_ReturnCheckViewGroup($ckuser,$vgid){
+	global $empire,$dbtbpre,$public_r,$ecms_config,$class_r;
+	$esuccess='empire.cms';
+	$vgid=(int)$vgid;
+	$ckuser['userid']=(int)$ckuser['userid'];
+	if(!$vgid)
+	{
+		return 'NotVgid';
+	}
+	$vgr=$empire->fetch1("select * from {$dbtbpre}enewsvg where vgid='$vgid'");
+	if(!$vgr['vgid'])
+	{
+		return 'NotVgid';
+	}
+	$thistime=time();
+	//会员组验证
+	if($vgr['gids'])
+	{
+		$ckuser['groupid']=(int)$ckuser['groupid'];
+		if(strstr($vgr['gids'],','.$ckuser['groupid'].','))
+		{
+			return $esuccess;
+		}
+	}
+	//内部组验证
+	if($vgr['ingids'])
+	{
+		$ckuser['ingid']=(int)$ckuser['ingid'];
+		if(strstr($vgr['ingids'],','.$ckuser['ingid'].','))
+		{
+			return $esuccess;
+		}
+	}
+	//会员管理组验证
+	if($vgr['agids'])
+	{
+		$ckuser['agid']=(int)$ckuser['agid'];
+		if(strstr($vgr['agids'],','.$ckuser['agid'].','))
+		{
+			return $esuccess;
+		}
+	}
+	//会员白名单
+	if($vgr['mlist'])
+	{
+		$vgmember=$empire->fetch1("select userid,outtime from {$dbtbpre}enewsvglist where vgid='$vgid' and userid='".$ckuser['userid']."' limit 1");
+		if(!$vgmember['userid'])
+		{
+			return 'NotUserid';
+		}
+		if(empty($vgmember['outtime']))
+		{
+			return $esuccess;
+		}
+		if($thistime<$vgmember['outtime'])
+		{
+			return $esuccess;
+		}
+	}
+	return 'NotLevel';
+}
+
+
+//--------------- 会员实名函数 ---------------
+
+//实名验证
+function eCheckHaveTruename($mod,$userid,$username,$isern,$checked,$ecms=0){
+	global $empire,$dbtbpre,$public_r,$ecms_config,$ecms_topagesetr,$enews;
+	if(empty($public_r['openern']))
+	{
+		return '';
+	}
+	if(!strstr($public_r['openern'],','.$mod.','))
+	{
+		return '';
+	}
+	if($userid)
+	{
+		if($checked==0)
+		{
+			printerror("NotCheckedUser",'',1);
+		}
+	}
+	if(!$isern)
+	{
+		printerror('NotHaveTrueName',$public_r['ernurl'],1);
+	}
+}
+
+//实名验证2
+function eCheckHaveTruenameCK($mod,$ecms=0){
+	global $empire,$dbtbpre,$public_r,$ecms_config,$ecms_topagesetr,$enews;
+	if(empty($public_r['openern']))
+	{
+		return '';
+	}
+	if(!strstr($public_r['openern'],','.$mod.','))
+	{
+		return '';
+	}
+	$isern=0;
+	$cklgr=qCheckLoginAuthstr();
+	if($cklgr['islogin'])
+	{
+		$userid=(int)$cklgr['userid'];
+		$ernr=eReturnHaveTruename($userid,'',1);
+		$isern=$ernr['isern'];
+		if($ernr['checked']==0)
+		{
+			printerror("NotCheckedUser",'',1);
+		}
+	}
+	if(!$isern)
+	{
+		printerror('NotHaveTrueName',$public_r['ernurl'],1);
+	}
+}
+
+//返回是否实名
+function eReturnHaveTruename($userid,$username='',$ecms=0){
+	global $empire,$dbtbpre;
+	$userid=(int)$userid;
+	$r=$empire->fetch1("select ".eReturnSelectMemberF('userid,checked,isern')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' limit 1");
+	if($ecms)
+	{
+		return $r;
+	}
+	else
+	{
+		return $r['isern'];
+	}
+}
+
+//更新实名状态
+function eUpdateTruenameStatus($userid,$username,$checked,$isern,$ecms=0){
+	global $empire,$dbtbpre;
+	$userid=(int)$userid;
+	$checked=(int)$checked;
+	$isern=(int)$isern;
+	$username=RepPostVar($username);
+	//更新审核和实名状态
+	$upstr='';
+	if($ecms==2)
+	{
+		$upstr="".egetmf('checked')."='$checked',".egetmf('isern')."='$isern'";
+	}
+	elseif($ecms==1)//审核
+	{
+		$upstr="".egetmf('checked')."='$checked'";
+	}
+	else//实名
+	{
+		$upstr="".egetmf('isern')."='$isern'";
+	}
+	if($upstr)
+	{
+		$sql=$empire->query("update ".eReturnMemberTable()." set ".$upstr." where ".egetmf('userid')."='$userid'");
+		return $sql;
+	}
+	return 0;
+}
+
+
 //--------------- 其他函数 ---------------
 
 //增加点数
@@ -539,6 +787,31 @@ function OutTimeZGroup($userid,$zgroupid){
 	}
 }
 
+//充值有效期判断
+function eCardCheckUserdate($userdate,$usergroupid,$buygroupid){
+	global $public_r;
+	if($usergroupid==$buygroupid)
+	{
+		return $userdate;
+	}
+	//已有有效期
+	if($userdate&&$userdate>=time())
+	{
+		if($public_r['mhavedatedo']==1)//覆盖
+		{
+			$userdate=0;
+		}
+		elseif($public_r['mhavedatedo']==2)//叠加
+		{
+		}
+		else//不让充值
+		{
+			printerror('CardHaveUserdate','history.go(-1)',1);
+		}
+	}
+	return $userdate;
+}
+
 //充值
 function eAddFenToUser($fen,$date,$groupid,$zgroupid,$user){
 	global $empire,$dbtbpre,$public_r;
@@ -555,6 +828,7 @@ function eAddFenToUser($fen,$date,$groupid,$zgroupid,$user){
 	//有效期
 	if($date)
 	{
+		$user[userdate]=eCardCheckUserdate($user[userdate],$user[groupid],$groupid);//有效期验证
 		$dh='';
 		if($update)
 		{

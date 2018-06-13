@@ -17,6 +17,12 @@ $loginadminstyleid=$lur['adminstyleid'];
 $ecms_hashur=hReturnEcmsHashStrAll();
 //验证权限
 CheckLevel($logininid,$loginin,$classid,"moreport");
+
+//是否主端
+if($ecms_config['sets']['selfmoreportid']>1)
+{
+	printerror2('请在主端下使用本操作','history.go(-1)',9);
+}
 $enews=ehtmlspecialchars($_GET['enews']);
 $r['ppath']=ReturnAbsEcmsPath();
 $url="<a href=ListMoreport.php".$ecms_hashur['whehref'].">管理网站访问端</a> &gt; 增加网站访问端";
@@ -50,6 +56,15 @@ while($tgr=$empire->fetch($tgsql))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>网站访问端</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
+<script>
+function eshowesay(ss)
+{
+ if (ss.style.display=="") 
+  ss.style.display="none";
+ else
+  ss.style.display=""; 
+}
+</script>
 </head>
 
 <body>
@@ -58,7 +73,7 @@ while($tgr=$empire->fetch($tgsql))
     <td>位置：<?=$url?></td>
   </tr>
 </table>
-<form name="moreportform" method="post" action="ListMoreport.php">
+<form name="moreportform" method="post" action="ListMoreport.php" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 
@@ -104,6 +119,19 @@ while($tgr=$empire->fetch($tgsql))
         <a href="#empirecms" title="与主端相同：如果主端是采用静态页面模式，需要在本访问端后台生成页面，才会同步显示。">与主端相同</a></td>
     </tr>
     <tr bgcolor="#FFFFFF">
+      <td height="25">同步静态页面：</td>
+      <td height="25"><select name="rehtml" id="rehtml" disabled="disabled">
+        <option value="0"<?=$r['rehtml']==0?' selected':''?>>不同步</option>
+      </select>
+        (此设置商业版才有效)</td>
+    </tr>
+    <tr bgcolor="#FFFFFF" id="rehtmlesay" style="display:none">
+      <td height="25">&nbsp;</td>
+      <td height="25">基本页含：<font color="#666666">(首页、栏目页、信息内容页、碎片文件、自定义页面)</font><br>
+        标准页含：基本页+<font color="#666666">(专题页、标题分类页)</font><br>
+        所有页含：标准页+<font color="#666666">(自定义列表、自定义JS)</font></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
       <td height="25">关闭访问端：</td>
       <td height="25"><input name="isclose" type="checkbox" id="isclose" value="1"<?=$r[isclose]==1?' checked':''?>>
       关闭</td>
@@ -112,6 +140,14 @@ while($tgr=$empire->fetch($tgsql))
       <td height="25">关闭投稿：</td>
       <td height="25"><input name="closeadd" type="checkbox" id="closeadd" value="1"<?=$r[closeadd]==1?' checked':''?>>
         关闭</td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">后台管理：</td>
+      <td height="25"><select name="openadmin" id="openadmin">
+        <option value="0"<?=$r['openadmin']==0?' selected':''?>>开启</option>
+        <option value="1"<?=$r['openadmin']==1?' selected':''?>>关闭登录</option>
+        <option value="2"<?=$r['openadmin']==2?' selected':''?>>关闭登录和后台管理</option>
+      </select>      </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">&nbsp;</td>

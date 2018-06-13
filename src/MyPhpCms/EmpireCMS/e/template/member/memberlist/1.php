@@ -59,7 +59,7 @@ require(ECMS_PATH.'e/template/incfile/header.php');
         <?=$returnpage?>
       </td>
       <td height="25"> <div align="center"> 
-          <input name="keyboard" type="text" id="keyboard" size="10">
+          <input name="keyboard[]" type="text" id="keyboard" size="10">
           <input type="submit" name="Submit" value="搜索">
         </div></td>
     </tr>

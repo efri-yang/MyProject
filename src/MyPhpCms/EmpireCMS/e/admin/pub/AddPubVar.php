@@ -59,7 +59,7 @@ $empire=null;
   </tr>
 </table>
 
-<form name="form1" method="post" action="ListPubVar.php">
+<form name="form1" method="post" action="ListPubVar.php" autocomplete="off">
   <table width="98%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 

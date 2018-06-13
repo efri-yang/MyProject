@@ -28,6 +28,13 @@ function AddPicNews($add,$title,$pic_url,$url,$pic_width,$pic_height,$open_pic,$
 	CheckLevel($userid,$username,$classid,"picnews");
 	$add[classid]=(int)$add[classid];
 	$border=(int)$border;
+	$title=hRepPostStr($title,1);
+	$pic_url=hRepPostStr2($pic_url);
+	$url=hRepPostStr2($url);
+	$pic_width=hRepPostStr($pic_width,1);
+	$pic_height=hRepPostStr($pic_height,1);
+	$open_pic=hRepPostStr($open_pic,1);
+	$pictext=hRepPostStr2($pictext);
 	$sql=$empire->query("insert into {$dbtbpre}enewspic(title,pic_url,url,pic_width,pic_height,open_pic,border,pictext,classid) values('$title','$pic_url','$url','$pic_width','$pic_height','$open_pic',$border,'$pictext',$add[classid]);");
 	//生成js
 	$picid=$empire->lastid();
@@ -68,6 +75,13 @@ function EditPicNews($add,$picid,$title,$pic_url,$url,$pic_width,$pic_height,$op
 	CheckLevel($userid,$username,$classid,"picnews");
 	$add[classid]=(int)$add[classid];
 	$border=(int)$border;
+	$title=hRepPostStr($title,1);
+	$pic_url=hRepPostStr2($pic_url);
+	$url=hRepPostStr2($url);
+	$pic_width=hRepPostStr($pic_width,1);
+	$pic_height=hRepPostStr($pic_height,1);
+	$open_pic=hRepPostStr($open_pic,1);
+	$pictext=hRepPostStr2($pictext);
 	$sql=$empire->query("update {$dbtbpre}enewspic set title='$title',pic_url='$pic_url',url='$url',pic_width='$pic_width',pic_height='$pic_height',open_pic='$open_pic',border=$border,pictext='$pictext',classid=$add[classid] where picid='$picid'");
 	//生成js
 	GetPicJs($picid);

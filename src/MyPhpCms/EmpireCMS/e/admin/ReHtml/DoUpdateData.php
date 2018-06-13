@@ -69,7 +69,7 @@ $changeday="<select name=selectday onchange=\"document.reform.startday.value=thi
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>数据整理</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 <script>
 function CheckAll(form)
   {
@@ -86,14 +86,21 @@ function CheckAll(form)
 <body>
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1">
   <tr> 
-    <td width="34%" height="25">位置：<a href="DoUpdateData.php<?=$ecms_hashur['whehref']?>">数据整理</a></td>
-    <td width="66%"><table width="460" border="0" align="right" cellpadding="0" cellspacing="0">
+    <td width="12%" height="25">位置：<a href="DoUpdateData.php<?=$ecms_hashur['whehref']?>">数据整理</a></td>
+    <td width="42%"><table width="460" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr> 
           <td> <div align="center">[<a href="#IfTotalPlNum">批量更新信息评论数</a>]</div></td>
           <td> <div align="center">[<a href="#IfOtherInfo">批量更新相关链接</a>]</div></td>
           <td><div align="center">[<a href="#IfClearBreakInfo">清理多余信息</a>]</div></td>
         </tr>
-      </table></td>
+    </table></td>
+    <td width="46%"><div align="right" class="emenubutton">
+      <input type="button" name="Submit52" value="数据更新中心" onclick="self.location.href='ChangeData.php<?=$ecms_hashur['whehref']?>';">
+      &nbsp;&nbsp;
+      <input type="button" name="Submit522" value="更新信息页地址" onclick="self.location.href='ReInfoUrl.php<?=$ecms_hashur['whehref']?>';">
+	  &nbsp;&nbsp;
+      <input type="button" name="Submit522" value="更新动态页缓存" onclick="self.location.href='ChangePageCache.php<?=$ecms_hashur['whehref']?>';">
+    </div></td>
   </tr>
 </table>
 <form action="../ecmspl.php" method="get" name="form1" target="_blank" onsubmit="return confirm('确认要更新?');">
@@ -126,9 +133,9 @@ function CheckAll(form)
               <td width="23%" height="25"> <input name="retype" type="radio" value="0" checked>
                 按时间更新：</td>
               <td width="77%" height="25">从 
-                <input name="startday" type="text" size="12" onclick="setday(this)">
+                <input name="startday" type="text" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 到 
-                <input name="endday" type="text" size="12" onclick="setday(this)">
+                <input name="endday" type="text" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 之间的信息 <font color="#666666">(不填将更新所有信息)</font></td>
             </tr>
             <tr> 
@@ -188,9 +195,9 @@ function CheckAll(form)
               <td width="23%" height="25"> <input name="retype" type="radio" value="0" checked>
                 按时间更新：</td>
               <td width="77%" height="25">从 
-                <input name="startday" type="text" size="12" onclick="setday(this)">
+                <input name="startday" type="text" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 到 
-                <input name="endday" type="text" size="12" onclick="setday(this)">
+                <input name="endday" type="text" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 之间的信息 <font color="#666666">(不填将更新所有信息)</font></td>
             </tr>
             <tr> 

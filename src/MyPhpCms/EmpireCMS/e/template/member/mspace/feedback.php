@@ -31,6 +31,7 @@ function CheckAll(form)
 		<?php
 		while($r=$empire->fetch($sql))
 		{
+			$r['uname']=stripSlashes($r['uname']);
 			if($r['uid'])
 			{
 				$r['uname']="<a href='../../space/?userid=$r[uid]' target='_blank'>$r[uname]</a>";
@@ -45,7 +46,7 @@ function CheckAll(form)
 			<input name="fid[]" type="checkbox" value="<?=$r[fid]?>">
 			</div></td>
 			<td height="25"><div align="left">
-			<a href="#ecms" onclick="window.open('ShowFeedback.php?fid=<?=$r[fid]?>','','width=650,height=600,scrollbars=yes,top=70,left=100');"><?=$r[title]?></a>&nbsp;(<?=$r['uname']?>)
+			<a href="#ecms" onclick="window.open('ShowFeedback.php?fid=<?=$r[fid]?>','','width=650,height=600,scrollbars=yes,top=70,left=100');"><?=stripSlashes($r[title])?></a>&nbsp;(<?=$r['uname']?>)
 			</div></td>
 			<td height="25"><div align="center"> 
 			<?=$r[addtime]?>

@@ -6,12 +6,30 @@ if(!defined('InEmpireCMS'))
 ?>
 <?php
 //查询SQL，如果要显示自定义字段记得在SQL里增加查询字段
-$query="select id,classid,isurl,titleurl,isqf,havehtml,istop,isgood,firsttitle,ismember,userid,username,plnum,totaldown,onclick,newstime,truetime,lastdotime,titlepic,title from ".$infotb.$where." order by ".$doorder." limit $offset,$line";
+$query="select id,classid,isurl,titleurl,isqf,havehtml,istop,isgood,firsttitle,ismember,userid,username,eckuid,plnum,totaldown,onclick,newstime,truetime,lastdotime,titlepic,title from ".$infotb.$where." order by ".$doorder." limit $offset,$line";
 $sql=$empire->query($query);
 //返回头条和推荐级别名称
 $ftnr=ReturnFirsttitleNameList(0,0);
 $ftnamer=$ftnr['ftr'];
 $ignamer=$ftnr['igr'];
+$searchisgoods='';
+$searchfirsttitles='';
+if($showisgood>0)
+{
+	$searchisgoods=str_replace('<option value="'.$showisgood.'">','<option value="'.$showisgood.'" selected>',$ftnr['igname']);
+}
+else
+{
+	$searchisgoods=$ftnr['igname'];
+}
+if($showfirsttitle>0)
+{
+	$searchfirsttitles=str_replace('<option value="'.$showfirsttitle.'">','<option value="'.$showfirsttitle.'" selected>',$ftnr['ftname']);
+}
+else
+{
+	$searchfirsttitles=$ftnr['ftname'];
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -107,12 +125,23 @@ function PushInfoToZt(form)
             <option value="5"<?=$showspecial==5?' selected':''?>>签发</option>
 			<option value="8"<?=$showspecial==8?' selected':''?>>我的信息</option>
           </select>
+		  <select name="showisgood" id="showisgood">
+            <option value="0"<?=$showisgood==0?' selected':''?>>不限推荐</option>
+	    	<option value="-1"<?=$showisgood==-1?' selected':''?>>所有推荐</option>
+	    	<?=$searchisgoods?>
+          </select>
+          <select name="showfirsttitle" id="showfirsttitle">
+            <option value="0"<?=$showfirsttitle==0?' selected':''?>>不限头条</option>
+	    	<option value="-1"<?=$showfirsttitle==-1?' selected':''?>>所有头条</option>
+	    	<?=$searchfirsttitles?>
+          </select>
           <input name="keyboard" type="text" id="keyboard" value="<?=$keyboard?>">
           <select name="show">
             <option value="0"<?=$show==0?' selected':''?>>不限字段</option>
             <option value="1"<?=$show==1?' selected':''?>>标题</option>
             <option value="2"<?=$show==2?' selected':''?>>发布者</option>
 			<option value="3"<?=$show==3?' selected':''?>>ID</option>
+			<option value="4"<?=$show==4?' selected':''?>>关键字</option>
           </select>
 		  <?=$stts?>
 		  <span id="searchclassnav"></span>
@@ -201,11 +230,11 @@ function PushInfoToZt(form)
 		}
 		if($r[isgood])//推荐
 		{
-			$st.="<font color=red>[".$ignamer[$r[isgood]-1]."]</font>";
+			$st.="<font color=red>[".$ignamer[$r['isgood']]."]</font>";
 		}
 		if($r[firsttitle])//头条
 		{
-			$st.="<font color=red>[".$ftnamer[$r[firsttitle]-1]."]</font>";
+			$st.="<font color=red>[".$ftnamer[$r['firsttitle']]."]</font>";
 		}
 		$oldtitle=$r[title];
 		$r[title]=stripSlashes(sub($r[title],0,36,false));
@@ -258,7 +287,7 @@ function PushInfoToZt(form)
 		$showtitlepic="";
 		if($r[titlepic])
 		{
-			$showtitlepic="<a href='".$r[titlepic]."' title='预览标题图片' target=_blank><img src='../data/images/showimg.gif' border=0></a>";
+			$showtitlepic="<a href='".$r['titlepic']."' title='预览标题图片' target=_blank><img src='../data/images/showimg.gif' border=0></a>";
 		}
 		//未生成
 		$myid="<a href='ecmschtml.php?enews=ReSingleInfo&classid=$r[classid]&id[]=".$r[id].$ecms_hashur['href']."'>".$r['id']."</a>";
@@ -278,7 +307,7 @@ function PushInfoToZt(form)
       <td height="25"> <div align="left"> 
           <?=$st?>
           <?=$showtitlepic?>
-          <a href='<?=$titleurl?>' target=_blank title="<?=$oldtitle?>">
+          <a href="<?=$titleurl?>" target=_blank title="<?=$oldtitle?>">
           <?=$r[title]?>
           </a> 
           <?=$qf?>
@@ -290,7 +319,7 @@ function PushInfoToZt(form)
           <font color="#574D5C">
           <?=$class_r[$r[classid]][classname]?>
           </font> </a></font></div></td>
-      <td height="25"> <div align="center"> 
+      <td height="25"<?=$r['eckuid']?' title="审核人UID：'.$r['eckuid'].'"':''?>> <div align="center"> 
           <?=$r[username]?>
         </div></td>
       <td height="25" title="<? echo"增加时间：".$truetime."\r\n最后修改：".$lastdotime;?>"> <div align="center">

@@ -21,7 +21,7 @@ else
 <HTML>
 <HEAD>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
-<TITLE>帝国网站管理系统 － 最安全、最稳定的开源CMS系统</TITLE>
+<TITLE>帝国CMS － 稳定可靠、安全省心</TITLE>
 <LINK href="adminstyle/1/adminmain.css" rel=stylesheet>
 <STYLE>
 .flyoutLink A {
@@ -307,7 +307,7 @@ function DoOnclickMenu(m){
 <div align="center"><font color="#FFFFFF"><strong>常用</strong></font></div></td>
                         </tr>
                       </table></TD>
-                    <TD width="301"><div align="right"><font color="#ffffff">用户：<a href="user/EditPassword.php<?=$ecms_hashur['whehref']?>" target="main"><font color="#ffffff"><b><?=$loginin?></b></font></a>&nbsp;&nbsp;&nbsp;[<a href="#ecms" onclick="if(confirm('确认要退出?')){JumpToMain('ecmsadmin.php?enews=exit<?=$ecms_hashur['href']?>');}"><font color="#ffffff">退出</font></a>]&nbsp;&nbsp;</font></div></TD>
+                    <TD width="301"><div align="right"><font color="#ffffff">用户：<a href="user/EditPassword.php<?=$ecms_hashur['whehref']?>" target="main"><font color="#ffffff"><b><?=$loginin?></b></font></a>&nbsp;&nbsp;&nbsp;[<a href="#ecms" onclick="if(confirm('确认要退出?')){JumpToMain('enews.php?enews=exit<?=$ecms_hashur['href']?>');}"><font color="#ffffff">退出</font></a>]&nbsp;&nbsp;</font></div></TD>
                   </TR>
                 </TBODY>
               </TABLE>
@@ -322,10 +322,11 @@ function DoOnclickMenu(m){
 <tr><td height="22">
 
   <TABLE width="100%" height="22" border=0 cellpadding="0" cellSpacing=0>
+  <form name="chmpform" method="post" action="enews.php" onsubmit="return confirm('确认要切换访问端？');">
     <TBODY>
       <TR> 
         <TD class=flyoutMenu width="1%"> </TD>   
-		    <TD width="99%" height="27"> 
+		    <TD width="77%" height="27"> 
               <TABLE class=flyoutMenu border=0>
                 <TBODY>
                   <TR align=middle> 
@@ -355,14 +356,29 @@ function DoOnclickMenu(m){
                     <TD width="60" class="flyoutLink" onclick="JumpToMain('infotop.php<?=$ecms_hashur['whehref']?>');" onmouseover="over(this)" onmouseout="out(this)">排行统计</TD>
                     <TD width="60" class="flyoutLink" onclick="JumpToMain('main.php<?=$ecms_hashur['whehref']?>');" onmouseover="over(this)" onmouseout="out(this)">后台首页</TD>
                     <TD width="60" class="flyoutLink" onclick="window.open('../../');" onmouseover="over(this)" onmouseout="out(this)">网站首页</TD>
-                    <TD width="60" class="flyoutLink" onclick="window.open('map.php<?=$ecms_hashur['whehref']?>','','width=1250,height=760,scrollbars=auto,resizable=yes,top=80,left=120');" onmouseover="over(this)" onmouseout="out(this)">后台地图</TD>
+                    <TD width="60" class="flyoutLink" onclick="window.open('map.php<?=$ecms_hashur['whehref']?>','','width=1250,height=760,scrollbars=yes,resizable=yes,top=80,left=120');" onmouseover="over(this)" onmouseout="out(this)">后台地图</TD>
                     <TD width="60" class="flyoutLink" onclick="window.open('http://bbs.phome.net/listthread-23-cms-page-0.html');" onmouseover="over(this)" onmouseout="out(this)">版本更新</TD>
                   </TR>
                 </TBODY>
-              </TABLE>
-            </TD>
+              </TABLE>            </TD>
+            <TD width="22%"><div align="right">
+			<?php
+if($r['dochmoreport']&&$public_r['ckhavemoreport'])
+{
+?>
+  访问端:
+  <?=Moreport_eReturnMoreportSelect($ecms_config['sets']['selfmoreportid'])?>
+  <input type="submit" name="Submit" value="切换">
+  <input name="enews" type="hidden" id="enews" value="ChangeMoreportAdmin">
+  <?=$ecms_hashur['form']?>
+	&nbsp;&nbsp;
+<?php
+}
+?>
+			</div></TD>
       </TR>
     </TBODY>
+	</form>
   </TABLE>
 
 </td></tr>

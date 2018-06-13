@@ -39,7 +39,7 @@ $empire=null;
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>信息批量归档</title>
 <link href="adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -92,9 +92,9 @@ $empire=null;
             <td height="32"> <input name="retype" type="radio" value="1">
               按时间归档</td>
             <td>从 
-              <input name="startday" type="text" size="12" onclick="setday(this)">
+              <input name="startday" type="text" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
               到 
-              <input name="endday" type="text" size="12" onclick="setday(this)">
+              <input name="endday" type="text" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
               之间的信息</td>
           </tr>
           <tr bgcolor="#FFFFFF"> 

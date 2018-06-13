@@ -42,16 +42,18 @@ if(!$path_r[$pathid])
 }
 $showdown_r=explode("::::::",$path_r[$pathid]);
 //下载权限
+$nockpass='';
 $downgroup=$showdown_r[2];
 $user=array();
 if($downgroup)
 {
 	$user=islogin();
+	$nockpass=qReturnLoginPassNoCK($user['userid'],$user['username'],$user['rnd'],0);
 }
 //验证码
 $ip=egetip();
-$pass=md5(ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$user[userid]);
-$p=$user[userid].":::".$user[rnd];
+$pass=md5(md5($classid."-!ecms!".$id."-!ecms!".$pathid).ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$user[userid]);
+$p=$user[userid].":::".$user[rnd].":::".$nockpass;
 DownSoft($classid,$id,$pathid,$p,$pass);
 db_close();
 $empire=null;

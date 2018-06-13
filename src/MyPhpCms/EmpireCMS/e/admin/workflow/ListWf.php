@@ -30,7 +30,11 @@ function AddWorkflow($add,$userid,$username){
 	CheckLevel($userid,$username,$classid,"workflow");
 	$add[myorder]=(int)$add[myorder];
 	$addtime=time();
-	$sql=$empire->query("insert into {$dbtbpre}enewsworkflow(wfname,wftext,myorder,addtime,adduser) values('$add[wfname]','$add[wftext]','$add[myorder]','$addtime','$username');");
+	$add['wfname']=hRepPostStr($add['wfname'],1);
+	$add['wftext']=hRepPostStr($add['wftext'],1);
+	$add['canedit']=(int)$add['canedit'];
+	$username=hRepPostStr($username,1);
+	$sql=$empire->query("insert into {$dbtbpre}enewsworkflow(wfname,wftext,myorder,addtime,adduser,canedit) values('$add[wfname]','$add[wftext]','$add[myorder]','$addtime','$username','$add[canedit]');");
 	$wfid=$empire->lastid();
 	if($sql)
 	{
@@ -53,7 +57,10 @@ function EditWorkflow($add,$userid,$username){
 	//验证权限
 	CheckLevel($userid,$username,$classid,"workflow");
 	$add[myorder]=(int)$add[myorder];
-	$sql=$empire->query("update {$dbtbpre}enewsworkflow set wfname='$add[wfname]',wftext='$add[wftext]',myorder='$add[myorder]' where wfid='$wfid'");
+	$add['wfname']=hRepPostStr($add['wfname'],1);
+	$add['wftext']=hRepPostStr($add['wftext'],1);
+	$add['canedit']=(int)$add['canedit'];
+	$sql=$empire->query("update {$dbtbpre}enewsworkflow set wfname='$add[wfname]',wftext='$add[wftext]',myorder='$add[myorder]',canedit='$add[canedit]' where wfid='$wfid'");
 	if($sql)
 	{
 		//操作日志

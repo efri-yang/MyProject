@@ -165,7 +165,7 @@ $query="select id,title,classid,newstime,isurl,titleurl,".$field." from {$dbtbpr
         </select>
         ，栏目 <span id="listfileclassnav"></span> ，标题分类 
         <select name="ttid" id="ttid">
-            <option value="0">所有专题</option>
+            <option value="0">所有标题分类</option>
             <?=$ttclass?>
         </select>
         ，排行 

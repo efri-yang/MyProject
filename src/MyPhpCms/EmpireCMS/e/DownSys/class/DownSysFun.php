@@ -24,9 +24,10 @@ function DownSoft($classid,$id,$pathid,$p,$pass){
 	$p_r=explode(":::",$p);
 	$userid=$p_r[0];
 	$rnd=$p_r[1];
+	$nockpass=$p_r[2];
 	//验证码
-	$cpass=md5(ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$userid);
-	if($cpass<>$pass)
+	$cpass=md5(md5($classid."-!ecms!".$id."-!ecms!".$pathid).ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$userid);
+	if('dg'.$cpass<>'dg'.$pass)
 	{
 		printerror("FailDownpass","history.go(-1)",1);
     }
@@ -59,6 +60,16 @@ function DownSoft($classid,$id,$pathid,$p,$pass){
 	{
 		$userid=(int)$userid;
 		$rnd=RepPostVar($rnd);
+		$nockpass=RepPostVar($nockpass);
+		if(!$nockpass)
+		{
+			printerror("MustSingleUser","history.go(-1)",1);
+		}
+		$cknockpass=qReturnLoginPassNoCK($userid,'',$rnd,0);
+		if('dg'.$nockpass<>'dg'.$cknockpass)
+		{
+			printerror("MustSingleUser","history.go(-1)",1);
+		}
 		//取得会员资料
 		$u=$empire->fetch1("select ".eReturnSelectMemberF('*')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' and ".egetmf('rnd')."='$rnd' limit 1");
 		if(empty($u['userid']))
@@ -69,9 +80,21 @@ function DownSoft($classid,$id,$pathid,$p,$pass){
 		{
 			$setuserday=DoCheckMDownNum($userid,$u['groupid']);
 		}
-		if($level_r[$downgroup][level]>$level_r[$u[groupid]][level])
+		if($downgroup>0)//会员组
 		{
-			printerror("NotDownLevel","history.go(-1)",1);
+			if($level_r[$downgroup][level]>$level_r[$u[groupid]][level])
+			{
+				printerror("NotDownLevel","history.go(-1)",1);
+			}
+		}
+		else//访问组
+		{
+			$vgroupid=0-$downgroup;
+			$ckvgresult=eMember_ReturnCheckViewGroup($u,$vgroupid);
+			if($ckvgresult<>'empire.cms')
+			{
+				printerror("NotDownLevel","history.go(-1)",1);
+			}
 		}
 		//点数是否足够
 		$showdown_r[3]=intval($showdown_r[3]);
@@ -212,7 +235,7 @@ function CheckOnlinePass($onlinetime,$onlinepass){
 	}
 	$onlinep=$public_r[downpass]."qweirtydui4opttt.,mvcfvxzzf3dsfm,.dsa";
 	$cpass=md5($onlinep.$onlinetime);
-	if($onlinepass<>$cpass)
+	if('dg'.$onlinepass<>'dg'.$cpass)
 	{
 		exit();
 	}
@@ -233,9 +256,10 @@ function GetSofturl($classid,$id,$pathid,$p,$pass,$onlinetime,$onlinepass){
 	$p_r=explode(":::",$p);
 	$userid=$p_r[0];
 	$rnd=$p_r[1];
+	$nockpass=$p_r[2];
 	//验证码
-	$cpass=md5(ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$userid);
-	if($cpass<>$pass)
+	$cpass=md5(md5($classid."-!ecms!".$id."-!ecms!".$pathid).ReturnDownSysCheckIp()."wm_chief".$public_r[downpass].$userid);
+	if('dg'.$cpass<>'dg'.$pass)
 	{exit();}
 	//验证验证码
 	CheckOnlinePass($onlinetime,$onlinepass);
@@ -263,6 +287,16 @@ function GetSofturl($classid,$id,$pathid,$p,$pass,$onlinetime,$onlinepass){
 	{
 		$userid=(int)$userid;
 		$rnd=RepPostVar($rnd);
+		$nockpass=RepPostVar($nockpass);
+		if(!$nockpass)
+		{
+			exit();
+		}
+		$cknockpass=qReturnLoginPassNoCK($userid,'',$rnd,0);
+		if('dg'.$nockpass<>'dg'.$cknockpass)
+		{
+			exit();
+		}
 		//取得会员资料
 		$u=$empire->fetch1("select ".eReturnSelectMemberF('*')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' and ".egetmf('rnd')."='$rnd' limit 1");
 		if(empty($u['userid']))
@@ -273,9 +307,21 @@ function GetSofturl($classid,$id,$pathid,$p,$pass,$onlinetime,$onlinepass){
 		{
 			$setuserday=DoCheckMDownNum($userid,$u['groupid'],1);
 		}
-		if($level_r[$downgroup][level]>$level_r[$u[groupid]][level])
+		if($downgroup>0)//会员组
 		{
-			exit();
+			if($level_r[$downgroup][level]>$level_r[$u[groupid]][level])
+			{
+				exit();
+			}
+		}
+		else//访问组
+		{
+			$vgroupid=0-$downgroup;
+			$ckvgresult=eMember_ReturnCheckViewGroup($u,$vgroupid);
+			if($ckvgresult<>'empire.cms')
+			{
+				exit();
+			}
 		}
 		//点数是否足够
 		$showdown_r[3]=intval($showdown_r[3]);

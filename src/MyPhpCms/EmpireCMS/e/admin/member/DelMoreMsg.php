@@ -21,6 +21,7 @@ $enews=$_POST['enews'];
 if($enews)
 {
 	hCheckEcmsRHash();
+	@set_time_limit(0);
 }
 if($enews=="DelMoreMsg")
 {
@@ -36,7 +37,7 @@ $empire=null;
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>批量删除站内短消息</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -87,9 +88,9 @@ $empire=null;
     <tr> 
       <td height="25" bgcolor="#FFFFFF">时间</td>
       <td bgcolor="#FFFFFF">删除从 
-        <input name="starttime" type="text" id="starttime" onclick="setday(this)" size="12">
+        <input name="starttime" type="text" id="starttime" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         到 
-        <input name="endtime" type="text" id="endtime" onclick="setday(this)" size="12">
+        <input name="endtime" type="text" id="endtime" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         之间的短消息</td>
     </tr>
     <tr> 

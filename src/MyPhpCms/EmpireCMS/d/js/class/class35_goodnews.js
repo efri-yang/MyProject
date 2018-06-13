@@ -1,1 +1,0 @@
-document.write("<li><a href=\"/MyProject/src/MyPhpCms/EmpireCMS/news/world/2012-12-10/70.html\" title=\"俄罗斯第三任总统梅德韦杰夫宣誓就职\">俄罗斯第三任总统梅德韦杰夫宣誓就</a></li>");

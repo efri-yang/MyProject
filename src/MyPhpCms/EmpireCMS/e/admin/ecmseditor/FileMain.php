@@ -27,12 +27,13 @@ $doing=ehtmlspecialchars($_GET['doing']);
 $field=ehtmlspecialchars($_GET['field']);
 $tranfrom=ehtmlspecialchars($_GET['tranfrom']);
 $fileno=ehtmlspecialchars($_GET['fileno']);
+$doecmspage=ehtmlspecialchars($_GET['doecmspage']);
 if(empty($field))
 {
 	$field="ecms";
 }
-$search="&classid=$classid&infoid=$infoid&filepass=$filepass&type=$type&modtype=$modtype&sinfo=$sinfo&doing=$doing&tranfrom=$tranfrom&field=$field&fileno=$fileno".$ecms_hashur['ehref'];
-$search1="&classid=$classid&infoid=$infoid&filepass=$filepass&modtype=$modtype&sinfo=$sinfo&doing=$doing&tranfrom=$tranfrom&field=$field&fileno=$fileno".$ecms_hashur['ehref'];
+$search="&classid=$classid&infoid=$infoid&filepass=$filepass&type=$type&modtype=$modtype&sinfo=$sinfo&doing=$doing&tranfrom=$tranfrom&field=$field&fileno=$fileno&doecmspage=$doecmspage".$ecms_hashur['ehref'];
+$search1="&classid=$classid&infoid=$infoid&filepass=$filepass&modtype=$modtype&sinfo=$sinfo&doing=$doing&tranfrom=$tranfrom&field=$field&fileno=$fileno&doecmspage=$doecmspage".$ecms_hashur['ehref'];
 if($showmod==1)
 {
 	$filename="filep.php";

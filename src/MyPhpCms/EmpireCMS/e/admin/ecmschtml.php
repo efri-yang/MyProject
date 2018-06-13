@@ -21,7 +21,21 @@ $loginin=$lur['username'];
 $loginrnd=$lur['rnd'];
 $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
+//spurl
+if($enews=='ReAllNewsJs')
+{
+	hSetSpFromUrl();
+}
 hCheckEcmsRHash();
+
+//level
+if($enews=='ReListHtml_all'||$enews=='ReNewsHtml'||$enews=='ReAllNewsJs'||$enews=='ReDtPage'||$enews=='ReTtListHtml_all'||$enews=='ReZtListHtml_all'||$enews=='ReSpAll'||$enews=='ReClassPath'||$enews=='UpdateClassInfosAll'||$enews=='ReUserpageAll'||$enews=='ReUserlistAll'||$enews=='ReUserjsAll'||$enews=='GoReListHtmlMore'||$enews=='GoReListHtmlMoreA'||$enews=='ReListHtmlMore'||$enews=='ReListZtHtmlMore'||$enews=='ReListTtHtmlMore')
+{
+	CheckLevel($logininid,$loginin,0,"changedata");
+}
+
+@set_time_limit(0);
+
 $incftp=0;
 if($public_r['phpmode'])
 {
@@ -32,6 +46,19 @@ if($public_r['phpmode'])
 if($public_r['opennotcj'])
 {
 	@include("../data/dbcache/notcj.php");
+}
+//设置访问端
+$moreportpid=0;
+if($enews=='ReIndex'||$enews=='ReListHtml_all'||$enews=='ReNewsHtml'||$enews=='ReAllNewsJs'||$enews=='ReDtPage'||$enews=='ReTtListHtml_all'||$enews=='ReZtListHtml_all'||$enews=='ReSpAll'||$enews=='ReClassPath'||$enews=='ReUserpageAll'||$enews=='ReUserlistAll'||$enews=='ReUserjsAll'||$enews=='GoReListHtmlMore'||$enews=='GoReListHtmlMoreA'||$enews=='ReListHtmlMore'||$enews=='ReListZtHtmlMore'||$enews=='ReListTtHtmlMore')
+{
+	$moreportpid=Moreport_hDoSetSelfPath(1);
+	if(!$moreportpid&&($enews=='GoReListHtmlMore'||$enews=='GoReListHtmlMoreA'||$enews=='ReListHtmlMore'||$enews=='ReListZtHtmlMore'||$enews=='ReListTtHtmlMore'))
+	{
+	}
+	else
+	{
+		define('ECMSDOALL',TRUE);
+	}
 }
 require("../class/chtmlfun.php");
 if($enews=="ReNewsHtml")//刷新内容页面

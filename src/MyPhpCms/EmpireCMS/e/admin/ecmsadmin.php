@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(0);
 define('EmpireCMSAdmin','1');
 $enews=$_POST['enews'];
 if(empty($enews))
@@ -34,10 +34,6 @@ if($enews=="login")//登陆
 	$key=$_POST['key'];
 	$loginin=$username;
 	login($username,$password,$key,$_POST);
-}
-elseif($enews=="exit")//退出系统
-{
-	loginout($logininid,$loginin,$loginrnd);
 }
 else
 {

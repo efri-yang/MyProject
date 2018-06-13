@@ -4,6 +4,8 @@ require("../class/connect.php");
 require("../class/db_sql.php");
 require("../class/functions.php");
 require LoadLang("pub/fun.php");
+require("../class/delpath.php");
+require("../class/copypath.php");
 require("../class/t_functions.php");
 require("../data/dbcache/class.php");
 require("../data/dbcache/MemberLevel.php");
@@ -20,6 +22,19 @@ $loginadminstyleid=$lur['adminstyleid'];
 $ecms_hashur=hReturnEcmsHashStrAll();
 
 @set_time_limit(0);
+
+//加载
+$incftp=0;
+if($public_r['phpmode'])
+{
+	include("../class/ftp.php");
+	$incftp=1;
+}
+//防采集
+if($public_r['opennotcj'])
+{
+	@include("../data/dbcache/notcj.php");
+}
 
 //验证是否执行
 function CheckDoTask($r){
@@ -89,7 +104,7 @@ function TogTaskTime($r,$dr){
 	return true;
 }
 
-$retasktime=20;
+$retasktime=30;
 
 $tasksql="select id,filename,lastdo,doweek,doday,dohour,dominute,userid,taskname from {$dbtbpre}enewstask where isopen=1 and (userid=0 or (userid<>0 and userid='$logininid'))";
 
@@ -115,7 +130,7 @@ if($ecms=='dotask')
 	if($lasttime)
 	{
 		echo"<script>parent.WriteTaskLog('任务 <".$r['taskname']."> 开始执行......');</script>";
-		require_once($file);
+		include_once($file);
 		$usql=$empire->query("update {$dbtbpre}enewstask set lastdo='$lasttime' where id=$id");
 		echo"<script>parent.WriteTaskLog('任务 <".$r['taskname']."> 执行完毕，最后执行时间：".date("Y-m-d H:i:s",$lasttime)."');</script>";
 	}
@@ -165,7 +180,7 @@ elseif($ecms=='TodoTask')
 	$file='../tasks/'.$r['filename'];
 	if($r['id']&&$r['filename']&&file_exists($file))
 	{
-		require_once($file);
+		include_once($file);
 		$enews=$ecms;
 		//操作日志
 		insert_dolog("id=$id&taskname=$r[taskname]&filename=$r[filename]");

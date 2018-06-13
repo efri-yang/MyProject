@@ -26,7 +26,8 @@ if($enews=="EditPs")
 	$url="<a href=ListPs.php".$ecms_hashur['whehref'].">管理配送方式</a>&nbsp;>&nbsp;修改配送方式：<b>".$r[pname]."</b>";
 }
 //--------------------html编辑器
-include('../ecmseditor/infoeditor/fckeditor.php');
+include('../ecmseditor/eshoweditor.php');
+$loadeditorjs=ECMS_ShowEditorJS('../ecmseditor/infoeditor/');
 db_close();
 $empire=null;
 ?>
@@ -37,6 +38,7 @@ $empire=null;
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
 <title>配送方式</title>
+<?=$loadeditorjs?>
 <script>
 function on()
 {

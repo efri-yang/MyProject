@@ -24,6 +24,9 @@ $loginrnd=$lur['rnd'];
 $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
 hCheckEcmsRHash();
+
+@set_time_limit(0);
+
 $incftp=0;
 if($public_r['phpmode'])
 {

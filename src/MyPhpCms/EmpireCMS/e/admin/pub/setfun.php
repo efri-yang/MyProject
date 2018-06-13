@@ -5,6 +5,7 @@ function ReturnSettingString($r){
 	$text=ReadFiletext($filename);
 	//后台安全
 	$text=str_replace('[!@--do_loginauth--@!]',addslashes($r[do_loginauth]),$text);
+	$text=str_replace('[!@--do_enloginauth--@!]',intval($r[do_enloginauth]),$text);
 	$text=str_replace('[!@--do_ecookiernd--@!]',addslashes($r[do_ecookiernd]),$text);
 	$text=str_replace('[!@--do_ckhloginip--@!]',intval($r[do_ckhloginip]),$text);
 	$text=str_replace('[!@--do_ckhsession--@!]',intval($r[do_ckhsession]),$text);
@@ -13,13 +14,21 @@ function ReturnSettingString($r){
 	$text=str_replace('[!@--do_thedolog--@!]',intval($r[do_thedolog]),$text);
 	$text=str_replace('[!@--do_ckfromurl--@!]',intval($r[do_ckfromurl]),$text);
 	$text=str_replace('[!@--do_ckhash--@!]',intval($r[do_ckhash]),$text);
+	$text=str_replace('[!@--do_ckhashename--@!]',addslashes($r[do_ckhashename]),$text);
+	$text=str_replace('[!@--do_ckhashrname--@!]',addslashes($r[do_ckhashrname]),$text);
+	$text=str_replace('[!@--do_ckhuseragent--@!]',addslashes($r[do_ckhuseragent]),$text);
 	//COOKIE
 	$text=str_replace('[!@--phome_cookiedomain--@!]',addslashes($r[phome_cookiedomain]),$text);
 	$text=str_replace('[!@--phome_cookiepath--@!]',addslashes($r[phome_cookiepath]),$text);
+	$text=str_replace('[!@--phome_cookiehttponly--@!]',intval($r[phome_cookiehttponly]),$text);
+	$text=str_replace('[!@--phome_cookiesecure--@!]',intval($r[phome_cookiesecure]),$text);
 	$text=str_replace('[!@--phome_cookievarpre--@!]',addslashes($r[phome_cookievarpre]),$text);
 	$text=str_replace('[!@--phome_cookieadminvarpre--@!]',addslashes($r[phome_cookieadminvarpre]),$text);
 	$text=str_replace('[!@--phome_cookieckrnd--@!]',addslashes($r[phome_cookieckrnd]),$text);
 	$text=str_replace('[!@--phome_cookieckrndtwo--@!]',addslashes($r[phome_cookieckrndtwo]),$text);
+	$text=str_replace('[!@--phome_cookieckrndthree--@!]',addslashes($r[phome_cookieckrndthree]),$text);
+	$text=str_replace('[!@--phome_cookieckrndfour--@!]',addslashes($r[phome_cookieckrndfour]),$text);
+	$text=str_replace('[!@--phome_cookieckrndfive--@!]',addslashes($r[phome_cookieckrndfive]),$text);
 	//防火墙
 	$text=str_replace('[!@--efw_open--@!]',intval($r[efw_open]),$text);
 	$text=str_replace('[!@--efw_pass--@!]',addslashes($r[efw_pass]),$text);
@@ -86,6 +95,7 @@ function SetFirewall($add,$userid,$username){
 	$r[efw_cleargettext]=$add[fw_cleargettext];
 	//原来设置
 	$r[do_loginauth]=$ecms_config['esafe']['loginauth'];
+	$r[do_enloginauth]=$ecms_config['esafe']['enloginauth'];
 	$r[do_ecookiernd]=$ecms_config['esafe']['ecookiernd'];
 	$r[do_ckhloginip]=$ecms_config['esafe']['ckhloginip'];
 	$r[do_ckhsession]=$ecms_config['esafe']['ckhsession'];
@@ -94,13 +104,21 @@ function SetFirewall($add,$userid,$username){
 	$r[do_thedolog]=$ecms_config['esafe']['thedolog'];
 	$r[do_ckfromurl]=$ecms_config['esafe']['ckfromurl'];
 	$r[do_ckhash]=$ecms_config['esafe']['ckhash'];
+	$r[do_ckhashename]=$ecms_config['esafe']['ckhashename'];
+	$r[do_ckhashrname]=$ecms_config['esafe']['ckhashrname'];
+	$r[do_ckhuseragent]=$ecms_config['esafe']['ckhuseragent'];
 
 	$r[phome_cookiedomain]=$ecms_config['cks']['ckdomain'];
 	$r[phome_cookiepath]=$ecms_config['cks']['ckpath'];
+	$r[phome_cookiehttponly]=$ecms_config['cks']['ckhttponly'];
+	$r[phome_cookiesecure]=$ecms_config['cks']['cksecure'];
 	$r[phome_cookievarpre]=$ecms_config['cks']['ckvarpre'];
 	$r[phome_cookieadminvarpre]=$ecms_config['cks']['ckadminvarpre'];
 	$r[phome_cookieckrnd]=$ecms_config['cks']['ckrnd'];
 	$r[phome_cookieckrndtwo]=$ecms_config['cks']['ckrndtwo'];
+	$r[phome_cookieckrndthree]=$ecms_config['cks']['ckrndthree'];
+	$r[phome_cookieckrndfour]=$ecms_config['cks']['ckrndfour'];
+	$r[phome_cookieckrndfive]=$ecms_config['cks']['ckrndfive'];
 	$string=ReturnSettingString($r);
 	GetSettingConfig($string);
 	//操作日志
@@ -116,6 +134,7 @@ function SetFirewall($add,$userid,$username){
 function SetSafe($add,$userid,$username){
 	global $ecms_config;
 	$r[do_loginauth]=$add[loginauth];
+	$r[do_enloginauth]=(int)$add[enloginauth];
 	$r[do_ecookiernd]=$add[ecookiernd];
 	$r[do_ckhloginip]=(int)$add[ckhloginip];
 	$r[do_ckhsession]=(int)$add[ckhsession];
@@ -124,13 +143,21 @@ function SetSafe($add,$userid,$username){
 	$r[do_thedolog]=(int)$add[thedolog];
 	$r[do_ckfromurl]=(int)$add[ckfromurl];
 	$r[do_ckhash]=(int)$add[ckhash];
+	$r[do_ckhashename]=$add[ckhashename];
+	$r[do_ckhashrname]=$add[ckhashrname];
+	$r[do_ckhuseragent]=$add[ckhuseragent];
 
 	$r[phome_cookiedomain]=$add[cookiedomain];
 	$r[phome_cookiepath]=$add[cookiepath];
+	$r[phome_cookiehttponly]=(int)$add[ckhttponly];
+	$r[phome_cookiesecure]=(int)$add[cksecure];
 	$r[phome_cookievarpre]=$add[cookievarpre];
 	$r[phome_cookieadminvarpre]=$add[cookieadminvarpre];
 	$r[phome_cookieckrnd]=$add[cookieckrnd];
 	$r[phome_cookieckrndtwo]=$add[cookieckrndtwo];
+	$r[phome_cookieckrndthree]=$add[cookieckrndthree];
+	$r[phome_cookieckrndfour]=$add[cookieckrndfour];
+	$r[phome_cookieckrndfive]=$add[cookieckrndfive];
 	//原来设置
 	$r[efw_open]=$ecms_config['fw']['eopen'];
 	$r[efw_pass]=$ecms_config['fw']['epass'];
@@ -144,7 +171,7 @@ function SetSafe($add,$userid,$username){
 	GetSettingConfig($string);
 	//操作日志
 	insert_dolog('');
-	if($ecms_config['esafe']['ecookiernd']!=$r[do_ecookiernd]||$ecms_config['cks']['ckadminvarpre']!=$r[phome_cookieadminvarpre]||$ecms_config['esafe']['ckhanytime']!=$r[do_ckhanytime])
+	if($ecms_config['esafe']['ecookiernd']!=$r[do_ecookiernd]||$ecms_config['cks']['ckadminvarpre']!=$r[phome_cookieadminvarpre]||$ecms_config['esafe']['ckhanytime']!=$r[do_ckhanytime]||$ecms_config['esafe']['ckhashename']!=$r[do_ckhashename]||$ecms_config['esafe']['ckhashrname']!=$r[do_ckhashrname])
 	{
 		printerror('SetSafeSuccessLogin','../index.php');
 	}

@@ -152,7 +152,7 @@ $empire=null;
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>统计数据</title>
 <link href="adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -194,9 +194,9 @@ $empire=null;
     <tr bgcolor="#FFFFFF"> 
       <td height="25">时间范围：</td>
       <td height="25">从 
-        <input name="startday" type="text" value="<?=$startday?>" size="12" onclick="setday(this)">
+        <input name="startday" type="text" value="<?=$startday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         到 
-        <input name="endday" type="text" value="<?=$endday?>" size="12" onclick="setday(this)">
+        <input name="endday" type="text" value="<?=$endday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         之间的数据(两边为空则为不限制日期)</td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

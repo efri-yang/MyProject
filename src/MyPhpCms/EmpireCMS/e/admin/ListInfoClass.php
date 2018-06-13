@@ -133,8 +133,32 @@ function AddInfoClass($bclassid,$newsclassid,$add,$ztid,$userid,$username){
 	$add[infourlispage]=(int)$add[infourlispage];
 	$keeptime=(int)$add['keeptime'];
 	$newstextisnull=(int)$add['newstextisnull'];
+	$loadkeeptime=(int)$add['loadkeeptime'];
+	$add['classname']=eDoRepPostComStr($add['classname']);
+	$add['startday']=hRepPostStr($add['startday'],1);
+	$add['endday']=hRepPostStr($add['endday'],1);
+	$add['save_titlepicl']=hRepPostStr2($add['save_titlepicl']);
+	$mr['tbname']=hRepPostStr2($mr['tbname']);
+	$add['repf']='';
+	if($_POST['repf'])
+	{
+		$add['repf']=$_POST['repf'];
+		$add['repf']=','.hRepPostStr($add['repf'],1).',';
+	}
+	$add['repadf']='';
+	if($_POST['repadf'])
+	{
+		$add['repadf']=$_POST['repadf'];
+		$add['repadf']=','.hRepPostStr($add['repadf'],1).',';
+	}
+	$add['isnullf']='';
+	if($_POST['isnullf'])
+	{
+		$add['isnullf']=$_POST['isnullf'];
+		$add['isnullf']=','.hRepPostStr($add['isnullf'],1).',';
+	}
 	//写入主表
-	$sql=$empire->query("insert into {$dbtbpre}enewsinfoclass(bclassid,classname,infourl,newsclassid,startday,endday,bz,num,copyimg,renum,keyboard,oldword,newword,titlelen,retitlewriter,smalltextlen,zz_smallurl,zz_newsurl,httpurl,repad,imgurl,relistnum,zz_titlepicl,z_titlepicl,qz_titlepicl,save_titlepicl,keynum,insertnum,copyflash,tid,tbname,pagetype,smallpagezz,pagezz,smallpageallzz,pageallzz,mark,enpagecode,recjtheurl,hiddenload,justloadin,justloadcheck,delloadinfo,pagerepad,getfirstpic,oldpagerep,newpagerep,keeptime,lasttime,newstextisnull,getfirstspic,getfirstspicw,getfirstspich,doaddtextpage,infourlispage) values($bclassid,'".eaddslashes($add[classname])."','".eaddslashes2($add[infourl])."',$newsclassid,'$add[startday]','$add[endday]','".eaddslashes2($add[bz])."',$add[num],$add[copyimg],$add[renum],'".eaddslashes2($add[keyboard])."','".eaddslashes2($add[oldword])."','".eaddslashes2($add[newword])."',$add[titlelen],$add[retitlewriter],$add[smalltextlen],'".eaddslashes2($add[zz_smallurl])."','".eaddslashes2($add[zz_newsurl])."','".eaddslashes2($add[httpurl])."','".eaddslashes2($add[repad])."','".eaddslashes2($add[imgurl])."',$add[relistnum],'".eaddslashes2($add[zz_titlepicl])."','".eaddslashes2($add[z_titlepicl])."','".eaddslashes2($add[qz_titlepicl])."','$add[save_titlepicl]',$add[keynum],$add[insertnum],$add[copyflash],$mr[tid],'$mr[tbname]',$add[pagetype],'".eaddslashes2($add[smallpagezz])."','".eaddslashes2($add[pagezz])."','".eaddslashes2($add[smallpageallzz])."','".eaddslashes2($add[pageallzz])."',$add[mark],$add[enpagecode],$add[recjtheurl],$add[hiddenload],$add[justloadin],$add[justloadcheck],$add[delloadinfo],'".eaddslashes2($add[pagerepad])."',$add[getfirstpic],'".eaddslashes2($add[oldpagerep])."','".eaddslashes2($add[newpagerep])."',$keeptime,$lasttime,$newstextisnull,$add[getfirstspic],$add[getfirstspicw],$add[getfirstspich],$add[doaddtextpage],$add[infourlispage]);");
+	$sql=$empire->query("insert into {$dbtbpre}enewsinfoclass(bclassid,classname,infourl,newsclassid,startday,endday,bz,num,copyimg,renum,keyboard,oldword,newword,titlelen,retitlewriter,smalltextlen,zz_smallurl,zz_newsurl,httpurl,repad,imgurl,relistnum,zz_titlepicl,z_titlepicl,qz_titlepicl,save_titlepicl,keynum,insertnum,copyflash,tid,tbname,pagetype,smallpagezz,pagezz,smallpageallzz,pageallzz,mark,enpagecode,recjtheurl,hiddenload,justloadin,justloadcheck,delloadinfo,pagerepad,getfirstpic,oldpagerep,newpagerep,keeptime,lasttime,newstextisnull,getfirstspic,getfirstspicw,getfirstspich,doaddtextpage,infourlispage,repf,repadf,loadkeeptime,isnullf) values($bclassid,'".eaddslashes($add[classname])."','".eaddslashes2($add[infourl])."',$newsclassid,'$add[startday]','$add[endday]','".eaddslashes2($add[bz])."',$add[num],$add[copyimg],$add[renum],'".eaddslashes2($add[keyboard])."','".eaddslashes2($add[oldword])."','".eaddslashes2($add[newword])."',$add[titlelen],$add[retitlewriter],$add[smalltextlen],'".eaddslashes2($add[zz_smallurl])."','".eaddslashes2($add[zz_newsurl])."','".eaddslashes2($add[httpurl])."','".eaddslashes2($add[repad])."','".eaddslashes2($add[imgurl])."',$add[relistnum],'".eaddslashes2($add[zz_titlepicl])."','".eaddslashes2($add[z_titlepicl])."','".eaddslashes2($add[qz_titlepicl])."','$add[save_titlepicl]',$add[keynum],$add[insertnum],$add[copyflash],$mr[tid],'$mr[tbname]',$add[pagetype],'".eaddslashes2($add[smallpagezz])."','".eaddslashes2($add[pagezz])."','".eaddslashes2($add[smallpageallzz])."','".eaddslashes2($add[pageallzz])."',$add[mark],$add[enpagecode],$add[recjtheurl],$add[hiddenload],$add[justloadin],$add[justloadcheck],$add[delloadinfo],'".eaddslashes2($add[pagerepad])."',$add[getfirstpic],'".eaddslashes2($add[oldpagerep])."','".eaddslashes2($add[newpagerep])."',$keeptime,$lasttime,$newstextisnull,$add[getfirstspic],$add[getfirstspicw],$add[getfirstspich],$add[doaddtextpage],$add[infourlispage],'$add[repf]','$add[repadf]','$loadkeeptime','$add[isnullf]');");
 	$classid=$empire->lastid();
 	if($newsclassid)
 	{
@@ -214,8 +238,32 @@ function EditInfoClass($bclassid,$newsclassid,$add,$ztid,$userid,$username){
 	$add[infourlispage]=(int)$add[infourlispage];
 	$keeptime=(int)$add['keeptime'];
 	$newstextisnull=(int)$add['newstextisnull'];
+	$loadkeeptime=(int)$add['loadkeeptime'];
+	$add['classname']=eDoRepPostComStr($add['classname']);
+	$add['startday']=hRepPostStr($add['startday'],1);
+	$add['endday']=hRepPostStr($add['endday'],1);
+	$add['save_titlepicl']=hRepPostStr2($add['save_titlepicl']);
+	$mr['tbname']=hRepPostStr2($mr['tbname']);
+	$add['repf']='';
+	if($_POST['repf'])
+	{
+		$add['repf']=$_POST['repf'];
+		$add['repf']=','.hRepPostStr($add['repf'],1).',';
+	}
+	$add['repadf']='';
+	if($_POST['repadf'])
+	{
+		$add['repadf']=$_POST['repadf'];
+		$add['repadf']=','.hRepPostStr($add['repadf'],1).',';
+	}
+	$add['isnullf']='';
+	if($_POST['isnullf'])
+	{
+		$add['isnullf']=$_POST['isnullf'];
+		$add['isnullf']=','.hRepPostStr($add['isnullf'],1).',';
+	}
 	//主表
-	$sql=$empire->query("update {$dbtbpre}enewsinfoclass set bclassid=$bclassid,classname='".eaddslashes($add[classname])."',infourl='".eaddslashes2($add[infourl])."',newsclassid=$newsclassid,startday='$add[startday]',endday='$add[endday]',bz='".eaddslashes2($add[bz])."',num=$add[num],copyimg=$add[copyimg],renum=$add[renum],keyboard='".eaddslashes2($add[keyboard])."',oldword='".eaddslashes2($add[oldword])."',newword='".eaddslashes2($add[newword])."',titlelen=$add[titlelen],retitlewriter=$add[retitlewriter],smalltextlen=$add[smalltextlen],zz_smallurl='".eaddslashes2($add[zz_smallurl])."',zz_newsurl='".eaddslashes2($add[zz_newsurl])."',httpurl='".eaddslashes2($add[httpurl])."',repad='".eaddslashes2($add[repad])."',imgurl='".eaddslashes2($add[imgurl])."',relistnum=$add[relistnum],zz_titlepicl='".eaddslashes2($add[zz_titlepicl])."',z_titlepicl='".eaddslashes2($add[z_titlepicl])."',qz_titlepicl='".eaddslashes2($add[qz_titlepicl])."',save_titlepicl='$add[save_titlepicl]',keynum=$add[keynum],insertnum=$add[insertnum],copyflash=$add[copyflash],tid=$mr[tid],tbname='$mr[tbname]',pagetype=$add[pagetype],smallpagezz='".eaddslashes2($add[smallpagezz])."',pagezz='".eaddslashes2($add[pagezz])."',smallpageallzz='".eaddslashes2($add[smallpageallzz])."',pageallzz='".eaddslashes2($add[pageallzz])."',mark=$add[mark],enpagecode=$add[enpagecode],recjtheurl=$add[recjtheurl],hiddenload=$add[hiddenload],justloadin=$add[justloadin],justloadcheck=$add[justloadcheck],delloadinfo=$add[delloadinfo],pagerepad='".eaddslashes2($add[pagerepad])."',getfirstpic=$add[getfirstpic],oldpagerep='".eaddslashes2($add[oldpagerep])."',newpagerep='".eaddslashes2($add[newpagerep])."',keeptime='$keeptime',newstextisnull=$newstextisnull,getfirstspic=$add[getfirstspic],getfirstspicw=$add[getfirstspicw],getfirstspich=$add[getfirstspich],doaddtextpage=$add[doaddtextpage],infourlispage=$add[infourlispage] where classid='$add[classid]'");
+	$sql=$empire->query("update {$dbtbpre}enewsinfoclass set bclassid=$bclassid,classname='".eaddslashes($add[classname])."',infourl='".eaddslashes2($add[infourl])."',newsclassid=$newsclassid,startday='$add[startday]',endday='$add[endday]',bz='".eaddslashes2($add[bz])."',num=$add[num],copyimg=$add[copyimg],renum=$add[renum],keyboard='".eaddslashes2($add[keyboard])."',oldword='".eaddslashes2($add[oldword])."',newword='".eaddslashes2($add[newword])."',titlelen=$add[titlelen],retitlewriter=$add[retitlewriter],smalltextlen=$add[smalltextlen],zz_smallurl='".eaddslashes2($add[zz_smallurl])."',zz_newsurl='".eaddslashes2($add[zz_newsurl])."',httpurl='".eaddslashes2($add[httpurl])."',repad='".eaddslashes2($add[repad])."',imgurl='".eaddslashes2($add[imgurl])."',relistnum=$add[relistnum],zz_titlepicl='".eaddslashes2($add[zz_titlepicl])."',z_titlepicl='".eaddslashes2($add[z_titlepicl])."',qz_titlepicl='".eaddslashes2($add[qz_titlepicl])."',save_titlepicl='$add[save_titlepicl]',keynum=$add[keynum],insertnum=$add[insertnum],copyflash=$add[copyflash],tid=$mr[tid],tbname='$mr[tbname]',pagetype=$add[pagetype],smallpagezz='".eaddslashes2($add[smallpagezz])."',pagezz='".eaddslashes2($add[pagezz])."',smallpageallzz='".eaddslashes2($add[smallpageallzz])."',pageallzz='".eaddslashes2($add[pageallzz])."',mark=$add[mark],enpagecode=$add[enpagecode],recjtheurl=$add[recjtheurl],hiddenload=$add[hiddenload],justloadin=$add[justloadin],justloadcheck=$add[justloadcheck],delloadinfo=$add[delloadinfo],pagerepad='".eaddslashes2($add[pagerepad])."',getfirstpic=$add[getfirstpic],oldpagerep='".eaddslashes2($add[oldpagerep])."',newpagerep='".eaddslashes2($add[newpagerep])."',keeptime='$keeptime',newstextisnull=$newstextisnull,getfirstspic=$add[getfirstspic],getfirstspicw=$add[getfirstspicw],getfirstspich=$add[getfirstspich],doaddtextpage=$add[doaddtextpage],infourlispage=$add[infourlispage],repf='$add[repf]',repadf='$add[repadf]',loadkeeptime='$loadkeeptime',isnullf='$add[isnullf]' where classid='$add[classid]'");
 	if($newsclassid)
 	{
 		//是否已有记录
@@ -256,6 +304,7 @@ function EditInfoClass($bclassid,$newsclassid,$add,$ztid,$userid,$username){
 //删除采集节点
 function DelInfoClass($classid,$userid,$username){
 	global $empire,$dbtbpre;
+	$classid=(int)$classid;
 	if(empty($classid))
 	{printerror("NotDelInfoid","history.go(-1)");}
 	//操作权限
@@ -322,7 +371,7 @@ function ShowClass_ListInfoClass($bclassid,$exp){
 	//缩
 	if(getcvar('displayinfoclass',1))
 	{
-		$display=" style=display=none";
+		$display=" style=display:none";
     }
 	if(empty($bclassid))
 	{
@@ -337,7 +386,7 @@ function ShowClass_ListInfoClass($bclassid,$exp){
 	{
 		//采集页面
 		$pager=explode("\r\n",$r[infourl]);
-	    $infourl=$pager[0];
+	    $infourl=eDoRepPostComStr($pager[0],1);
 		$divonclick="";
 		$start_tbody="";
 		$end_tbody="";
@@ -354,7 +403,7 @@ function ShowClass_ListInfoClass($bclassid,$exp){
 		if($r[newsclassid])
 		{
 			$lastcjtime=!$r['lasttime']?'从未采集':date("Y-m-d H:i:s",$r['lasttime']);
-			$cj="<a href='DoCj.php?enews=CjUrl&classid[]=".$r[classid].$ecms_hashur['href']."' title='最后采集时间：".$lastcjtime."'><u>".$fun_r['StartCj']."</u></a>";
+			$cj="<a href='DoCj.php?enews=CjUrl&classid[]=".$r[classid].$ecms_hashur['href']."' title='最后采集时间：".$lastcjtime."' target=_blank><u>".$fun_r['StartCj']."</u></a>";
 			$emptydb="&nbsp;[<a href=ListInfoClass.php?enews=EmptyCj&classid=$r[classid]".$ecms_hashur['href']." onclick=\"return confirm('".$fun_r['CheckEmptyCjRecord']."');\">".$fun_r['EmptyCjRecord']."</a>]";
 			$loadoutcj="&nbsp;[<a href=ecmscj.php?enews=LoadOutCj&classid=$r[classid]".$ecms_hashur['href']." onclick=\"return confirm('确认要导出?');\">导出</a>]";
 			$checkbox="<input type=checkbox name=classid[] value=$r[classid]>";
@@ -513,6 +562,8 @@ var newWindow = null
         <input type="button" name="Submit5" value="增加节点" onclick="self.location.href='AddInfoC.php<?=$ecms_hashur['whehref']?>';">
 		&nbsp;&nbsp;
         <input type="button" name="Submit52" value="导入采集规则" onclick="self.location.href='cj/LoadInCj.php<?=$ecms_hashur['whehref']?>';">
+		&nbsp;&nbsp;
+		<input type="button" name="Submit6" value="数据更新中心" onclick="window.open('ReHtml/ChangeData.php<?=$ecms_hashur['whehref']?>#ReIfInfoHtml');">
       </div></td>
   </tr>
 </table>

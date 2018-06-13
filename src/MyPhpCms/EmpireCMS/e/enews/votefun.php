@@ -138,9 +138,9 @@ function DoVote($r,$vote){
 	}
 	$new_votetext=substr($new_votetext,0,strlen($new_votetext)-2);//去掉最后的字符
 	//返回数组
-	$re['votetotal']=$new_vote_total;
+	$re['votetotal']=(int)$new_vote_total;
 	$re['votetext']=$new_votetext;
-	$re['voteip']=$r['voteip'];
+	$re['voteip']=addslashes($r['voteip']);
 	return $re;
 }
 
@@ -182,11 +182,11 @@ function AddInfoPfen($add){
 		{
 			$nr=$empire->fetch1("select infopfen,infopfennum from {$dbtbpre}ecms_".$class_r[$classid]['tbname']." where id='$id' and classid='$classid' limit 1");
 			$infopfen=$nr[infopfennum]?round($nr[infopfen]/$nr[infopfennum]):0;
-			ajax_printerror($infopfen,$add['ajaxarea'],'AddInfoPfen',1);
+			ajax_printerror($infopfen,RepPostVar($add['ajaxarea']),'AddInfoPfen',1);
 		}
 		else
 		{
-			printerror('AddInfoPfen',$_SERVER['HTTP_REFERER'],1);
+			printerror('AddInfoPfen',EcmsGetReturnUrl(),1);
 		}
 	}
 	else

@@ -22,19 +22,13 @@ $fields = array();
   <table width="98%" border="0" cellspacing="0" cellpadding="0">
   <tr>
   <td align="center">
-  <input type='button' class="coolbg np" onClick="location='catalog_do.php?channelid=<?php echo $GLOBALS['channelid']; ?>&cid=<?php echo $GLOBALS['cid']; ?>&dopost=addArchives';" value='添加文档' />
-  <?php if($adminid==$mid){ ?>
-	<input type='button' class="coolbg np" onClick="location='content_list.php?cid=<?php echo $GLOBALS['cid']; ?>&mid=0';" value='全部文档' />
-	<?php
-}
-else{
-?>
-	<input type='button' class="coolbg np" onClick="location='content_list.php?cid=<?php echo $GLOBALS['cid']; ?>&mid=<?php echo $cuserLogin->getUserID(); ?>';" value='我的文档' />
-	<?php }  echo $GLOBALS['CheckUserSend']; ?>
+  <input type='button' class="coolbg np" onClick="location='catalog_do.php?channelid=<?php echo $GLOBALS['']; ?>&cid=<?php echo $GLOBALS['']; ?>&dopost=addArchives';" value='添加文档' />
+  
+	<?php echo $GLOBALS['']; ?>
  <input type='button' class="coolbg np" onClick="location='catalog_main.php';" value='栏目管理' />
- <input type='button' class="coolbg np" name='bb1' onClick="location='makehtml_list.php?cid=<?php echo $GLOBALS['cid']; ?>';" value='更新列表' />
- <input type='button' class="coolbg np" name='bb2' onClick="location='makehtml_archives.php?cid=<?php echo $GLOBALS['cid']; ?>';" value='更新文档' />
- <input type='button' class="coolbg np" name='bb1' onClick="location='recycling.php?cid=<?php echo $GLOBALS['cid']; ?>';" value='文章回收站' />
+ <input type='button' class="coolbg np" name='bb1' onClick="location='makehtml_list.php?cid=<?php echo $GLOBALS['']; ?>';" value='更新列表' />
+ <input type='button' class="coolbg np" name='bb2' onClick="location='makehtml_archives.php?cid=<?php echo $GLOBALS['']; ?>';" value='更新文档' />
+ <input type='button' class="coolbg np" name='bb1' onClick="location='recycling.php?cid=<?php echo $GLOBALS['']; ?>';" value='文章回收站' />
  </td>
  </tr>
 </table>
@@ -47,7 +41,7 @@ else{
 <table width="98%" border="0" cellpadding="2" cellspacing="1" bgcolor="#CFCFCF" align="center" style="margin-top:8px">
 <tr bgcolor="#E7E7E7" >
 	<td height="28" colspan="10" background="images/tbg.gif" style="padding-left:10px;">
-	◆ <?php echo $GLOBALS['positionname']; ?>文档列表 &nbsp;(使用鼠标右键弹出菜单)
+	◆ <?php echo $GLOBALS['']; ?>文档列表 &nbsp;(使用鼠标右键弹出菜单)
 	</td>
 </tr>
 <tr align="center" bgcolor="#FBFCE2" height="25">
@@ -64,7 +58,6 @@ else{
 </tr>
 <?php
 $atts = array();
-$atts['tagname'] = 'datalist';
 $blockValue = $this->refObj->GetArcList($atts,$this->refObj,$fields); 
 if(is_array($blockValue)){
 foreach( $blockValue as $key=>$fields )
@@ -72,30 +65,30 @@ foreach( $blockValue as $key=>$fields )
 ?>
 <tr align='center' bgcolor="#FFFFFF" height="26" align="center" onMouseMove="javascript:this.bgColor='#FCFDEE';" onMouseOut="javascript:this.bgColor='#FFFFFF';">
 	<td nowrap>
-		<?php echo $fields['id']; ?>
+		<?php echo $fields['']; ?>
 	</td>
 	<td>
-		<input name="arcID" type="checkbox" id="arcID" value="<?php echo $fields['id']; ?>" class="np" />
+		<input name="arcID" type="checkbox" id="arcID" value="<?php echo $fields['']; ?>" class="np" />
 	</td>
 	<td align='left'>
-		<span id="arc<?php echo $fields['id']; ?>">
-			<a href='archives_do.php?aid=<?php echo $fields['id']; ?>&dopost=editArchives'
-				 oncontextmenu="ShowMenu(event,this,<?php echo $fields['id']; ?>,'<?php echo str_replace('\'', '', $fields['title']); ?>')">
-				<u><?php echo $fields['title']; ?></u>
+		<span id="arc<?php echo $fields['']; ?>">
+			<a href='archives_do.php?aid=<?php echo $fields['']; ?>&dopost=editArchives'
+				 oncontextmenu="ShowMenu(event,this,<?php echo $fields['']; ?>,'<?php echo $fields['']; ?>')">
+				<u><?php echo $fields['']; ?></u>
 			</a>
 		</span>
-		<?php echo IsCommendArchives($fields['flag']); ?>
+		<?php echo $fields['']; ?>
 	</td>
-	<td><?php echo GetDateMk($fields['senddate']); ?></td>
-	<td><a href='content_list.php?cid=<?php echo $fields['typeid']; ?>'><?php echo GetTypename($fields['typeid']); ?></a></td>
-	<td><?php echo $fields['click']; ?></td>
-	<td><?php echo IsHtmlArchives($fields['ismake']); ?></td>
-	<td><?php echo GetRankName($fields['arcrank']); ?></td>
-	<td><?php echo GetMemberName($fields['mid']); ?></td>
+	<td><?php echo $fields['']; ?></td>
+	<td><a href='content_list.php?cid=<?php echo $fields['']; ?>'><?php echo $fields['']; ?></a></td>
+	<td><?php echo $fields['']; ?></td>
+	<td><?php echo $fields['']; ?></td>
+	<td><?php echo $fields['']; ?></td>
+	<td><?php echo $fields['']; ?></td>
 	<td>
-		<img src='images/trun.gif' title="编辑属性" alt="编辑属性" onClick="QuickEdit(<?php echo $fields['id']; ?>, event, this);" style='cursor:pointer' border='0' width='16' height='16' />
-		<img src='images/gtk-edit.png' title="编辑" alt="编辑" onClick="editArc(<?php echo $fields['id']; ?>);" style='cursor:pointer' border='0' width='16' height='16' />
-		<img src='images/part-list.gif' title="预览" alt="预览" onClick="viewArc(<?php echo $fields['id']; ?>);" style='cursor:pointer' border='0' width='16' height='16' />
+		<img src='images/trun.gif' title="编辑属性" alt="编辑属性" onClick="QuickEdit(<?php echo $fields['']; ?>, event, this);" style='cursor:pointer' border='0' width='16' height='16' />
+		<img src='images/gtk-edit.png' title="编辑" alt="编辑" onClick="editArc(<?php echo $fields['']; ?>);" style='cursor:pointer' border='0' width='16' height='16' />
+		<img src='images/part-list.gif' title="预览" alt="预览" onClick="viewArc(<?php echo $fields['']; ?>);" style='cursor:pointer' border='0' width='16' height='16' />
 	</td>
 </tr>
 <?php
@@ -121,8 +114,6 @@ foreach( $blockValue as $key=>$fields )
 	<td height="36" colspan="10" align="center">
 		<?php
 $atts = array();
-$atts['tagname'] = 'pagelist';
-$atts['listsize'] = '3';
  echo $this->refObj->GetPageList($atts,$this->refObj,$fields); 
 ?>
 
@@ -141,14 +132,14 @@ $atts['listsize'] = '3';
           <td width='160'>
           <select name='cid' style='width:150px'>
           <option value='0'>选择栏目...</option>
-          	<?php echo $GLOBALS['optionarr']; ?>
+          	<?php echo $GLOBALS['']; ?>
           </select>
         </td >
         <td nowrap>
           关键字：
         </td>
         <td width='130'>
-          	<input type='text' name='keyword' value='<?php echo $GLOBALS['keyword']; ?>' style='width:120px' />
+          	<input type='text' name='keyword' value='<?php echo $GLOBALS['']; ?>' style='width:120px' />
         </td>
         <td width='90'>
     		<select name='orderby' style='width:80px'>
@@ -163,7 +154,7 @@ $atts['listsize'] = '3';
       <td width='90'>
     		<select name='flag' style='width:80px'>
             <option value=''>属性...</option>
-            <?php echo $GLOBALS['flagsArr']; ?>
+            <?php echo $GLOBALS['']; ?>
       	</select>
       </td>
        <td>

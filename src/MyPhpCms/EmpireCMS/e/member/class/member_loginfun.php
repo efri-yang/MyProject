@@ -123,6 +123,9 @@ function qloginout($userid,$username,$rnd){
 		Header("Location:".$ecms_config['member']['quiturl']);
 		exit();
 	}
+	$user_r[userid]=(int)$user_r[userid];
+	$rnd=make_password(20);//产生随机密码
+	$sql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('rnd')."='$rnd' where ".egetmf('userid')."='$user_r[userid]'");
 	EmptyEcmsCookie();
 	$dopr=1;
 	if($_GET['prtype'])

@@ -27,6 +27,7 @@ function UserSearchDoKeyboard($f,$hh,$keyboard){
 
 $editor=1;
 eCheckCloseMods('member');//关闭模块
+eCheckCloseMods('mlist');//关闭模块
 if($public_r['memberlistlevel'])
 {
 	$user=islogin();
@@ -108,6 +109,10 @@ if($sear)
 				continue;
 			}
 			$show[$i]=RepPostVar($show[$i]);
+			if(stristr(','.$searchf.',',','.$show[$i].','))
+			{
+				continue;
+			}
 			$dh=empty($searchf)?'':',';
 			$searchf.=$dh.$show[$i];
 			if($show[$i]=='username')
@@ -117,6 +122,10 @@ if($sear)
 			else
 			{
 				$f='ui.`'.$show[$i].'`';
+			}
+			if(strlen($keyboard[$i])>$public_r['max_keyboard'])
+			{
+				printerror("MinKeyboard","",1);
 			}
 			$onewhere=UserSearchDoKeyboard($f,$hh[$i],$keyboard[$i]);
 			if($onewhere)
@@ -136,7 +145,15 @@ if($sear)
 		$searchf='username';
 		if($keyboard[0])
 		{
-			$add.=$where.UserSearchDoKeyboard('u.'.egetmf('username'),$hh[0],$keyboard[0]);
+			if(strlen($keyboard[0])>$public_r['max_keyboard'])
+			{
+				printerror("MinKeyboard","",1);
+			}
+			$onewhere=UserSearchDoKeyboard('u.'.egetmf('username'),$hh[0],$keyboard[0]);
+			if($onewhere)
+			{
+				$add.=$where.$onewhere;
+			}
 		}
 		$search.='&hh[]='.RepPostStr($hh[0],1).'&keyboard[]='.RepPostStr($keyboard[0],1);
 	}
@@ -149,6 +166,10 @@ $line=$public_r['member_num'];//每页显示条数
 $page_line=10;//每页显示链接数
 $offset=$page*$line;//总偏移量
 $totalnum=(int)$_GET['totalnum'];
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 if($totalnum<1)
 {
 	$totalquery="select count(*) as total from ".eReturnMemberTable()." u".$add;
@@ -158,7 +179,12 @@ else
 {
 	$num=$totalnum;
 }
-$search.='&totalnum='.$num;
+if($public_r['usetotalnum'])
+{
+	$search.='&totalnum='.$num;
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 //模板
 $tempid=(int)$_GET['tempid'];
 if(empty($tempid))

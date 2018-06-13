@@ -13,6 +13,7 @@ function SetPl($add,$userid,$username){
 	$add['plgroupid']=(int)$add['plgroupid'];
 	$add['pl_num']=(int)$add['pl_num'];
 	$add['plmaxfloor']=(int)$add['plmaxfloor'];
+	$add['plurl']=hRepPostStr($add['plurl'],1);
 	$sql=$empire->query("update {$dbtbpre}enewspl_set set pltime='$add[pltime]',plsize='$add[plsize]',plincludesize='$add[plincludesize]',plkey_ok='$add[plkey_ok]',plfacenum='$add[plfacenum]',plgroupid='$add[plgroupid]',plclosewords='".eaddslashes($add[plclosewords])."',pl_num='$add[pl_num]',plurl='$add[plurl]',plmaxfloor='$add[plmaxfloor]',plquotetemp='".eaddslashes2($add[plquotetemp])."' limit 1");
 	GetConfig();//更新缓存
 	if($sql)
@@ -44,6 +45,7 @@ function DelPl_all($plid,$id,$bclassid,$classid,$userid,$username){
 	{
 		printerror("NotDelPlid","history.go(-1)");
 	}
+	$add='';
 	for($i=0;$i<$count;$i++)
 	{
 		$add.="plid='".intval($plid[$i])."' or ";
@@ -66,7 +68,7 @@ function DelPl_all($plid,$id,$bclassid,$classid,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("classid=".$classid."<br>classname=".$class_r[$classid][classname]);
-		printerror("DelPlSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelPlSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -87,17 +89,20 @@ function CheckPl_all($plid,$id,$bclassid,$classid,$userid,$username){
 	{
 		printerror("NotCheckPlid","history.go(-1)");
 	}
+	$add='';
+	$docheck=(int)$_POST['docheck'];
+	$docheck=$docheck?1:0;
 	for($i=0;$i<$count;$i++)
 	{
 		$add.="plid='".intval($plid[$i])."' or ";
 	}
 	$add=substr($add,0,strlen($add)-4);
-	$sql=$empire->query("update {$dbtbpre}enewspl_{$restb} set checked=0 where ".$add);
+	$sql=$empire->query("update {$dbtbpre}enewspl_{$restb} set checked='$docheck' where ".$add);
 	if($sql)
 	{
 		//操作日志
-		insert_dolog("classid=".$classid."<br>classname=".$class_r[$classid][classname]);
-		printerror("CheckPlSuccess",$_SERVER['HTTP_REFERER']);
+		insert_dolog("docheck=$docheck<br>classid=".$classid."<br>classname=".$class_r[$classid][classname]);
+		printerror("CheckPlSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -118,6 +123,7 @@ function DoGoodPl_all($plid,$id,$bclassid,$classid,$isgood,$userid,$username){
 	{
 		printerror("NotGoodPlid","history.go(-1)");
 	}
+	$add='';
 	$isgood=(int)$isgood;
 	for($i=0;$i<$count;$i++)
 	{
@@ -129,7 +135,7 @@ function DoGoodPl_all($plid,$id,$bclassid,$classid,$isgood,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("isgood=$isgood<br>classid=".$classid."<br>classname=".$class_r[$classid][classname]);
-		printerror("DoGoodPlSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DoGoodPlSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -285,6 +291,10 @@ function AddPlF($add,$userid,$username){
 	}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"plf");
+	$add['fname']=hRepPostStr($add['fname'],1);
+	$add['fzs']=hRepPostStr($add['fzs'],1);
+	$add['ftype']=hRepPostStr($add['ftype'],1);
+	$add['flen']=hRepPostStr($add['flen'],1);
 	//验证字段重复
 	CheckRePlF($add,0);
 	//字段类型
@@ -330,6 +340,10 @@ function EditPlF($add,$userid,$username){
 	}
 	//验证权限
 	CheckLevel($userid,$username,$classid,"plf");
+	$add['fname']=hRepPostStr($add['fname'],1);
+	$add['fzs']=hRepPostStr($add['fzs'],1);
+	$add['ftype']=hRepPostStr($add['ftype'],1);
+	$add['flen']=hRepPostStr($add['flen'],1);
 	//验证字段重复
 	CheckRePlF($add,1);
 	$cr=$empire->fetch1("select * from {$dbtbpre}enewsplf where fid='$fid'");

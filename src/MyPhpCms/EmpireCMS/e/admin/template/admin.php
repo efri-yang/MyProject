@@ -50,6 +50,10 @@ if(empty($tgname))
 {
 	printerror("ErrorUrl","");
 }
+if(!file_exists("../adminstyle/".$loginadminstyleid."/AdminTemp.php"))
+{
+	exit();
+}
 require("../adminstyle/".$loginadminstyleid."/AdminTemp.php");
 db_close();
 $empire=null;

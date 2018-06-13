@@ -72,3 +72,28 @@ function EchoReturnedText () {
 		}
 	}
 }
+
+
+
+
+
+
+function edoshowkey(showid,vname,baseurl){
+	document.getElementById(showid).innerHTML='<img src="'+baseurl+'e/ShowKey/?v='+vname+'&t='+Math.random()+'" name="'+vname+'KeyImg" id="'+vname+'KeyImg" align="bottom" onclick=edoshowkey("'+showid+'","'+vname+'","'+baseurl+'") title="看不清楚,点击刷新">';
+}
+
+function edozoomimg(o){
+	var zoom=parseInt(o.style.zoom, 10)||100;zoom+=event.wheelDelta/12;if (zoom>0) o.style.zoom=zoom+'%';
+	return false;
+}
+
+function edoautosimg(o){
+	if(o.width>screen.width*0.5)
+	{
+		o.width=screen.width*0.5;
+	}
+}
+
+
+
+

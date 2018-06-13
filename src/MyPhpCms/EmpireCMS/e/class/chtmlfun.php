@@ -1,7 +1,13 @@
 <?php
 //生成所有内容页面
 function ReNewsHtml($start,$classid,$from,$retype,$startday,$endday,$startid,$endid,$tbname,$havehtml){
-	global $empire,$public_r,$class_r,$fun_r,$dbtbpre,$etable_r;
+	global $empire,$public_r,$class_r,$fun_r,$dbtbpre,$etable_r,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$tbname=RepPostVar($tbname);
 	if(empty($tbname)||!eCheckTbname($tbname))
 	{
@@ -94,13 +100,19 @@ function ReNewsHtml($start,$classid,$from,$retype,$startday,$endday,$startid,$en
 		$empire=null;
 		exit();
 	}
-	echo"<link rel=\"stylesheet\" href=\"../data/images/css.css\" type=\"text/css\"><meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReNewsHtml&tbname=$tbname&classid=$classid&start=$new_start&from=".urlencode($from)."&retype=$retype&startday=$startday&endday=$endday&startid=$startid&endid=$endid&havehtml=$havehtml&reallinfotime=".ehtmlspecialchars($_GET['reallinfotime']).hReturnEcmsHashStrHref(0)."\">".$fun_r[OneReNewsHtmlSuccess]."(ID:<font color=red><b>".$new_start."</b></font>)";
+	echo"<link rel=\"stylesheet\" href=\"../data/images/css.css\" type=\"text/css\"><meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReNewsHtml&tbname=$tbname&classid=$classid&start=$new_start&from=".urlencode($from)."&retype=$retype&startday=$startday&endday=$endday&startid=$startid&endid=$endid&havehtml=$havehtml&reallinfotime=".ehtmlspecialchars($_GET['reallinfotime']).hReturnEcmsHashStrHref(0).$mphref."\">".$fun_r[OneReNewsHtmlSuccess]."(ID:<font color=red><b>".$new_start."</b></font>)";
 	exit();
 }
 
 //刷新所有列表
 function ReListHtml_all($start,$do,$from){
-	global $empire,$public_r,$fun_r,$class_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$class_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	if($do=="all")
@@ -137,17 +149,23 @@ function ReListHtml_all($start,$do,$from){
 	}
 	if(empty($b))
 	{
-		echo $fun_r[ReListNewsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReListHtml_all&start=0&from=".urlencode($from).hReturnEcmsHashStrHref(0)."&do=all';</script>";
+		echo $fun_r[ReListNewsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReListHtml_all&start=0&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."&do=all';</script>";
 		exit();
     }
-	//echo $fun_r[OneReListNewsSuccess]."(ID:<font color=red><b>".$end_classid."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReListHtml_all&start=$end_classid&do=class&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
-	echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReListHtml_all&start=$end_classid&do=class&from=".urlencode($from).hReturnEcmsHashStrHref(0)."\">".$fun_r[OneReListNewsSuccess]."(ID:<font color=red><b>".$end_classid."</b></font>)";
+	//echo $fun_r[OneReListNewsSuccess]."(ID:<font color=red><b>".$end_classid."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReListHtml_all&start=$end_classid&do=class&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
+	echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReListHtml_all&start=$end_classid&do=class&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."\">".$fun_r[OneReListNewsSuccess]."(ID:<font color=red><b>".$end_classid."</b></font>)";
 	exit();
 }
 
 //刷新专题列表
 function ReZtListHtml_all($start,$do,$from){
-	global $empire,$public_r,$fun_r,$class_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$class_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	$time=time();
@@ -167,10 +185,10 @@ function ReZtListHtml_all($start,$do,$from){
 		}
 		if(empty($b))
 		{
-			echo $fun_r[ReZtcListNewsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReZtListHtml_all&start=0&do=all&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+			echo $fun_r[ReZtcListNewsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReZtListHtml_all&start=0&do=all&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 			exit();
 		}
-		echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReZtListHtml_all&start=$end_classid&do=ztc&from=".urlencode($from).hReturnEcmsHashStrHref(0)."\">".$fun_r[OneReZtcListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)";
+		echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReZtListHtml_all&start=$end_classid&do=ztc&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."\">".$fun_r[OneReZtcListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)";
 		exit();
 	}
 	$zsql=$empire->query("select ztid from {$dbtbpre}enewszt where ztid>$start and (endtime=0 or endtime>$time) order by ztid limit ".$public_r['relistnum']);
@@ -182,10 +200,10 @@ function ReZtListHtml_all($start,$do,$from){
 	}
 	if(empty($b))
 	{
-		echo $fun_r[ReZtListNewsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReZtListHtml_all&start=0&do=ztc&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+		echo $fun_r[ReZtListNewsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReZtListHtml_all&start=0&do=ztc&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 		exit();
 	}
-	echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReZtListHtml_all&start=$end_classid&do=zt&from=".urlencode($from).hReturnEcmsHashStrHref(0)."\">".$fun_r[OneReZtListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)";
+	echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReZtListHtml_all&start=$end_classid&do=zt&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."\">".$fun_r[OneReZtListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)";
 	exit();
 }
 
@@ -206,7 +224,13 @@ function DoReZtListHtml($ztid,$ecms=0){
 
 //刷新标题分类
 function ReTtListHtml_all($start,$do,$from){
-	global $empire,$public_r,$fun_r,$class_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$class_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	$tsql=$empire->query("select typeid from {$dbtbpre}enewsinfotype where typeid>$start and listdt=0 order by typeid limit ".$public_r['relistnum']);
@@ -221,13 +245,19 @@ function ReTtListHtml_all($start,$do,$from){
 		insert_dolog("");//操作日志
 		printerror("ReTtidAllSuccess",$from);
 	}
-	echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReTtListHtml_all&start=$end_classid&do=tt&from=".urlencode($from).hReturnEcmsHashStrHref(0)."\">".$fun_r[OneReTtListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)";
+	echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReTtListHtml_all&start=$end_classid&do=tt&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."\">".$fun_r[OneReTtListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)";
 	exit();
 }
 
 //刷新所有js
 function ReAllNewsJs($start,$do,$from){
-	global $empire,$public_r,$fun_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$line=$public_r[relistnum];
 	$b=0;
@@ -262,11 +292,11 @@ function ReAllNewsJs($start,$do,$from){
 		//刷新完毕
 		if(empty($b))
 		{
-			echo $fun_r[ReTtNewsJsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReAllNewsJs&do=all&start=0&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+			echo $fun_r[ReTtNewsJsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReAllNewsJs&do=all&start=0&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 			exit();
 	    }
-		//echo $fun_r[OneReTtNewsJsSuccess]."(ZtID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReAllNewsJs&do=tt&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
-		echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReAllNewsJs&do=tt&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."\">".$fun_r[OneReTtNewsJsSuccess]."(ZtID:<font color=red><b>".$newstart."</b></font>)";
+		//echo $fun_r[OneReTtNewsJsSuccess]."(ZtID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReAllNewsJs&do=tt&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
+		echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReAllNewsJs&do=tt&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."\">".$fun_r[OneReTtNewsJsSuccess]."(ZtID:<font color=red><b>".$newstart."</b></font>)";
 		exit();
 	}
 	else//刷新栏目js
@@ -287,11 +317,11 @@ function ReAllNewsJs($start,$do,$from){
 		//刷新完毕
 		if(empty($b))
 		{
-			echo $fun_r[ReClassNewsJsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReAllNewsJs&do=tt&start=0&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+			echo $fun_r[ReClassNewsJsSuccess]."<script>self.location.href='ecmschtml.php?enews=ReAllNewsJs&do=tt&start=0&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 			exit();
 	    }
-		//echo $fun_r[OneReClassNewsJsSuccess]."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReAllNewsJs&do=class&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
-		echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReAllNewsJs&do=class&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."\">".$fun_r[OneReClassNewsJsSuccess]."(ID:<font color=red><b>".$newstart."</b></font>)";
+		//echo $fun_r[OneReClassNewsJsSuccess]."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReAllNewsJs&do=class&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
+		echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=ReAllNewsJs&do=class&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."\">".$fun_r[OneReClassNewsJsSuccess]."(ID:<font color=red><b>".$newstart."</b></font>)";
 		exit();
 	}
 }
@@ -387,7 +417,13 @@ function ReDtPage($userid,$username){
 
 //批量刷新自定义页面
 function ReUserpageAll($start=0,$from,$userid,$username){
-	global $empire,$public_r,$fun_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	$sql=$empire->query("select id,path,pagetext,title,pagetitle,pagekeywords,pagedescription,tempid from {$dbtbpre}enewspage where id>$start order by id limit ".$public_r['reuserpagenum']);
@@ -404,13 +440,19 @@ function ReUserpageAll($start=0,$from,$userid,$username){
 	    insert_dolog("");
 		printerror("ReUserpageAllSuccess",$from);
 	}
-	echo $fun_r['OneReUserpageSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReUserpageAll&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+	echo $fun_r['OneReUserpageSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReUserpageAll&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
 }
 
 //批量刷新自定义信息列表
 function ReUserlistAll($start=0,$from,$userid,$username){
-	global $empire,$public_r,$fun_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	$sql=$empire->query("select listid,pagetitle,filepath,filetype,totalsql,listsql,maxnum,lencord,listtempid,pagekeywords,pagedescription from {$dbtbpre}enewsuserlist where listid>$start order by listid limit ".$public_r['reuserlistnum']);
@@ -427,13 +469,19 @@ function ReUserlistAll($start=0,$from,$userid,$username){
 	    insert_dolog("");
 		printerror("ReUserlistAllSuccess",$from);
 	}
-	echo $fun_r['OneReUserlistSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReUserlistAll&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+	echo $fun_r['OneReUserlistSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReUserlistAll&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
 }
 
 //批量刷新自定义JS
 function ReUserjsAll($start=0,$from,$userid,$username){
-	global $empire,$public_r,$fun_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	$sql=$empire->query("select jsid,jsname,jssql,jstempid,jsfilename from {$dbtbpre}enewsuserjs where jsid>$start order by jsid limit ".$public_r['reuserjsnum']);
@@ -450,13 +498,19 @@ function ReUserjsAll($start=0,$from,$userid,$username){
 	    insert_dolog("");
 		printerror("ReUserjsAllSuccess",$from);
 	}
-	echo $fun_r['OneReUserjsSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReUserjsAll&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+	echo $fun_r['OneReUserjsSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReUserjsAll&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
 }
 
 //批量刷新碎片文件
 function ReSpAll($start=0,$from,$userid,$username){
-	global $empire,$public_r,$fun_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	$sql=$empire->query("select spid,varname,refile,spfile,spfileline,spfilesub from {$dbtbpre}enewssp where refile=1 and spid>$start order by spid limit ".$public_r['reuserpagenum']);
@@ -473,7 +527,7 @@ function ReSpAll($start=0,$from,$userid,$username){
 	    insert_dolog("");
 		printerror("ReSpAllSuccess",$from);
 	}
-	echo $fun_r['OneReSpSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReSpAll&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+	echo $fun_r['OneReSpSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReSpAll&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
 }
 
@@ -502,12 +556,18 @@ function ReSp($add,$userid,$username,$ecms=0){
 	}
 	//操作日志
 	insert_dolog("");
-	printerror("ReSpSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("ReSpSuccess",EcmsGetReturnUrl());
 }
 
 //转向处理文件
 function GoReListHtmlMore($classid,$gore,$from,$ecms=0){
-	global $empire,$class_r;
+	global $empire,$class_r,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$count=count($classid);
 	if($count==0)
 	{
@@ -539,13 +599,19 @@ function GoReListHtmlMore($classid,$gore,$from,$ecms=0){
 	{
 		$phome="ReListZtHtmlMore";
 	}
-	echo"<script>self.location.href='ecmschtml.php?enews=$phome&classid=$cid&from=".urlencode($from).hReturnEcmsHashStrHref(0)."&ecms=$ecms';</script>";
+	echo"<script>self.location.href='ecmschtml.php?enews=$phome&classid=$cid&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."&ecms=$ecms';</script>";
 	exit();
 }
 
 //刷新多列表
 function ReListHtmlMore($start,$classid,$from){
-	global $empire,$public_r,$fun_r,$class_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$class_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$classid=eReturnInids($classid);
 	if(empty($classid))
@@ -587,13 +653,19 @@ function ReListHtmlMore($start,$classid,$from){
 		insert_dolog("");
 		printerror("ReClassidAllSuccess",$from);
     }
-	echo $fun_r[OneReListNewsSuccess]."(ID:<font color=red><b>".$end_classid."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReListHtmlMore&start=$end_classid&classid=$classid&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+	echo $fun_r[OneReListNewsSuccess]."(ID:<font color=red><b>".$end_classid."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReListHtmlMore&start=$end_classid&classid=$classid&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
 }
 
 //刷新多专题列表
 function ReListZtHtmlMore($start,$classid,$from,$ecms=0){
-	global $empire,$public_r,$fun_r,$class_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$class_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$classid=eReturnInids($classid);
 	if(empty($classid))
@@ -615,13 +687,19 @@ function ReListZtHtmlMore($start,$classid,$from,$ecms=0){
 		insert_dolog("");
 		printerror("ReZtidAllSuccess",$from);
     }
-    echo $fun_r[OneReZtListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReListZtHtmlMore&start=$end_classid&classid=$classid&from=".urlencode($from).hReturnEcmsHashStrHref(0)."&ecms=$ecms';</script>";
+    echo $fun_r[OneReZtListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReListZtHtmlMore&start=$end_classid&classid=$classid&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."&ecms=$ecms';</script>";
     exit();
 }
 
 //刷新多标题分类
 function ReListTtHtmlMore($start,$classid,$from){
-	global $empire,$public_r,$fun_r,$class_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$class_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$classid=eReturnInids($classid);
 	if(empty($classid))
@@ -643,7 +721,7 @@ function ReListTtHtmlMore($start,$classid,$from){
 		insert_dolog("");
 		printerror("ReTtidAllSuccess",$from);
     }
-    echo $fun_r[OneReTtListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReListTtHtmlMore&start=$end_classid&classid=$classid&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+    echo $fun_r[OneReTtListNewsSuccess]."(ZtID:<font color=red><b>".$end_classid."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReListTtHtmlMore&start=$end_classid&classid=$classid&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
     exit();
 }
 
@@ -682,12 +760,18 @@ function ReSingleInfo($userid,$username){
 	}
 	//操作日志
 	insert_dolog("classid=".$classid);
-	printerror("ReSingleInfoSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("ReSingleInfoSuccess",EcmsGetReturnUrl());
 }
 
 //恢复栏目目录
 function ReClassPath($start=0){
-	global $empire,$public_r,$dbtbpre;
+	global $empire,$public_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$sql=$empire->query("select classid,classpath,islast from {$dbtbpre}enewsclass where wburl='' and classid>$start order by classid limit ".$public_r[relistnum]);
 	$b=0;
@@ -717,29 +801,10 @@ function ReClassPath($start=0){
 	{
 		//操作日志
 	    insert_dolog("");
-		printerror("ReClassPathSuccess","ReHtml/ChangeData.php".hReturnEcmsHashStrHref2(1));
+		printerror("ReClassPathSuccess","ReHtml/ChangeData.php?".hReturnEcmsHashStrHref2(0).$mphref);
 	}
-	echo"(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReClassPath&start=$newstart".hReturnEcmsHashStrHref(0)."';</script>";
+	echo"(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmschtml.php?enews=ReClassPath&start=$newstart".hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
-}
-
-//建立栏目目录
-function FormatClassPath($classpath,$islast){
-	$r=explode("/",$classpath);
-	$returnpath="";
-	for($i=0;$i<count($r);$i++)
-	{
-		if($i>0)
-		{
-			$returnpath.="/".$r[$i];
-		}
-		else
-		{
-			$returnpath.=$r[$i];
-		}
-		CreateClassPath($returnpath);
-	}
-	return $returnpath;
 }
 
 //刷新首页
@@ -752,7 +817,13 @@ function ReIndex(){
 
 //更新栏目信息数
 function UpdateClassInfosAll($add){
-	global $empire,$public_r,$fun_r,$class_r,$dbtbpre;
+	global $empire,$public_r,$fun_r,$class_r,$dbtbpre,$moreportpid;
+	$moreportpid=(int)$moreportpid;
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$add['start'];
 	$from=$add['from'];
 	$b=0;
@@ -769,7 +840,7 @@ function UpdateClassInfosAll($add){
 		insert_dolog('');//操作日志
 		printerror('UpdateClassInfosAllSuccess',$from);
     }
-	echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=UpdateClassInfosAll&start=$end_classid&from=".urlencode($from).hReturnEcmsHashStrHref(0)."\">".$fun_r[OneUpdateClassInfosSuccess]."(ID:<font color=red><b>".$end_classid."</b></font>)";
+	echo"<meta http-equiv=\"refresh\" content=\"".$public_r['realltime'].";url=ecmschtml.php?enews=UpdateClassInfosAll&start=$end_classid&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."\">".$fun_r[OneUpdateClassInfosSuccess]."(ID:<font color=red><b>".$end_classid."</b></font>)";
 	exit();
 }
 ?>

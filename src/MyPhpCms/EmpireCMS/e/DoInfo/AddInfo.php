@@ -59,6 +59,8 @@ if($enews=="MAddInfo")
 	$check_ip=egetip();
 	$check_checked=$cr['wfid']?0:$cr['checkqadd'];
 	eCheckIpAddInfoNum($check_ip,$cr['tbname'],$cr['modid'],$check_checked);
+	//验证单信息
+	//qCheckMemberOneInfo($cr['tbname'],$cr['modid'],$classid,$muserid);
 	//初始变量
 	$word="增加信息";
 	$ecmsfirstpost=1;
@@ -68,8 +70,15 @@ if($enews=="MAddInfo")
 	{
 		$showkey="<tr bgcolor=\"#FFFFFF\">
       <td width=\"11%\" height=\"25\">验证码</td>
-      <td height=\"25\"><input name=\"key\" type=\"text\" size=\"6\">
-        <img src=\"../ShowKey/?v=info\" name=\"infoKeyImg\" id=\"infoKeyImg\" onclick=\"infoKeyImg.src='../ShowKey/?v=info&t='+Math.random()\" title=\"看不清楚,点击刷新\"></td></tr>";
+      <td height=\"25\">
+        <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">
+                <tr> 
+                  <td width=\"52\"><input name=\"key\" type=\"text\" id=\"key\" size=\"6\"> 
+                  </td>
+                  <td id=\"infoshowkey\"><a href=\"#EmpireCMS\" onclick=\"edoshowkey('infoshowkey','info','".$public_r['newsurl']."');\" title=\"点击显示验证码\">点击显示验证码</a></td>
+                </tr>
+        </table>
+      </td></tr>";
 	}
 	//图片
 	$imgwidth=0;
@@ -142,9 +151,11 @@ if($cr['bclassid'])
 	$postclass="<a href='".$bclassurl."' target=_blank>".$class_r[$cr['bclassid']]['classname']."</a>&nbsp;>&nbsp;".$postclass;
 }
 //html编辑器
+$loadeditorjs='';
 if($emod_r[$mid]['editorf']&&$emod_r[$mid]['editorf']!=',')
 {
-	include('../data/ecmseditor/infoeditor/fckeditor.php');
+	include('../data/ecmseditor/eshoweditor.php');
+	$loadeditorjs=ECMS_ShowEditorJS('../data/ecmseditor/infoeditor/');
 }
 if(empty($musername))
 {

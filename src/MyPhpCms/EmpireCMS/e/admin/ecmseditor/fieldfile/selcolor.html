@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
-<TITLE>颜色</TITLE>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<TITLE>颜色</TITLE>
 <STYLE TYPE="text/css">
  td {font-size: 10.8pt}
  body {font-size: 10.8pt}
@@ -9,11 +9,38 @@
 </STYLE>
 
 <SCRIPT LANGUAGE=JavaScript>
+
 var SelRGB = '';
 var DrRGB = '';
 var SelGRAY = '120';
 
 var hexch = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F');
+
+//return srcElement
+function eGetSrcElement(e){
+	var theEvent= window.event || e;
+	var srcElement= theEvent.srcElement;
+	var thisisie=1;
+	if(!srcElement)
+	{
+		srcElement=theEvent.target;
+		thisisie=0;
+	}
+	return srcElement;
+}
+
+//return isie
+function eGetIsIE(e){
+	var theEvent= window.event || e;
+	var srcElement= theEvent.srcElement;
+	var thisisie=1;
+	if(!srcElement)
+	{
+		srcElement=theEvent.target;
+		thisisie=0;
+	}
+	return thisisie;
+}
 
 function ToHex(n)
 {	var h, l;
@@ -48,8 +75,9 @@ function DoColor(c, l)
   return '#' + ToHex(r) + ToHex(g) + ToHex(b);
 }
 
-function EndColor()
-{ var i;
+function EndColor(e)
+{ var i,rbgtext,graytext;
+	var thisisie=eGetIsIE(e);
 
   if(DrRGB != SelRGB)
   {
@@ -57,53 +85,97 @@ function EndColor()
     for(i = 0; i <= 30; i ++)
       GrayTable.rows(i).bgColor = DoColor(SelRGB, 240 - i * 8);
   }
+  rbgtext=thisisie==1?RGB.innerText:RGB.textContent;
+  graytext=thisisie==1?GRAY.innerText:GRAY.textContent;
 
-  SelColor.value = DoColor(RGB.innerText, GRAY.innerText);
+  SelColor.value = DoColor(rbgtext,graytext);
   ShowColor.bgColor = SelColor.value;
 }
-</SCRIPT>
 
-<SCRIPT LANGUAGE=JavaScript FOR=ColorTable EVENT=onclick>
-  SelRGB = event.srcElement.bgColor;
-  EndColor();
-</SCRIPT>
 
-<SCRIPT LANGUAGE=JavaScript FOR=ColorTable EVENT=onmouseover>
-  RGB.innerText = event.srcElement.bgColor;
-  EndColor();
-</SCRIPT>
+//fun
+function ColorTableOnclick(e){
+	var srcElement=eGetSrcElement(e);
+	SelRGB = srcElement.bgColor;
+	EndColor(e);
+}
 
-<SCRIPT LANGUAGE=JavaScript FOR=ColorTable EVENT=onmouseout>
-  RGB.innerText = SelRGB;
-  EndColor();
-</SCRIPT>
+function ColorTableOnmouseover(e){
+	var thisisie=eGetIsIE(e);
+	var srcElement=eGetSrcElement(e);
+	if(thisisie==1)
+	{
+		RGB.innerText = srcElement.bgColor;
+	}
+	else
+	{
+		RGB.textContent = srcElement.bgColor;
+	}
+	EndColor(e);
+}
 
-<SCRIPT LANGUAGE=JavaScript FOR=GrayTable EVENT=onclick>
-  SelGRAY = event.srcElement.title;
-  EndColor();
-</SCRIPT>
+function ColorTableOnmouseout(e){
+	var thisisie=eGetIsIE(e);
+	if(thisisie==1)
+	{
+		RGB.innerText=SelRGB;
+	}
+	else
+	{
+		RGB.textContent=SelRGB;
+	}
+	EndColor(e);
+}
 
-<SCRIPT LANGUAGE=JavaScript FOR=GrayTable EVENT=onmouseover>
-  GRAY.innerText = event.srcElement.title;
-  EndColor();
-</SCRIPT>
+//fun2
+function GrayTableOnclick(e){
+	var srcElement=eGetSrcElement(e);
+	SelGRAY = srcElement.title;
+	EndColor(e);
+}
 
-<SCRIPT LANGUAGE=JavaScript FOR=GrayTable EVENT=onmouseout>
-  GRAY.innerText = SelGRAY;
-  EndColor();
-</SCRIPT>
+function GrayTableOnmouseover(e){
+	var thisisie=eGetIsIE(e);
+	var srcElement=eGetSrcElement(e);
+	if(thisisie==1)
+	{
+		GRAY.innerText=srcElement.title;
+	}
+	else
+	{
+		GRAY.textContent=srcElement.title;
+	}
+	EndColor(e);
+}
 
-<SCRIPT LANGUAGE=JavaScript FOR=Ok EVENT=onclick>
+function GrayTableOnmouseout(e){
+	var thisisie=eGetIsIE(e);
+	if(thisisie==1)
+	{
+		GRAY.innerText=SelGRAY;
+	}
+	else
+	{
+		GRAY.textContent=SelGRAY;
+	}
+	EndColor(e);
+}
+
+//fun3
+function OkOnclick(){
   window.returnValue = SelColor.value;
   window.close();
+}
+
 </SCRIPT>
+
 
 </HEAD>
 
-<BODY bgcolor=menu>
+<BODY bgcolor="#cccccc">
 
 <div align="center"><center><table border="0" cellspacing="10" cellpadding="0"><tr><td>
-<TABLE ID=ColorTable BORDER=0 CELLSPACING=0 CELLPADDING=0 style='cursor:hand'>
+<TABLE ID=ColorTable BORDER=0 CELLSPACING=0 CELLPADDING=0 style='cursor:pointer' onclick="ColorTableOnclick(event);" onmouseover="ColorTableOnmouseover(event);" onmouseout="ColorTableOnmouseout(event);">
 <SCRIPT LANGUAGE=JavaScript>
 function wc(r, g, b, n)
 {
@@ -134,7 +206,7 @@ var cnum = new Array(1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0,
   }
 </SCRIPT>
 </TABLE></td><td>
-<TABLE ID=GrayTable BORDER=0 CELLSPACING=0 CELLPADDING=0 style='cursor:hand'>
+<TABLE ID=GrayTable BORDER=0 CELLSPACING=0 CELLPADDING=0 style='cursor:pointer' onclick="GrayTableOnclick(event);" onmouseover="GrayTableOnmouseover(event);" onmouseout="GrayTableOnmouseout(event);">
 <SCRIPT LANGUAGE=JavaScript>
   for(i = 255; i >= 0; i -= 8.5)
      document.write('<TR BGCOLOR=#' + ToHex(i) + ToHex(i) + ToHex(i) + '><TD TITLE=' + Math.floor(i * 16 / 17) + ' height=4 width=20></TD></TR>');
@@ -148,7 +220,7 @@ var cnum = new Array(1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0,
 <td rowspan="2">基色: <SPAN ID=RGB></SPAN><BR>
 亮度: <SPAN ID=GRAY>120</SPAN><BR>
 代码: <INPUT TYPE=TEXT SIZE=7 ID=SelColor></td>
-<td><BUTTON ID=Ok TYPE=SUBMIT>确定</BUTTON></td></tr>
+<td><BUTTON ID=Ok TYPE=SUBMIT onclick="OkOnclick();">确定</BUTTON></td></tr>
 <tr><td><BUTTON ONCLICK="window.close();">取消</BUTTON></td></tr></table></center></div>
 
 </BODY>   

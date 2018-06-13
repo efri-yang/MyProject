@@ -194,9 +194,11 @@ while($r=$empire->fetch($sql))
 $br=$empire->fetch1("select bname from {$dbtbpre}enewsgbookclass where bid='$r[bid]'");
 //审核
 $checked="";
+$checkednc='';
 if($r[checked])
 {
 $checked=" title='未审核' style='background:#99C4E3'";
+$checkednc='NC';
 }
 $username="游客";
 if($r['userid'])
@@ -237,7 +239,7 @@ if($r['userid'])
           <tr>
             <td width="65%"><strong>邮箱:<?=$r[email]?>,电话:<?=$r[mycall]?></strong></td>
             <td width="35%"> <div align="left"><strong>操作:</strong>[<a href="#ecms" onclick="window.open('ReGbook.php?lyid=<?=$r[lyid]?>&bid=<?=$bid?><?=$ecms_hashur['ehref']?>','','width=600,height=380,scrollbars=yes');">回复/修改回复</a>]&nbsp;&nbsp;[<a href="gbook.php?enews=DelGbook&lyid=<?=$r[lyid]?>&bid=<?=$bid?><?=$ecms_hashur['href']?>" onclick="return confirm('确认要删除?');">删除</a>] 
-                  <input name="lyid[]" type="checkbox" id="lyid[]" value="<?=$r[lyid]?>"<?=$checked?>>
+                  <input name="lyid[]" type="checkbox" id="lyid[]" value="<?=$r[lyid]?>"<?=$checked?>><?=$checkednc?>
                 </div></td>
           </tr>
         </table>

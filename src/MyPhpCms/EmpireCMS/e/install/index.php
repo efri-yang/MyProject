@@ -5,15 +5,29 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 define('InEmpireCMS',TRUE);
 
+$ecms_config=array();
+$ecms_config['db']['showerror']=1;
+$link='';
+$empire='';
+$dbtbpre='';
+
 //导入文件
 require('data/fun.php');
 require('../class/EmpireCMS_version.php');
+if(function_exists('mysql_connect'))
+{
+	include('../class/db/db_mysql.php');
+}
+else
+{
+	include('../class/db/db_mysqli.php');
+}
 
 //------ 参数开始 ------
 
 $char_r=array();
 $char_r=InstallReturnDbChar();
-$version="7.2,1421510410";
+$version="7.5,1502985610";
 $dbchar=$char_r['dbchar'];
 $setchar=$char_r['setchar'];
 $headerchar=$char_r['headerchar'];
@@ -154,7 +168,7 @@ if(!$shorttag)
         </tr>
         <tr bgcolor="#FFFFFF"> 
           <td height="25">程序版本</td>
-          <td height="25">Version 7.2 </td>
+          <td height="25">Version 7.5 </td>
         </tr>
         <tr bgcolor="#FFFFFF"> 
           <td height="25">开发团队</td>
@@ -389,6 +403,12 @@ if(!$shorttag)
                     <td> <div align="center"> <?php echo CheckFileMod("../../t");?> 
                       </div></td>
                   </tr>
+				  <tr bgcolor="#FFFFFF"> 
+                    <td height="25"> <div align="left">/ecachefiles</div></td>
+                    <td> <div align="center"><font color="#666666">动态页面缓存目录</font></div></td>
+                    <td> <div align="center"> <?php echo CheckFileMod("../../ecachefiles","../../ecachefiles/empirecms");?> 
+                      </div></td>
+                  </tr>
                   <tr bgcolor="#FFFFFF"> 
                     <td height="25"> <div align="left">/search</div></td>
                     <td> <div align="center"><font color="#666666">搜索表单</font></div></td>
@@ -526,7 +546,7 @@ if(!$shorttag)
 			return false;
 		  }
 		  </script> <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
-        <form name="form1" method="post" action="index.php?enews=setdb&ok=1&f=5" onsubmit="document.form1.Submit6223.disabled=true;">
+        <form name="form1" method="post" action="index.php?enews=setdb&ok=1&f=5" onsubmit="document.form1.Submit6223.disabled=true;" autocomplete="off">
           <tr class="header"> 
             <td height="25"> <div align="center"><strong><font color="#FFFFFF">第四步：配置数据库</font></strong></div></td>
           </tr>
@@ -555,18 +575,34 @@ if(!$shorttag)
                     <td width="43%"><div align="center"><strong>注释</strong></div></td>
                   </tr>
 					<?php
-					$getmysqlver=@mysql_get_server_info();
+					$getmysqlver=do_eGetDBVer(0);
 					$selectmysqlver=$getmysqlver;
 					if(empty($selectmysqlver))
 					{
 						$selectmysqlver='5.0';
 					}
 					?>
+                    <tr bgcolor="#FFFFFF">
+                      <td height="25">MYSQL接口类型:</td>
+                      <td><select name="mydbtype" id="mydbtype">
+					  	<?php
+					  	if(function_exists('mysql_connect'))
+					  	{
+					  	?>
+                        <option value="mysql">mysql</option>
+						<?php
+						}
+						?>
+                        <option value="mysqli">mysqli</option>
+                      </select>
+                      </td>
+                      <td><font color="#666666">一般默认即可</font></td>
+                    </tr>
                   <tr bgcolor="#FFFFFF"> 
                     <td height="25">MYSQL版本:</td>
                     <td><table width="100%" border="0" cellpadding="3" cellspacing="1">
                         <tr> 
-                          <td height="22"><input type="radio" name="mydbver" value="auto" checked>
+                          <td height="22"><input type="radio" name="mydbver" value="auto">
                             自动识别</td>
                         </tr>
                         <tr> 
@@ -578,7 +614,7 @@ if(!$shorttag)
                             MYSQL 4.1.*</td>
                         </tr>
                         <tr> 
-                          <td height="22"> <input type="radio" name="mydbver" value="5.0">
+                          <td height="22"> <input type="radio" name="mydbver" value="5.0" checked>
                             MYSQL 5.*或以上</td>
                         </tr>
                       </table></td>
@@ -597,8 +633,7 @@ if(!$shorttag)
                   </tr>
                   <tr bgcolor="#FFFFFF"> 
                     <td height="25"><font color="#009900">数据库服务器端口:</font></td>
-                    <td> <input name="mydbport" type="text" id="mydbport" size="30"> 
-                    </td>
+                    <td> <input name="mydbport" type="text" id="mydbport" size="30">                    </td>
                     <td><font color="#666666">MYSQL端口,空为默认端口, 一般为空</font></td>
                   </tr>
                   <tr bgcolor="#FFFFFF"> 
@@ -613,8 +648,7 @@ if(!$shorttag)
                   </tr>
                   <tr bgcolor="#FFFFFF"> 
                     <td height="25">数据库名(*):</td>
-                    <td> <input name="mydbname" type="text" id="mydbname" value="empirecms" size="30"> 
-                    </td>
+                    <td> <input name="mydbname" type="text" id="mydbname" value="empirecms" size="30">                    </td>
                     <td><font color="#666666">数据库名称</font></td>
                   </tr>
                   <tr bgcolor="#FFFFFF"> 
@@ -633,9 +667,7 @@ if(!$shorttag)
                           <td>后台：
                             <input name="myadmincookievarpre" type="text" id="myadmincookievarpre" value="<?php echo $myadmincookievarpre;?>" size="22"></td>
                         </tr>
-                      </table>
-                      
-                    </td>
+                      </table>                    </td>
                     <td><font color="#666666">由<strong>英文字母</strong>组成，默认即可</font></td>
                   </tr>
                   <tr bgcolor="#FFFFFF"> 
@@ -652,7 +684,6 @@ if(!$shorttag)
                 <input type="button" name="Submit5223" value="上一步" onclick="javascript:history.go(-1);">
                 &nbsp;&nbsp; 
                 <input type="submit" name="Submit6223" value="下一步">
-                <input name="mydbtype" type="hidden" id="mydbtype" value="mysql">
                 <input name="mydbchar" type="hidden" id="mydbchar" value="<?php echo $dbchar;?>">
                 <input name="mysetchar" type="hidden" id="mysetchar" value="<?php echo $setchar;?>">
               </div></td>
@@ -666,7 +697,7 @@ if(!$shorttag)
 	{
 	?>
       <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
-        <form name="form1" method="post" action="index.php?enews=firstadmin&ok=1&f=6" onsubmit="document.form1.Submit62222.disabled=true">
+        <form name="form1" method="post" action="index.php?enews=firstadmin&ok=1&f=6" onsubmit="document.form1.Submit62222.disabled=true" autocomplete="off">
           <input type="hidden" name="defaultdata" value="<?php echo $_GET['defaultdata'];?>">
           <tr class="header"> 
             <td height="25"> <div align="center"><strong><font color="#FFFFFF">第五步：初始化管理员账号</font></strong></div></td>
@@ -702,7 +733,7 @@ if(!$shorttag)
                   <tr> 
                     <td height="25" bgcolor="#FFFFFF">密码:</td>
                     <td bgcolor="#FFFFFF"> <input name="password" type="password" id="password" size="30"></td>
-                    <td bgcolor="#FFFFFF"><font color="#666666">管理员账号密码</font></td>
+                    <td bgcolor="#FFFFFF"><font color="#666666">管理员账号密码，区分大小写</font></td>
                   </tr>
                   <tr> 
                     <td height="25" bgcolor="#FFFFFF"> <p>重复密码:</p></td>
@@ -710,9 +741,9 @@ if(!$shorttag)
                     <td bgcolor="#FFFFFF"><font color="#666666">确认账号密码</font></td>
                   </tr>
                   <tr>
-                    <td height="25" bgcolor="#FFFFFF"><font color="#FF0000">登陆认证码:</font></td>
+                    <td height="25" bgcolor="#FFFFFF"><font color="#FF0000">登录认证码:</font></td>
                     <td bgcolor="#FFFFFF"><input name="loginauth" type="text" id="loginauth" size="30"></td>
-                    <td bgcolor="#FFFFFF"><font color="#FF0000">如果设置后台登陆要输入认证码，更安全</font></td>
+                    <td bgcolor="#FFFFFF"><font color="#FF0000">如果设置后台登录要输入认证码，更安全</font></td>
                   </tr>
                 </table>
               </div></td>
@@ -823,7 +854,7 @@ if(!$shorttag)
           <td height="25"><div align="center"><a href="http://www.PHome.Net" target="_blank">官方网站</a>&nbsp; 
               | &nbsp;<a href="http://bbs.PHome.Net" target="_blank">支持论坛</a>&nbsp; 
               | &nbsp;<a href="http://www.phome.net/EmpireCMS/UserSite/" target="_blank">部分案例</a>&nbsp; 
-              | &nbsp;<a href="http://www.phome.net/ecms7/?ecms=EmpireCMS" target="_blank">系统特性</a>&nbsp; 
+              | &nbsp;<a href="http://www.phome.net/ecms72/?ecms=EmpireCMS" target="_blank">系统特性</a>&nbsp; 
               | &nbsp;<a href="http://www.phome.net/zy/template/" target="_blank">模板下载</a>&nbsp; 
               | &nbsp;<a href="http://bbs.phome.net/showthread-13-18902-0.html" target="_blank">教程下载</a>&nbsp; 
               | &nbsp;<a href="http://www.phome.net/service/about.html" target="_blank">关于帝国</a></div></td>
@@ -831,7 +862,7 @@ if(!$shorttag)
         <tr> 
           <td height="36"> <div align="center">帝兴软件开发有限公司 版权所有<BR>
               <font face="Arial, Helvetica, sans-serif">Copyright &copy; 2002 
-              - 2015<b> <a href="http://www.PHome.net"><font color="#000000">PHome</font><font color="#FF6600">.Net</font></a></b></font></div></td>
+              - 2018<b> <a href="http://www.PHome.net"><font color="#000000">PHome</font><font color="#FF6600">.Net</font></a></b></font></div></td>
         </tr>
       </table></td>
   </tr>

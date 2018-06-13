@@ -19,6 +19,12 @@ $ecms_hashur=hReturnEcmsHashStrAll();
 //验证权限
 CheckLevel($logininid,$loginin,$classid,"moreport");
 
+//是否主端
+if($ecms_config['sets']['selfmoreportid']>1)
+{
+	printerror2('请在主端下使用本操作','history.go(-1)',9);
+}
+
 //增加访问端
 function AddMoreport($add,$userid,$username){
 	global $empire,$dbtbpre;
@@ -37,11 +43,14 @@ function AddMoreport($add,$userid,$username){
 	$add['mustdt']=(int)$add['mustdt'];
 	$add['isclose']=(int)$add['isclose'];
 	$add['closeadd']=(int)$add['closeadd'];
+	$add['headersign']=hRepPostStr($add['headersign'],1);
+	$add['openadmin']=(int)$add['openadmin'];
+	$add['rehtml']=(int)$add['rehtml'];
 	if(!file_exists($add['ppath'].'e/config/config.php'))
 	{
 		printerror("ErrorMoreportPath","history.go(-1)");
 	}
-	$sql=$empire->query("insert into {$dbtbpre}enewsmoreport(pname,purl,ppath,postpass,postfile,tempgid,mustdt,isclose,closeadd) values('$add[pname]','$add[purl]','$add[ppath]','$add[postpass]','$add[postfile]','$add[tempgid]','$add[mustdt]','$add[isclose]','$add[closeadd]');");
+	$sql=$empire->query("insert into {$dbtbpre}enewsmoreport(pname,purl,ppath,postpass,postfile,tempgid,mustdt,isclose,closeadd,headersign,openadmin,rehtml) values('$add[pname]','$add[purl]','$add[ppath]','$add[postpass]','$add[postfile]','$add[tempgid]','$add[mustdt]','$add[isclose]','$add[closeadd]','$add[headersign]','$add[openadmin]','$add[rehtml]');");
 	$pid=$empire->lastid();
 	//更新缓存
 	Moreport_UpdateIsclose();
@@ -75,11 +84,14 @@ function EditMoreport($add,$userid,$username){
 	$add['mustdt']=(int)$add['mustdt'];
 	$add['isclose']=(int)$add['isclose'];
 	$add['closeadd']=(int)$add['closeadd'];
+	$add['headersign']=hRepPostStr($add['headersign'],1);
+	$add['openadmin']=(int)$add['openadmin'];
+	$add['rehtml']=(int)$add['rehtml'];
 	if(!file_exists($add['ppath'].'e/config/config.php'))
 	{
 		printerror("ErrorMoreportPath","history.go(-1)");
 	}
-	$sql=$empire->query("update {$dbtbpre}enewsmoreport set pname='$add[pname]',purl='$add[purl]',ppath='$add[ppath]',postpass='$add[postpass]',postfile='$add[postfile]',tempgid='$add[tempgid]',mustdt='$add[mustdt]',isclose='$add[isclose]',closeadd='$add[closeadd]' where pid='$add[pid]'");
+	$sql=$empire->query("update {$dbtbpre}enewsmoreport set pname='$add[pname]',purl='$add[purl]',ppath='$add[ppath]',postpass='$add[postpass]',postfile='$add[postfile]',tempgid='$add[tempgid]',mustdt='$add[mustdt]',isclose='$add[isclose]',closeadd='$add[closeadd]',headersign='$add[headersign]',openadmin='$add[openadmin]',rehtml='$add[rehtml]' where pid='$add[pid]'");
 	//更新缓存
 	Moreport_UpdateIsclose();
 	GetConfig();
@@ -124,6 +136,7 @@ if(empty($enews))
 if($enews)
 {
 	hCheckEcmsRHash();
+	@set_time_limit(0);
 	include('../../class/copypath.php');
 	include('moreportfun.php');
 }

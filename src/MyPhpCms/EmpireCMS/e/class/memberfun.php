@@ -624,7 +624,7 @@ function AddMemberGroup($add,$userid,$username){
 	if(empty($add[groupname])||empty($add[level]))
 	{printerror("EmptyMemberGroupname","history.go(-1)");}
 	//验证权限
-	CheckLevel($userid,$username,$classid,"member");
+	CheckLevel($userid,$username,$classid,"membergroup");
 	//处理文件
 	$add[level]=(int)$add[level];
 	$add[checked]=(int)$add[checked];
@@ -660,7 +660,7 @@ function EditMemberGroup($add,$userid,$username){
 	if(empty($add[groupid])||empty($add[groupname])||empty($add[level]))
 	{printerror("EmptyMemberGroupname","history.go(-1)");}
 	//验证权限
-	CheckLevel($userid,$username,$classid,"member");
+	CheckLevel($userid,$username,$classid,"membergroup");
 	//处理文件
 	$add[level]=(int)$add[level];
 	$add[checked]=(int)$add[checked];
@@ -695,7 +695,7 @@ function DelMemberGroup($groupid,$userid,$username){
 	if(empty($groupid))
 	{printerror("NotDelMemberGroupid","history.go(-1)");}
 	//验证权限
-	CheckLevel($userid,$username,$classid,"member");
+	CheckLevel($userid,$username,$classid,"membergroup");
 	$r=$empire->fetch1("select groupname from {$dbtbpre}enewsmembergroup where groupid='$groupid'");
 	$sql=$empire->query("delete from {$dbtbpre}enewsmembergroup where groupid='$groupid'");
 	//更新缓存

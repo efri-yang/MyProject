@@ -35,6 +35,9 @@ $enews_r=array
 	'DelZtF'=>'删除专题字段',
 	'EditZtFOrder'=>'修改专题字段顺序',
 	'SetClassStats'=>'设置栏目访问统计参数',
+	'AddGoodType'=>'增加推荐/头条级别',
+	'EditGoodType'=>'修改推荐/头条级别',
+	'DelGoodType'=>'删除推荐/头条级别',
 
 	'AddNews'=>'增加信息',
 	'EditNews'=>'修改信息',
@@ -169,6 +172,7 @@ $enews_r=array
 	'DelIndexpage'=>'删除首页方案',
 	'DefIndexpage'=>'启用/取消首页方案',
 	'EditDtTempFiletext'=>'修改动态页面模板',
+	'EditTempid'=>'修改模板ID',
 
 	'AddSpClass'=>'增加碎片分类',
 	'EditSpClass'=>'修改碎片分类',
@@ -188,6 +192,10 @@ $enews_r=array
 
 	'SetEnews'=>'参数设置',
 	'SetRewrite'=>'设置伪静态参数',
+	'SetPageCache'=>'设置页面缓存参数',
+	'ClearPageCache'=>'清空动态页面缓存',
+	'SetDigg'=>'设置DIGG顶参数',
+	'ClearDiggRecord'=>'清空DIGG顶验证记录',
 	'AddPicNews'=>'增加图片信息',
 	'EditPicNews'=>'修改图片信息',
 	'DelPicNews'=>'删除图片信息',
@@ -304,6 +312,7 @@ $enews_r=array
 	'ReSingleInfo'=>'刷新信息页面(单)',
 	'UpdateClassInfosAll'=>'更新栏目信息数',
 	'ReInfoUrl'=>'批量更新信息页地址',
+	'ChangePageCache'=>'更新动态页面缓存',
 
 	'AddUserpage'=>'增加自定义页面',
 	'EditUserpage'=>'修改自定义页面',
@@ -378,6 +387,22 @@ $enews_r=array
 	'EditBuyGroup'=>'修改充值类型',
 	'DelBuyGroup'=>'删除充值类型',
 	'EditMemberConnect'=>'配置外部登录接口',
+	'AddInGroup'=>'增加会员内部组',
+	'EditInGroup'=>'修改会员内部组',
+	'DelInGroup'=>'删除会员内部组',
+	'AddViewGroup'=>'增加会员访问组',
+	'EditViewGroup'=>'修改会员访问组',
+	'DelViewGroup'=>'删除会员访问组',
+	'AddViewGroupMList'=>'增加会员白名单(访问组)',
+	'EditViewGroupMList'=>'修改会员白名单(访问组)',
+	'DelViewGroupMList'=>'删除会员白名单(访问组)',
+	'AddMAdminGroup'=>'增加会员管理组',
+	'EditMAdminGroup'=>'修改会员管理组',
+	'DelMAdminGroup'=>'删除会员管理组',
+	'AddMAgUser'=>'增加会员管理员',
+	'DelMAgUser'=>'删除会员管理员',
+	'MemberChangeTimeGroup'=>'批量更新到期会员组',
+	'DoMoveInGroupMember_all'=>'转移会员内部组',
 
 	'CjUrl'=>'采集信息地址',
 	'GetNewsInfo'=>'采集信息内容',
@@ -542,6 +567,7 @@ $enews_r=array
 	'AddMoreport'=>'增加网站访问端',
 	'EditMoreport'=>'修改网站访问端',
 	'DelMoreport'=>'删除网站访问端',
+	'SetAutodo'=>'设置页面同步参数',
 	'MoreportReIndexfileAll'=>'更新所有访问端数据',
 );
 

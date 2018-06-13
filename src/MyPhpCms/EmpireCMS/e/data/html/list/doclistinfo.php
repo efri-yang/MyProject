@@ -6,7 +6,7 @@ if(!defined('InEmpireCMS'))
 ?>
 <?php
 //查询SQL，如果要显示自定义字段记得在SQL里增加查询字段
-$query="select id,classid,isurl,titleurl,isqf,havehtml,istop,isgood,firsttitle,ismember,userid,username,plnum,totaldown,onclick,newstime,truetime,lastdotime,titlepic,title from {$dbtbpre}ecms_".$class_r[$classid][tbname]."_doc".$ewhere." order by ".$doorder." limit $offset,$line";
+$query="select id,classid,isurl,titleurl,isqf,havehtml,istop,isgood,firsttitle,ismember,userid,username,eckuid,plnum,totaldown,onclick,newstime,truetime,lastdotime,titlepic,title from {$dbtbpre}ecms_".$class_r[$classid][tbname]."_doc".$ewhere." order by ".$doorder." limit $offset,$line";
 $sql=$empire->query($query);
 //返回头条和推荐级别名称
 $ftnr=ReturnFirsttitleNameList(0,0);
@@ -122,11 +122,11 @@ function CheckAll(form)
 		}
 		if($r[isgood])//推荐
 		{
-			$st.="<font color=red>[".$ignamer[$r[isgood]-1]."]</font>";
+			$st.="<font color=red>[".$ignamer[$r['isgood']]."]</font>";
 		}
 		if($r[firsttitle])//头条
 		{
-			$st.="<font color=red>[".$ftnamer[$r[firsttitle]-1]."]</font>";
+			$st.="<font color=red>[".$ftnamer[$r['firsttitle']]."]</font>";
 		}
 		//时间
 		$truetime=date("Y-m-d H:i:s",$r[truetime]);
@@ -166,7 +166,7 @@ function CheckAll(form)
 		$showtitlepic="";
 		if($r[titlepic])
 		{
-			$showtitlepic="<a href='".$r[titlepic]."' title='预览标题图片' target=_blank><img src='../data/images/showimg.gif' border=0></a>";
+			$showtitlepic="<a href='".$r['titlepic']."' title='预览标题图片' target=_blank><img src='../data/images/showimg.gif' border=0></a>";
 		}
 		//未生成
 		$myid=$r['id'];
@@ -182,12 +182,12 @@ function CheckAll(form)
       <td height="25"> <div align="left"> 
           <?=$st?>
           <?=$showtitlepic?>
-          <a href='<?=$titleurl?>' target=_blank title="<?=$oldtitle?>"> 
+          <a href="<?=$titleurl?>" target=_blank title="<?=$oldtitle?>"> 
           <?=$r[title]?>
           </a> 
           <?=$qf?>
         </div></td>
-      <td height="25"> <div align="center"> 
+      <td height="25"<?=$r['eckuid']?' title="审核人UID：'.$r['eckuid'].'"':''?>> <div align="center"> 
           <?=$r[username]?>
         </div></td>
       <td height="25"> <div align="center"> <a href="#ecms" title="<? echo"增加时间：".$truetime."\r\n最后修改：".$lastdotime;?>"> 

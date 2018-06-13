@@ -31,13 +31,18 @@ elseif(getcvar('ecertkeyrnds'))
 	$empirecmskey4=RepPostVar($certr[3]);
 	$empirecmskey5=RepPostVar($certr[4]);
 }
+else
+{}
+
+
 ?>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>帝国网站管理系统 － 最安全、最稳定的开源CMS系统</title>
+<title>帝国CMS － 稳定可靠、安全省心</title>
 <link rel="stylesheet" href="loginimg/css.css" type="text/css">
-<base onmouseover="window.status='帝国网站管理系统(EmpireCMS) － 最安全、最稳定的开源CMS系统';return true">
+<base onmouseover="window.status='帝国CMS － 稳定可靠、安全省心';return true">
+
 <script>
 if(self!=top)
 {
@@ -74,7 +79,12 @@ function CheckLogin(obj){
 			return false;
 		}
 	}
+	
 	return true;
+}
+
+function edoshowkey(showid,vname){
+	document.getElementById(showid).innerHTML='<img src="ShowKey.php?v='+vname+'&t='+Math.random()+'" name="'+vname+'KeyImg" id="'+vname+'KeyImg" align="bottom" onclick=edoshowkey("'+showid+'","'+vname+'") title="看不清楚,点击刷新">';
 }
 </script>
 </head>
@@ -86,8 +96,9 @@ function CheckLogin(obj){
   </tr>
 </table>
 <table width="524" border="0" cellspacing="0" cellpadding="0" align="center" height="320">
-  <form name="login" id="login" method="post" action="ecmsadmin.php" onsubmit="return CheckLogin(document.login);">
+  <form name="login" id="login" method="post" action="ecmsadmin.php" onsubmit="return CheckLogin(document.login);" autocomplete="off">
     <input type="hidden" name="enews" value="login">
+	<input name="eposttime" type="hidden" id="eposttime" value="0">
     <tr> 
       <td width="61" rowspan="3" valign="top"> <TABLE WIDTH=61 height="100%" BORDER=0 CELLPADDING=0 CELLSPACING=0>
           <TR> 
@@ -132,12 +143,12 @@ function CheckLogin(obj){
       <td height="80"> <table width="230" height="100%" border="0" align="right" cellpadding="0" cellspacing="0">
           <tr> 
             <td width="50" height="27">用户名: </td>
-            <td colspan="2"> <input name="username" type="text" class="b-form2" size="24"> 
+            <td colspan="2"> <input name="username" type="text" class="b-form2" size="22"> 
             </td>
           </tr>
           <tr> 
-            <td height="27">密&nbsp;&nbsp;码:&nbsp;</td>
-            <td colspan="2"> <input name="password" type="password" class="b-form2" size="24"> 
+            <td height="27">密&nbsp; &nbsp;码: </td>
+            <td colspan="2"> <input name="password" type="password" class="b-form2" size="22"> 
             </td>
           </tr>
 		  <?php
@@ -145,14 +156,14 @@ function CheckLogin(obj){
 		  {
 		  ?>
           <tr> 
-            <td height="27">认证码:&nbsp;</td>
-            <td colspan="2"><input name="loginauth" type="password" id="loginauth" class="b-form2" size="24"></td>
+            <td height="27">认证码: </td>
+            <td colspan="2"><input name="loginauth" type="password" id="loginauth" class="b-form2" size="22"></td>
           </tr>
           <?php
 		  }
 		  ?>
           <tr>
-            <td height="27">提&nbsp;&nbsp;问:&nbsp;</td>
+            <td height="27">提&nbsp; &nbsp;问: </td>
             <td colspan="2"><select name="equestion" id="equestion" onchange="if(this.options[this.selectedIndex].value==0){showanswer.style.display='none';}else{showanswer.style.display='';}">
                 <option value="0">无安全提问</option>
                 <option value="1">母亲的名字</option>
@@ -165,24 +176,24 @@ function CheckLogin(obj){
               </select></td>
           </tr>
           <tr id="showanswer">
-            <td height="27">答&nbsp;&nbsp;案:&nbsp;</td>
-            <td colspan="2"><input name="eanswer" type="text" id="eanswer" class="b-form2" size="24"></td>
+            <td height="27">答&nbsp; &nbsp;案: </td>
+            <td colspan="2"><input name="eanswer" type="text" id="eanswer" class="b-form2" size="22"></td>
           </tr>
           <?php
 		  if(empty($public_r['adminloginkey']))
 		  {
 		  ?>
           <tr> 
-            <td height="27">验证码:&nbsp;</td>
+            <td height="27">验证码: </td>
             <td width="83"> <input name="key" type="text" class="b-form2" size="9"> 
             </td>
-            <td width="97"><img src="ShowKey.php" name="KeyImg" id="KeyImg" align="bottom" onclick="KeyImg.src='ShowKey.php?'+Math.random()" title="看不清楚,点击刷新"></td>
+            <td width="97" id="checkkeyshowkey"><a href="#EmpireCMS" onclick="edoshowkey('checkkeyshowkey','checkkey');" title="点击显示验证码">点击显示</a></td>
           </tr>
           <?php
 		  }
 		  ?>
           <tr> 
-            <td height="27">窗&nbsp;&nbsp;口:&nbsp;</td>
+            <td height="27">窗&nbsp; &nbsp;口: </td>
             <td colspan="2"><input type="radio" name="adminwindow" value="0" checked>
               正常 
               <input type="radio" name="adminwindow" value="1">
@@ -214,13 +225,18 @@ function CheckLogin(obj){
           <tr> 
             <td width="19%"><div align="center"></div></td>
             <td width="73%" height="30">Powered by <a href="http://www.phome.net" target="_blank"><strong>EmpireCMS</strong></a> 
-              <font color="#FF9900"><strong>7.2</strong></font> &copy; 2002-2015 <a href="http://www.digod.com" target="_blank">EmpireSoft</a> 
+              <font color="#FF9900"><strong>7.5</strong></font> &copy; 2002-2018 <a href="http://www.digod.com" target="_blank">EmpireSoft</a> 
               Inc.</td>
             <td width="8%">&nbsp;</td>
           </tr>
         </table></td>
     </tr>
   </form>
+</table>
+<table width="100%" border="0" cellspacing="1" cellpadding="3">
+  <tr>
+    <td height="90"><div align="center"><a href="http://ebak.phome.net" target="_blank" title="EmpireBak+phpMyAdmin+高安全"><img src="loginimg/ebakbanner.gif" width="523" style="border:1px solid #63CDEF;"></a></div></td>
+  </tr>
 </table>
 <script>
 if(document.login.equestion.value==0)

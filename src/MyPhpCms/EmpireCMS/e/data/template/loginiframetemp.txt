@@ -6,6 +6,7 @@ if(!defined('InEmpireCMS'))
 }
 eCheckCloseMods('member');//关闭模块
 $myuserid=(int)getcvar('mluserid');
+$r=array();
 $mhavelogin=0;
 if($myuserid)
 {
@@ -18,11 +19,20 @@ if($myuserid)
 	//数据
 	$myusername=RepPostVar(getcvar('mlusername'));
 	$myrnd=RepPostVar(getcvar('mlrnd'));
-	$r=$empire->fetch1("select ".eReturnSelectMemberF('userid,username,groupid,userfen,money,userdate,havemsg,checked')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$myuserid' and ".egetmf('rnd')."='$myrnd' limit 1");
-	if(empty($r[userid])||$r[checked]==0)
+	$qcklgr=qCheckLoginAuthstr();
+	if(!$qcklgr['islogin'])
 	{
 		EmptyEcmsCookie();
 		$mhavelogin=0;
+	}
+	else
+	{
+		$r=$empire->fetch1("select ".eReturnSelectMemberF('userid,username,groupid,userfen,money,userdate,havemsg,checked')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$myuserid' and ".egetmf('rnd')."='$myrnd' limit 1");
+		if(empty($r[userid])||$r[checked]==0)
+		{
+			EmptyEcmsCookie();
+			$mhavelogin=0;
+		}
 	}
 	//会员等级
 	if(empty($r[groupid]))
@@ -51,19 +61,19 @@ if($myuserid)
 		$havemsg="<a href='".$public_r['newsurl']."e/member/msg/' target=_blank><font color=red>您有新消息</font></a>";
 	}
 	//$myusername=$r[username];
-	db_close();
-	$empire=null;
 }
 if($mhavelogin==1)
 {
 ?>
 <!--loginin-->
-<?
+<?php
+	db_close();
+	$empire=null;
 }
 else
 {
 ?>
 <!--login-->
-<?
+<?php
 }
 ?>

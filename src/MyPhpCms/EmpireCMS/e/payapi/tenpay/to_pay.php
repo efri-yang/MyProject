@@ -3,6 +3,7 @@ if(!defined('InEmpireCMS'))
 {
 	exit();
 }
+eCheckCloseMods('pay');//关闭模块
 
 //------------------ 参数开始 ------------------
 

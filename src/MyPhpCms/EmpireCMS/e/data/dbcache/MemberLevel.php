@@ -54,5 +54,17 @@ $level_r[4]=Array('groupid'=>4,
 'plchecked'=>0,
 'msgnum'=>120);
 
+$aglevel_r=array();
+$aglevel_r[1]=Array('agid'=>1,
+'agname'=>'管理员',
+'isadmin'=>9);
+$aglevel_r[2]=Array('agid'=>2,
+'agname'=>'版主',
+'isadmin'=>5);
+
+
+$iglevel_r=array();
+
+
 //level
 ?>

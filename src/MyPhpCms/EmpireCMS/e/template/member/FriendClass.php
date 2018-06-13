@@ -56,7 +56,7 @@ self.location.href='../../doaction.php?enews=DelFriendClass&doing=1&cid='+cid;
                   <input name="doing" type="hidden" id="doing" value="1">
                   <input name="enews" type="hidden" id="enews" value="EditFriendClass">
                   <input name="cid" type="hidden" value="<?=$r[cid]?>">
-                  <input name="cname" type="text" id="cname" value="<?=$r[cname]?>">
+                  <input name="cname" type="text" id="cname" value="<?=stripSlashes($r[cname])?>">
                 </div></td>
               <td><div align="center"> 
                   <input type="submit" name="Submit2" value="修改">

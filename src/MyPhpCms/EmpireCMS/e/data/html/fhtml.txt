@@ -442,10 +442,13 @@ document.getElementById("addpicdown").innerHTML="<table width='100%' border=0 ce
 </table>
 [!--morepic--]
 [!--date--]
-<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars(stripSlashes($r[[!--enews.var--]]))?>" size="[!--fsize.w--]" onclick="setday(this);">
+<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars(stripSlashes($r[[!--enews.var--]]))?>" size="[!--fsize.w--]" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
 [!--date--]
+[!--datetime--]
+<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars(stripSlashes($r[[!--enews.var--]]))?>" size="[!--fsize.w--]" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+[!--datetime--]
 [!--color--]
-<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars(stripSlashes($r[[!--enews.var--]]))?>" size="[!--fsize.w--]" onclick="FieldChangeColor(this);">
+<input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars(stripSlashes($r[[!--enews.var--]]))?>" size="[!--fsize.w--]" class="color">
 [!--color--]
 [!--linkfield--]
 <input name="[!--enews.var--]" type="text" id="[!--enews.var--]" value="<?=$ecmsfirstpost==1?"[!--enews.def.val--]":ehtmlspecialchars(stripSlashes($r[[!--enews.var--]]))?>" size="[!--fsize.w--]">

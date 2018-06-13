@@ -72,15 +72,20 @@ $sql=$empire->query("select userid,username from {$dbtbpre}enewsuser order by us
 
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <tr class="header"> 
-    <td width="25%" height="25"> 
+    <td width="19%" height="25"> 
       <div align="center">用户</div></td>
-    <td width="13%" height="25"> <div align="center">今天发布数</div></td>
-    <td width="13%" height="25"> <p align="center">昨天发布数</p></td>
-    <td width="13%" height="25"> <div align="center">本月发布数</div></td>
-    <td width="13%"> <div align="center">总发布数</div></td>
-    <td width="13%"> 
+    <td width="8%" height="25"> <div align="center">今天发布数</div></td>
+    <td width="8%" height="25"> <div align="center">昨天发布数</div></td>
+    <td width="8%" height="25"> <div align="center">本月发布数</div></td>
+    <td width="8%"> <div align="center">总发布数</div></td>
+    <td width="7%"> 
       <div align="center">未审核数</div></td>
-    <td width="10%"><div align="center"></div></td>
+    <td width="7%"><div align="center">审发数</div></td>
+    <td width="7%"><div align="center">审投数</div></td>
+    <td width="8%"><div align="center">点击数</div></td>
+    <td width="7%"><div align="center">评论数</div></td>
+    <td width="7%"><div align="center">下载数</div></td>
+    <td width="6%"><div align="center"></div></td>
   </tr>
   <?php
   $totime=time();
@@ -105,6 +110,18 @@ $sql=$empire->query("select userid,username from {$dbtbpre}enewsuser order by us
 	//所有
 	$totalnum=$empire->gettotal($tquery);
 	$checktotalnum=$empire->gettotal($checktquery);
+	//总点击量
+	$tonclickquery="select sum(onclick) as total from {$dbtbpre}ecms_".$tbname." where userid='$r[userid]' and ismember=0";
+	$totalonclick=$empire->gettotal($tonclickquery);
+	//总评论数
+	$tplquery="select sum(plnum) as total from {$dbtbpre}ecms_".$tbname." where userid='$r[userid]' and ismember=0";
+	$totalplnum=$empire->gettotal($tplquery);
+	//总下载数
+	$tdownquery="select sum(totaldown) as total from {$dbtbpre}ecms_".$tbname." where userid='$r[userid]' and ismember=0";
+	$totaldown=$empire->gettotal($tdownquery);
+	//审稿
+	$checkhinfonum=$empire->gettotal("select count(*) as total from {$dbtbpre}ecms_".$tbname." where eckuid='$r[userid]' and ismember=0");
+	$checkqinfonum=$empire->gettotal("select count(*) as total from {$dbtbpre}ecms_".$tbname." where eckuid='$r[userid]' and ismember=1");
   ?>
   <tr bgcolor="#FFFFFF" onmouseout="this.style.backgroundColor='#ffffff'" onmouseover="this.style.backgroundColor='#C3EFFF'"> 
     <td height="25"><div align="center"><a href="AddUser.php?enews=EditUser&userid=<?=$r[userid]?><?=$ecms_hashur['ehref']?>" target="_blank">
@@ -125,7 +142,12 @@ $sql=$empire->query("select userid,username from {$dbtbpre}enewsuser order by us
     <td><div align="center"><a href="../ListAllInfo.php?showspecial=4&keyboard=<?=$r[username]?>&show=2&tbname=<?=$tbname?>&sear=1&ecmscheck=1&infocheck=2<?=$ecms_hashur['ehref']?>" target="_blank">
         <u><?=$checktotalnum?></u>
         </a></div></td>
-    <td><div align="center"><a href="#ecms" onclick="window.open('MoreUserTotal.php?tbname=<?=$tbname?>&userid=<?=$r[userid]?>&username=<?=$r[username]?><?=$ecms_hashur['ehref']?>','ViewUserTotal','width=420,height=500,scrollbars=yes,left=300,top=150,resizable=yes');">[详细]</a></div></td>
+    <td><div align="center"><?=$checkhinfonum?></div></td>
+    <td><div align="center"><?=$checkqinfonum?></div></td>
+    <td><div align="center"><?=$totalonclick?></div></td>
+    <td><div align="center"><?=$totalplnum?></div></td>
+    <td><div align="center"><?=$totaldown?></div></td>
+    <td><div align="center"><a href="#ecms" onclick="window.open('MoreUserTotal.php?tbname=<?=$tbname?>&userid=<?=$r[userid]?>&username=<?=$r[username]?><?=$ecms_hashur['ehref']?>','ViewUserTotal','width=650,height=500,scrollbars=yes,left=300,top=150,resizable=yes');">[详细]</a></div></td>
   </tr>
   <?php
   }

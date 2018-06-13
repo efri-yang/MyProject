@@ -135,7 +135,7 @@ function CheckAll(form)
           <input name="id[]" type="checkbox" id="id[]" value="<?=$r[id]?>">
         </div></td>
       <td height="25"> <div align="center"> 
-          <?=$r[id]?>
+          <a href="AddPage.php?enews=EditUserpage&id=<?=$r[id]?>&cid=<?=$classid?>&gid=<?=$gid?><?=$ecms_hashur['ehref']?>" target="_blank" title="在新窗口打开修改页面"><?=$r[id]?></a>
         </div></td>
       <td height="25"> <div align="center"><a href="<?=$path?>" target=_blank> 
           <?=$r[title]?>
@@ -153,6 +153,9 @@ function CheckAll(form)
       <td height="25" colspan="6"> 
         <?=$returnpage?>
         &nbsp;&nbsp;&nbsp; <input type="submit" name="Submit3" value="刷新"> <input name="enews" type="hidden" id="enews" value="DoReUserpage">      </td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25" colspan="6"><font color="#666666">说明：点击“ID”可弹窗修改页面。</font></td>
     </tr>
   </form>
 </table>

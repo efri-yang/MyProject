@@ -40,7 +40,7 @@ function AddListtemp($add,$userid,$username){
 	$add[subtitle]=(int)$add[subtitle];
 	$docode=(int)$add[docode];
 	$gid=(int)$add['gid'];
-	$sql=$empire->query("insert into ".GetDoTemptb("enewslisttemp",$gid)."(tempname,temptext,subnews,listvar,rownum,modid,showdate,subtitle,classid,isdefault,docode) values('$add[tempname]','".eaddslashes2($add[temptext])."',$add[subnews],'".eaddslashes2($add[listvar])."',$add[rownum],'$add[modid]','$add[showdate]',$add[subtitle],$classid,0,'$docode');");
+	$sql=$empire->query("insert into ".GetDoTemptb("enewslisttemp",$gid)."(tempname,temptext,subnews,listvar,rownum,modid,showdate,subtitle,classid,isdefault,docode) values('$add[tempname]','".eaddslashes2($add[temptext])."',$add[subnews],'".eaddslashes2($add[listvar])."',$add[rownum],'$add[modid]','".eaddslashes($add[showdate])."',$add[subtitle],$classid,0,'$docode');");
 	$tempid=$empire->lastid();
 	//备份模板
 	AddEBakTemp('listtemp',$gid,$tempid,$add[tempname],$add[temptext],$add[subnews],0,$add[listvar],$add[rownum],$add[modid],$add[showdate],$add[subtitle],$classid,$docode,$userid,$username);
@@ -78,7 +78,7 @@ function EditListtemp($add,$userid,$username){
 	$add[subtitle]=(int)$add[subtitle];
 	$docode=(int)$add[docode];
 	$gid=(int)$add['gid'];
-	$sql=$empire->query("update ".GetDoTemptb("enewslisttemp",$gid)." set subnews=$add[subnews],tempname='$add[tempname]',temptext='".eaddslashes2($add[temptext])."',listvar='".eaddslashes2($add[listvar])."',rownum=$add[rownum],modid=$add[modid],showdate='$add[showdate]',subtitle=$add[subtitle],classid=$classid,docode='$docode' where tempid='$add[tempid]'");
+	$sql=$empire->query("update ".GetDoTemptb("enewslisttemp",$gid)." set subnews=$add[subnews],tempname='$add[tempname]',temptext='".eaddslashes2($add[temptext])."',listvar='".eaddslashes2($add[listvar])."',rownum=$add[rownum],modid=$add[modid],showdate='".eaddslashes($add[showdate])."',subtitle=$add[subtitle],classid=$classid,docode='$docode' where tempid='$add[tempid]'");
 	//备份模板
 	AddEBakTemp('listtemp',$gid,$add[tempid],$add[tempname],$add[temptext],$add[subnews],0,$add[listvar],$add[rownum],$add[modid],$add[showdate],$add[subtitle],$classid,$docode,$userid,$username);
 	if($gid==$public_r['deftempid']||(!$public_r['deftempid']&&($gid==1||$gid==0)))
@@ -272,7 +272,7 @@ while($mr=$empire->fetch($msql))
   ?>
   <tr bgcolor="ffffff" onmouseout="this.style.backgroundColor='#ffffff'" onmouseover="this.style.backgroundColor='#C3EFFF'"> 
     <td height="25"><div align="center"> 
-        <?=$r[tempid]?>
+        <a href="EditTempid.php?tempno=3&tempid=<?=$r['tempid']?>&gid=<?=$gid?><?=$ecms_hashur['ehref']?>" target="_blank" title="修改模板ID"><?=$r[tempid]?></a>
       </div></td>
     <td height="25"><div align="center"> 
         <?=$r[tempname]?>

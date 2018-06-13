@@ -3,6 +3,7 @@ if(!defined('InEmpireCMS'))
 {
 	exit();
 }
+eCheckCloseMods('pay');//关闭模块
 
 if($payr['paymethod']==0)//双接口
 {

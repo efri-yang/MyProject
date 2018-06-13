@@ -20,7 +20,12 @@ $ecms_hashur=hReturnEcmsHashStrAll();
 CheckLevel($logininid,$loginin,$classid,"user");
 
 //------------------------增加用户
-function AddUser($username,$password,$repassword,$groupid,$adminclass,$checked,$styleid,$loginuserid,$loginusername){global $empire,$class_r,$dbtbpre;
+function AddUser($username,$password,$repassword,$groupid,$adminclass,$checked,$styleid,$loginuserid,$loginusername){
+	global $empire,$class_r,$dbtbpre;
+	$username=str_replace(',','',$username);
+	$username=str_replace('|','',$username);
+	$username=RepPostVar($username);
+	$password=RepPostVar($password);
 	if(!$username||!$password||!$repassword)
 	{printerror("EmptyUsername","history.go(-1)");}
 	if($password!=$repassword)
@@ -35,8 +40,10 @@ function AddUser($username,$password,$repassword,$groupid,$adminclass,$checked,$
 	if($num)
 	{printerror("ReUsername","history.go(-1)");}
 	//管理目录
+	$insert_class='';
 	for($i=0;$i<count($adminclass);$i++)
 	{
+		$adminclass[$i]=(int)$adminclass[$i];
 		//大栏目
 		if(empty($class_r[$adminclass[$i]][islast]))
 		{
@@ -65,14 +72,19 @@ function AddUser($username,$password,$repassword,$groupid,$adminclass,$checked,$
 	$salt=make_password(8);
 	$salt2=make_password(20);
 	$password=DoEmpireCMSAdminPassword($password,$salt,$salt2);
-	$truename=ehtmlspecialchars($_POST['truename']);
-	$email=ehtmlspecialchars($_POST['email']);
-	$openip=ehtmlspecialchars($_POST['openip']);
+	$truename=hRepPostStr($_POST['truename'],1);
+	$email=hRepPostStr($_POST['email'],1);
+	$openip=hRepPostStr($_POST['openip'],1);
+	$wname=hRepPostStr($_POST['wname'],1);
+	$tel=hRepPostStr($_POST['tel'],1);
+	$wxno=hRepPostStr($_POST['wxno'],1);
+	$qq=hRepPostStr($_POST['qq'],1);
 	$addtime=time();
 	$addip=egetip();
 	$addipport=egetipport();
 	$userprikey=make_password(48);
-	$sql=$empire->query("insert into {$dbtbpre}enewsuser(username,password,rnd,groupid,adminclass,checked,styleid,filelevel,salt,loginnum,lasttime,lastip,truename,email,classid,addtime,addip,userprikey,salt2,lastipport,preipport,addipport) values('$username','$password','$rnd',$groupid,'$insert_class',$checked,$styleid,'$filelevel','$salt',0,0,'','$truename','$email','$classid','$addtime','$addip','$userprikey','$salt2','$addipport','$addipport','$addipport');");
+	$insert_class=hRepPostStr2($insert_class);
+	$sql=$empire->query("insert into {$dbtbpre}enewsuser(username,password,rnd,groupid,adminclass,checked,styleid,filelevel,salt,loginnum,lasttime,lastip,truename,email,classid,addtime,addip,userprikey,salt2,lastipport,preipport,addipport,wname,tel,wxno,qq) values('$username','$password','$rnd','$groupid','$insert_class','$checked','$styleid','$filelevel','$salt',0,0,'','$truename','$email','$classid','$addtime','$addip','$userprikey','$salt2','$addipport','$addipport','$addipport','$wname','$tel','$wxno','$qq');");
 	$userid=$empire->lastid();
 	//安全提问
 	$equestion=(int)$_POST['equestion'];
@@ -114,6 +126,12 @@ function AddUser($username,$password,$repassword,$groupid,$adminclass,$checked,$
 function EditUser($userid,$username,$password,$repassword,$groupid,$adminclass,$oldusername,$checked,$styleid,$loginuserid,$loginusername){
 	global $empire,$class_r,$dbtbpre;
 	$userid=(int)$userid;
+	$oldusername=RepPostVar($oldusername);
+	$username=str_replace(',','',$username);
+	$username=str_replace('|','',$username);
+	$username=RepPostVar($username);
+	$password=RepPostVar($password);
+	$add='';
 	if(!$userid||!$username)
 	{printerror("EnterUsername","history.go(-1)");}
 	//操作权限
@@ -145,8 +163,10 @@ function EditUser($userid,$username,$password,$repassword,$groupid,$adminclass,$
 		$add=",password='$password',salt='$salt',salt2='$salt2'";
 	}
 	//管理目录
+	$insert_class='';
 	for($i=0;$i<count($adminclass);$i++)
 	{
+		$adminclass[$i]=(int)$adminclass[$i];
 		//大栏目
 		if(empty($class_r[$adminclass[$i]][islast]))
 		{
@@ -171,10 +191,15 @@ function EditUser($userid,$username,$password,$repassword,$groupid,$adminclass,$
 	$checked=(int)$checked;
 	$filelevel=(int)$_POST['filelevel'];
 	$classid=(int)$_POST['classid'];
-	$truename=ehtmlspecialchars($_POST['truename']);
-	$email=ehtmlspecialchars($_POST['email']);
-	$openip=ehtmlspecialchars($_POST['openip']);
-	$sql=$empire->query("update {$dbtbpre}enewsuser set username='$username',groupid=$groupid,adminclass='$insert_class',checked=$checked,styleid=$styleid,filelevel='$filelevel',truename='$truename',email='$email',classid='$classid'".$add." where userid='$userid'");
+	$truename=hRepPostStr($_POST['truename'],1);
+	$email=hRepPostStr($_POST['email'],1);
+	$openip=hRepPostStr($_POST['openip'],1);
+	$wname=hRepPostStr($_POST['wname'],1);
+	$tel=hRepPostStr($_POST['tel'],1);
+	$wxno=hRepPostStr($_POST['wxno'],1);
+	$qq=hRepPostStr($_POST['qq'],1);
+	$insert_class=hRepPostStr2($insert_class);
+	$sql=$empire->query("update {$dbtbpre}enewsuser set username='$username',groupid='$groupid',adminclass='$insert_class',checked='$checked',styleid='$styleid',filelevel='$filelevel',truename='$truename',email='$email',classid='$classid',wname='$wname',tel='$tel',wxno='$wxno',qq='$qq'".$add." where userid='$userid'");
 	//安全提问
 	$equestion=(int)$_POST['equestion'];
 	$eanswer=$_POST['eanswer'];

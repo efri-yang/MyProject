@@ -31,7 +31,7 @@ function hDelMemberFeedback($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("fid=".$fid);
-		printerror("DelMemberFeedbackSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelMemberFeedbackSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -58,7 +58,7 @@ function hDelMemberFeedback_All($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("");
-		printerror("DelMemberFeedbackSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelMemberFeedbackSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{

@@ -20,7 +20,7 @@ if(empty($tbname)||empty($mid)||InfoIsInTable($tbname))
 {
 	printerror("ErrorUrl","history.go(-1)",1);
 }
-$cr=$empire->fetch1("select classid,classpagekey,intro,classimg,cgroupid,islist,classtempid,listdt,bdinfoid,repagenum,islast,infos from {$dbtbpre}enewsclass where classid='$classid'");
+$cr=$empire->fetch1("select classid,classpagekey,intro,classimg,cgroupid,islist,classtempid,listdt,bdinfoid,repagenum,islast,infos,addsql,fclast from {$dbtbpre}enewsclass where classid='$classid'");
 if(empty($cr['classid']))
 {
 	printerror("ErrorUrl","history.go(-1)",1);
@@ -52,6 +52,16 @@ if($cr['cgroupid'])
 		printerror('NotLevelToClass','history.go(-1)',1);
 	}
 }
+//缓存
+if($public_r['ctimeopen'])
+{
+	$public_r['usetotalnum']=0;
+}
+$ecms_tofunr=array();
+$ecms_tofunr['cacheuse']=0;
+$ecms_tofunr['cacheselfcid']=$classid;
+$ecms_tofunr['cachepath']='empirecms';
+//缓存
 $GLOBALS['navclassid']=$classid;
 $url=ReturnClassLink($classid);
 $pagetitle=$class_r[$classid]['classname'];
@@ -65,6 +75,19 @@ if(!$class_r[$classid][islast]&&$cr['islist']!=1)
 	{
 		printerror("ErrorUrl","history.go(-1)",1);
 	}
+	//封面：缓存
+	$ecms_tofunr['cachetype']='classpage';
+	$ecms_tofunr['cacheids']=$classid;
+	$ecms_tofunr['cachedatepath']='cpage';
+	$ecms_tofunr['cachetime']=$public_r['ctimeclass'];
+	$ecms_tofunr['cachelasttime']=$public_r['ctimelast'];
+	$ecms_tofunr['cachelastedit']=$cr['fclast'];
+	$ecms_tofunr['cacheopen']=Ecms_eCacheCheckOpen($ecms_tofunr['cachetime']);
+	if($ecms_tofunr['cacheopen']==1)
+	{
+		$ecms_tofunr['cacheuse']=Ecms_eCacheOut($ecms_tofunr,0);
+	}
+	//封面：缓存
 	if($cr[islist]==2)
 	{
 		$classtemp=GetClassText($classid);
@@ -83,7 +106,16 @@ if(!$class_r[$classid][islast]&&$cr['islist']!=1)
 	$string=str_replace('[!--newsnav--]',$url,$string);//位置导航
 	$string=Class_ReplaceSvars($string,$url,$classid,$pagetitle,$pagekey,$pagedes,$classimg,$addr,0);
 	$string=str_replace('[!--page.stats--]','',$string);
-	echo stripSlashes($string);
+	//封面：缓存
+	if($ecms_tofunr['cacheopen']==1)
+	{
+		Ecms_eCacheIn($ecms_tofunr,stripSlashes($string));
+	}
+	else
+	{
+		echo stripSlashes($string);
+	}
+	//封面：缓存
 	exit();
 }
 //---列表式---
@@ -98,6 +130,10 @@ else
 {
 	$add.=ReturnClass($class_r[$classid][sonclass]);
 	$have_class=1;
+}
+if($cr['addsql'])
+{
+	$add.=' and ('.$cr['addsql'].')';
 }
 //排序
 if(empty($class_r[$classid][reorder]))
@@ -125,6 +161,19 @@ $start=0;
 $line=$class_r[$classid]['lencord'];//每页显示记录数
 $page_line=10;//每页显示链接数
 $offset=$page*$line;//总偏移量
+//列表：缓存
+$ecms_tofunr['cachetype']='classlist';
+$ecms_tofunr['cacheids']=$classid.','.$page;
+$ecms_tofunr['cachedatepath']='clist/'.$classid;
+$ecms_tofunr['cachetime']=$public_r['ctimelist'];
+$ecms_tofunr['cachelasttime']=$public_r['ctimelast'];
+$ecms_tofunr['cachelastedit']=$cr['fclast'];
+$ecms_tofunr['cacheopen']=Ecms_eCacheCheckOpen($ecms_tofunr['cachetime']);
+if($ecms_tofunr['cacheopen']==1)
+{
+	$ecms_tofunr['cacheuse']=Ecms_eCacheOut($ecms_tofunr,0);
+}
+//列表：缓存
 //系统模型
 $ret_r=ReturnReplaceListF($mid);
 //优化
@@ -137,9 +186,13 @@ if($yhid)
 }
 //总数
 $totalnum=(int)$_GET['totalnum'];
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 if($totalnum<1)
 {
-	if($yhadd)
+	if($yhadd||$cr['addsql'])
 	{
 		$totalquery="select count(*) as total from {$dbtbpre}ecms_".$tbname." where ".$yhadd.$add;
 		$num=$empire->gettotal($totalquery);
@@ -153,7 +206,12 @@ else
 {
 	$num=$totalnum;
 }
-$search.='&totalnum='.$num;
+if($public_r['usetotalnum'])
+{
+	$search.='&totalnum='.$num;
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 $query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$tbname." where ".$yhadd.$add;
 $query.=" order by ".ReturnSetTopSql('list').$addorder." limit $offset,$line";
 $sql=$empire->query($query);
@@ -228,7 +286,16 @@ if($changerow<=$rownum&&$listtext<>$list_r[1])
 	$string.=$listtext;
 }
 $string=$list_r[0].$string.$list_r[2];
-echo stripSlashes($string);
+//列表：缓存
+if($ecms_tofunr['cacheopen']==1)
+{
+	Ecms_eCacheIn($ecms_tofunr,stripSlashes($string));
+}
+else
+{
+	echo stripSlashes($string);
+}
+//列表：缓存
 db_close();
 $empire=null;
 ?>

@@ -7,7 +7,7 @@ define('EmpireCMSConfig',TRUE);
 $ecms_config=array();
 
 //数据库设置
-$ecms_config['db']['usedb']='mysql';	//数据库类型
+$ecms_config['db']['usedb']='mysqli';	//数据库类型
 $ecms_config['db']['dbver']='5.0';	//数据库版本
 $ecms_config['db']['dbserver']='localhost';	//数据库登录地址
 $ecms_config['db']['dbport']='';	//端口，不填为按默认
@@ -34,6 +34,11 @@ $ecms_config['esafe']['openeditdttemp']=1;	//开启后台在线修改动态模�
 $ecms_config['epassport']['open']=0;	//是否开启易通行系统(1为开启，0为关闭)
 
 //其它配置
+$ecms_config['sets']['webdebug']=0;	//是否显示PHP错误提示(0为不显示,1为显示)
+$ecms_config['sets']['timezone']='PRC';	//时区
+$ecms_config['sets']['getiptype']=0;	//获取IP地址类型(0为自动,1为REMOTE_ADDR,2为HTTP_X_FORWARDED_FOR,3为HTTP_CLIENT_IP)
+$ecms_config['sets']['ecmscachepath']=ECMS_PATH.'ecachefiles/';	//动态页面缓存文件存放目录
+$ecms_config['sets']['ecmscachefiletype']='.html';	//动态页面缓存文件扩展名
 $ecms_config['sets']['txtpath']=ECMS_PATH.'d/txt/';	//文本型数据存放目录
 $ecms_config['sets']['saveurlimgclearurl']=0;	//远程保存图片自动去除图片的链接(0为保留,1为去除)
 $ecms_config['sets']['deftempid']=0;	//默认模板组ID
@@ -73,6 +78,9 @@ $ecms_config['memberf']['havemsg']='havemsg';//提示短消息字段
 $ecms_config['memberf']['checked']='checked';//审核状态字段
 $ecms_config['memberf']['salt']='salt';//SALT加密字段
 $ecms_config['memberf']['userkey']='userkey';//用户密钥字段
+$ecms_config['memberf']['ingid']='ingid';//内部会员组字段
+$ecms_config['memberf']['agid']='agid';//会员管理组字段
+$ecms_config['memberf']['isern']='isern';//实名字段
 
 //-------EmpireCMS.Seting.member-------
 
@@ -83,22 +91,31 @@ $ecms_config['memberf']['userkey']='userkey';//用户密钥字段
 
 //后台安全设置
 $ecms_config['esafe']['loginauth']='yyh';	//登录认证码,如果设置登录需要输入此认证码才能通过
-$ecms_config['esafe']['ecookiernd']='hVdGJJYCczvDAkZsw0O79sUV1in9ym';	//后台登录COOKIE认证码(填写10~50个任意字符，最好多种字符组合)
+$ecms_config['esafe']['enloginauth']=0;	//登录认证码加密验证串有效时间,单位:秒(0为不启用加密)
+$ecms_config['esafe']['ecookiernd']='4cPraMGD1CSZC364qAqA472iO6sUCwuUFYwX';	//后台登录COOKIE认证码(填写10~50个任意字符，最好多种字符组合)
 $ecms_config['esafe']['ckhloginip']=0;	//后台是否验证登录IP,0为不验证,1为验证
 $ecms_config['esafe']['ckhsession']=0;	//后台是否启用SESSION验证,0为不验证,1为验证
 $ecms_config['esafe']['ckhanytime']=0;	//后台随时认证码变更周期,单位:秒(0为不启用)
 $ecms_config['esafe']['theloginlog']=0;	//是否记录登陆日志(0为记录,1为不记录)
 $ecms_config['esafe']['thedolog']=0;		//是否记录操作日志(0为记录,1为不记录)
-$ecms_config['esafe']['ckfromurl']=2;	//是否启用来源地址验证,0为不验证,1为全部验证,2为后台验证,3为前台验证
+$ecms_config['esafe']['ckfromurl']=2;	//是否启用来源地址验证,0为不验证,1为全部验证,2为后台验证,3为前台验证,4为全部验证(严格),5为后台验证(严格),6为前台验证(严格)
 $ecms_config['esafe']['ckhash']=0;	//启用后台来源认证码,0为金刚模式验证,1为刺猬模式验证,2为关闭验证
+$ecms_config['esafe']['ckhashename']='ehash_';	//后台来源认证码访问变量名(必须字母开头,并且只能由字母、数字、下划线组成)
+$ecms_config['esafe']['ckhashrname']='rhash_';	//后台来源认证码提交变量名(必须字母开头,并且只能由字母、数字、下划线组成)
+$ecms_config['esafe']['ckhuseragent']='';	//允许后台访问的UserAgent信息必须包含字符(区分大小写),多个用“||”半角双竖线隔开
 
 //COOKIE设置
 $ecms_config['cks']['ckdomain']='';		//cookie作用域
 $ecms_config['cks']['ckpath']='/';		//cookie作用路径
-$ecms_config['cks']['ckvarpre']='oisjj';		//前台cookie变量前缀
-$ecms_config['cks']['ckadminvarpre']='prgxo';		//后台cookie变量前缀
-$ecms_config['cks']['ckrnd']='2EPFoTEMbVlTDaIlDsUjF4XUlG8x7q';	//COOKIE验证随机码(填写10~50个任意字符，最好多种字符组合)
-$ecms_config['cks']['ckrndtwo']='k3ilqqZVzJoWR2J8kCc1GaJoCYqXTw';	//COOKIE验证随机码2(填写10~50个任意字符，最好多种字符组合)
+$ecms_config['cks']['ckhttponly']=0;	//cookie的HttpOnly属性(0关闭,1开启,2只后台开启,3只前台开启)
+$ecms_config['cks']['cksecure']=0;		//cookie的secure属性(0为自动识别,1为关闭,2为开启,3只后台开启,4只前台开启)
+$ecms_config['cks']['ckvarpre']='kxnuh';		//前台cookie变量前缀
+$ecms_config['cks']['ckadminvarpre']='ernul';		//后台cookie变量前缀
+$ecms_config['cks']['ckrnd']='argCSwKbTxDNa0137NN3XEAFUn2OKNUxcwA';	//COOKIE验证随机码(填写10~50个任意字符，最好多种字符组合)
+$ecms_config['cks']['ckrndtwo']='f1FB2HnSVUyrPOBkoyIQTBjwSBHIXjPdlR';	//COOKIE验证随机码2(填写10~50个任意字符，最好多种字符组合)
+$ecms_config['cks']['ckrndthree']='vrBOMBykNq8ypF047Q6hwrBg3ajoUH7Pf';	//COOKIE验证随机码3(填写10~50个任意字符，最好多种字符组合)
+$ecms_config['cks']['ckrndfour']='KhGBUVbV9fhhAOcmu5Kw9fSEi8xw4suf';	//COOKIE验证随机码4(填写10~50个任意字符，最好多种字符组合)
+$ecms_config['cks']['ckrndfive']='Yi9TeTafyhatdzC57WKQhuEEOUVJRWn';	//COOKIE验证随机码5(填写10~50个任意字符，最好多种字符组合)
 
 //网站防火墙配置
 $ecms_config['fw']['eopen']=0;	//开启防火墙(0为关闭,1为开启)
@@ -114,9 +131,9 @@ $ecms_config['fw']['cleargettext']='';	//屏蔽提交敏感字符，多个用半
 
 
 //文件类型
-$ecms_config['sets']['tranpicturetype']=',.jpg,.gif,.png,.bmp,.jpeg,';	//图片
+$ecms_config['sets']['tranpicturetype']=',.jpg,.gif,.png,.bmp,.jpeg,.webp,';	//图片
 $ecms_config['sets']['tranflashtype']=',.swf,.flv,.dcr,';	//FLASH
-$ecms_config['sets']['mediaplayertype']=',.wmv,.asf,.wma,.mp3,.asx,.mid,.midi,';	//mediaplayer
+$ecms_config['sets']['mediaplayertype']=',.wmv,.asf,.wma,.mp3,.asx,.mid,.midi,.swf,.flv,.dcr,.ogg,.webm,';	//mediaplayer
 $ecms_config['sets']['realplayertype']=',.rm,.ra,.rmvb,.mp4,.mov,.avi,.wav,.ram,.mpg,.mpeg,';	//realplayer
 
 
@@ -142,7 +159,7 @@ $public_r=array('sitename'=>'帝国网站管理系统',
 'searchtime'=>30,
 'loginnum'=>5,
 'logintime'=>60,
-'addnews_ok'=>0,
+'addnews_ok'=>1,
 'register_ok'=>0,
 'indextype'=>'.html',
 'goodlencord'=>0,
@@ -158,7 +175,7 @@ $public_r=array('sitename'=>'帝国网站管理系统',
 'loadtempnum'=>50,
 'bakdbpath'=>'bdata',
 'bakdbzip'=>'zip',
-'downpass'=>'AqwovWeDcTuUUxdeTkJv',
+'downpass'=>'FO2O3QDgJ9VxBMdV6wiU',
 'filechmod'=>1,
 'loginkey_ok'=>0,
 'tbname'=>'news',
@@ -202,7 +219,7 @@ $public_r=array('sitename'=>'帝国网站管理系统',
 'reuserlistnum'=>8,
 'opentitleurl'=>1,
 'searchtempvar'=>1,
-'showinfolevel'=>0,
+'showinfolevel'=>2,
 'navfh'=>'>',
 'spicwidth'=>105,
 'spicheight'=>118,
@@ -213,33 +230,33 @@ $public_r=array('sitename'=>'帝国网站管理系统',
 'reggetfen'=>0,
 'regbooktime'=>30,
 'revotetime'=>30,
-'fpath'=>0,
-'filepath'=>'Y-m-d',
+'fpath'=>1,
+'filepath'=>'Y/m-d',
 'nreclass'=>',',
 'nreinfo'=>',',
 'nrejs'=>',',
 'nottobq'=>',',
 'defspacestyleid'=>1,
 'canposturl'=>'',
-'openspace'=>0,
+'openspace'=>1,
 'defadminstyle'=>1,
 'realltime'=>0,
 'closeip'=>'',
 'openip'=>'',
 'hopenip'=>'',
 'textpagelistnum'=>6,
-'memberlistlevel'=>0,
+'memberlistlevel'=>2,
 'ebakcanlistdb'=>0,
 'keytog'=>2,
-'keytime'=>30,
-'keyrnd'=>'JArSmbjd2yxMCwdr2x7AG928VgtNRQ',
+'keytime'=>900,
+'keyrnd'=>'N7INSHbW2Lgr3mNnTRMzCSe7gG37FYRU',
 'checkdorepstr'=>',0,0,0,0,',
 'regkey_ok'=>0,
 'opengetdown'=>0,
 'gbkey_ok'=>0,
 'fbkey_ok'=>0,
 'newaddinfotime'=>0,
-'classnavs'=>'<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/download/\">下载中心</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/movie/\">影视频道</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/shop/\">网上商城</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/flash/\">FLASH频道</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/photo/\">图片频道</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/article/\">文章中心</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/info/\">分类信息</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/lanmucs01/\">栏目测试1</a>',
+'classnavs'=>'<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/news/\">新闻中心</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/download/\">下载中心</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/movie/\">影视频道</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/shop/\">网上商城</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/flash/\">FLASH频道</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/photo/\">图片频道</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/article/\">文章中心</a>&nbsp;|&nbsp;<a href=\"/MyProject/src/MyPhpCms/EmpireCMS/info/\">分类信息</a>',
 'adminstyle'=>',1,2,',
 'docnewsnum'=>300,
 'openschall'=>0,
@@ -257,7 +274,7 @@ $public_r=array('sitename'=>'帝国网站管理系统',
 'qlistinfonum'=>25,
 'dtncanbq'=>1,
 'dtncachetime'=>43200,
-'readdinfotime'=>0,
+'readdinfotime'=>60,
 'qeditinfotime'=>0,
 'onclicktype'=>0,
 'onclickfilesize'=>10,
@@ -288,7 +305,7 @@ $public_r=array('sitename'=>'帝国网站管理系统',
 'closeqdtmsg'=>'',
 'openfileserver'=>0,
 'fs_purl'=>'',
-'closemods'=>'',
+'closemods'=>',error,gb,fb,',
 'fieldandtop'=>0,
 'fieldandclosetb'=>'',
 'filedatatbs'=>',1,',
@@ -303,7 +320,7 @@ $public_r=array('sitename'=>'帝国网站管理系统',
 'pl_num'=>12,
 'plgroupid'=>0,
 'closelisttemp'=>'',
-'chclasscolor'=>'#99C4E3',
+'chclasscolor'=>'99C4E3',
 'timeclose'=>'',
 'timeclosedo'=>'',
 'ipaddinfonum'=>0,
@@ -318,6 +335,43 @@ $public_r=array('sitename'=>'帝国网站管理系统',
 'indexaddpage'=>0,
 'modmemberedittran'=>0,
 'modinfoedittran'=>0,
+'php_adminouttime'=>1000,
+'httptype'=>0,
+'qinfoaddfen'=>0,
+'bakescapetype'=>1,
+'hkeytime'=>30,
+'hkeyrnd'=>'1JHnmMIE2TQMEzAQOp11sgRO3OPAZRifaeKl',
+'mhavedatedo'=>0,
+'reportkey'=>0,
+'ctimeopen'=>0,
+'ctimelast'=>0,
+'ctimeindex'=>0,
+'ctimeclass'=>0,
+'ctimelist'=>0,
+'ctimetext'=>0,
+'ctimett'=>0,
+'ctimetags'=>0,
+'ctimegids'=>'',
+'ctimecids'=>'',
+'ctimernd'=>'oMgNzYAWBpyaVxAwTeC32n4WhP3rljxhCR8rjTjzqQ',
+'qmadminuids'=>'',
+'qmforumuids'=>'',
+'qmotheruids'=>'',
+'ckhavemoreport'=>0,
+'usetotalnum'=>0,
+'autodoopen'=>0,
+'autodofile'=>0,
+'autodoss'=>0,
+'digglevel'=>0,
+'diggcmids'=>'',
+'spacegids'=>'',
+'candocodetag'=>0,
+'openern'=>'',
+'ernurl'=>'',
+'toqjf'=>'',
+'qtoqjf'=>'',
+'ctimeaddre'=>0,
+'ctimeqaddre'=>0,
 'deftempid'=>0);
 //------------e_public
 
@@ -363,10 +417,6 @@ $etable_r['info']=Array('deftb'=>'1',
 'yhid'=>0,
 'intb'=>0,
 'mid'=>8);
-$etable_r['lanmucs01']=Array('deftb'=>'1',
-'yhid'=>0,
-'intb'=>0,
-'mid'=>0);
 
 
 $emod_r=array();
@@ -410,6 +460,10 @@ $emod_r[1]=Array('mid'=>1,
 'definfovoteid'=>0,
 'orderf'=>'',
 'sonclass'=>'|34|35|36|37|',
+'maddfun'=>'',
+'meditfun'=>'',
+'qmaddfun'=>'',
+'qmeditfun'=>'',
 'tid'=>1,
 'tbname'=>'news');
 $emod_r[2]=Array('mid'=>2,
@@ -452,6 +506,10 @@ $emod_r[2]=Array('mid'=>2,
 'definfovoteid'=>0,
 'orderf'=>'',
 'sonclass'=>'|38|39|40|41|',
+'maddfun'=>'',
+'meditfun'=>'',
+'qmaddfun'=>'',
+'qmeditfun'=>'',
 'tid'=>2,
 'tbname'=>'download');
 $emod_r[3]=Array('mid'=>3,
@@ -494,6 +552,10 @@ $emod_r[3]=Array('mid'=>3,
 'definfovoteid'=>0,
 'orderf'=>'',
 'sonclass'=>'|52|53|54|',
+'maddfun'=>'',
+'meditfun'=>'',
+'qmaddfun'=>'',
+'qmeditfun'=>'',
 'tid'=>3,
 'tbname'=>'photo');
 $emod_r[4]=Array('mid'=>4,
@@ -536,6 +598,10 @@ $emod_r[4]=Array('mid'=>4,
 'definfovoteid'=>0,
 'orderf'=>'',
 'sonclass'=>'|50|51|',
+'maddfun'=>'',
+'meditfun'=>'',
+'qmaddfun'=>'',
+'qmeditfun'=>'',
 'tid'=>4,
 'tbname'=>'flash');
 $emod_r[5]=Array('mid'=>5,
@@ -578,6 +644,10 @@ $emod_r[5]=Array('mid'=>5,
 'definfovoteid'=>0,
 'orderf'=>'',
 'sonclass'=>'|42|43|44|45|',
+'maddfun'=>'',
+'meditfun'=>'',
+'qmaddfun'=>'',
+'qmeditfun'=>'',
 'tid'=>5,
 'tbname'=>'movie');
 $emod_r[6]=Array('mid'=>6,
@@ -620,6 +690,10 @@ $emod_r[6]=Array('mid'=>6,
 'definfovoteid'=>0,
 'orderf'=>'',
 'sonclass'=>'|46|47|48|49|',
+'maddfun'=>'',
+'meditfun'=>'',
+'qmaddfun'=>'',
+'qmeditfun'=>'',
 'tid'=>6,
 'tbname'=>'shop');
 $emod_r[7]=Array('mid'=>7,
@@ -662,6 +736,10 @@ $emod_r[7]=Array('mid'=>7,
 'definfovoteid'=>0,
 'orderf'=>'',
 'sonclass'=>'|55|56|57|',
+'maddfun'=>'',
+'meditfun'=>'',
+'qmaddfun'=>'',
+'qmeditfun'=>'',
 'tid'=>7,
 'tbname'=>'article');
 $emod_r[8]=Array('mid'=>8,
@@ -704,6 +782,10 @@ $emod_r[8]=Array('mid'=>8,
 'definfovoteid'=>0,
 'orderf'=>'',
 'sonclass'=>'|11|12|13|14|15|16|18|19|20|21|23|24|25|26|28|29|30|31|',
+'maddfun'=>'',
+'meditfun'=>'',
+'qmaddfun'=>'',
+'qmeditfun'=>'',
 'tid'=>8,
 'tbname'=>'info');
 

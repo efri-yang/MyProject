@@ -52,6 +52,16 @@ if($r[dopublic]||$r[dofirewall]||$r[dosetsafe]||$r[dopubvar])
 			<a href="../../pub/SetRewrite.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">伪静态参数设置</a>
           </td>
         </tr>
+		<tr> 
+          <td class="file">
+			<a href="../../pub/SetPageCache.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">动态页缓存设置</a>
+          </td>
+        </tr>
+		<tr> 
+          <td class="file">
+			<a href="../../pub/SetDigg.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">DIGG顶设置</a>
+          </td>
+        </tr>
 		<?
 		}
 		if($r[dopubvar])
@@ -116,6 +126,11 @@ if($r[dochangedata]||$r[dopostdata])
 		<tr> 
           <td class="file">
 			<a href="../../ReHtml/ReInfoUrl.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">更新信息页地址</a>
+          </td>
+        </tr>
+		<tr> 
+          <td class="file">
+			<a href="../../ReHtml/ChangePageCache.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">更新动态页缓存</a>
           </td>
         </tr>
 		<tr> 

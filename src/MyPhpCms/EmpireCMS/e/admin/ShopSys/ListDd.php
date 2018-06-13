@@ -187,7 +187,7 @@ function SetShopDd($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog($log);
-		printerror($mess,$_SERVER['HTTP_REFERER']);
+		printerror($mess,EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -374,7 +374,7 @@ function CheckAll(form)
     }
   }
 </script>
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -428,9 +428,9 @@ function CheckAll(form)
     </tr>
     <tr>
       <td>时间:从 
-        <input name="starttime" type="text" id="starttime2" value="<?=$starttime?>" size="12" onclick="setday(this)">
+        <input name="starttime" type="text" id="starttime2" value="<?=$starttime?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         到 
-        <input name="endtime" type="text" id="endtime2" value="<?=$endtime?>" size="12" onclick="setday(this)">
+        <input name="endtime" type="text" id="endtime2" value="<?=$endtime?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         止的订单 
         <input type="submit" name="Submit6" value="搜索"> <input name="sear" type="hidden" id="sear2" value="1"></td>
     </tr>

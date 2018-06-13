@@ -30,7 +30,7 @@ function EditZtOrder($ztid,$myorder,$userid,$username){
     }
 	//操作日志
 	insert_dolog("");
-	printerror("EditZtOrderSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("EditZtOrderSuccess",EcmsGetReturnUrl());
 }
 
 $enews=$_POST['enews'];

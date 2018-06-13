@@ -36,6 +36,31 @@ function eCheckIpAddInfoNum($ip,$tbname,$mid,$checked=1){
 	}
 }
 
+//一个会员单信息
+function qCheckMemberOneInfo($tbname,$mid,$classid,$userid){
+	global $empire,$dbtbpre,$class_r;
+	$classid=(int)$classid;
+	$userid=(int)$userid;
+	if(empty($class_r[$classid]['oneinfo']))
+	{
+		return '';
+	}
+	$GLOBALS['classqoneinfo']=$class_r[$classid]['oneinfo'];
+	//表
+	$num=$empire->gettotal("select count(*) as total from {$dbtbpre}ecms_".$tbname." where userid='$userid' and ismember=1 and classid='$classid'");
+	if($num>=$class_r[$classid]['oneinfo'])
+	{
+		printerror('OneInfoAddInfo','history.go(-1)',1);
+	}
+	//审核表
+	$cknum=$empire->gettotal("select count(*) as total from {$dbtbpre}ecms_".$tbname."_check where userid='$userid' and ismember=1 and classid='$classid'");
+	$allnum=$num+$cknum;
+	if($allnum>=$class_r[$classid]['oneinfo'])
+	{
+		printerror('OneInfoAddInfo','history.go(-1)',1);
+	}
+}
+
 //屏蔽字符
 function qCheckInfoCloseWord($mid,$add,$closewordsf,$closewords){
 	if(empty($closewordsf)||$closewordsf=='|'||empty($closewords)||$closewords=='|')
@@ -93,12 +118,6 @@ function DoqValue($mid,$f,$val){
 		}
 	}
 	return $val;
-}
-
-//过滤
-function ClearNewsBadCode($text){
-	$text=preg_replace(array('!<script!i','!</script>!i','!<link!i','!<iframe!i','!</iframe>!i','!<meta!i','!<body!i','!<style!i','!</style>!i','! onerror!i','!<marquee!i','!</marquee>!i','/<!--/','! onload!i','! onmouse!i','!<frame!i','!<frameset!i'),array('&lt;script','&lt;/script&gt;','&lt;link','&lt;iframe','&lt;/iframe&gt;','&lt;meta','&lt;body','&lt;style','&lt;/style&gt;',' one rror','&lt;marquee','&lt;/marquee&gt;','<!---ecms ',' onl oad',' onm ouse','&lt;frame','&lt;frameset'),$text);
-	return $text;
 }
 
 //返回字段值的处理
@@ -361,6 +380,7 @@ function DoReqDownPath($downpath){
 	$r_exp="\r\n";
 	$r=explode($r_exp,$downpath);
 	$r1=explode($f_exp,$r[0]);
+	$r1[1]=addslashes(RepPostStr($r1[1]));
 	return $r1[1];
 }
 
@@ -613,6 +633,7 @@ function ReturnQAddinfoF($mid,$add,$infor,$classid,$filepass,$userid,$username,$
 			$add[$f]=ReturnMoreValueAddF($add,$add[$f],$mid,$f,$ecms);//多值
 			$fval=$add[$f];
 		}
+		$fval=eDoInfoTbfToQj($emod_r[$mid]['tbname'],$f,$fval,$public_r['qtoqjf']);
 		$fval=DoFFun($mid,$f,$fval,$isadd,1);//执行函数
 		$modispagef=$pagef==$f?1:0;
 		$fval=RepTempvarPostStrT($fval,$modispagef);
@@ -749,6 +770,7 @@ function DelYQTranFile($classid,$id,$file,$tf,$fstb='1'){
 	$r=explode("/",$file);
 	$count=count($r);
 	$filename=$r[$count-1];
+	$filename=addslashes(RepPostStr($filename));
 	$fr=$empire->fetch1("select filename,path,fileid,fpath,classid from {$dbtbpre}enewsfile_{$fstb} where classid='$classid' and id='$id' and filename='$filename' limit 1");
 	if($fr['fileid'])
 	{
@@ -800,8 +822,8 @@ function DodoInfo($add,$ecms=0){
 	$id=(int)$add['id'];
 	$infor=array();
 	//组合标题属性
-	$titlecolor=RepPostStr(RepPhpAspJspcodeText($add[titlecolor]));
-	$titlefont=TitleFont($add[titlefont],$titlecolor);
+	$titlecolor=addslashes(RepPostStr(RepPhpAspJspcodeText($add[titlecolor])));
+	$titlefont=dgdb_tosave(TitleFont($add[titlefont],$titlecolor));
 	$titlecolor="";
 	$titlefont="";
 	$ttid=(int)$add['ttid'];
@@ -812,6 +834,12 @@ function DodoInfo($add,$ecms=0){
 	{
 		$keyboard=str_replace('[!--f--!]','ecms',$keyboard);
 		$keyid=GetKeyid($keyboard,$classid,$id,$class_r[$classid][link_num]);
+		$keyid=dgdb_tosave($keyid);
+	}
+	else
+	{
+		$keyboard='';
+		$keyid='';
 	}
 	//验证码
 	$keyvname='checkinfokey';
@@ -821,6 +849,7 @@ function DodoInfo($add,$ecms=0){
 		define('ECMS_SELFPATH',eReturnEcmsMainPortPath());
 		Moreport_ResetMainTempGid();
 	}
+	$epreid=0;
 	//-----------------增加
 	if($ecms==0)
 	{
@@ -842,6 +871,8 @@ function DodoInfo($add,$ecms=0){
 		$check_ip=egetip();
 		$check_checked=$cr['wfid']?0:$cr['checkqadd'];
 		eCheckIpAddInfoNum($check_ip,$tbname,$mid,$check_checked);
+		//验证单信息
+		qCheckMemberOneInfo($tbname,$mid,$classid,$muserid);
 		//返回字段
 		$ret_r=ReturnQAddinfoF($mid,$add,$infor,$classid,$filepass,$muserid,$musername,0);
 		$checked=$cr['checkqadd'];
@@ -859,10 +890,21 @@ function DodoInfo($add,$ecms=0){
 			$isqf=1;
 		}
 		//增扣点
-		if($checked&&$muserid)
+		if($muserid)
 		{
-			AddInfoFen($cr['addinfofen'],$muserid);
-			$haveaddfen=1;
+			if($checked)
+			{
+				AddInfoFen($cr['addinfofen'],$muserid);
+				$haveaddfen=1;
+			}
+			else
+			{
+				if($cr['addinfofen']<0&&!$public_r['qinfoaddfen'])
+				{
+					AddInfoFen($cr['addinfofen'],$muserid);
+					$haveaddfen=1;
+				}
+			}
 		}
 		if(empty($muserid))
 		{
@@ -903,7 +945,7 @@ function DodoInfo($add,$ecms=0){
 		{
 			if($cr['addinfofen']<0)
 			{
-				BakDown($classid,$id,0,$muserid,$musername,RepPostStr($add[title]),abs($cr['addinfofen']),3);
+				BakDown($classid,$id,0,$muserid,$musername,addslashes(RepPostStr($add[title])),abs($cr['addinfofen']),3);
 			}
 		}
 		//签发
@@ -927,6 +969,8 @@ function DodoInfo($add,$ecms=0){
 		AddClassInfos($classid,'+1','+1',$checked);
 		//更新新信息数
 		DoUpdateAddDataNum('info',$class_r[$classid]['tid'],1);
+		//处理函数
+		DoMFun($class_r[$classid]['modid'],$classid,$id,1,1);
 		//清除验证码
 		ecmsEmptyShowKey($keyvname);
 		esetcookie("qeditinfo","",0);
@@ -936,6 +980,7 @@ function DodoInfo($add,$ecms=0){
 			$titleurl=qAddGetHtml($classid,$id);
 		}
 		//生成列表
+		$epreid=0;
 		if($checked)
 		{
 			qAddListHtml($classid,$mid,$cr['qaddlist'],$cr['listdt']);
@@ -943,8 +988,14 @@ function DodoInfo($add,$ecms=0){
 			if($cr['repreinfo'])
 			{
 				$prer=$empire->fetch1("select * from {$dbtbpre}ecms_".$tbname." where id<$id and classid='$classid' order by id desc limit 1");
+				$epreid=$prer['id'];
 				GetHtml($prer['classid'],$prer['id'],$prer,1);
 			}
+		}
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$checked)
+		{
+			eUpCacheInfo(0,$classid,0,$epreid,$ttid,'','',0,0);
 		}
 		if($sql)
 		{
@@ -986,6 +1037,19 @@ function DodoInfo($add,$ecms=0){
 			if(time()-$infor['truetime']>$public_r['qeditinfotime']*60)
 			{
 				printerror("QEditInfoOutTime","history.go(-1)",1);
+			}
+		}
+		//签发信息
+		if($infor['isqf'])
+		{
+			$qck_qfr=$empire->fetch1("select wfid,checktno from {$dbtbpre}enewswfinfo where id='$infor[id]' and classid='$infor[classid]' limit 1");
+			if($qck_qfr['checktno']<100)
+			{
+				$qck_qfwfr=$empire->fetch1("select wfid,canedit from {$dbtbpre}enewsworkflow where wfid='$qck_qfr[wfid]' limit 1");
+				if($qck_qfwfr['wfid']&&!$qck_qfwfr['canedit'])
+				{
+					printerror("qWorkflowCanNotEditInfo","history.go(-1)",1);
+				}
 			}
 		}
 		$iaddfield='';
@@ -1052,6 +1116,8 @@ function DodoInfo($add,$ecms=0){
 				AddClassInfos($classid,'','-1');
 			}
 		}
+		//处理函数
+		DoMFun($class_r[$classid]['modid'],$classid,$id,0,1);
 		esetcookie("qeditinfo","",0);
 		//生成页面
 		if($infor['checked']&&!$cr['showdt'])
@@ -1064,10 +1130,17 @@ function DodoInfo($add,$ecms=0){
 			qAddListHtml($classid,$mid,$cr['qaddlist'],$cr['listdt']);
 		}
 		//生成上一篇
+		$epreid=0;
 		if($cr['repreinfo']&&$infor['checked'])
 		{
 			$prer=$empire->fetch1("select * from {$dbtbpre}ecms_".$tbname." where id<$id and classid='$classid' order by id desc limit 1");
+			$epreid=$prer['id'];
 			GetHtml($prer['classid'],$prer['id'],$prer,1);
+		}
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$infor['checked'])
+		{
+			eUpCacheInfo(0,$classid,0,$epreid,$ttid,'','',0,0);
 		}
 		if($sql)
 		{
@@ -1136,6 +1209,8 @@ function DodoInfo($add,$ecms=0){
 		//删除其它表记录和附件
 		DelSingleInfoOtherData($classid,$id,$r,0,0);
 		//生成列表
+		$epreid=0;
+		$enextid=0;
 		if($r['checked'])
 		{
 			qAddListHtml($classid,$mid,$cr['qaddlist'],$cr['listdt']);
@@ -1143,14 +1218,21 @@ function DodoInfo($add,$ecms=0){
 			if($cr['repreinfo'])
 			{
 				$prer=$empire->fetch1("select * from {$dbtbpre}ecms_".$tbname." where id<$id and classid='$classid' order by id desc limit 1");
+				$epreid=$prer['id'];
 				GetHtml($prer['classid'],$prer['id'],$prer,1);
 				//下一篇
 				$nextr=$empire->fetch1("select * from {$dbtbpre}ecms_".$tbname." where id>$id and classid='$classid' order by id limit 1");
 				if($nextr['id'])
 				{
+					$enextid=$nextr['id'];
 					GetHtml($nextr['classid'],$nextr['id'],$nextr,1);
 				}
 			}
+		}
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$r['checked'])
+		{
+			eUpCacheInfo(0,$classid,$enextid,$epreid,$r['ttid'],'','',0,0);
 		}
 		if($sql)
 		{
@@ -1169,6 +1251,7 @@ function DodoInfo($add,$ecms=0){
 //投稿权限检测
 function DoQCheckAddLevel($classid,$userid,$username,$rnd,$ecms=0,$isadd=0){
 	global $empire,$dbtbpre,$level_r,$public_r;
+	$classid=(int)$classid;
 	$user=array();
 	$r=$empire->fetch1("select * from {$dbtbpre}enewsclass where classid='$classid'");
 	if(!$r['classid']||$r[wburl])
@@ -1227,12 +1310,16 @@ function DoQCheckAddLevel($classid,$userid,$username,$rnd,$ecms=0,$isadd=0){
 			$r['qeditchecked']=0;
 		}
 	}
+	//实名验证
+	eCheckHaveTruename('info',$user['userid'],$user['username'],$user['isern'],$user['checked'],0);
+
 	return $r;
 }
 
 //检查投稿数
 function DoQCheckAddNum($userid,$groupid){
 	global $empire,$dbtbpre,$level_r,$public_r;
+	$userid=(int)$userid;
 	$ur=$empire->fetch1("select userid,todayinfodate,todayaddinfo from {$dbtbpre}enewsmemberpub where userid='$userid' limit 1");
 	$thetoday=date("Y-m-d");
 	if($ur['userid'])
@@ -1373,6 +1460,7 @@ function DoQTranFile($add,$file,$file_name,$file_type,$file_size,$userid,$userna
 	}
 	else
 	{
+		eCheckStrType(4,$add['field'],1);
 		echo"<script>opener.document.add.".$add['field'].".value='".$r['url']."';window.close();</script>";
 	}
 	db_close();
@@ -1395,7 +1483,14 @@ function ECMS_QEditorPrintError($errorNumber,$fileUrl,$fileName,$customMsg,$file
 		$customMsg=$qmessage_r[$customMsg];
 	}
 	$errorNumber=(int)$errorNumber;
-	echo"<script type=\"text/javascript\">window.parent.OnUploadCompleted($errorNumber,'".addslashes($fileUrl)."','".addslashes($fileName)."','".addslashes($customMsg)."','".addslashes($fileno)."','$filesize');</script>";
+	$typer=ECMS_EditorReturnType('');
+	$type=$typer['ftype'];
+	//附件
+	if($type==0)
+	{
+		$fileUrl=$fileUrl.'##'.$fileno.'##'.$filesize;
+	}
+	ECMS_PTEditorShowError($type,addslashes($customMsg),addslashes($fileUrl),$add,0);
 	db_close();
 	exit();
 }

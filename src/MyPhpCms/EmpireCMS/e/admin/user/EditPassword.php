@@ -19,6 +19,7 @@ $ecms_hashur=hReturnEcmsHashStrAll();
 //修改密码
 function EditPassword($userid,$username,$oldpassword,$password,$repassword,$styleid,$oldstyleid,$add){
 	global $empire,$dbtbpre,$gr;
+	$userid=(int)$userid;
 	$styleid=(int)$styleid;
 	$oldstyleid=(int)$oldstyleid;
 	$username=RepPostVar($username);
@@ -170,7 +171,7 @@ $empire=null;
     <td>位置：<a href="EditPassword.php<?=$ecms_hashur['whehref']?>">修改个人资料</a></td>
   </tr>
 </table>
-<form name="form1" method="post" action="EditPassword.php">
+<form name="form1" method="post" action="EditPassword.php" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 
@@ -180,8 +181,7 @@ $empire=null;
     <tr bgcolor="#FFFFFF"> 
       <td width="19%" height="25">用户名：</td>
       <td width="81%" height="25"> 
-        <?=$loginin?>
-      </td>
+        <?=$loginin?>      </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">旧密码：</td>
@@ -197,6 +197,11 @@ $empire=null;
       <td height="25">重复新密码：</td>
       <td height="25"><input name="repassword" type="password" id="repassword" size="32"> 
         <font color="#666666">(不修改密码,请留空) </font></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">&nbsp;</td>
+      <td height="25"><font color="#666666">(说明：密码设置6位以上，区分大小写，且密码不能包含：$ 
+      &amp; * # &lt; &gt; ' &quot; / \ % ; 空格)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">安全提问：</td>
@@ -216,7 +221,7 @@ $empire=null;
     <tr bgcolor="#FFFFFF"> 
       <td height="25">安全回答：</td>
       <td height="25"><input name="eanswer" type="text" id="eanswer" size="32"> 
-        <font color="#666666">(如果修改答案，请在此输入新答案)</font></td>
+        <font color="#666666">(如果修改答案，请在此输入新答案。区分大小写)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">姓名：</td>
@@ -235,8 +240,7 @@ $empire=null;
       <td height="25"><select name="styleid" id="styleid">
           <?=$style?>
         </select> <input type="button" name="Submit6222322" value="管理后台样式" onclick="window.open('../template/AdminStyle.php<?=$ecms_hashur['whehref']?>');"> 
-        <input name="oldstyleid" type="hidden" id="oldstyleid" value="<?=$r[styleid]?>"> 
-      </td>
+        <input name="oldstyleid" type="hidden" id="oldstyleid" value="<?=$r[styleid]?>">      </td>
     </tr>
     <?php
 	}
@@ -247,7 +251,7 @@ $empire=null;
         </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
-      <td height="25" colspan="2"><font color="#666666">说明：密码设置6位以上，且密码不能包含：$ 
+      <td height="25" colspan="2"><font color="#666666">说明：密码设置6位以上，区分大小写，且密码不能包含：$ 
         &amp; * # &lt; &gt; ' &quot; / \ % ; 空格</font></td>
     </tr>
   </table>

@@ -62,10 +62,13 @@ $doing=(int)$_GET['doing'];
 $field=RepPostVar($_GET['field']);
 $tranfrom=RepPostStr($_GET['tranfrom'],1);
 $fileno=RepPostStr($_GET['fileno'],1);
+$doecmspage=RepPostStr($_GET['doecmspage'],1);
 if(empty($field))
 {
 	$field="ecms";
 }
+include('eshoweditor.php');
+
 $add='';
 //附件类型
 $isinfofile=0;
@@ -215,7 +218,7 @@ if(!empty($keyboard))
 		$add.=" and adduser like '%$keyboard%'";
 	}
 }
-$search="&classid=$classid&infoid=$infoid&filepass=$filepass&type=$type&modtype=$modtype&doing=$doing&tranfrom=$tranfrom&field=$field&show=$show&searchclassid=$searchvarclassid&keyboard=$keyboard&fileno=$fileno&filelday=$filelday&sinfo=$sinfo".$ecms_hashur['ehref'];
+$search="&classid=$classid&infoid=$infoid&filepass=$filepass&type=$type&modtype=$modtype&doing=$doing&tranfrom=$tranfrom&field=$field&show=$show&searchclassid=$searchvarclassid&keyboard=$keyboard&fileno=$fileno&filelday=$filelday&sinfo=$sinfo&doecmspage=$doecmspage".$ecms_hashur['ehref'];
 //分页
 $page=(int)$_GET['page'];
 $page=RepPIntvar($page);
@@ -285,31 +288,18 @@ else
 }
 //编辑器选择
 function EditorChangeFile(fileurl,filename,filetype,filesize,name){
-	parent.opener.OnUploadCompleted(2,fileurl,filename,'',name,filesize);
-<?php
-if($type==1)
-{
-?>
-	if(parent.opener.document.getElementById('txtAlt').value=='')
+	var returnstr;
+	returnstr=fileurl;
+	<?php
+	$useeditor_r=ECMS_EditorReturnType('');
+	if($useeditor_r['ftype']==0)
 	{
-		parent.opener.document.getElementById('txtAlt').value=name;
+	?>
+	returnstr=fileurl+'##'+name+'##'+filesize;
+	<?php
 	}
-<?php
-}
-elseif($type==0)
-{
-?>
-	if(parent.opener.document.getElementById('fname').value=='')
-	{
-		parent.opener.document.getElementById('fname').value=name;
-	}
-	if(parent.opener.document.getElementById('filesize').value=='')
-	{
-		parent.opener.document.getElementById('filesize').value=filesize;
-	}
-<?php
-}
-?>
+	?>
+	window.parent.opener.<?=$useeditor_r['jsfun']?>(returnstr);
 	parent.window.close();
 }
 //变量层选择
@@ -390,6 +380,7 @@ function eTranMoreForFileMain(htmlstr){
           <input type=hidden name=doing value="<?=$doing?>">
 		  <input type=hidden name=fstb value="<?=$fstb?>">
 		  <input type=hidden name=sinfo value="<?=$sinfo?>">
+		  <input type=hidden name=doecmspage value="<?=$doecmspage?>">
           <tr class="header"> 
             <td colspan="2">上传<?=$tranname?>附件</td>
           </tr>
@@ -449,6 +440,7 @@ function eTranMoreForFileMain(htmlstr){
   <input type=hidden name=tranfrom value="<?=$tranfrom?>">
   <input type=hidden name=field value="<?=$field?>">
   <input type=hidden name=fileno value="<?=$fileno?>">
+  <input type=hidden name=doecmspage value="<?=$doecmspage?>">
     <tr> 
       <td><div align="center">搜索<?=$tranname?>附件： 
           <input name="keyboard" type="text" id="keyboard" value="<?=$keyboard?>">
@@ -493,6 +485,7 @@ function eTranMoreForFileMain(htmlstr){
   <input type=hidden name=field value="<?=$field?>">
   <input type=hidden name=fstb value="<?=$fstb?>">
   <input type=hidden name=sinfo value="<?=$sinfo?>">
+  <input type=hidden name=doecmspage value="<?=$doecmspage?>">
 <?
 if($type==1)//图片
 {

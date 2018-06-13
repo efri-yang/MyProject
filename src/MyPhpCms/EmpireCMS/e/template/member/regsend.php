@@ -34,7 +34,15 @@ require(ECMS_PATH.'e/template/incfile/header.php');
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">验证码</td>
-      <td><input name="key" type="text" id="key" size="6"> <img src="../../ShowKey/?v=regsend" name="regsendKeyImg" id="regsendKeyImg" onclick="regsendKeyImg.src='../../ShowKey/?v=regsend&t='+Math.random()" title="看不清楚,点击刷新"></td>
+      <td>
+	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr> 
+                  <td width="52"><input name="key" type="text" id="key" size="6"> 
+                  </td>
+                  <td id="regsendshowkey"><a href="#EmpireCMS" onclick="edoshowkey('regsendshowkey','regsend','<?=$public_r['newsurl']?>');" title="点击显示验证码">点击显示验证码</a></td>
+                </tr>
+            </table>
+	  </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">&nbsp; </td>

@@ -19,7 +19,15 @@ $loginin=$lur['username'];
 $loginrnd=$lur['rnd'];
 $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
+//spurl
+if($enews=='EditCjNews')
+{
+	hSetSpFromUrl();
+}
 hCheckEcmsRHash();
+
+@set_time_limit(0);
+
 require("../class/cjfun.php");
 if($enews=="CjUrl")//开始采集
 {

@@ -9,16 +9,16 @@ $public_diyr['pagetitle']='订单列表';
 $url="<a href=../../../>首页</a>&nbsp;>&nbsp;<a href=../../member/cp/>会员中心</a>&nbsp;>&nbsp;订单列表";
 require(ECMS_PATH.'e/template/incfile/header.php');
 ?>
-<script src=../../data/images/setday.js></script>
+<script type="text/javascript" src="../../data/js/jstime/WdatePicker.js"></script>
 <form name="form1" method="get" action="index.php">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1">
     <tr> 
       <td>订单号为: 
         <input name="keyboard" type="text" id="keyboard" value="<?=$keyboard?>">
         时间从 
-        <input name="starttime" type="text" id="starttime2" value="<?=$starttime?>" size="12" onclick="setday(this)">
+        <input name="starttime" type="text" id="starttime2" value="<?=$starttime?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         到 
-        <input name="endtime" type="text" id="endtime2" value="<?=$endtime?>" size="12" onclick="setday(this)">
+        <input name="endtime" type="text" id="endtime2" value="<?=$endtime?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         止的订单 
         <input type="submit" name="Submit6" value="搜索"> <input name="sear" type="hidden" id="sear2" value="1"> 
       </td>

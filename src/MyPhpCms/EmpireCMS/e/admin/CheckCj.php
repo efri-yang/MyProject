@@ -106,7 +106,7 @@ function CheckAll(form)
       <?=$num?>
       </font></b>条未入库记录) </td>
     <td width="10%"><div align="right" class="emenubutton">
-        <input type="button" name="Submit6" value="数据更新中心" onclick="window.open('ReHtml/ChangeData.php<?=$ecms_hashur['whehref']?>');">
+        <input type="button" name="Submit6" value="数据更新中心" onclick="window.open('ReHtml/ChangeData.php<?=$ecms_hashur['whehref']?>#ReIfInfoHtml');">
       </div></td>
   </tr>
   <tr> 

@@ -1,6 +1,7 @@
 <?php
 require("../../class/connect.php");
 $editor=1;
+eCheckCloseMods('fb');//关闭模块
 //分类id
 $bid=(int)$_GET['bid'];
 if(empty($bid))

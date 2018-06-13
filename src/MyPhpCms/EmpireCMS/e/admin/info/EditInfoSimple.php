@@ -177,11 +177,13 @@ $ftnr=ReturnFirsttitleNameList($r['firsttitle'],$r['isgood']);
 <script>
 function foreColor(){
   if(!Error())	return;
-  var arr = showModalDialog("../../data/html/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../../data/html/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) document.add.titlecolor.value=arr;
   else document.add.titlecolor.focus();
 }
 </script>
+<script type="text/javascript" src="../ecmseditor/js/jscolor/jscolor.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
@@ -218,8 +220,8 @@ function foreColor(){
               斜体 
               <input name="titlefont[s]" type="checkbox" value="s"<?=$titlefonts?>>
               删除线 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;颜色: 
-              <input name="titlecolor" type="text" value="<?=stripSlashes($r[titlecolor])?>" size="10"> 
-              <a onclick="foreColor();"><img src="../../data/images/color.gif" width="21" height="21" align="absbottom"></a> 
+              <input name="titlecolor" type="text" value="<?=stripSlashes($r[titlecolor])?>" size="10" class="color"> 
+               
             </td>
           </tr>
         </table></td>
@@ -250,7 +252,8 @@ function foreColor(){
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">发布时间</td>
-      <td><input name="newstime" type="text" value="<?=$r[newstime]?>"> <input type=button name=button2 value="设为当前时间" onclick="document.add.newstime.value='<?=$todaytime?>'"></td>
+      <td><input name="newstime" type="text" value="<?=$r[newstime]?>" size="28" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:ss'})"> 
+      <input type=button name=button2 value="设为当前时间" onclick="document.add.newstime.value='<?=$todaytime?>'"></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">标题图片</td>

@@ -72,12 +72,13 @@ $empire=null;
 function foreColor()
 {
   if (!Error())	return;
-  var arr = showModalDialog("../ecmseditor/fieldfile/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../ecmseditor/fieldfile/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) document.form1.titlecolor.value=arr;
   else document.form1.titlecolor.focus();
 }
 </script>
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jscolor/jscolor.js"></script>
 </head>
 
 <body>
@@ -160,8 +161,8 @@ function foreColor()
                       <input name="titlefont[s]" type="checkbox" id="titlefont[s]" value="s"<?=strstr($r[titlefont],'s|')?' checked':''?>>
                       删除线</td>
                     <td width="49%">颜色： 
-                      <input name="titlecolor" type="text" id="titlecolor" value="<?=$r[titlecolor]?>" size="10"> 
-                      <a onclick="foreColor();"><img src="../../data/images/color.gif" width="21" height="21" align="absbottom"></a></td>
+                      <input name="titlecolor" type="text" id="titlecolor" value="<?=$r[titlecolor]?>" size="10" class="color"> 
+                      </td>
                   </tr>
                 </table></td>
             </tr>
@@ -194,9 +195,9 @@ function foreColor()
             <tr bgcolor="#FFFFFF"> 
               <td height="25">过期时间：</td>
               <td height="25">从 
-                <input name="add[starttime]" type="text" id="add[starttime]" value="<?=$r[starttime]?>" size="12" onclick="setday(this)">
+                <input name="add[starttime]" type="text" id="add[starttime]" value="<?=$r[starttime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 到 
-                <input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="12" onclick="setday(this)">
+                <input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 止 <font color="#666666">(格式：2004-09-01，永不过期可填0000-00-00)</font></td>
             </tr>
             <tr bgcolor="#FFFFFF">
@@ -277,9 +278,9 @@ function foreColor()
             <tr bgcolor="#FFFFFF"> 
               <td height="25">过期时间：</td>
               <td height="25">从 
-                <input name="add[starttime]" type="text" id="add[starttime]" value="<?=$r[starttime]?>" size="12" onclick="setday(this)">
+                <input name="add[starttime]" type="text" id="add[starttime]" value="<?=$r[starttime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 到 
-                <input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="12" onclick="setday(this)">
+                <input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 止 <font color="#666666">(格式：2004-09-01，永不过期可填0000-00-00)</font></td>
             </tr>
 			<tr bgcolor="#FFFFFF">
@@ -362,9 +363,9 @@ function foreColor()
             <tr bgcolor="#FFFFFF"> 
               <td height="25">过期时间：</td>
               <td height="25">从 
-                <input name="add[starttime]" type="text" id="add[starttime]" value="<?=$r[starttime]?>" size="12" onclick="setday(this)">
+                <input name="add[starttime]" type="text" id="add[starttime]" value="<?=$r[starttime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 到 
-                <input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="12" onclick="setday(this)">
+                <input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 止 <font color="#666666">(格式：2004-09-01，永不过期可填0000-00-00)</font></td>
             </tr>
 			<tr bgcolor="#FFFFFF">
@@ -472,9 +473,9 @@ function foreColor()
             <tr bgcolor="#FFFFFF"> 
               <td height="25">过期时间：</td>
               <td height="25">从 
-                <input name="add[starttime]" type="text" id="add[starttime]" value="<?=$r[starttime]?>" size="12" onclick="setday(this)">
+                <input name="add[starttime]" type="text" id="add[starttime]" value="<?=$r[starttime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 到 
-                <input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="12" onclick="setday(this)">
+                <input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
                 止 <font color="#666666">(格式：2004-09-01，永不过期可填0000-00-00)</font></td>
             </tr>
 			<tr bgcolor="#FFFFFF">

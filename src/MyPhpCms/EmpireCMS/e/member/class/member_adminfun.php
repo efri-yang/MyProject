@@ -16,6 +16,7 @@ function admin_EditMember($add,$logininid,$loginin){
 	$add[oldusername]=RepPostVar($add[oldusername]);
 	$add[password]=RepPostVar($add[password]);
 	$add[email]=RepPostStr($add[email]);
+	$add[email]=RepPostVar($add[email]);
 	$dousername=$add[username];
 	$dooldusername=$add[oldusername];
 	//修改密码
@@ -52,6 +53,10 @@ function admin_EditMember($add,$logininid,$loginin){
 	$userdate=(int)$userdate;
 	$add[money]=(float)$add[money];
 	$add[spacestyleid]=(int)$add[spacestyleid];
+	$add[ingid]=(int)$add[ingid];
+	$isern=(int)$add['isern'];
+	$spacename=dgdb_tosave($add['spacename']);
+	$spacegg=dgdb_tosave($add['spacegg']);
 	//验证附加表必填项
 	$addr=$empire->fetch1("select * from {$dbtbpre}enewsmemberadd where userid='$add[userid]'");
 	$fid=GetMemberFormId($add[groupid]);
@@ -66,7 +71,7 @@ function admin_EditMember($add,$logininid,$loginin){
 		$member_r=ReturnDoMemberF($fid,$_POST,$addr,1,$dousername,1);
 	}
 
-	$sql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('email')."='$add[email]',".egetmf('groupid')."='$add[groupid]',".egetmf('userfen')."='$add[userfen]',".egetmf('money')."='$add[money]',".egetmf('userdate')."='$userdate',".egetmf('zgroupid')."='$add[zgroupid]',".egetmf('checked')."='$add[checked]'".$add1." where ".egetmf('userid')."='$add[userid]'");
+	$sql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('email')."='$add[email]',".egetmf('groupid')."='$add[groupid]',".egetmf('userfen')."='$add[userfen]',".egetmf('money')."='$add[money]',".egetmf('userdate')."='$userdate',".egetmf('zgroupid')."='$add[zgroupid]',".egetmf('checked')."='$add[checked]',".egetmf('ingid')."='$add[ingid]',".egetmf('isern')."='$isern'".$add1." where ".egetmf('userid')."='$add[userid]'");
 
 	//更改用户名
 	if($add[oldusername]<>$add[username])
@@ -92,11 +97,11 @@ function admin_EditMember($add,$logininid,$loginin){
 	//附加表
 	if(empty($addr[userid]))
 	{
-		$sql1=$empire->query("insert into {$dbtbpre}enewsmemberadd(userid,spacestyleid".$member_r[0].") values($add[userid],$add[spacestyleid]".$member_r[1].");");
+		$sql1=$empire->query("insert into {$dbtbpre}enewsmemberadd(userid,spacestyleid,spacename,spacegg".$member_r[0].") values($add[userid],$add[spacestyleid],'$spacename','$spacegg'".$member_r[1].");");
     }
 	else
 	{
-		$sql1=$empire->query("update {$dbtbpre}enewsmemberadd set spacestyleid=$add[spacestyleid]".$member_r[0]." where userid='$add[userid]'");
+		$sql1=$empire->query("update {$dbtbpre}enewsmemberadd set spacestyleid=$add[spacestyleid],spacename='$spacename',spacegg='$spacegg'".$member_r[0]." where userid='$add[userid]'");
     }
 	//更新附件
 	UpdateTheFileEditOther(6,$add['userid'],'member');
@@ -151,7 +156,7 @@ function admin_DelMember($userid,$loginuserid,$loginusername){
     if($sql)
 	{
 	    insert_dolog("userid=".$userid."<br>username=".$dousername);//操作日志
-		printerror("DelMemberSuccess","ListMember.php".hReturnEcmsHashStrHref2(1));
+		printerror("DelMemberSuccess",EcmsGetReturnUrl());
 	}
     else
 	{
@@ -213,7 +218,7 @@ function admin_DelMember_all($userid,$logininid,$loginin){
 	if($sql)
 	{
 	    insert_dolog("");//操作日志
-		printerror("DelMemberSuccess","ListMember.php".hReturnEcmsHashStrHref2(1));
+		printerror("DelMemberSuccess",EcmsGetReturnUrl());
     }
 	else
 	{
@@ -222,14 +227,17 @@ function admin_DelMember_all($userid,$logininid,$loginin){
 }
 
 //审核会员
-function admin_DoCheckMember_all($userid,$logininid,$loginin){
+function admin_DoCheckMember_all($add,$logininid,$loginin){
 	global $empire,$dbtbpre;
     CheckLevel($logininid,$loginin,$classid,"member");//验证权限
+	$userid=$add['userid'];
+	$docheck=(int)$add['docheck'];
     $count=count($userid);
     if(!$count)
 	{
 		 printerror("NotChangeDoCheckMember","history.go(-1)");
 	}
+	$inid='';
 	for($i=0;$i<$count;$i++)
 	{
 		$dh=",";
@@ -240,11 +248,46 @@ function admin_DoCheckMember_all($userid,$logininid,$loginin){
 		//集合
 		$inid.=$dh.intval($userid[$i]);
 	}
-	$sql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('checked')."=1 where ".egetmf('userid')." in (".$inid.")");
+	$checked=$docheck?1:0;
+	$sql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('checked')."='$checked' where ".egetmf('userid')." in (".$inid.")");
 	if($sql)
 	{
 		insert_dolog("");//操作日志
-		printerror("DoCheckMemberSuccess","ListMember.php".hReturnEcmsHashStrHref2(1));
+		printerror("DoCheckMemberSuccess",EcmsGetReturnUrl());
+	}
+	else
+	{
+		printerror("DbError","history.go(-1)");
+	}
+}
+
+//转移至内部会员组
+function admin_DoMoveInGroupMember_all($add,$logininid,$loginin){
+	global $empire,$dbtbpre;
+	CheckLevel($logininid,$loginin,$classid,"member");//验证权限
+	$userid=$add['userid'];
+	$toingid=(int)$add['toingid'];
+	$count=count($userid);
+	if(!$count)
+	{
+		 printerror("NotChangeDoMoveMember","history.go(-1)");
+	}
+	$inid='';
+	for($i=0;$i<$count;$i++)
+	{
+		$dh=",";
+		if($i==0)
+		{
+			$dh="";
+		}
+		//集合
+		$inid.=$dh.intval($userid[$i]);
+	}
+	$sql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('ingid')."='$toingid' where ".egetmf('userid')." in (".$inid.")");
+	if($sql)
+	{
+		insert_dolog("");//操作日志
+		printerror("DoMoveInGroupMemberSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -259,6 +302,7 @@ function admin_ClearMember($add,$logininid,$loginin){
 	//变量处理
 	$username=RepPostVar($add['username']);
 	$email=RepPostStr($add['email']);
+	$email=RepPostVar($email);
 	$startuserid=(int)$add['startuserid'];
 	$enduserid=(int)$add['enduserid'];
 	$groupid=(int)$add['groupid'];
@@ -366,6 +410,25 @@ function GetFen_all($cardfen,$userid,$username){
 		//操作日志
 		insert_dolog("cardfen=$cardfen");
 		printerror("GetFenSuccess","GetFen.php".hReturnEcmsHashStrHref2(1));
+	}
+	else
+	{printerror("DbError","history.go(-1)");}
+}
+
+//批量更新到期会员组
+function admin_MemberChangeTimeGroup($add,$logininid,$loginin){
+	global $empire,$dbtbpre;
+	CheckLevel($logininid,$loginin,$classid,"member");//验证权限
+	$dotime=time();
+	//更新到期会员组
+	$sql=$empire->query("update ".eReturnMemberTable()." set ".egetmf('groupid')."=".egetmf('zgroupid').",".egetmf('userdate')."=0 where ".egetmf('zgroupid')."<>0 and ".egetmf('userdate').">0 and ".egetmf('userdate')."<=".$dotime);
+	//更新到期时间
+	$sql1=$empire->query("update ".eReturnMemberTable()." set ".egetmf('userdate')."=0 where ".egetmf('userdate').">0 and ".egetmf('userdate')."<=".$dotime);
+	if($sql)
+	{
+		//操作日志
+		insert_dolog("");
+		printerror("MemberChangeTimeGroupSuccess","ListMember.php".hReturnEcmsHashStrHref2(1));
 	}
 	else
 	{printerror("DbError","history.go(-1)");}

@@ -276,7 +276,7 @@ else
 		$zttypes.="<option value='".$zttyper['cid']."'>".$zttyper['cname']."</option>";
 	}
 ?>
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1">
 <form name="loadtogzt" method="get" action="TogZt.php">
 	<?=$ecms_hashur['form']?>
@@ -363,9 +363,9 @@ else
       <td height="27"> <input name="retype" type="radio" value="0"<?=$togr[retype]==0?' checked':''?>>
         按时间查询</td>
       <td height="27">从 
-        <input name="startday" type="text" onclick="setday(this)" value="<?=$togr[startday]?>" size="12">
+        <input name="startday" type="text" value="<?=$togr[startday]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         到 
-        <input name="endday" type="text" onclick="setday(this)" value="<?=$togr[endday]?>" size="12">
+        <input name="endday" type="text" value="<?=$togr[endday]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         之间的数据<font color="#666666">(不填将查询所有信息)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

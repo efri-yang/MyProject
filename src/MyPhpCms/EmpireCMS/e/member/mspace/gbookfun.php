@@ -23,8 +23,11 @@ function AddMemberGbook($add){
 		$uid=0;
 		$uname=trim($add['uname']);
 	}
-	$uname=RepPostStr($uname);
-	$gbtext=RepPostStr($add['gbtext']);
+	//实名验证
+	eCheckHaveTruenameCK('msps',0);
+
+	$uname=dgdb_tosave($uname);
+	$gbtext=dgdb_tosave($add['gbtext']);
 	if(empty($uname)||!trim($gbtext))
 	{
 		printerror("EmptyMemberGbook","history.go(-1)",1);
@@ -37,7 +40,7 @@ function AddMemberGbook($add){
 	ecmsEmptyShowKey($keyvname);//清空验证码
 	if($sql)
 	{
-		printerror("AddMemberGbookSuccess",$_SERVER['HTTP_REFERER'],1);
+		printerror("AddMemberGbookSuccess",EcmsGetReturnUrl(),1);
 	}
 	else
 	{
@@ -54,11 +57,11 @@ function ReMemberGbook($add){
 	{
 		printerror("EmptyReMemberGbook","history.go(-1)",1);
 	}
-	$retext=RepPostStr($add['retext']);
+	$retext=dgdb_tosave($add['retext']);
 	$sql=$empire->query("update {$dbtbpre}enewsmembergbook set retext='$retext' where gid='$gid' and userid='$user_r[userid]'");
 	if($sql)
 	{
-		printerror("ReMemberGbookSuccess",$_SERVER['HTTP_REFERER'],1);
+		printerror("ReMemberGbookSuccess",EcmsGetReturnUrl(),1);
 	}
 	else
 	{
@@ -78,7 +81,7 @@ function DelMemberGbook($add){
 	$sql=$empire->query("delete from {$dbtbpre}enewsmembergbook where gid='$gid' and userid='$user_r[userid]'");
 	if($sql)
 	{
-		printerror("DelMemberGbookSuccess",$_SERVER['HTTP_REFERER'],1);
+		printerror("DelMemberGbookSuccess",EcmsGetReturnUrl(),1);
 	}
 	else
 	{
@@ -104,7 +107,7 @@ function DelMemberGbook_All($add){
 	$sql=$empire->query("delete from {$dbtbpre}enewsmembergbook where (".$addsql.") and userid='$user_r[userid]'");
 	if($sql)
 	{
-		printerror("DelMemberGbookSuccess",$_SERVER['HTTP_REFERER'],1);
+		printerror("DelMemberGbookSuccess",EcmsGetReturnUrl(),1);
 	}
 	else
 	{

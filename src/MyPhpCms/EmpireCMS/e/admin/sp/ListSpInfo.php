@@ -145,6 +145,9 @@ function LoadInSpInfo($add,$userid,$username){
 //增加静态碎片信息
 function AddSpInfo1($spid,$spr,$add){
 	global $empire,$dbtbpre;
+	$add['title']=eDoRepPostComStr($add['title'],1);
+	$add['titlepic']=eDoRepPostComStr($add['titlepic'],1);
+	$add['titleurl']=eDoRepPostComStr($add['titleurl'],1);
 	$titlefont=TitleFont($add[titlefont],$add[titlecolor]);
 	$newstime=$add[newstime]?to_time($add[newstime]):time();
 	$sql=$empire->query("insert into {$dbtbpre}enewssp_1(spid,title,titlepic,bigpic,titleurl,smalltext,titlefont,newstime,titlepre,titlenext) values('$spid','".eaddslashes2($add[title])."','".eaddslashes2($add[titlepic])."','".eaddslashes2($add[bigpic])."','".eaddslashes2($add[titleurl])."','".eaddslashes2($add[smalltext])."','".eaddslashes2($titlefont)."','$newstime','".eaddslashes2($add[titlepre])."','".eaddslashes2($add[titlenext])."');");
@@ -292,6 +295,9 @@ function EditSpInfo1($spid,$spr,$sid,$add){
 	{
 		printerror('ErrorUrl','');
 	}
+	$add['title']=eDoRepPostComStr($add['title'],1);
+	$add['titlepic']=eDoRepPostComStr($add['titlepic'],1);
+	$add['titleurl']=eDoRepPostComStr($add['titleurl'],1);
 	$titlefont=TitleFont($add[titlefont],$add[titlecolor]);
 	$newstime=$add[newstime]?to_time($add[newstime]):time();
 	$empire->query("update {$dbtbpre}enewssp_1 set title='".eaddslashes2($add[title])."',titlepic='".eaddslashes2($add[titlepic])."',bigpic='".eaddslashes2($add[bigpic])."',titleurl='".eaddslashes2($add[titleurl])."',smalltext='".eaddslashes2($add[smalltext])."',titlefont='".eaddslashes2($titlefont)."',newstime='$newstime',titlepre='".eaddslashes2($add[titlepre])."',titlenext='".eaddslashes2($add[titlenext])."' where sid='$sid' and spid='$spid'");

@@ -26,7 +26,7 @@ $registerpay='';
 //支付宝
 if($r[paytype]=='alipay')
 {
-	$registerpay="<input type=\"button\" value=\"立即申请支付宝接口\" onclick=\"javascript:window.open('http://www.phome.net/empireupdate/payapi/?ecms=alipay');\">";
+	//$registerpay="<input type=\"button\" value=\"立即申请支付宝接口\" onclick=\"javascript:window.open('http://www.phome.net/empireupdate/payapi/?ecms=alipay');\">";
 }
 db_close();
 $empire=null;
@@ -52,7 +52,7 @@ $empire=null;
       </div></td>
   </tr>
 </table>
-<form name="setpayform" method="post" action="PayApi.php" enctype="multipart/form-data">
+<form name="setpayform" method="post" action="PayApi.php" enctype="multipart/form-data" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 

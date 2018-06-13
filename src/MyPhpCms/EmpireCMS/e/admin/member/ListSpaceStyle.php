@@ -29,7 +29,7 @@ function ReturnSpaceStyleMemberGroup($membergroup){
 	$mg='';
 	for($i=0;$i<$count;$i++)
 	{
-		$mg.=$membergroup[$i].',';
+		$mg.=intval($membergroup[$i]).',';
 	}
 	if($mg)
 	{
@@ -52,6 +52,10 @@ function AddSpaceStyle($add,$userid,$username){
 	{
 		printerror("EmptySpaceStylePath","history.go(-1)");
 	}
+	$add['stylename']=hRepPostStr($add['stylename'],1);
+	$add['stylepic']=hRepPostStr($add['stylepic'],1);
+	$add['stylesay']=hRepPostStr2($add['stylesay']);
+	$add['stylepath']=hRepPostStr2($add['stylepath']);
 	$mg=ReturnSpaceStyleMemberGroup($add['membergroup']);
 	$sql=$empire->query("insert into {$dbtbpre}enewsspacestyle(stylename,stylepic,stylesay,stylepath,isdefault,membergroup) values('$add[stylename]','$add[stylepic]','$add[stylesay]','$add[stylepath]',0,'$mg');");
 	if($sql)
@@ -81,6 +85,10 @@ function EditSpaceStyle($add,$userid,$username){
 	{
 		printerror("EmptySpaceStylePath","history.go(-1)");
 	}
+	$add['stylename']=hRepPostStr($add['stylename'],1);
+	$add['stylepic']=hRepPostStr($add['stylepic'],1);
+	$add['stylesay']=hRepPostStr2($add['stylesay']);
+	$add['stylepath']=hRepPostStr2($add['stylepath']);
 	$mg=ReturnSpaceStyleMemberGroup($add['membergroup']);
 	$sql=$empire->query("update {$dbtbpre}enewsspacestyle set stylename='$add[stylename]',stylepic='$add[stylepic]',stylesay='$add[stylesay]',stylepath='$add[stylepath]',membergroup='$mg' where styleid='$styleid'");
 	if($sql)

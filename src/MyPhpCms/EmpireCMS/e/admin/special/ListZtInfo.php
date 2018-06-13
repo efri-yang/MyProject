@@ -46,7 +46,7 @@ function DoDelZtInfo($add,$userid,$username){
 	$zids=eArrayReturnInids($zid);
 	DelZtInfo("zid in (".$zids.") and ztid='$ztid'");
 	insert_dolog("ztid=$ztid");//操作日志
-	printerror('DelZtInfoSuccess',$_SERVER['HTTP_REFERER']);
+	printerror('DelZtInfoSuccess',EcmsGetReturnUrl());
 }
 
 //转移专题信息
@@ -75,7 +75,7 @@ function DoMoveZtInfo($add,$userid,$username){
 	if($sql)
 	{
 		insert_dolog("ztid=$ztid&to_cid=$to_cid");//操作日志
-		printerror('MoveZtInfoSuccess',$_SERVER['HTTP_REFERER']);
+		printerror('MoveZtInfoSuccess',EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -104,7 +104,7 @@ function DoGoodZtInfo($add,$userid,$username){
 	if($sql)
 	{
 		insert_dolog("ztid=$ztid&isgood=$isgood");//操作日志
-		printerror('GoodZtInfoSuccess',$_SERVER['HTTP_REFERER']);
+		printerror('GoodZtInfoSuccess',EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -134,7 +134,7 @@ function DoEditZtInfoTime($add,$userid,$username){
 		$empire->query("update {$dbtbpre}enewsztinfo set newstime='$donewstime' where zid='$dozid' and ztid='$ztid'");
 	}
 	insert_dolog("ztid=$ztid");//操作日志
-	printerror('EditZtInfoTimeSuccess',$_SERVER['HTTP_REFERER']);
+	printerror('EditZtInfoTimeSuccess',EcmsGetReturnUrl());
 }
 
 $enews=$_POST['enews'];

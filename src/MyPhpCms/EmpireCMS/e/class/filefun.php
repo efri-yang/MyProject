@@ -16,7 +16,7 @@ function DelFile($fileid,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("fileid=".$fileid."<br>filename=".$r[filename]);
-		printerror("DelFileSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelFileSuccess",EcmsGetReturnUrl());
     }
 	else
 	{
@@ -75,7 +75,7 @@ function DelFile_all($fileid,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("");
-		printerror("DelFileAllSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelFileAllSuccess",EcmsGetReturnUrl());
     }
 	else
 	{
@@ -96,7 +96,7 @@ function DelFreeFile($userid,$username){
 	DelFileOtherTable("cjid<>0 and (id=0 or cjid=id)","other");
 	//操作日志
 	insert_dolog("");
-	printerror("DelFreeFileSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("DelFreeFileSuccess",EcmsGetReturnUrl());
 }
 
 //删除目录文件
@@ -137,7 +137,7 @@ function DelPathFile($filename,$userid,$username){
     }
 	//操作日志
 	insert_dolog("");
-	printerror("DelFileSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("DelFileSuccess",EcmsGetReturnUrl());
 }
 
 //批量加水印/缩略图
@@ -189,7 +189,7 @@ function DoMarkSmallPic($add,$userid,$username){
 			}
 		}
 	}
-	printerror("DoMarkSmallPicSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("DoMarkSmallPicSuccess",EcmsGetReturnUrl());
 }
 
 //上传多附件

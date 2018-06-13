@@ -50,6 +50,7 @@ function ReturnAddF($modid,$rdata=0){
 function RepPhpAspJspcode($string){
 	//$string=str_replace("<?xml","[!--ecms.xml--]",$string);
 	$string=str_replace("<\\","&lt;\\",$string);
+	$string=str_replace("\\>","\\&gt;",$string);
 	$string=str_replace("<?","&lt;?",$string);
 	$string=str_replace("<%","&lt;%",$string);
 	if(@stristr($string,' language'))
@@ -109,6 +110,7 @@ function AddFeedback($add){
 		printerror("EmptyFeedback","history.go(-1)",1);
 	}
 	//权限
+	$user=array();
 	if($br['groupid'])
 	{
 		$user=islogin();
@@ -117,6 +119,9 @@ function AddFeedback($add){
 			printerror("HaveNotEnLevel","history.go(-1)",1);
 		}
 	}
+	//实名验证
+	eCheckHaveTruename('fb',$user['userid'],$user['username'],$user['isern'],$user['checked'],0);
+
 	$pr=$empire->fetch1("select feedbacktfile,feedbackfilesize,feedbackfiletype from {$dbtbpre}enewspublic limit 1");
 	//必填项
 	$mustr=explode(",",$br['mustenter']);
@@ -231,6 +236,8 @@ function AddFeedback($add){
 			$addval=str_replace("[!#@-".$tf."-@!]",$repfval,$addval);
 		}
 	}
+	$filepath=dgdb_tosave($filepath);
+	$filename=dgdb_tosave($filename);
 	$ip=egetip();
 	$eipport=egetipport();
 	$sql=$empire->query("insert into {$dbtbpre}enewsfeedback(bid,saytime,ip,filepath,filename,userid,username,haveread,eipport".$addf.") values('$bid','$saytime','$ip','$filepath','$filename','$userid','$username',0,'$eipport'".$addval.");");
@@ -249,12 +256,18 @@ function AddFeedback($add){
 
 //--------------发送错误报告
 function AddError($add){
-	global $empire,$class_r,$dbtbpre;
+	global $empire,$class_r,$dbtbpre,$public_r;
 	CheckCanPostUrl();//验证来源
 	$id=(int)$add['id'];
 	$classid=(int)$add['classid'];
 	if(!$classid||!$id||!trim($add[errortext]))
 	{printerror("EmptyErrortext","history.go(-1)",1);}
+	//验证码
+	$keyvname='checkreportkey';
+	if($public_r['reportkey'])
+	{
+		ecmsCheckShowKey($keyvname,$add['key'],1);
+	}
 	//返回标题链接
 	if(empty($class_r[$classid][tbname]))
 	{
@@ -272,6 +285,7 @@ function AddError($add){
 	$errortext=RepPostStr($add[errortext]);
 	$errortime=date("Y-m-d H:i:s");
 	$sql=$empire->query("insert into {$dbtbpre}enewsdownerror(id,errortext,errorip,errortime,email,classid,cid) values($id,'".addslashes($errortext)."','$ip','$errortime','".addslashes($email)."',$classid,'$cid');");
+	ecmsEmptyShowKey($keyvname);//清空验证码
 	if($sql)
 	{
 		printerror("AddErrorSuccess",$titleurl,1);

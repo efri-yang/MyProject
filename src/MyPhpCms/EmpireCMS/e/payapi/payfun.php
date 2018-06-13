@@ -4,7 +4,7 @@ function PayApiBuyFen($fen,$money,$paybz,$orderid,$userid,$username,$ecms_paytyp
 	global $empire,$dbtbpre;
 	$fen=(int)$fen;
 	$money=(float)$money;
-	$paybz=RepPostStr($paybz);
+	$paybz=dgdb_tosave($paybz);
 	$userid=(int)$userid;
 	$username=RepPostVar($username);
 	$ecms_paytype=RepPostVar($ecms_paytype);
@@ -31,7 +31,7 @@ function PayApiBuyFen($fen,$money,$paybz,$orderid,$userid,$username,$ecms_paytyp
 function PayApiPayMoney($money,$paybz,$orderid,$userid,$username,$ecms_paytype){
 	global $empire,$dbtbpre;
 	$money=(float)$money;
-	$paybz=RepPostStr($paybz);
+	$paybz=dgdb_tosave($paybz);
 	$userid=(int)$userid;
 	$username=RepPostVar($username);
 	$ecms_paytype=RepPostVar($ecms_paytype);
@@ -85,9 +85,9 @@ function PayApiShopPay($ddid,$money,$paybz,$orderid,$userid,$username,$ecms_payt
 		$payip=egetip();
 		$userid=(int)$ddr[userid];
 		$username=$ddr[username]?$ddr[username]:$ddr[truename];
-		$username=RepPostStr($username);
+		$username=dgdb_tosave($username);
 		$paybz=str_replace('[!--ddno--]',$ddr[ddno],$paybz);
-		$paybz=RepPostStr($paybz);
+		$paybz=dgdb_tosave($paybz);
 		$empire->query("insert into {$dbtbpre}enewspayrecord(id,userid,username,orderid,money,posttime,paybz,type,payip) values(NULL,'$userid','$username','$orderid','$money','$posttime','$paybz','$ecms_paytype','$payip');");
 	}
 	printerror('您已成功购买此订单','../../ShopSys/buycar/',1,0,1);
@@ -135,12 +135,12 @@ function PayApiBuyGroupPay($bgid,$money,$orderid,$userid,$username,$groupid,$ecm
 	{
 		$money=(float)$money;
 		//充值
-		$user=$empire->fetch1("select ".eReturnSelectMemberF('userdate,userid,username')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid'");
+		$user=$empire->fetch1("select ".eReturnSelectMemberF('userdate,userid,username,groupid')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid'");
 		eAddFenToUser($buyr['gfen'],$buyr['gdate'],$buyr['ggroupid'],$buyr['gzgroupid'],$user);
 		$posttime=date("Y-m-d H:i:s");
 		$payip=egetip();
 		$paybz="充值类型:".addslashes($buyr['gname']);
-		$paybz=RepPostStr($paybz);
+		$paybz=dgdb_tosave($paybz);
 		$empire->query("insert into {$dbtbpre}enewspayrecord(id,userid,username,orderid,money,posttime,paybz,type,payip) values(NULL,'$userid','$username','$orderid','$money','$posttime','$paybz','$ecms_paytype','$payip');");
 		//备份充值记录
 		BakBuy($userid,$username,$buyr['gname'],$buyr['gfen'],$money,$buyr['gdate'],1);

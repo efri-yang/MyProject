@@ -16,7 +16,7 @@ $loginadminstyleid=$lur['adminstyleid'];
 //ehash
 $ecms_hashur=hReturnEcmsHashStrAll();
 //验证权限
-CheckLevel($logininid,$loginin,$classid,"member");
+CheckLevel($logininid,$loginin,$classid,"membergroup");
 $enews=ehtmlspecialchars($_GET['enews']);
 $url="<a href=ListMemberGroup.php".$ecms_hashur['whehref'].">管理会员组</a>&nbsp;>&nbsp;增加会员组";
 $r[level]=1;

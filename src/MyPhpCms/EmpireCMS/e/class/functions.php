@@ -170,7 +170,7 @@ function GetModTable($mid){
 
 //建立专题目录
 function CreateZtPath($ztpath){
-	$createpath=ECMS_PATH.$ztpath;
+	$createpath=eReturnTrueEcmsPath().$ztpath;
     $mk=DoMkdir($createpath);
 	$createfilepath=$createpath.'/uploadfile';//建立附件目录
     $mk1=DoMkdir($createfilepath);
@@ -178,16 +178,89 @@ function CreateZtPath($ztpath){
 
 //建立栏目目录
 function CreateClassPath($classpath){
-	$createpath=ECMS_PATH.$classpath;
+	$createpath=eReturnTrueEcmsPath().$classpath;
 	$mk=DoMkdir($createpath);
-	$createfilepath=ECMS_PATH.'d/file/'.$classpath;//建立附件目录
+	$createfilepath=eReturnTrueEcmsPath().'d/file/'.$classpath;//建立附件目录
     $mk1=DoMkdir($createfilepath);
 }
 
 //建立标题分类目录
 function CreateInfoTypePath($tpath){
-	$createpath=ECMS_PATH.$tpath;
+	$createpath=eReturnTrueEcmsPath().$tpath;
     $mk=DoMkdir($createpath);
+}
+
+//建立栏目目录
+function FormatClassPath($classpath,$islast){
+	$r=explode("/",$classpath);
+	$returnpath="";
+	for($i=0;$i<count($r);$i++)
+	{
+		if($i>0)
+		{
+			$returnpath.="/".$r[$i];
+		}
+		else
+		{
+			$returnpath.=$r[$i];
+		}
+		CreateClassPath($returnpath);
+	}
+	return $returnpath;
+}
+
+//自建目录
+function eAutodo_eCreatePath($dotype,$classid,$ecms=0){
+	global $empire,$dbtbpre,$public_r,$class_r,$class_zr,$class_tr,$ecms_config;
+	$classid=(int)$classid;
+	$path='';
+	if($dotype=='cpage')//栏目
+	{
+		if(!$class_r[$classid]['classpath'])
+		{
+			return '';
+		}
+		$path=$class_r[$classid]['classpath'];
+		$truepath=eReturnTrueEcmsPath().$path;
+		if(file_exists($truepath))
+		{
+			return '';
+		}
+		$islast=$class_r[$classid]['islast'];
+		FormatClassPath($path,$islast);
+	}
+	elseif($dotype=='zpage')//专题
+	{
+		if(!$class_zr[$classid]['ztpath'])
+		{
+			return '';
+		}
+		$path=$class_zr[$classid]['ztpath'];
+		$truepath=eReturnTrueEcmsPath().$path;
+		if(file_exists($truepath))
+		{
+			return '';
+		}
+		CreateZtPath($path);
+	}
+	elseif($dotype=='tpage')//标题分类
+	{
+		if(!$class_tr[$classid]['tpath'])
+		{
+			return '';
+		}
+		$path=$class_tr[$classid]['tpath'];
+		$truepath=eReturnTrueEcmsPath().$path;
+		if(file_exists($truepath))
+		{
+			return '';
+		}
+		CreateInfoTypePath($path);
+	}
+	else
+	{
+		return '';
+	}
 }
 
 //删除栏目缓存文件
@@ -215,6 +288,7 @@ function RepPhpAspJspcode($string){
 	if(!$public_r[candocode]){
 		//$string=str_replace("<?xml","[!--ecms.xml--]",$string);
 		$string=str_replace("<\\","&lt;\\",$string);
+		$string=str_replace("\\>","\\&gt;",$string);
 		$string=str_replace("<?","&lt;?",$string);
 		$string=str_replace("<%","&lt;%",$string);
 		if(@stristr($string,' language'))
@@ -230,6 +304,7 @@ function RepPhpAspJspcode($string){
 function RepPhpAspJspcodeText($string){
 	//$string=str_replace("<?xml","[!--ecms.xml--]",$string);
 	$string=str_replace("<\\","&lt;\\",$string);
+	$string=str_replace("\\>","\\&gt;",$string);
 	$string=str_replace("<?","&lt;?",$string);
 	$string=str_replace("<%","&lt;%",$string);
 	if(@stristr($string,' language'))
@@ -452,7 +527,7 @@ function TranmoreIsOpen($ecms='addinfo'){
 	}
 	elseif($ecms=='editor')
 	{
-		$file='../../tranmore/tranmore.php';
+		$file='../tranmore/tranmore.php';
 	}
 	elseif($ecms=='filemain')
 	{
@@ -535,6 +610,30 @@ function RenameListfile($classid,$lencord,$num,$type,$newtype,$classpath){
 		}
 		@rename($listfile.$type,$listfile.$newtype);
 	}
+}
+
+//验证是否有设置头条级别权限
+function eFirstTitleCheckLevel($levelid,$ttype=0){
+	global $empire,$dbtbpre,$lur,$classid,$class_r;
+	$levelid=(int)$levelid;
+	$ttype=(int)$ttype;
+	if(!$levelid)
+	{
+		return 1;
+	}
+	$r=$empire->fetch1("select tid,groupid from {$dbtbpre}enewsgoodtype where levelid='$levelid' and ttype='$ttype' limit 1");
+	if(!$r['tid'])
+	{
+		return 0;
+	}
+	if($r['groupid'])
+	{
+		if(!strstr($r['groupid'],','.$lur['groupid'].','))
+		{
+			return 0;
+		}
+	}
+	return 1;
 }
 
 //组合标题属性
@@ -717,6 +816,15 @@ function InsertWfLog($classid,$id,$wfid,$tid,$username,$checktext,$checknum,$che
 	$empire->query("insert into {$dbtbpre}enewswfinfolog(id,classid,wfid,tid,username,checktime,checktext,checknum,checktype) values('$id','$classid','$wfid','$tid','$username','$checktime','$checktext','$checknum','$checktype');");
 }
 
+//返回是否签发
+function EcmsReturnDoIsqf($userid,$username,$ugroupid,$ecms=0){
+	global $empire,$public_r,$dbtbpre,$emod_r,$lur;
+	$ugroupid=(int)$ugroupid;
+	$ugr=ReturnLeftLevel($ugroupid);
+	$qf=$ugr['doisqf']?1:0;
+	return $qf;
+}
+
 //加入TAG表
 function eInsertTags($tags,$classid,$id,$newstime){
 	global $empire,$dbtbpre,$class_r;
@@ -871,7 +979,7 @@ function ReturnInfoFilename($classid,$id,$filenameqz){
 	}
 	elseif($class_r[$classid][filename]==2)	//md5命名
 	{
-		$filename=$class_r[$classid][filename_qz].md5(uniqid(microtime()));
+		$filename=$class_r[$classid][filename_qz].md5(uniqid(microtime()).$id);
 	}
 	elseif($class_r[$classid][filename]==3)	//目录
 	{
@@ -1019,10 +1127,16 @@ function UpdateTheIspic($classid,$id,$checked){
 
 //取第几张图片
 function GetFpicToTpic($classid,$id,$num=1,$getfirsttitlespic=0,$swidth=0,$sheight=0,$fstb=1){
-	global $empire,$dbtbpre,$public_r,$class_r;
+	global $empire,$dbtbpre,$public_r,$class_r,$loginin,$logininid;
 	$pubid=ReturnInfoPubid($classid,$id);
 	$num=(int)$num;
 	$num=$num-1;
+	if($num<0)
+	{
+		return '';
+	}
+	$logininid=(int)$logininid;
+	$loginin=RepPostVar($loginin);
 	$picr=$empire->fetch1("select fileid,filename,path,id,classid,no,fpath from {$dbtbpre}enewsfile_{$fstb} where pubid='$pubid' and type=1 order by fileid limit $num,1");
 	$firsttitlepic="";
 	if($picr['fileid'])
@@ -1036,7 +1150,7 @@ function GetFpicToTpic($classid,$id,$num=1,$getfirsttitlespic=0,$swidth=0,$sheig
 			$filetype=GetFiletype($picr[filename]);
 			$insertfile=substr($picr[filename],0,strlen($picr[filename])-strlen($filetype)).time();
 			$name=$path."small".$insertfile;
-			$sfiler=GetMySmallImg($classid,$picr[no],$insertfile,$picr[path],$yname,$swidth,$sheight,$name,$id,$add['filepass'],$userid,$username,0,$fstb);
+			$sfiler=GetMySmallImg($classid,$picr[no],$insertfile,$picr[path],$yname,$swidth,$sheight,$name,$id,$add['filepass'],$logininid,$loginin,0,$fstb);
 			$firsttitlepic=$fspath['fileurl'].$rpath."small".$insertfile.$sfiler['filetype'];
 		}
 		else
@@ -1155,10 +1269,17 @@ function GetKeyid($keyboard,$classid,$id,$link_num){
 	global $empire,$public_r,$class_r,$fun_r,$dbtbpre,$eyh_r,$etable_r;
 	if($keyboard)
 	{
+		$link_num=(int)$link_num;
 		if(empty($link_num))
 		{
 			return '';
 		}
+		$where='';
+		$add='';
+		$repadd='';
+		$classid=(int)$classid;
+		$id=(int)$id;
+		$keyboard=str_replace('[!--f--!]','ecms',$keyboard);
 		$keyboard=RepDyh($keyboard);
 		$r=explode(",",$keyboard);
 		for($i=0;$i<count($r);$i++)
@@ -1171,6 +1292,7 @@ function GetKeyid($keyboard,$classid,$id,$link_num){
 			{
 				$or=" or ";
 			}
+			$r[$i]=RepPostVar($r[$i]);
 			$repadd.=$or."[!--f--!]"." like '%".$r[$i]."%'";
 	    }
 		//搜索范围
@@ -1388,6 +1510,18 @@ function DelNewsTheFile($id,$classid,$fstb='1',$delpl=0,$restb='1'){
 //删除信息文件
 function DelNewsFile($filename,$newspath,$classid,$newstext,$groupid=0){
 	global $class_r,$addgethtmlpath;
+	if(!trim($filename)||!$classid||!$class_r[$classid][classpath])
+	{
+		return '';
+	}
+	if(strstr($filename,'/'))
+	{
+		$etfilename=ReturnInfoSPath($filename);
+		if(!trim($etfilename)||strstr($etfilename,'/'))
+		{
+			return '';
+		}
+	}
 	//文件类型
 	if($groupid)
 	{
@@ -1408,11 +1542,13 @@ function DelNewsFile($filename,$newspath,$classid,$newstext,$groupid=0){
     }
 	$iclasspath=ReturnSaveInfoPath($classid,$id);
 	$r=explode("[!--empirenews.page--]",$newstext);
-	for($i=1;$i<=count($r);$i++)
+	$pagecount=count($r);
+	for($i=1;$i<=$pagecount;$i++)
 	{
 		if(strstr($filename,'/'))
 		{
 			DelPath(eReturnTrueEcmsPath().$iclasspath.$mynewspath.ReturnInfoSPath($filename));
+			break;
 		}
 		else
 		{
@@ -1427,41 +1563,76 @@ function DelNewsFile($filename,$newspath,$classid,$newstext,$groupid=0){
 			DelFiletext($file);
 		}
 	}
+	//moreportdo
+	if($filename)
+	{
+		if(strstr($filename,'/'))
+		{
+			$eautodofile=$iclasspath.$mynewspath.ReturnInfoSPath($filename);
+			$eautodofname='delpath|'.$eautodofile.'||';
+			eAutodo_AddDo('eDelFileInfo',0,0,0,0,0,$eautodofname);
+		}
+		else
+		{
+			$eautodofile=$iclasspath.$mynewspath.$filename;
+			$eautodofname='delfile|'.$eautodofile.'|'.$filetype.'|'.$pagecount;
+			eAutodo_AddDo('eDelFileInfo',0,0,0,0,0,$eautodofname);
+		}
+	}
 }
 
 //删除专题子类列表文件
-function DelZtcFile($cid){
+function DelZtcFile($cid,$cr){
 	global $empire,$dbtbpre,$class_zr;
-	$cr=$empire->fetch1("select ztid,islist,maxnum,tnum,ttype from {$dbtbpre}enewszttype where cid='$cid'");
+	//$cr=$empire->fetch1("select ztid,islist,maxnum,tnum,ttype,tfile from {$dbtbpre}enewszttype where cid='$cid'");
 	if(!$cr['ztid'])
 	{
 		return '';
 	}
 	//文件类型
 	$filetype=$cr['ttype'];
+	$tfile=$cr['tfile'];
 	$doclasspath=ReturnSaveZtPath($cr['ztid'],0);
 	$dopath=ECMS_PATH.$doclasspath."/";
 	//单页
 	if($cr['islist']!=1)
 	{
-		$file=$dopath.'type'.$cid.$filetype;
+		$file=$dopath.$tfile.$filetype;
 		DelFiletext($file);
+		//moreportdo
+		if($tfile)
+		{
+			$eautodofile=$doclasspath."/".$tfile.$filetype;
+			$eautodofname='delfile|'.$eautodofile.'||';
+			eAutodo_AddDo('eDelFileZTC',0,0,0,0,0,$eautodofname);
+		}
 		return '';
 	}
 	//数量
 	$num=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsztinfo where cid='$cid'");
+	if(!$num)
+	{
+		$num=1;
+	}
 	$totalpage=ceil($num/$cr['tnum']);
 	for($i=1;$i<=$totalpage;$i++)
 	{
 		if($i==1)
 		{
-			$file=$dopath.'type'.$cid.$filetype;
+			$file=$dopath.$tfile.$filetype;
 		}
 		else
 		{
-			$file=$dopath.'type'.$cid.'_'.$i.$filetype;
+			$file=$dopath.$tfile.'_'.$i.$filetype;
 		}
 		DelFiletext($file);
+	}
+	//moreportdo
+	if($tfile)
+	{
+		$eautodofile=$doclasspath."/".$tfile;
+		$eautodofname='delfile|'.$eautodofile.'|'.$filetype.'|'.$totalpage;
+		eAutodo_AddDo('eDelFileZTC',0,0,0,0,0,$eautodofname);
 	}
 }
 
@@ -1707,7 +1878,7 @@ function ShowClass_AddClass($adminclass,$obclassid,$bclassid,$exp,$modid,$enews=
 		{
 			if(empty($enews)||$enews==2||$enews==3||$enews==4)
 			{
-				$color=" style='background:".$public_r['chclasscolor']."'";
+				$color=" style='background:#".$public_r['chclasscolor']."'";
 			}
 			//隐藏不能投稿的栏目
 			if($enews==2)
@@ -1810,11 +1981,12 @@ function GetPageurlQz($self){
 	$sr=explode("/",$self);
 	$count=count($sr)-1;
 	$sfile=$sr[$count];
-	$r[selfqz]=substr($self,0,strlen($self)-strlen($sfile));
+	$r['selfqz']=substr($self,0,strlen($self)-strlen($sfile));
 	//取得域名
-	$sr1=explode("http://",$self);
+	$expstr=stristr($self,'https://')?'https://':'http://';
+	$sr1=explode($expstr,$self);
 	$sr2=explode("/",$sr1[1]);
-	$r[domain]="http://".$sr2[0];
+	$r['domain']=$expstr.$sr2[0];
 	return $r;
 }
 
@@ -2112,20 +2284,43 @@ function AddCheckClassLevel($classid,$groupid,$classpath){
 //生成栏目绑定信息页面
 function ReClassBdInfo($classid){
 	global $empire,$dbtbpre;
+	$classid=(int)$classid;
 	$cr=$empire->fetch1("select classid,bdinfoid from {$dbtbpre}enewsclass where classid='$classid'");
 	if(!$cr['classid']||!$cr['bdinfoid'])
 	{
 		return '';
 	}
+	eAutodo_AddDo('ReListHtml',$classid,0,0,0,0);//moreportdo
 	$infor=explode(',',$cr['bdinfoid']);
 	$infofile=GetInfoFilename(intval($infor[0]),intval($infor[1]));
 	$classtext='';
 	if($infofile)
 	{
-		$classtext=ReadFiletext($infofile);
+		if(file_exists($infofile))
+		{
+			$classtext=ReadFiletext($infofile);
+		}
+		else
+		{
+			$classtext=ReClassBdInfoDtHtml($infor[0],$infor[1]);
+		}
 	}
 	$classfile=eReturnTrueEcmsPath().ReturnSaveClassPath($classid,1);//moreport
 	WriteFiletext_n($classfile,$classtext);
+}
+
+//栏目绑定动态信息
+function ReClassBdInfoDtHtml($classid,$id){
+	global $empire,$dbtbpre,$public_r;
+	$classid=(int)$classid;
+	$id=(int)$id;
+	if(!$classid||!$id)
+	{
+		return '';
+	}
+	$infourl=$public_r['newsurl'].'e/public/InfoUrl/?classid='.$classid.'&id='.$id;
+	$html='<meta http-equiv="refresh" content="0;url='.$infourl.'">';
+	return $html;
 }
 
 //生成碎片文件
@@ -2133,17 +2328,18 @@ function DoSpReFile($r,$spid=0){
 	global $empire,$dbtbpre;
 	if($spid)
 	{
-		$r=$empire->fetch1("select varname,refile,spfile,spfileline,spfilesub from {$dbtbpre}enewssp where spid='$spid' limit 1");
+		$r=$empire->fetch1("select spid,varname,refile,spfile,spfileline,spfilesub from {$dbtbpre}enewssp where spid='$spid' limit 1");
 	}
 	if(!$r['refile'])
 	{
 		return '';
 	}
+	eAutodo_AddDo('ReSp',$r['spid'],0,0,0,0);//moreportdo
 	ob_start();
 	sys_eShowSpInfo($r['varname'],$r['spfileline'],$r['spfilesub']);
 	$string=ob_get_contents();
 	ob_end_clean();
-	$filename=ECMS_PATH.$r['spfile'];
+	$filename=eReturnTrueEcmsPath().$r['spfile'];
 	WriteFiletext($filename,$string);
 }
 
@@ -2169,6 +2365,7 @@ function NewsBq($classid,$indextext,$enews=0,$doing=0){
 			$class_r[$classid][classtype]=$cr[classtype];
 			$class_r[$classid][classname]=$cr[classname];
 		}
+		eAutodo_AddDo('ReListHtml',$classid,0,0,0,0);//moreportdo
 		//权限
 		if($cr['cgroupid'])
 		{
@@ -2181,7 +2378,7 @@ function NewsBq($classid,$indextext,$enews=0,$doing=0){
 		$classimg=$cr['classimg'];
 		$onclick="<script src=".$public_r[newsurl]."e/public/onclick/?enews=doclass&classid=$classid></script>";
 		$truefile=eReturnTrueEcmsPath().ReturnSaveClassPath($classid,1);//moreport
-		$file=ECMS_PATH.'e/data/tmp/class'.$classid.'.php';
+		$file=eReturnTrueEcmsPath().'e/data/tmp/class'.$classid.'.php';
 		$indextext=str_replace("[!--newsnav--]",$url,$indextext);//位置导航
 		$indextext=Class_ReplaceSvars($indextext,$url,$classid,$pagetitle,$pagekey,$pagedes,$classimg,$add,0);
 	}
@@ -2197,19 +2394,21 @@ function NewsBq($classid,$indextext,$enews=0,$doing=0){
 			$class_zr[$classid][zttype]=$cr[zttype];
 			$class_zr[$classid][ztname]=$cr[ztname];
 	    }
+		eAutodo_AddDo('ReZtListHtml',$classid,0,0,0,0);//moreportdo
 		$pagetitle=ehtmlspecialchars($class_zr[$classid][ztname]);
 		$pagekey=ehtmlspecialchars($cr['ztpagekey']);
 		$pagedes=ehtmlspecialchars($cr['intro']);
 		$classimg=$cr['ztimg'];
 		$onclick="<script src=".$public_r[newsurl]."e/public/onclick/?enews=dozt&ztid=$classid></script>";
-		$truefile=ECMS_PATH.ReturnSaveZtPath($classid,1);
-		$file=ECMS_PATH.'e/data/tmp/zt'.$classid.'.php';
+		$truefile=eReturnTrueEcmsPath().ReturnSaveZtPath($classid,1);//moreport
+		$file=eReturnTrueEcmsPath().'e/data/tmp/zt'.$classid.'.php';
 		$indextext=str_replace("[!--newsnav--]",$url,$indextext);//位置导航
 		$indextext=Class_ReplaceSvars($indextext,$url,$classid,$pagetitle,$pagekey,$pagedes,$classimg,$add,1);
 	}
 	elseif($enews==4)//专题子类
 	{
-		$cr=$empire->fetch1("select ztid,cname,ttype from {$dbtbpre}enewszttype where cid='$classid'");
+		$cr=$empire->fetch1("select ztid,cname,ttype,tfile from {$dbtbpre}enewszttype where cid='$classid'");
+		eAutodo_AddDo('ReZtcListHtml',$classid,0,0,0,0);//moreportdo
 		$GLOBALS['navclassid']=$classid;
 		$GLOBALS['navinfor']['ecmsbid']=$cr['ztid'];
 		$url=ReturnZtLink($cr['ztid']);//导航
@@ -2217,8 +2416,8 @@ function NewsBq($classid,$indextext,$enews=0,$doing=0){
 		$pagekey=ehtmlspecialchars($cr['cname']);
 		$pagedes=ehtmlspecialchars($cr['cname']);
 		$onclick="<script src=".$public_r[newsurl]."e/public/onclick/?enews=dozt&ztid=$cr[ztid]></script>";
-		$truefile=ECMS_PATH.ReturnSaveZtPath($cr['ztid'],0).'/type'.$classid.$cr['ttype'];
-		$file=ECMS_PATH.'e/data/tmp/ztc'.$classid.'.php';
+		$truefile=eReturnTrueEcmsPath().ReturnSaveZtPath($cr['ztid'],0).'/'.$cr['tfile'].$cr['ttype'];//moreport
+		$file=eReturnTrueEcmsPath().'e/data/tmp/ztc'.$classid.'.php';
 		$indextext=str_replace("[!--newsnav--]",$url,$indextext);//位置导航
 		$indextext=Class_ReplaceSvars($indextext,$url,$classid,$pagetitle,$pagekey,$pagedes,$classimg,$add,1);
 	}
@@ -2229,6 +2428,7 @@ function NewsBq($classid,$indextext,$enews=0,$doing=0){
 		{
 			return '';
 		}
+		eAutodo_AddDo('ReIndex',0,0,0,0,0,'',1);//moreportdo
 		//页面
 		$pagetitle=ehtmlspecialchars($public_r['sitename']);
 		$pagekey=ehtmlspecialchars($pr['sitekey']);
@@ -2236,7 +2436,7 @@ function NewsBq($classid,$indextext,$enews=0,$doing=0){
 		$url="<a href=\"".ReturnSiteIndexUrl()."\">".$fun_r['index']."</a>";//栏目导航
 		$onclick='';
 		$truefile=eReturnTrueEcmsPath().ReturnSaveIndexFile();//moreport
-		$file=ECMS_PATH.'e/data/tmp/index.php';
+		$file=eReturnTrueEcmsPath().'e/data/tmp/index.php';
 		$indextext=ReplaceSvars($indextext,$url,0,$pagetitle,$pagekey,$pagedes,$add,0);
 	}
 	$indextext=str_replace("[!--page.stats--]",$onclick,$indextext);
@@ -2266,7 +2466,7 @@ function InfoNewsBq($classid,$indextext){
 	{
 		$classid.='_all';
 	}
-	$file=ECMS_PATH.'e/data/tmp/temp'.$classid.'.php';
+	$file=eReturnTrueEcmsPath().'e/data/tmp/temp'.$classid.'.php';
 	if($_GET['reallinfotime']&&file_exists($file))
 	{
 		$filetime=filemtime($file);
@@ -2305,11 +2505,11 @@ function GetInfoNewsBq($classid,$newstemp_r,$ecms_gr,$docheckrep){
 	}
 	if($_GET['reallinfotime'])
 	{
-		$file=ECMS_PATH.'e/data/tmp/tempnews'.$newstemp_r['tempid'].'_all.php';
+		$file=eReturnTrueEcmsPath().'e/data/tmp/tempnews'.$newstemp_r['tempid'].'_all.php';
 	}
 	else
 	{
-		$file=ECMS_PATH.'e/data/tmp/tempnews'.$newstemp_r['tempid'].'.php';
+		$file=eReturnTrueEcmsPath().'e/data/tmp/tempnews'.$newstemp_r['tempid'].'.php';
 	}
 	//变量处理
 	$grurl=ReturnClassLink($ecms_gr['classid']);//导航
@@ -2388,7 +2588,7 @@ function DtNewsBq($classid,$indextext,$ecms=0){
 //解析代码
 function RepExeCode($string){
 	global $public_r;
-	if($public_r[candocode])
+	if($public_r['candocode']&&$public_r['candocodetag'])
 	{
 		$string=str_replace('<!--code.start-->','<',$string);
 		$string=str_replace('<!--code.end-->','>',$string);
@@ -2483,13 +2683,14 @@ function ListHtml($classid,$fields,$enews=0,$userlistr=""){
 		}
 		$selfclassid=$classid;
 		$doenews=0;
-		$cr=$empire->fetch1("select classpagekey,intro,classimg,cgroupid,repagenum,bdinfoid from {$dbtbpre}enewsclass where classid='$classid'");
+		$cr=$empire->fetch1("select classpagekey,intro,classimg,cgroupid,repagenum,bdinfoid,addsql from {$dbtbpre}enewsclass where classid='$classid'");
 		//绑定信息
 		if(!empty($cr['bdinfoid']))
 		{
 			ReClassBdInfo($classid);
 			return '';
 		}
+		eAutodo_AddDo('ReListHtml',$classid,0,0,0,0);//moreportdo
 		$mid=$class_r[$classid][modid];
 		//权限
 		if($cr['cgroupid'])
@@ -2534,8 +2735,9 @@ function ListHtml($classid,$fields,$enews=0,$userlistr=""){
 		{
 			$yhadd=ReturnYhSql($yhid,$yhvar,1);
 		}
-		$query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where ".$yhadd."classid='$classid' order by ".ReturnSetTopSql('list').$addorder.$limit;
-		$totalquery="select count(*) as total from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where ".$yhadd."classid='$classid'";//统计
+		$caddsql=$cr['addsql']?' and ('.$cr['addsql'].')':'';
+		$query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where ".$yhadd."classid='$classid'".$caddsql." order by ".ReturnSetTopSql('list').$addorder.$limit;
+		$totalquery="select count(*) as total from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where ".$yhadd."classid='$classid'".$caddsql;//统计
 		$doclasspath=ReturnSaveClassPath($classid,0);
 		$dopath=eReturnTrueEcmsPath().$doclasspath."/";//moreport
 		if(empty($class_r[$classid][classurl]))
@@ -2575,6 +2777,7 @@ function ListHtml($classid,$fields,$enews=0,$userlistr=""){
 		{
 			return '';
 		}
+		eAutodo_AddDo('ReTtListHtml',$classid,0,0,0,0);//moreportdo
 		//排序
 		if(empty($cr['reorder']))
 		{
@@ -2606,7 +2809,7 @@ function ListHtml($classid,$fields,$enews=0,$userlistr=""){
 		{
 			$yhadd=ReturnYhSql($yhid,$yhvar,1);
 		}
-		$query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$tbname." where ".$yhadd."ttid='$classid' order by ".$addorder.$limit;
+		$query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$tbname." where ".$yhadd."ttid='$classid' order by ".ReturnSetTopSql('list').$addorder.$limit;
 		$totalquery="select count(*) as total from {$dbtbpre}ecms_".$tbname." where ".$yhadd."ttid='$classid'";//统计
 		$doclasspath=ReturnSaveInfoTypePath($classid,0);
 		$dopath=eReturnTrueEcmsPath().$doclasspath."/";//moreport
@@ -2624,9 +2827,10 @@ function ListHtml($classid,$fields,$enews=0,$userlistr=""){
 		{
 			return '';
 		}
+		eAutodo_AddDo('ReListHtml',$classid,0,0,0,0);//moreportdo
 		$selfclassid=$classid;
 		$doenews=0;
-		$cr=$empire->fetch1("select classpagekey,intro,classimg,cgroupid,repagenum from {$dbtbpre}enewsclass where classid='$classid'");
+		$cr=$empire->fetch1("select classpagekey,intro,classimg,cgroupid,repagenum,addsql from {$dbtbpre}enewsclass where classid='$classid'");
 		$mid=$class_r[$classid][modid];
 		//权限
 		if($cr['cgroupid'])
@@ -2672,8 +2876,9 @@ function ListHtml($classid,$fields,$enews=0,$userlistr=""){
 		{
 			$yhadd=ReturnYhSql($yhid,$yhvar,1);
 		}
-		$query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where ".$yhadd."(".$whereclass.") order by ".ReturnSetTopSql('list').$addorder.$limit;
-		$totalquery="select count(*) as total from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where ".$yhadd."(".$whereclass.")";//统计
+		$caddsql=$cr['addsql']?' and ('.$cr['addsql'].')':'';
+		$query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where ".$yhadd."(".$whereclass.")".$caddsql." order by ".ReturnSetTopSql('list').$addorder.$limit;
+		$totalquery="select count(*) as total from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where ".$yhadd."(".$whereclass.")".$caddsql;//统计
 		$doclasspath=ReturnSaveClassPath($classid,0);
 		$dopath=eReturnTrueEcmsPath().$doclasspath."/";//moreport
 		if(empty($class_r[$classid][classurl]))
@@ -2710,8 +2915,8 @@ function ListHtml($classid,$fields,$enews=0,$userlistr=""){
 		$query=stripSlashes($userlistr['listsql']).$limit;
 		//统计
 		$totalquery=stripSlashes($userlistr['totalsql']);
-		$dopath=$userlistr['addpath'].$userlistr['filepath'];
-		$dolink=$public_r[newsurl].str_replace($userlistr['addpath'].'../../','',$dopath);
+		$dopath=eReturnTrueEcmsPath().'e/data/'.$userlistr['filepath'];//maddpath
+		$dolink=$public_r[newsurl].str_replace('../../','',$userlistr['filepath']);
 		$dotype=$userlistr['filetype'];
 		$classname=$userlistr['pagetitle'];
 		$lencord=$userlistr['lencord'];//记录数
@@ -2865,6 +3070,7 @@ function ListHtmlIndex($classid,$fields,$enews=0,$userlistr=""){
 			NewsBq($classid,$classtemp,3,0);
 			return "";
 		}
+		eAutodo_AddDo('ReZtListHtml',$classid,0,0,0,0);//moreportdo
 		//排序
 		if(empty($class_zr[$classid][reorder]))
 		{
@@ -2888,7 +3094,7 @@ function ListHtmlIndex($classid,$fields,$enews=0,$userlistr=""){
 		$query="select ztid,cid,classid,id,isgood from {$dbtbpre}enewsztinfo where ".$yhadd."ztid='$classid' order by ".$addorder.$limit;
 		$totalquery="select count(*) as total from {$dbtbpre}enewsztinfo where ".$yhadd."ztid='$classid'";//统计
 		$doclasspath=ReturnSaveZtPath($classid,0);
-		$dopath=ECMS_PATH.$doclasspath."/";
+		$dopath=eReturnTrueEcmsPath().$doclasspath."/";
 		if(empty($class_zr[$classid][zturl]))
 		{
 			$dolink=$public_r[newsurl].$doclasspath."/";
@@ -2908,7 +3114,7 @@ function ListHtmlIndex($classid,$fields,$enews=0,$userlistr=""){
 	{
 		$selfclassid=$classid;
 		$doenews=1;
-		$cr=$empire->fetch1("select ztid,cname,islist,listtempid,maxnum,tnum,reorder,ttype from {$dbtbpre}enewszttype where cid='$classid'");
+		$cr=$empire->fetch1("select ztid,cname,islist,listtempid,maxnum,tnum,reorder,ttype,tfile from {$dbtbpre}enewszttype where cid='$classid'");
 		$GLOBALS['navinfor']['ecmsbid']=$cr['ztid'];
 		//页面
 		$pagetitle=ehtmlspecialchars($cr['cname']);
@@ -2922,6 +3128,7 @@ function ListHtmlIndex($classid,$fields,$enews=0,$userlistr=""){
 			NewsBq($classid,$classtemp,4,0);
 			return '';
 		}
+		eAutodo_AddDo('ReZtcListHtml',$classid,0,0,0,0);//moreportdo
 		//排序
 		if(empty($cr['reorder']))
 		{
@@ -2946,7 +3153,7 @@ function ListHtmlIndex($classid,$fields,$enews=0,$userlistr=""){
 		$query="select ztid,cid,classid,id,isgood from {$dbtbpre}enewsztinfo where ".$yhadd."cid='$classid' order by ".$addorder.$limit;
 		$totalquery="select count(*) as total from {$dbtbpre}enewsztinfo where ".$yhadd."cid='$classid'";//统计
 		$doclasspath=ReturnSaveZtPath($ztid,0);
-		$dopath=ECMS_PATH.$doclasspath."/";
+		$dopath=eReturnTrueEcmsPath().$doclasspath."/";
 		if(empty($class_zr[$ztid][zturl]))
 		{
 			$dolink=$public_r[newsurl].$doclasspath."/";
@@ -2955,7 +3162,7 @@ function ListHtmlIndex($classid,$fields,$enews=0,$userlistr=""){
 		{
 			$dolink=$class_zr[$ztid][zturl]."/";
 		}
-		$dofile='type'.$classid;//文件名
+		$dofile=$cr['tfile'];//文件名
 		$dotype=$cr['ttype'];
 		$classname=$cr['cname'];
 		$lencord=$cr['tnum'];//记录数
@@ -2982,8 +3189,8 @@ function ListHtmlIndex($classid,$fields,$enews=0,$userlistr=""){
 		$query=stripSlashes($userlistr['listsql']).$limit;
 		//统计
 		$totalquery=stripSlashes($userlistr['totalsql']);
-		$dopath=$userlistr['addpath'].$userlistr['filepath'];
-		$dolink=$public_r[newsurl].str_replace($userlistr['addpath'].'../../','',$dopath);
+		$dopath=eReturnTrueEcmsPath().'e/data/'.$userlistr['filepath'];//maddpath
+		$dolink=$public_r[newsurl].str_replace('../../','',$userlistr['filepath']);
 		$dotype=$userlistr['filetype'];
 		$classname=$userlistr['pagetitle'];
 		$lencord=$userlistr['lencord'];//记录数
@@ -3372,6 +3579,7 @@ function GetHtml($classid,$id,$add,$ecms=0,$doall=0){
 			$add[$stf]=GetTxtFieldText($add[$stf]);
 		}
 	}
+	eAutodo_AddDo('ReNewsHtml',$classid,$id,0,0,0);//moreportdo
 	$GLOBALS['navclassid']=$add[classid];
 	$GLOBALS['navinfor']=$add;
 	//取得内容模板
@@ -3834,9 +4042,9 @@ function GetNewsJs($classid,$line,$sub,$showdate,$enews=0,$tempr){
 		$tbname=$emod_r[$mid][tbname];
 		$yhid=$class_tr[$classid][yhid];
 	}
-	$allpath=ECMS_PATH.'d/js/js/';
-	$ttpath=ECMS_PATH.'d/js/class/tt'.$classid.'_';
-	$classpath=ECMS_PATH.'d/js/class/class'.$classid.'_';
+	$allpath=eReturnTrueEcmsPath().'d/js/js/';
+	$ttpath=eReturnTrueEcmsPath().'d/js/class/tt'.$classid.'_';
+	$classpath=eReturnTrueEcmsPath().'d/js/class/class'.$classid.'_';
 	$query='';
 	$qand=' and ';
 	if($enews==0)//栏目最新
@@ -3992,7 +4200,9 @@ function GetNewsJs($classid,$line,$sub,$showdate,$enews=0,$tempr){
 //生成自定义js
 function ReUserjs($jsr,$addpath){
 	global $empire,$public_r;
-	DoFileMkDir($addpath.$jsr['jsfilename']);//建目录
+	$jsfilepath=eReturnTrueEcmsPath().'e/data/'.$jsr['jsfilename'];//maddpath
+	DoFileMkDir($jsfilepath);//建目录
+	eAutodo_AddDo('ReUserjs',$jsr['jsid'],0,0,0,0);//moreportdo
 	//取得js模板
 	$jstemptext=GetTheJstemp($jsr[jstempid]);
 	$ret_r=ReturnReplaceListF($jstemptext[modid]);//字段
@@ -4011,7 +4221,7 @@ function ReUserjs($jsr,$addpath){
 		$no++;
 	}
 	$allnew="document.write(\"".addslashes(stripSlashes(str_replace("\r\n","",$temp_r[0].$allnew.$temp_r[2])))."\");";
-	WriteFiletext_n($addpath.$jsr['jsfilename'],$allnew);
+	WriteFiletext_n($jsfilepath,$allnew);
 }
 
 //刷新信息列表
@@ -4074,7 +4284,9 @@ function ReUserpage($id,$pagetext,$path,$title="",$pagetitle,$pagekeywords,$page
 	{
 		return "";
 	}
+	$path=eReturnTrueEcmsPath().'e/data/'.$path;
 	DoFileMkDir($path);//建目录
+	eAutodo_AddDo('ReUserpage',$id,0,0,0,0);//moreportdo
 	if(empty($pagetitle))
 	{
 		$pagetitle=$title;
@@ -4097,8 +4309,9 @@ function ReUserpage($id,$pagetext,$path,$title="",$pagetitle,$pagekeywords,$page
 //生成自定义信息列表
 function ReUserlist($listr,$addpath){
 	$listr['addpath']=$addpath;
-	DoFileMkDir($listr['addpath'].$listr['filepath']);//建目录
-	ListHtml($classid,$field,4,$listr);
+	DoFileMkDir(eReturnTrueEcmsPath().'e/data/'.$listr['filepath']);//建目录maddpath
+	eAutodo_AddDo('ReUserlist',$listr['listid'],0,0,0,0);//moreportdo
+	ListHtml($listr['listid'],$field,4,$listr);
 }
 
 //生成搜索文件
@@ -4339,9 +4552,9 @@ if(\$r[retext])
 	$listtemp_center=str_replace("[!--end.regbook--]",$endstart,$listtemp_center);
 
 	$listtemp_center=str_replace("[!--lyid--]","<?=\$r[lyid]?>",$listtemp_center);
-	$listtemp_center=str_replace("[!--name--]","<?=\$r[name]?>",$listtemp_center);
-	$listtemp_center=str_replace("[!--email--]","<?=\$r[email]?>",$listtemp_center);
-	$listtemp_center=str_replace("[!--mycall--]","<?=\$r[mycall]?>",$listtemp_center);
+	$listtemp_center=str_replace("[!--name--]","<?=stripSlashes(\$r[name])?>",$listtemp_center);
+	$listtemp_center=str_replace("[!--email--]","<?=stripSlashes(\$r[email])?>",$listtemp_center);
+	$listtemp_center=str_replace("[!--mycall--]","<?=stripSlashes(\$r[mycall])?>",$listtemp_center);
 	$listtemp_center=str_replace("[!--lytime--]","<?=\$r[lytime]?>",$listtemp_center);
 	$listtemp_center=str_replace("[!--lytext--]","<?=\$r[lytext]?>",$listtemp_center);
 	$listtemp_center=str_replace("[!--retext--]","<?=\$r[retext]?>",$listtemp_center);
@@ -4614,7 +4827,7 @@ function CheckLevel($userid,$username,$classid,$enews){
 	if($enews=="news")
 	{
 		//操作所有栏目权限
-		$gr=$empire->fetch1("select doall,doselfinfo,doaddinfo,doeditinfo,dodelinfo,docheckinfo,dogoodinfo,dodocinfo,domoveinfo,domustcheck,docheckedit from {$dbtbpre}enewsgroup where groupid='$r[groupid]'");
+		$gr=$empire->fetch1("select doall,doselfinfo,doaddinfo,doeditinfo,dodelinfo,docheckinfo,dogoodinfo,dodocinfo,domoveinfo,domustcheck,docheckedit,docanhtml,doinfofile from {$dbtbpre}enewsgroup where groupid='$r[groupid]'");
 		if(empty($gr[doall]))
 		{
 			$e_r=explode("|".$classid."|",$r[adminclass]);
@@ -4847,7 +5060,7 @@ function DoECheckOtherRnd($userid,$username,$rnd,$loginecmsotherpass,$loginecmso
 	$ip=$ecms_config['esafe']['ckhloginip']==0?'127.0.0.1':egetip();
 	$otherinfo=$ckoi==1?DoECkOtherInfo():'empire.cms';
 	$ecmsckpass=md5(md5($rnd.'-empirecms.2002!check.other-'.$ecms_config['cks']['ckrndtwo']).'-'.$ip.'empire.cms'.'-'.$otherinfo.'-'.$userid.'-'.$loginecmsothertime.'-'.$username.'db.check.rnd'.'-'.$rnd.'-phome'.$loginecmsotherrndtwo);
-	if($ecmsckpass<>$loginecmsotherpass)
+	if('dg'.$ecmsckpass<>'dg'.$loginecmsotherpass)
 	{
 		printerror("NotLogin","index.php");
 	}
@@ -4871,6 +5084,10 @@ function ReESessionRnd(){
 	{
 		return '';
 	}
+	if(!$_SESSION['ecmsckhspass'])
+	{
+		printerror('NotLogin','index.php');
+	}
 	return $_SESSION['ecmsckhspass'];
 }
 
@@ -4880,6 +5097,7 @@ function DelESessionRnd(){
 	{
 		return '';
 	}
+	$_SESSION['ecmsckhspass']='';
 	unset($_SESSION['ecmsckhspass']);
 	session_destroy();
 }
@@ -4909,7 +5127,7 @@ function DoChECookieRnd($userid,$username,$rnd,$userkey,$dbdata,$groupid,$admins
 	$otherinfo=DoECkOtherInfo();
 	$sessval=ReESessionRnd();
 	$ecmsckpass=md5(md5($rnd.$ecms_config['esafe']['ecookiernd']).'-'.$ip.'-'.$otherinfo.'-'.$userid.'-'.$username.'-'.$dbdata.$rnd.$groupid.'-'.$adminstyle.$sessval);
-	if($ecmsckpass<>getcvar('loginecmsckpass',1))
+	if('dg'.$ecmsckpass<>'dg'.getcvar('loginecmsckpass',1))
 	{
 		printerror("NotLogin","index.php");
 	}
@@ -4924,21 +5142,34 @@ function DelECookieRnd(){
 
 //文件认证
 
+//返回文件验证DEF变量字符
+function hAdminLoginFileInfoDefStr($str){
+	$defstr='dg'.md5('e-c,m@s'.md5($str.'-p.h!o-m5e').'-e.m-p!i8re');
+	return $defstr;
+}
+
 //返回用户缓存信息
 function hReturnAdminLoginFileInfo($userid,$username,$rnd,$dbdata,$groupid,$adminstyle,$truelogintime,$ip,$sessval){
+	global $ecms_config;
 	$adminlogins='';
 	$ernd=make_password(27);
 	$erndtwo=make_password(20);
 	$erndadd=make_password(32);
 	$ehash=make_password(20);
-	$ehashname='ehash_'.make_password(4);
+	$ehashname=$ecms_config['esafe']['ckhashename'].make_password(5);
 	$rhash=make_password(12);
-	$rhashname='rhash_'.make_password(4);
+	$rhashname=$ecms_config['esafe']['ckhashrname'].make_password(5);
 	$userid=(int)$userid;
 	$dbdata=(int)$dbdata;
 	$defhash=$ehashname.'='.$ehash.'||'.$rhashname.'='.$rhash.'||'.$ernd.'||'.$erndtwo;
+	$ernddefine=make_password(22);
+	$ernddefinemd5=hAdminLoginFileInfoDefStr($ernddefine);
+	$eckdiyvar='emec'.abc_make_password(8);
+	$eckdiyval=make_password(18);
 	define('EmpireCMSHDefHash',$defhash);
 	$adminlogins.="<?php
+define('EcmsAdminLogin','EmpireCMS');
+define('EcmsAdminLoginDEF','".$ernddefinemd5."');
 \$ecms_adminloginr=array();
 \$ecms_adminloginr=Array('userid'=>'".$userid."',
 'ernd'=>'".addslashes($ernd)."',
@@ -4948,9 +5179,13 @@ function hReturnAdminLoginFileInfo($userid,$username,$rnd,$dbdata,$groupid,$admi
 'ehashname'=>'".addslashes($ehashname)."',
 'rhash'=>'".addslashes($rhash)."',
 'rhashname'=>'".addslashes($rhashname)."',
+'eckdiyvar'=>'".addslashes($eckdiyvar)."',
+'eckdiyval'=>'".addslashes($eckdiyval)."',
 'edbdata'=>'".$dbdata."');
 ?>";
 	esetcookie("loginecmsckfrnd",$ernd,0,1);
+	esetcookie("loginecmsckfdef",$ernddefine,0,1);
+	esetcookie($eckdiyvar,$eckdiyval,0,1);
 	return $adminlogins;
 }
 
@@ -4961,10 +5196,36 @@ function hCheckAadminLoginFileInfo(){
 	{
 		printerror("NotLogin","index.php");
 	}
+	if(!defined('EcmsAdminLogin'))
+	{
+		printerror("NotLogin","index.php");
+	}
+	if(!defined('EcmsAdminLoginDEF'))
+	{
+		printerror("NotLogin","index.php");
+	}
+	$ckstr=getcvar('loginecmsckfdef',1);
+	if(EcmsAdminLoginDEF==''||EcmsAdminLoginDEF=='EcmsAdminLoginDEF'||!$ckstr)
+	{
+		printerror("NotLogin","index.php");
+	}
+	$ckdefstr=hAdminLoginFileInfoDefStr($ckstr);
+	if(EcmsAdminLoginDEF<>$ckdefstr)
+	{
+		printerror("NotLogin","index.php");
+	}
+	$diyck=getcvar($ecms_adminloginr['eckdiyvar'],1);
+	if(!$diyck||!$ecms_adminloginr['eckdiyval']||$ecms_adminloginr['eckdiyval']<>$diyck)
+	{
+		printerror("NotLogin","index.php");
+	}
 }
 
 function DelECookieAdminLoginFileInfo(){
+	global $ecms_config,$ecms_adminloginr;
 	esetcookie("loginecmsckfrnd",'',0,1);
+	esetcookie("loginecmsckfdef",'',0,1);
+	esetcookie($ecms_adminloginr['eckdiyvar'],'',0,1);
 }
 
 //来源Hash验证
@@ -4987,6 +5248,11 @@ function hCheckEcmsRHash(){
 	else
 	{
 		printerror("FailHash","history.go(-1)");
+	}
+	//spurl
+	if($ecms_config['esafe']['ckfromurl']>3)
+	{
+		hCheckSpFromUrl();
 	}
 }
 
@@ -5016,6 +5282,30 @@ function hCheckEcmsEHash(){
 	}
 }
 
+//随机ehash附加form
+function hReturnEcmsHashStrAddRnd($ern=2){
+	global $ecms_config,$ecms_adminloginr;
+	$num=EcmsRandInt(1,$ern);
+	$addrnd='';
+	$rndstr=uniqid(microtime()).EcmsRandInt();
+	for($i=1;$i<=$num;$i++)
+	{
+		$str=md5($rndstr.$i);
+		if($i%2==0)
+		{
+			$rndname='rhash_'.substr($str,22,4);
+			$rndvalue=substr($str,4,12);
+		}
+		else
+		{
+			$rndname='ehash_'.substr($str,25,4);
+			$rndvalue=substr($str,2,20);
+		}
+		$addrnd.='<input type=hidden name='.$rndname.' value='.$rndvalue.'>';
+	}
+	return $addrnd;
+}
+
 //返回hash变量
 function hReturnEcmsHashStrAll(){
 	global $ecms_config,$ecms_adminloginr;
@@ -5039,19 +5329,22 @@ function hReturnEcmsHashStrAll(){
 	{
 		$hashhrefr['href']='&'.$rhashvar.'='.$rhash;
 		$hashhrefr['whhref']='?'.$rhashvar.'='.$rhash;
-		$hashhrefr['form']='<input type=hidden name='.$rhashvar.' value='.$rhash.'>';
+		$hashhrefr['form']=hReturnEcmsHashStrAddRnd(2).'<input type=hidden name='.$rhashvar.' value='.$rhash.'>'.hReturnEcmsHashStrAddRnd(2);
 		$hashhrefr['ehref']='';
 		$hashhrefr['whehref']='';
 		$hashhrefr['eform']='';
 	}
 	else//金刚模式
 	{
+		$ehaddrnd=hReturnEcmsHashStrAddRnd();
+		$ehaddrnd2=hReturnEcmsHashStrAddRnd(2);
+		$ehaddrnd3=hReturnEcmsHashStrAddRnd(2);
 		$hashhrefr['href']='&'.$ehashvar.'='.$ehash.'&'.$rhashvar.'='.$rhash;
 		$hashhrefr['whhref']='?'.$ehashvar.'='.$ehash.'&'.$rhashvar.'='.$rhash;
-		$hashhrefr['form']='<input type=hidden name='.$ehashvar.' value='.$ehash.'><input type=hidden name='.$rhashvar.' value='.$rhash.'>';
+		$hashhrefr['form']=$ehaddrnd.'<input type=hidden name='.$ehashvar.' value='.$ehash.'>'.$ehaddrnd2.'<input type=hidden name='.$rhashvar.' value='.$rhash.'>'.$ehaddrnd3;
 		$hashhrefr['ehref']='&'.$ehashvar.'='.$ehash;
 		$hashhrefr['whehref']='?'.$ehashvar.'='.$ehash;
-		$hashhrefr['eform']='<input type=hidden name='.$ehashvar.' value='.$ehash.'>';
+		$hashhrefr['eform']=$ehaddrnd.'<input type=hidden name='.$ehashvar.' value='.$ehash.'>'.$ehaddrnd2;
 	}
 	return $hashhrefr;
 }
@@ -5148,6 +5441,64 @@ function DoECheckFileRnd($userid,$username,$rnd,$dbdata,$groupid,$adminstyle,$tr
 	*/
 }
 
+//切换访问端后台
+function Moreport_eChangeMoreportAdmin($pid,$ecms,$douserid,$dousername){
+	global $empire,$dbtbpre,$public_r,$ecms_config;
+	CheckLevel($douserid,$dousername,$classid,"chmoreport");//操作权限
+	$pid=(int)$pid;
+	if(!$pid)
+	{
+		printerror("EmptyMoreportPid","history.go(-1)");
+	}
+	$pr=$empire->fetch1("select * from {$dbtbpre}enewsmoreport where pid='$pid'");
+	if(!$pr['pid']||!$pr['purl'])
+	{
+		printerror("EmptyMoreportPid","history.go(-1)");
+	}
+	if(!$pr['ppath']||!file_exists($pr['ppath'].'e/config/config.php'))
+	{
+		printerror("EmptyMoreportPid","history.go(-1)");
+	}
+	if($pr['isclose']||$pr['openadmin']==2)
+	{
+		printerror("ChangeMoreportIsClose","history.go(-1)");
+	}
+	if($pid==$ecms_config['sets']['selfmoreportid']||($pid==1&&!$ecms_config['sets']['selfmoreportid']))
+	{
+		printerror("IsSelfMoreportPid","history.go(-1)");
+	}
+	//文件名
+	$userid=intval(getcvar('loginuserid',1));
+	$username=RepPostVar(getcvar('loginusername',1));
+	$rnd=RepPostVar(getcvar('loginrnd',1));
+	$dbdata=getcvar('ecmsdodbdata',1)?1:0;
+	$groupid=(int)getcvar('loginlevel',1);
+	$adminstyle=(int)getcvar('loginadminstyleid',1);
+	$truelogintime=(int)getcvar('truelogintime',1);
+	$ip=$ecms_config['esafe']['ckhloginip']==0?'127.0.0.1':egetip();
+	$otherinfo=DoECkOtherInfo();
+	$sessval=ReESessionRnd();
+	$userloginfile='user'.$userid.'_'.md5(md5($username.'-empirecms!check.file'.$truelogintime.'-'.$rnd.$ecms_config['esafe']['ecookiernd']).'-'.$ip.'-'.$userid.'-'.$rnd.$adminstyle.'-'.$groupid.'-'.$dbdata.$sessval).'.php';
+	$fromfile=ECMS_PATH.'e/data/adminlogin/'.$userloginfile;
+	$tofile=$pr['ppath'].'e/data/adminlogin/'.$userloginfile;
+	if(!file_exists($fromfile))
+	{
+		printerror("EmptyMoreportPid","history.go(-1)");
+	}
+	@copy($fromfile,$tofile);
+	if(!file_exists($tofile))
+	{
+		printerror("MoreportPidFailPath","history.go(-1)");
+	}
+	if($ecms==0)
+	{
+		DelFiletext($fromfile);
+	}
+	$selfurl=eReturnSelfPage(0);
+	$gourl=substr($pr['purl'],0,-1).str_replace('/enews.php','/admin.php',$selfurl).hReturnEcmsHashStrHref2(1);
+	printerror("ChangeMoreportAdminSuccess",$gourl);
+}
+
 function DoEDelFileRnd($userid){
 	$path=ECMS_PATH.'e/data/adminlogin/';
 	$hand=@opendir($path);
@@ -5157,7 +5508,7 @@ function DoEDelFileRnd($userid){
 		{
 			continue;
 		}
-		if(strstr($file,'user'.$userid.'_'))
+		if(stristr($file,'user'.$userid.'_'))
 		{
 			DelFiletext($path.$file);
 		}
@@ -5183,7 +5534,7 @@ function DoECheckAndAuthRnd($userid,$username,$rnd,$userkey,$dbdata,$groupid,$ad
 	//$otherinfo=DoECkOtherInfo();
 	$sessval=ReESessionRnd();
 	$ckandauth=md5(md5($rnd.'-'.$username.'-empirecms!check.andauth'.$truelogintime.'-'.$ecms_config['esafe']['ecookiernd'].$userkey).$sessval.'-'.$ip.'-'.$userid.$rnd.'-'.$adminstyle.'-'.$groupid.$username.'-'.$dbdata);
-	if($anduser_r['andauth']<>$ckandauth)
+	if('dg'.$anduser_r['andauth']<>'dg'.$ckandauth)
 	{
 		printerror('NotLogin','index.php');
 	}
@@ -5203,6 +5554,9 @@ function insert_dolog($doing,$pubid=0){
 	}
 	if(empty($doing))
 	{$doing="---";}
+	$doing=str_replace('<br>','[e.cms.br]',$doing);
+	$doing=eDoRepPostComStr($doing);
+	$doing=str_replace('[e.cms.br]','<br>',$doing);
 	$doing=addslashes(stripSlashes($doing));
 	//ip
 	$logip=egetip();
@@ -5322,7 +5676,7 @@ function AddPostUrlData($postdata,$userid,$username){
 	//操作权限
 	CheckLevel($userid,$username,$classid,"postdata");
 	$e="!!!";
-	$rnd=md5(uniqid(microtime()));
+	$rnd=md5(uniqid(microtime()).EcmsRandInt());
 	for($i=0;$i<$count;$i++)
 	{
 		$r=explode($e,$postdata[$i]);
@@ -5502,6 +5856,44 @@ function DoFFun($mid,$f,$value,$isadd=1,$isq=0){
 		$value=$fun($mid,$f,$isadd,$isq,$value,$r[1]);
 	}
 	return $value;
+}
+
+//执行模型函数
+function DoMFun($mid,$classid,$id,$isadd=1,$isq=0){
+	global $empire,$dbtbpre,$emod_r;
+	if($isq==1)//前台
+	{
+		if($isadd==1)//增加
+		{
+			$dofun=$emod_r[$mid]['qmaddfun'];
+		}
+		else//修改
+		{
+			$dofun=$emod_r[$mid]['qmeditfun'];
+		}
+	}
+	else//后台
+	{
+		if($isadd==1)//增加
+		{
+			$dofun=$emod_r[$mid]['maddfun'];
+		}
+		else//修改
+		{
+			$dofun=$emod_r[$mid]['meditfun'];
+		}
+	}
+	if(!$dofun)
+	{
+		return '';
+	}
+	$r=explode('##',$dofun);
+	if(!$r[0])
+	{
+		return '';
+	}
+	$fun=$r[0];
+	$value=$fun($mid,$isadd,$isq,$classid,$id,$r[1]);
 }
 
 //取得字段名
@@ -5732,9 +6124,30 @@ function ReturnCheckboxAddF($r,$mid,$f){
 	return $val;
 }
 
+//信息字段值处理
+function DohFieldValue($mid,$f,$val,$gr){
+	global $public_r,$emod_r,$lur;
+	$val=RepPhpAspJspcodeText($val);
+	if($gr['docanhtml'])
+	{
+		return $val;
+	}
+	if(strstr($emod_r[$mid]['editorf'],','.$f.','))//编辑器
+	{
+		$val=ClearNewsBadCode($val);
+	}
+	else
+	{
+		$val=eDoRepPostComStr($val,1);//替换html
+	}
+	return $val;
+}
+
 //返回自定义字段
 function ReturnAddF($add,$modid,$userid,$username,$do=0,$rdata=0,$ch=0){
-	global $empire,$public_r,$dbtbpre,$emod_r;
+	global $empire,$public_r,$dbtbpre,$emod_r,$lur;
+	$ugroupid=(int)$lur['groupid'];
+	$ugr=ReturnLeftLevel($ugroupid);
 	if($do==0||$do==1)
 	{
 		//导入gd处理文件
@@ -5795,6 +6208,7 @@ function ReturnAddF($add,$modid,$userid,$username,$do=0,$rdata=0,$ch=0){
 			{
 				$value=$value?$value:GetInfoZm($add[title]);
 			}
+			$value=eDoInfoTbfToQj($emod_r[$modid]['tbname'],$f,$value,$public_r['toqjf']);
 			//处理函数
 			$value=DoFFun($modid,$f,$value,1,0);
 			$modispagef=$pagef==$f?1:0;
@@ -5809,6 +6223,7 @@ function ReturnAddF($add,$modid,$userid,$username,$do=0,$rdata=0,$ch=0){
 				ChMustAddF($modid,$f,$value);
 				ChIsOnlyAddF($modid,0,$f,$value,0);//唯一值
 			}
+			$value=DohFieldValue($modid,$f,$value,$ugr);
 			$value=hRepPostStr2($value);
 			//编辑器
 			if($f=="newstext")
@@ -5887,6 +6302,7 @@ function ReturnAddF($add,$modid,$userid,$username,$do=0,$rdata=0,$ch=0){
 			{
 				$value=$value?$value:GetInfoZm($add[title]);
 			}
+			$value=eDoInfoTbfToQj($emod_r[$modid]['tbname'],$f,$value,$public_r['toqjf']);
 			//处理函数
 			$value=DoFFun($modid,$f,$value,0,0);
 			$modispagef=$pagef==$f?1:0;
@@ -5901,6 +6317,7 @@ function ReturnAddF($add,$modid,$userid,$username,$do=0,$rdata=0,$ch=0){
 				ChMustAddF($modid,$f,$value);
 				ChIsOnlyAddF($modid,$add[id],$f,$value,0);//唯一值
 			}
+			$value=DohFieldValue($modid,$f,$value,$ugr);
 			$value=hRepPostStr2($value);
 			//数据同步
 			SameDataAddF($add[id],$add[classid],$modid,$f,$value);
@@ -5923,6 +6340,9 @@ function ReturnAddF($add,$modid,$userid,$username,$do=0,$rdata=0,$ch=0){
 				//建立目录
 				$newstexttxt_r=explode("/",$add[newstext_url]);
 				$thetxtfile=$newstexttxt_r[2];
+				eCheckStrType(1,$newstexttxt_r[0],1);
+				eCheckStrType(1,$newstexttxt_r[1],1);
+				eCheckStrType(3,$thetxtfile,1);
 				$truevalue=MkDirTxtFile($newstexttxt_r[0]."/".$newstexttxt_r[1],$thetxtfile);
 				//写放文件
 				EditTxtFieldText($truevalue,$value);
@@ -5957,6 +6377,9 @@ function ReturnAddF($add,$modid,$userid,$username,$do=0,$rdata=0,$ch=0){
 				//建立目录
 				$newstexttxt_r=explode("/",$add[newstext_url]);
 				$thetxtfile=$newstexttxt_r[2];
+				eCheckStrType(1,$newstexttxt_r[0],1);
+				eCheckStrType(1,$newstexttxt_r[1],1);
+				eCheckStrType(3,$thetxtfile,1);
 				$truevalue=MkDirTxtFile($newstexttxt_r[0]."/".$newstexttxt_r[1],$thetxtfile);
 				//写放文件
 				EditTxtFieldText($truevalue,$value);
@@ -6520,11 +6943,20 @@ function GetPubCache(){
 	{
 		$pvstring.=",'add_".$pvr['myvar']."'=>'".addslashes($pvr['varvalue'])."'";
 	}
+	//多访问端
+	$ckhavemoreport=0;
+	$mpnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsmoreport");
+	if($mpnum>1)
+	{
+		$ckhavemoreport=1;
+	}
 	//公共变量
 	$r=$empire->fetch1("select * from {$dbtbpre}enewspublic limit 1");
 	$tr=$empire->fetch1("select downsofttemp,onlinemovietemp,listpagetemp from ".GetTemptb("enewspubtemp")." limit 1");
 	$fsr=$empire->fetch1("select purl from {$dbtbpre}enewspostserver where ptype=1 limit 1");
 	$plr=$empire->fetch1("select * from {$dbtbpre}enewspl_set limit 1");
+	$paddr=$empire->fetch1("select * from {$dbtbpre}enewspublicadd limit 1");
+	$agcacher=eGetCacheMAdmin();
 	$memberconnectnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsmember_connect_app where isclose=0");
 	$GLOBALS['public_r']['newsurl']=$r['newsurl'];
 	$r[filedeftb]=1;
@@ -6725,6 +7157,43 @@ function GetPubCache(){
 'indexaddpage'=>".$r[indexaddpage].",
 'modmemberedittran'=>".$r[modmemberedittran].",
 'modinfoedittran'=>".$r[modinfoedittran].",
+'php_adminouttime'=>".$r[php_adminouttime].",
+'httptype'=>".$r[httptype].",
+'qinfoaddfen'=>".$r[qinfoaddfen].",
+'bakescapetype'=>".$r[bakescapetype].",
+'hkeytime'=>".$r[hkeytime].",
+'hkeyrnd'=>'".addslashes($r[hkeyrnd])."',
+'mhavedatedo'=>".$r[mhavedatedo].",
+'reportkey'=>".$r[reportkey].",
+'ctimeopen'=>".$paddr[ctimeopen].",
+'ctimelast'=>".$paddr[ctimelast].",
+'ctimeindex'=>".$paddr[ctimeindex].",
+'ctimeclass'=>".$paddr[ctimeclass].",
+'ctimelist'=>".$paddr[ctimelist].",
+'ctimetext'=>".$paddr[ctimetext].",
+'ctimett'=>".$paddr[ctimett].",
+'ctimetags'=>".$paddr[ctimetags].",
+'ctimegids'=>'".addslashes($paddr[ctimegids])."',
+'ctimecids'=>'".addslashes($paddr[ctimecids])."',
+'ctimernd'=>'".addslashes($paddr[ctimernd])."',
+'qmadminuids'=>'".addslashes($agcacher[qmadminuids])."',
+'qmforumuids'=>'".addslashes($agcacher[qmforumuids])."',
+'qmotheruids'=>'".addslashes($agcacher[qmotheruids])."',
+'ckhavemoreport'=>".$ckhavemoreport.",
+'usetotalnum'=>".$r[usetotalnum].",
+'autodoopen'=>".$paddr[autodoopen].",
+'autodofile'=>".$paddr[autodofile].",
+'autodoss'=>".$paddr[autodoss].",
+'digglevel'=>".$paddr[digglevel].",
+'diggcmids'=>'".addslashes($paddr[diggcmids])."',
+'spacegids'=>'".addslashes($r[spacegids])."',
+'candocodetag'=>".$r[candocodetag].",
+'openern'=>'".addslashes($r[openern])."',
+'ernurl'=>'".addslashes($r[ernurl])."',
+'toqjf'=>'".addslashes($paddr[toqjf])."',
+'qtoqjf'=>'".addslashes($paddr[qtoqjf])."',
+'ctimeaddre'=>".$paddr[ctimeaddre].",
+'ctimeqaddre'=>".$paddr[ctimeqaddre].",
 'deftempid'=>".$r[deftempid].$pvstring.");
 //------------e_public
 ".GetMoreportCache()."
@@ -6905,6 +7374,10 @@ function GetModCache(){
 'definfovoteid'=>".$mr[definfovoteid].",
 'orderf'=>'".addslashes($mr[orderf])."',
 'sonclass'=>'".addslashes($mr[sonclass])."',
+'maddfun'=>'".addslashes($mr['maddfun'])."',
+'meditfun'=>'".addslashes($mr['meditfun'])."',
+'qmaddfun'=>'".addslashes($mr['qmaddfun'])."',
+'qmeditfun'=>'".addslashes($mr['qmeditfun'])."',
 'tid'=>".$mr[tid].",
 'tbname'=>'".addslashes($mr[tbname])."');
 ";
@@ -6921,6 +7394,76 @@ function GetModCache(){
 
 ";
 	return $mods;
+}
+
+//返回会员管理组
+function eGetCacheMAdmin(){
+	global $empire,$dbtbpre;
+	$qmr=array();
+	$qmr['qmadminuids']='';
+	$qmr['qmforumuids']='';
+	$qmr['qmotheruids']='';
+	//缓存
+	$agcache='';
+	$qmsql=$empire->query("select * from {$dbtbpre}enewsag");
+	while($r=$empire->fetch($qmsql))
+	{
+		if($r['isadmin']==9)//管理员
+		{
+			if($r['auids'])
+			{
+				$qmr['qmadminuids']=$qmr['qmadminuids']?substr($r['auids'],0,-1).$qmr['qmadminuids']:$r['auids'];
+			}
+		}
+		elseif($r['isadmin']>=5)//版主
+		{
+			if($r['auids'])
+			{
+				$qmr['qmforumuids']=$qmr['qmforumuids']?substr($r['auids'],0,-1).$qmr['qmforumuids']:$r['auids'];
+			}
+		}
+		elseif($r['isadmin']>=1)//实习版主
+		{
+			if($r['auids'])
+			{
+				$qmr['qmotheruids']=$qmr['qmotheruids']?substr($r['auids'],0,-1).$qmr['qmotheruids']:$r['auids'];
+			}
+		}
+		else
+		{
+		}
+		//缓存
+		$agcache.="\$aglevel_r[".$r['agid']."]=Array('agid'=>".$r['agid'].",
+'agname'=>'".addslashes($r['agname'])."',
+'isadmin'=>".$r['isadmin'].");
+";
+	}
+	$agcache="
+\$aglevel_r=array();
+".$agcache."
+";
+	$qmr['agcache']=$agcache;
+	return $qmr;
+}
+
+//返回会员内部组
+function eGetCacheMInGroup(){
+	global $empire,$dbtbpre;
+	//缓存
+	$igcache='';
+	$sql=$empire->query("select * from {$dbtbpre}enewsingroup");
+	while($r=$empire->fetch($sql))
+	{
+		//缓存
+		$igcache.="\$iglevel_r[".$r['gid']."]=Array('gid'=>".$r['gid'].",
+'gname'=>'".addslashes($r['gname'])."');
+";
+	}
+	$igcache="
+\$iglevel_r=array();
+".$igcache."
+";
+	return $igcache;
 }
 
 //会员组缓存
@@ -6945,10 +7488,14 @@ function GetMemberLevel(){
 'msgnum'=>".$r[msgnum].");
 ";
 	}
+	//管理组
+	$agcacher=eGetCacheMAdmin();
+	//内部组
+	$igcache=eGetCacheMInGroup();
 	$levels="<?php
 //level
 \$level_r=array();
-".$levels."
+".$levels.$agcacher['agcache'].$igcache."
 //level
 ?>";
 	WriteFiletext_n($file,$levels);
@@ -7011,7 +7558,7 @@ function GetClass(){
 	$no=0;
 	$p=0;
 	$l="";
-	$mod="";
+	$mod=array();
 	$modstr=",";
 	while($r=$empire->fetch($sql))
 	{
@@ -7036,7 +7583,7 @@ function GetClass(){
 			}
 			$l=",
 'lencord'=>".$r[lencord].",".ReturnEmptyFCache('link_num',$r[link_num],1)."
-'newstempid'=>".$r[newstempid].",
+'newstempid'=>".$r[newstempid].",".ReturnEmptyFCache('oneinfo',$r[oneinfo],1)."
 'listtempid'=>".$r[listtempid].",".ReturnEmptyFCache('pltempid',$r[pltempid],1)."
 ".ReturnEmptyFCache('newspath',$r[newspath],0).ReturnEmptyFCache('filename',$r[filename],1)."
 'filetype'=>'".addslashes($r[filetype])."',".ReturnEmptyFCache('ipath',$r[ipath],0)."
@@ -7197,6 +7744,8 @@ function GetMoreportCache(){
 'tempgid'=>'".addslashes($r[tempgid])."',
 'isclose'=>'".addslashes($r[isclose])."',
 'closeadd'=>'".addslashes($r[closeadd])."',
+'openadmin'=>'".addslashes($r[openadmin])."',
+'rehtml'=>'".addslashes($r[rehtml])."',
 'mustdt'=>'".$r[mustdt]."');
 ";
 	}
@@ -7226,15 +7775,15 @@ function Moreport_UpdateIsclose(){
 	$num=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsmoreport where isclose=0");
 	if($num>1)
 	{
-		$purl=addslashes($public_r['newsurl']);
+		$purl=addslashes(eReturnDomainSiteUrl());
 		$ppath=addslashes(ReturnAbsEcmsPath());
 		$postpass=make_password(60);
-		$empire->query("update {$dbtbpre}enewsmoreport set purl='$purl',ppath='$ppath',postpass='$postpass' where pid=1");
+		$empire->query("update {$dbtbpre}enewsmoreport set purl='$purl',ppath='$ppath',postpass='$postpass',rehtml='3' where pid=1");
 	}
 	else
 	{
 		$postpass=make_password(60);
-		$empire->query("update {$dbtbpre}enewsmoreport set purl='',ppath='',postpass='$postpass' where pid=1");
+		$empire->query("update {$dbtbpre}enewsmoreport set purl='',ppath='',postpass='$postpass',rehtml='0' where pid=1");
 	}
 	return $num;
 }
@@ -7246,5 +7795,69 @@ function Moreport_CheckAdminIsMain(){
 	{
 		printerror("NotMainMoreport","history.go(-1)");
 	}
+}
+
+//显示访问端
+function Moreport_eReturnMoreportSelect($pid,$varname=''){
+	global $empire,$dbtbpre,$public_r,$ecms_config;
+	if(!$varname)
+	{
+		$varname='moreportid';
+	}
+	$pid=(int)$pid;
+	$selects='';
+	$sql=$empire->query("select * from {$dbtbpre}enewsmoreport order by pid");
+	while($r=$empire->fetch($sql))
+	{
+		if(!$r['purl'])
+		{
+			continue;
+		}
+		$selected='';
+		if($pid==$r['pid'])
+		{
+			$selected=' selected';
+		}
+		$selects.="<option value='".$r['pid']."'".$selected.">".$r['pname']."</option>";
+	}
+	$selects="<select name='".$varname."' id='".$varname."'>".$selects."</select>";
+	return $selects;
+}
+
+//处理接收访问端目录
+function Moreport_hDoSetSelfPath($ecms=0){
+	$moreportpid=(int)$_GET['moreportpid'];
+	if(!$moreportpid)
+	{
+		$moreportpid=(int)$_POST['moreportpid'];
+	}
+	if($moreportpid)
+	{
+		Moreport_eSetSelfPath($moreportpid,$ecms);
+	}
+	return $moreportpid;
+}
+
+//返回moreport参数
+function Moreport_ReturnUrlCsPid($pid,$ecms=0,$wh=0,$ycs=''){
+	$pid=(int)$pid;
+	if(!$pid)
+	{
+		return '';
+	}
+	if($ecms==1)
+	{
+		$cs="<input type=hidden name=moreportpid id=moreportpid value='$pid'>";
+	}
+	else
+	{
+		$and='&';
+		if($wh&&!$ycs)
+		{
+			$and='?';
+		}
+		$cs=$and.'moreportpid='.$pid;
+	}
+	return $cs;
 }
 ?>

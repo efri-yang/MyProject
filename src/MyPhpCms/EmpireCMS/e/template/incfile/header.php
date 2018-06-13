@@ -112,6 +112,7 @@ select					{ font: 9pt Tahoma, Verdana; font-weight: normal; }
 .epages input{margin-bottom:0px;border:1px solid #659B28;height:15px;font:bold 12px/15px Verdana;padding-bottom:1px;padding-left:1px;margin-right:1px;color:#659B28;}
 
 </style>
+<script src="<?=$public_r['newsurl']?>e/data/js/ajax.js"></script>
 
 <SCRIPT lanuage="JScript">
 function DisplayImg(ss,imgname,phome)

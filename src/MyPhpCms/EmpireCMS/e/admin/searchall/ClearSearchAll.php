@@ -58,6 +58,7 @@ $enews=$_GET['enews'];
 if($enews)
 {
 	hCheckEcmsRHash();
+	@set_time_limit(0);
 	include("../../data/dbcache/class.php");
 	include "../".LoadLang("pub/fun.php");
 	ClearSearchAll($_GET[start],$_GET[line],$logininid,$loginin);

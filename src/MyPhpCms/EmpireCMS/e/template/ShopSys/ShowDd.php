@@ -105,7 +105,7 @@ function PrintDd()
           <td height="25"> 
             <div align="right">发票抬头：</div></td>
           <td><strong> 
-            <?=$r[fptt]?>
+            <?=stripSlashes($r[fptt])?>
             </strong></td>
           <td><div align="right">订单总金额：</div></td>
           <td><strong>
@@ -115,7 +115,7 @@ function PrintDd()
         <tr>
           <td height="25"><div align="right">发票名称：</div></td>
           <td colspan="3"><strong>
-            <?=$r[fpname]?>
+            <?=stripSlashes($r[fpname])?>
           </strong></td>
         </tr>
       </table></td>
@@ -128,55 +128,55 @@ function PrintDd()
         <tr> 
           <td width="20%" height="25">真实姓名:</td>
           <td width="80%"> 
-            <?=$r[truename]?>          </td>
+            <?=stripSlashes($r[truename])?>          </td>
         </tr>
         <tr> 
           <td height="25">QQ:</td>
           <td> 
-            <?=$r[oicq]?>          </td>
+            <?=stripSlashes($r[oicq])?>          </td>
         </tr>
         <tr> 
           <td height="25">MSN:</td>
           <td> 
-            <?=$r[msn]?>          </td>
+            <?=stripSlashes($r[msn])?>          </td>
         </tr>
         <tr> 
           <td height="25">固定电话:</td>
           <td> 
-            <?=$r[mycall]?>          </td>
+            <?=stripSlashes($r[mycall])?>          </td>
         </tr>
         <tr> 
           <td height="25">移动电话:</td>
           <td> 
-            <?=$r[phone]?>          </td>
+            <?=stripSlashes($r[phone])?>          </td>
         </tr>
         <tr> 
           <td height="25">联系邮箱:</td>
           <td> 
-            <?=$r[email]?>          </td>
+            <?=stripSlashes($r[email])?>          </td>
         </tr>
         <tr> 
           <td height="25">联系地址:</td>
           <td> 
-            <?=$r[address]?>          </td>
+            <?=stripSlashes($r[address])?>          </td>
         </tr>
         <tr> 
           <td height="25">邮编:</td>
           <td> 
-            <?=$r[zip]?>          </td>
+            <?=stripSlashes($r[zip])?>          </td>
         </tr>
         <tr>
           <td height="25">标志建筑:</td>
-          <td><?=$r[signbuild]?></td>
+          <td><?=stripSlashes($r[signbuild])?></td>
         </tr>
         <tr>
           <td height="25">最佳送货地址:</td>
-          <td><?=$r[besttime]?></td>
+          <td><?=stripSlashes($r[besttime])?></td>
         </tr>
         <tr> 
           <td height="25">备注:</td>
           <td> 
-            <?=nl2br($addr[bz])?>          </td>
+            <?=nl2br(stripSlashes($addr[bz]))?>          </td>
         </tr>
       </table></td>
   </tr>
@@ -188,7 +188,7 @@ function PrintDd()
         <tr> 
           <td width="20%" height="25">备注内容:</td>
           <td width="80%"> 
-            <?=nl2br($addr['retext'])?>          </td>
+            <?=nl2br(stripSlashes($addr['retext']))?>          </td>
         </tr>
       </table></td>
   </tr>

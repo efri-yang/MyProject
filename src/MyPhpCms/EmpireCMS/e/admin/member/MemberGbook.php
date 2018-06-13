@@ -31,7 +31,7 @@ function hDelMemberGbook($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("gid=".$gid);
-		printerror("DelMemberGbookSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelMemberGbookSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -58,7 +58,7 @@ function hDelMemberGbook_All($add,$userid,$username){
 	{
 		//操作日志
 		insert_dolog("");
-		printerror("DelMemberGbookSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelMemberGbookSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{

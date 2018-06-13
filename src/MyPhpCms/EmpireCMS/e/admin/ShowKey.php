@@ -31,6 +31,7 @@ function domake_password($pw_length){
 		{
 			mt_srand((double)microtime()*1000000);
 		}
+		mt_srand();
 		$randnum=mt_rand($low_ascii_bound,$upper_ascii_bound);
 		if(!in_array($randnum,$notuse))
 		{
@@ -81,7 +82,7 @@ function ReturnShowKeyColor($img){
 function ShowKey($v){
 	$vname=ecmsReturnKeyVarname($v);
 	$key=strtolower(domake_password(4));
-	ecmsSetShowKey($vname,$key,0);
+	ecmsSetShowKey($vname,$key,0,1);
 	//是否支持gd库
 	if(function_exists("imagejpeg")) 
 	{
@@ -153,7 +154,7 @@ function ShowKey($v){
 	}
 	else
 	{
-		ecmsSetShowKey($vname,'ecms',0);
+		ecmsSetShowKey($vname,'ecms',0,1);
 		echo ReadFiletext("../data/images/ecms.jpg");
 	}
 }

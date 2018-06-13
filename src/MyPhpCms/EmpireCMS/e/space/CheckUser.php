@@ -7,6 +7,7 @@ if(!defined('InEmpireCMS'))
 //统计访问
 function UpdateSpaceViewStats($userid){
 	global $empire,$dbtbpre;
+	$userid=(int)$userid;
 	if(!getcvar('dospacevstats'.$userid))
 	{
 		$sql=$empire->query("update {$dbtbpre}enewsmemberadd set viewstats=viewstats+1 where userid='".$userid."' limit 1");
@@ -47,6 +48,21 @@ if(empty($ur['username']))
 {
 	printerror("NotUsername","",1);
 }
+if(empty($ur['checked']))
+{
+	printerror("NotUsername","",1);
+}
+//会员组
+if($public_r['spacegids'])
+{
+	if(!strstr($public_r['spacegids'],','.$ur['groupid'].','))
+	{
+		printerror("UserNotSpace","",1);
+	}
+}
+//实名验证
+eCheckHaveTruename('msp',$ur['userid'],$ur['username'],$ur['isern'],$ur['checked'],0);
+
 $userid=$userid?$userid:$ur['userid'];
 $utfusername=$utfusername?$utfusername:$ur['username'];
 $username=$username?$username:$ur['username'];
@@ -58,6 +74,8 @@ $userpic=$addur['userpic']?$addur['userpic']:$public_r[newsurl].'e/data/images/n
 //空间地址
 $spaceurl=eReturnDomainSiteUrl()."e/space/?userid=".$userid;
 //空间名称
+$addur['spacename']=stripSlashes($addur['spacename']);
+$addur['spacegg']=stripSlashes($addur['spacegg']);
 $spacename=$addur['spacename']?$addur['spacename']:$username." 的空间";
 //空间模板
 $spacestyleid=$addur['spacestyleid'];

@@ -13,8 +13,13 @@ $empire=new mysqlquery();
 eCheckCloseMods('sch');//关闭模块
 $searchtime=time();
 $totalnum=(int)$_GET['totalnum'];
+$sear=(int)$_GET['sear'];
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 $firstsearch=0;
-if($totalnum<1)
+if($sear<1)
 {
 	$firstsearch=1;
 	//搜索间隔
@@ -63,7 +68,13 @@ else
 {
 	$num=$totalnum;
 }
-$search=$schallr['search']."&totalnum=".$num;
+$search=$schallr['search'].'&sear=1';
+if($public_r['usetotalnum'])
+{
+	$search.='&totalnum='.$num;
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 $query.=" order by infotime desc limit $offset,$line";
 $sql=$empire->query($query);
 $listpage=page1($num,$line,$page_line,$start,$page,$search);
@@ -258,7 +269,7 @@ $empire=null;
         </tr>
         <tr> 
           <td align="center">Powered by <strong><a href="http://www.phome.net" target="_blank">EmpireCMS</a></strong> 
-            <strong><font color="#FF9900">7.2</font></strong>&nbsp; &copy; 2002-2015 
+            <strong><font color="#FF9900">7.5</font></strong>&nbsp; &copy; 2002-2018 
             <a href="http://www.digod.com" target="_blank">EmpireSoft Inc.</a></td>
         </tr>
 	</table>

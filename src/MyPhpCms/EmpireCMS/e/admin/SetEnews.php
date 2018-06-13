@@ -198,15 +198,86 @@ function SetEnews($add,$userid,$username){
 	$add['closeqdtmsg']=AddAddsData($add['closeqdtmsg']);
 	$add['openfileserver']=(int)$add['openfileserver'];
 	$add['fieldandtop']=(int)$add['fieldandtop'];
-	$add['fieldandclosetb']=$add['fieldandclosetb']?','.$add['fieldandclosetb'].',':'';
-	$add['firsttitlename']=ehtmlspecialchars(str_replace("\r\n","|",$add['firsttitlename']));
-	$add['isgoodname']=ehtmlspecialchars(str_replace("\r\n","|",$add['isgoodname']));
-	$add['closelisttemp']=ehtmlspecialchars($add['closelisttemp']);
+	$add['fieldandclosetb']=$add['fieldandclosetb']?','.$add['fieldandclosetb'].',':'';	
+	$add['closelisttemp']=ehtmlspecialchars($add['closelisttemp'],ENT_QUOTES);
 	$add['ipaddinfonum']=(int)$add['ipaddinfonum'];
 	$add['ipaddinfotime']=(int)$add['ipaddinfotime'];
 	$add['indexaddpage']=(int)$add['indexaddpage'];
 	$add['modmemberedittran']=(int)$add['modmemberedittran'];
 	$add['modinfoedittran']=(int)$add['modinfoedittran'];
+	$add['php_adminouttime']=(int)$add['php_adminouttime'];
+	$add['httptype']=(int)$add['httptype'];
+	$add['qinfoaddfen']=(int)$add['qinfoaddfen'];
+	$add['bakescapetype']=(int)$add['bakescapetype'];
+	$add['hkeytime']=(int)$add['hkeytime'];
+	$add['mhavedatedo']=(int)$add['mhavedatedo'];
+	$add['reportkey']=(int)$add['reportkey'];
+	$add['candocodetag']=(int)$add['candocodetag'];
+
+	$add['newsurl']=hRepPostStr($add['newsurl'],0);
+	$add['sitename']=hRepPostStr($add['sitename'],1);
+	$add['email']=hRepPostStr($add['email'],1);
+	$add['filetype']=hRepPostStr($add['filetype'],0);
+	$add['indextype']=hRepPostStr($add['indextype'],1);
+	$add['goodtype']=hRepPostStr($add['goodtype'],1);
+	$add['searchtype']=hRepPostStr($add['searchtype'],1);
+	$add['fileurl']=hRepPostStr($add['fileurl'],1);
+	$add['ftphost']=hRepPostStr($add['ftphost'],1);
+	$add['ftpport']=hRepPostStr($add['ftpport'],1);
+	$add['ftpusername']=hRepPostStr($add['ftpusername'],0);
+	$add['ftppassword']=hRepPostStr($add['ftppassword'],0);
+	$add['ftppath']=hRepPostStr($add['ftppath'],1);
+	$add['bakdbpath']=hRepPostStr($add['bakdbpath'],1);
+	$add['bakdbzip']=hRepPostStr($add['bakdbzip'],1);
+	$add['downpass']=hRepPostStr($add['downpass'],0);
+	$add['markimg']=hRepPostStr($add['markimg'],1);
+	$add['marktext']=hRepPostStr($add['marktext'],1);
+	$add['markfontsize']=hRepPostStr($add['markfontsize'],1);
+	$add['markfontcolor']=hRepPostStr($add['markfontcolor'],1);
+	$add['markfont']=hRepPostStr($add['markfont'],1);
+	$add['listpagefun']=hRepPostStr($add['listpagefun'],1);
+	$add['textpagefun']=hRepPostStr($add['textpagefun'],1);
+	$add['adfile']=hRepPostStr($add['adfile'],1);
+	$add['notsaveurl']=hRepPostStr($add['notsaveurl'],0);
+	$add['listpagelistfun']=hRepPostStr($add['listpagelistfun'],1);
+	$add['qaddtranimgtype']=hRepPostStr($add['qaddtranimgtype'],0);
+	$add['qaddtranfiletype']=hRepPostStr($add['qaddtranfiletype'],0);
+	$add['smtphost']=hRepPostStr($add['smtphost'],1);
+	$add['fromemail']=hRepPostStr($add['fromemail'],0);
+	$add['loginemail']=hRepPostStr($add['loginemail'],0);
+	$add['emailusername']=hRepPostStr($add['emailusername'],0);
+	$add['emailpassword']=hRepPostStr($add['emailpassword'],0);
+	$add['smtpport']=hRepPostStr($add['smtpport'],1);
+	$add['emailname']=hRepPostStr($add['emailname'],0);
+	$add['feedbackfiletype']=hRepPostStr($add['feedbackfiletype'],0);
+	$add['filepath']=hRepPostStr($add['filepath'],0);
+	$add['memberimgtype']=hRepPostStr($add['memberimgtype'],0);
+	$add['memberfiletype']=hRepPostStr($add['memberfiletype'],0);
+	$add['canposturl']=hRepPostStr($add['canposturl'],0);
+	$add['closeip']=hRepPostStr($add['closeip'],1);
+	$add['openip']=hRepPostStr($add['openip'],1);
+	$add['hopenip']=hRepPostStr($add['hopenip'],1);
+	$add['closewords']=AddAddsData($add['closewords']);
+	$add['closewordsf']=hRepPostStr($add['closewordsf'],1);
+	$add['keyrnd']=hRepPostStr($add['keyrnd'],0);
+	$add['sitekey']=hRepPostStr($add['sitekey'],0);
+	$add['siteintro']=hRepPostStr($add['siteintro'],0);
+	$add['regclosewords']=AddAddsData($add['regclosewords']);
+	$add['opendoip']=hRepPostStr($add['opendoip'],0);
+	$add['closedoip']=hRepPostStr($add['closedoip'],0);
+	$add['onclickrnd']=hRepPostStr($add['onclickrnd'],1);
+	$add['keybgcolor']=hRepPostStr($add['keybgcolor'],1);
+	$add['keyfontcolor']=hRepPostStr($add['keyfontcolor'],1);
+	$add['keydistcolor']=hRepPostStr($add['keydistcolor'],1);
+	$add['fieldandclosetb']=hRepPostStr($add['fieldandclosetb'],1);
+	$add['hkeyrnd']=hRepPostStr($add['hkeyrnd'],0);
+	$add['usetotalnum']=(int)$add['usetotalnum'];
+	$spacegids=eReturnSetGroups($add['spacegid']);
+	$add['toqjf']=hRepPostStr($add['toqjf'],1);
+	$add['qtoqjf']=hRepPostStr($add['qtoqjf'],1);
+	$openerns=eReturnSetGroups($add['openern'],0);
+	$openerns=hRepPostStr($openerns,1);
+	$ernurl=hRepPostStr2(eDoRepPostComStr($add['ernurl'],1));
 	//提交IP
 	$doiptypes='';
 	$doiptype=$add['doiptype'];
@@ -219,6 +290,7 @@ function SetEnews($add,$userid,$username){
 			$doiptypes.=$doiptype[$di].',';
 		}
 	}
+	$doiptypes=hRepPostStr($doiptypes,1);
 	//关闭相关模块
 	$closemodss='';
 	$closemods=$add['closemods'];
@@ -231,6 +303,7 @@ function SetEnews($add,$userid,$username){
 			$closemodss.=$closemods[$cmi].',';
 		}
 	}
+	$closemodss=hRepPostStr($closemodss,1);
 	//关闭后台菜单
 	$closehmenus='';
 	$closehmenu=$add['closehmenu'];
@@ -243,6 +316,7 @@ function SetEnews($add,$userid,$username){
 			$closehmenus.=$closehmenu[$chmi].',';
 		}
 	}
+	$closehmenus=hRepPostStr($closehmenus,1);
 	//限制操作的时间点
 	$timecloses='';
 	$timeclose=$add['timeclose'];
@@ -255,6 +329,7 @@ function SetEnews($add,$userid,$username){
 			$timecloses.=$timeclose[$tci].',';
 		}
 	}
+	$timecloses=hRepPostStr($timecloses,1);
 	//限制使用时间的操作
 	$timeclosedos='';
 	$timeclosedo=$add['timeclosedo'];
@@ -267,6 +342,7 @@ function SetEnews($add,$userid,$username){
 			$timeclosedos.=$timeclosedo[$tcdi].',';
 		}
 	}
+	$timeclosedos=hRepPostStr($timeclosedos,1);
 
 	$add[filetype]="|".$add[filetype]."|";
 	$add[qimgtype]="|".$add['qaddtranimgtype']."|";
@@ -274,7 +350,9 @@ function SetEnews($add,$userid,$username){
 	$add[feedbackfiletype]="|".$add['feedbackfiletype']."|";
 	$add[memberimgtype]="|".$add['memberimgtype']."|";
 	$add[memberfiletype]="|".$add['memberfiletype']."|";
-	$sql=$empire->query("update {$dbtbpre}enewspublic set ".$a."sitename='$add[sitename]',newsurl='$add[newsurl]',email='$add[email]',filetype='$add[filetype]',filesize=$add[filesize],hotnum=$add[hotnum],newnum=$add[newnum],relistnum=$add[relistnum],renewsnum=$add[renewsnum],min_keyboard=$add[min_keyboard],max_keyboard=$add[max_keyboard],search_num=$add[search_num],search_pagenum=$add[search_pagenum],newslink=$add[newslink],checked=$add[checked],searchtime=$add[searchtime],loginnum=$add[loginnum],logintime=$add[logintime],addnews_ok=$add[addnews_ok],register_ok=$add[register_ok],indextype='$add[indextype]',goodlencord=$add[goodlencord],goodtype='$add[goodtype]',goodnum=$add[goodnum],searchtype='$add[searchtype]',exittime=$add[exittime],smalltextlen=$add[smalltextlen],defaultgroupid=$add[defaultgroupid],fileurl='$add[fileurl]',phpmode=$add[phpmode],ftphost='$add[ftphost]',ftpport='$add[ftpport]',ftpusername='$add[ftpusername]',ftppath='$add[ftppath]',ftpmode='$add[ftpmode]',install=$add[install],hotplnum=$add[hotplnum],dorepnum=$add[dorepnum],loadtempnum=$add[loadtempnum],firstnum=$add[firstnum],bakdbpath='$add[bakdbpath]',bakdbzip='$add[bakdbzip]',downpass='$add[downpass]',min_userlen=$add[min_userlen],max_userlen=$add[max_userlen],min_passlen=$add[min_passlen],max_passlen=$add[max_passlen],filechmod=$add[filechmod],loginkey_ok=$add[loginkey_ok],limittype=$add[limittype],redodown=$add[redodown],candocode=$add[candocode],opennotcj=$add[opennotcj],reuserpagenum=$add[reuserpagenum],revotejsnum=$add[revotejsnum],readjsnum=$add[readjsnum],qaddtran=$add[qaddtran],qaddtransize=$add[qaddtransize],ebakthisdb=$add[ebakthisdb],delnewsnum=$add[delnewsnum],markpos=$add[markpos],markimg='$add[markimg]',marktext='$add[marktext]',markfontsize='$add[markfontsize]',markfontcolor='$add[markfontcolor]',markfont='$add[markfont]',adminloginkey=$add[adminloginkey],php_outtime=$add[php_outtime],listpagefun='$add[listpagefun]',textpagefun='$add[textpagefun]',adfile='$add[adfile]',notsaveurl='$add[notsaveurl]',rssnum=$add[rssnum],rsssub=$add[rsssub],dorepdlevelnum=$add[dorepdlevelnum],listpagelistfun='$add[listpagelistfun]',listpagelistnum=$add[listpagelistnum],infolinknum=$add[infolinknum],searchgroupid=$add[searchgroupid],opencopytext=$add[opencopytext],reuserjsnum=$add[reuserjsnum],reuserlistnum=$add[reuserlistnum],opentitleurl='$add[opentitleurl]',qaddtranimgtype='$add[qimgtype]',qaddtranfile=$add[qaddtranfile],qaddtranfilesize=$add[qaddtranfilesize],qaddtranfiletype='$add[qfiletype]',sendmailtype=$add[sendmailtype],smtphost='$add[smtphost]',fromemail='$add[fromemail]',loginemail=$add[loginemail],emailusername='$add[emailusername]',emailpassword='$add[emailpassword]',smtpport='$add[smtpport]',emailname='$add[emailname]',feedbacktfile=$add[feedbacktfile],feedbackfilesize=$add[feedbackfilesize],feedbackfiletype='$add[feedbackfiletype]',searchtempvar=$add[searchtempvar],showinfolevel=$add[showinfolevel],navfh='".eaddslashes($add[navfh])."',spicwidth=$add[spicwidth],spicheight=$add[spicheight],spickill=$add[spickill],jpgquality=$add[jpgquality],markpct=$add[markpct],redoview=$add[redoview],reggetfen=$add[reggetfen],regbooktime=$add[regbooktime],revotetime=$add[revotetime],fpath=$add[fpath],filepath='$add[filepath]',openmembertranimg=$add[openmembertranimg],memberimgsize=$add[memberimgsize],openmembertranfile=$add[openmembertranfile],memberfilesize=$add[memberfilesize],memberimgtype='$add[memberimgtype]',memberfiletype='$add[memberfiletype]',canposturl='$add[canposturl]',openspace='$add[openspace]',realltime=$add[realltime],closeip='$add[closeip]',openip='$add[openip]',hopenip='$add[hopenip]',closewords='$add[closewords]',closewordsf='$add[closewordsf]',textpagelistnum=$add[textpagelistnum],memberlistlevel=$add[memberlistlevel],ebakcanlistdb=$add[ebakcanlistdb],keytog='$add[keytog]',keyrnd='$add[keyrnd]',keytime='$add[keytime]',regkey_ok='$add[regkey_ok]',opengetdown='$add[opengetdown]',gbkey_ok='$add[gbkey_ok]',fbkey_ok='$add[fbkey_ok]',newaddinfotime='$add[newaddinfotime]',classnavline='$add[classnavline]',classnavfh='".eaddslashes($add[classnavfh])."',sitekey='$add[sitekey]',siteintro='$add[siteintro]',docnewsnum='$add[docnewsnum]',dtcanbq='$add[dtcanbq]',dtcachetime='$add[dtcachetime]',regretime='$add[regretime]',regclosewords='$add[regclosewords]',regemailonly='$add[regemailonly]',repkeynum='$add[repkeynum]',getpasstime='$add[getpasstime]',acttime='$add[acttime]',regacttype='$add[regacttype]',acttext='".eaddslashes($add[acttext])."',getpasstext='".eaddslashes($add[getpasstext])."',acttitle='".eaddslashes($add[acttitle])."',getpasstitle='".eaddslashes($add[getpasstitle])."',opengetpass='$add[opengetpass]',hlistinfonum='$add[hlistinfonum]',qlistinfonum='$add[qlistinfonum]',dtncanbq='$add[dtncanbq]',dtncachetime='$add[dtncachetime]',readdinfotime='$add[readdinfotime]',qeditinfotime='$add[qeditinfotime]',ftpssl='$add[ftpssl]',ftppasv='$add[ftppasv]',ftpouttime='$add[ftpouttime]',onclicktype='$add[onclicktype]',onclickfilesize='$add[onclickfilesize]',onclickfiletime='$add[onclickfiletime]',closeqdt='$add[closeqdt]',settop='$add[settop]',qlistinfomod='$add[qlistinfomod]',gb_num='$add[gb_num]',member_num='$add[member_num]',space_num='$add[space_num]',opendoip='$add[opendoip]',closedoip='$add[closedoip]',doiptype='$doiptypes',infolday='$add[infolday]',filelday='$add[filelday]',baktempnum='$add[baktempnum]',dorepkey='$add[dorepkey]',dorepword='$add[dorepword]',onclickrnd='$add[onclickrnd]',indexpagedt='$add[indexpagedt]',keybgcolor='$add[keybgcolor]',keyfontcolor='$add[keyfontcolor]',keydistcolor='$add[keydistcolor]',closeqdtmsg='$add[closeqdtmsg]',openfileserver='$add[openfileserver]',closemods='$closemodss',fieldandtop='$add[fieldandtop]',fieldandclosetb='$add[fieldandclosetb]',firsttitlename='".eaddslashes($add[firsttitlename])."',isgoodname='".eaddslashes($add[isgoodname])."',closelisttemp='".eaddslashes($add[closelisttemp])."',chclasscolor='".eaddslashes($add[chclasscolor])."',timeclose='".eaddslashes($timecloses)."',timeclosedo='".eaddslashes($timeclosedos)."',ipaddinfonum='$add[ipaddinfonum]',ipaddinfotime='$add[ipaddinfotime]',closehmenu='$closehmenus',indexaddpage='$add[indexaddpage]',modmemberedittran='$add[modmemberedittran]',modinfoedittran='$add[modinfoedittran]';");
+	$sql=$empire->query("update {$dbtbpre}enewspublic set ".$a."sitename='$add[sitename]',newsurl='$add[newsurl]',email='$add[email]',filetype='$add[filetype]',filesize=$add[filesize],hotnum=$add[hotnum],newnum=$add[newnum],relistnum=$add[relistnum],renewsnum=$add[renewsnum],min_keyboard=$add[min_keyboard],max_keyboard=$add[max_keyboard],search_num=$add[search_num],search_pagenum=$add[search_pagenum],newslink=$add[newslink],checked=$add[checked],searchtime=$add[searchtime],loginnum=$add[loginnum],logintime=$add[logintime],addnews_ok=$add[addnews_ok],register_ok=$add[register_ok],indextype='$add[indextype]',goodlencord=$add[goodlencord],goodtype='$add[goodtype]',goodnum=$add[goodnum],searchtype='$add[searchtype]',exittime=$add[exittime],smalltextlen=$add[smalltextlen],defaultgroupid=$add[defaultgroupid],fileurl='$add[fileurl]',phpmode=$add[phpmode],ftphost='$add[ftphost]',ftpport='$add[ftpport]',ftpusername='$add[ftpusername]',ftppath='$add[ftppath]',ftpmode='$add[ftpmode]',install=$add[install],hotplnum=$add[hotplnum],dorepnum=$add[dorepnum],loadtempnum=$add[loadtempnum],firstnum=$add[firstnum],bakdbpath='$add[bakdbpath]',bakdbzip='$add[bakdbzip]',downpass='$add[downpass]',min_userlen=$add[min_userlen],max_userlen=$add[max_userlen],min_passlen=$add[min_passlen],max_passlen=$add[max_passlen],filechmod=$add[filechmod],loginkey_ok=$add[loginkey_ok],limittype=$add[limittype],redodown=$add[redodown],candocode=$add[candocode],opennotcj=$add[opennotcj],reuserpagenum=$add[reuserpagenum],revotejsnum=$add[revotejsnum],readjsnum=$add[readjsnum],qaddtran=$add[qaddtran],qaddtransize=$add[qaddtransize],ebakthisdb=$add[ebakthisdb],delnewsnum=$add[delnewsnum],markpos=$add[markpos],markimg='$add[markimg]',marktext='$add[marktext]',markfontsize='$add[markfontsize]',markfontcolor='$add[markfontcolor]',markfont='$add[markfont]',adminloginkey=$add[adminloginkey],php_outtime=$add[php_outtime],listpagefun='$add[listpagefun]',textpagefun='$add[textpagefun]',adfile='$add[adfile]',notsaveurl='$add[notsaveurl]',rssnum=$add[rssnum],rsssub=$add[rsssub],dorepdlevelnum=$add[dorepdlevelnum],listpagelistfun='$add[listpagelistfun]',listpagelistnum=$add[listpagelistnum],infolinknum=$add[infolinknum],searchgroupid=$add[searchgroupid],opencopytext=$add[opencopytext],reuserjsnum=$add[reuserjsnum],reuserlistnum=$add[reuserlistnum],opentitleurl='$add[opentitleurl]',qaddtranimgtype='$add[qimgtype]',qaddtranfile=$add[qaddtranfile],qaddtranfilesize=$add[qaddtranfilesize],qaddtranfiletype='$add[qfiletype]',sendmailtype=$add[sendmailtype],smtphost='$add[smtphost]',fromemail='$add[fromemail]',loginemail=$add[loginemail],emailusername='$add[emailusername]',emailpassword='$add[emailpassword]',smtpport='$add[smtpport]',emailname='$add[emailname]',feedbacktfile=$add[feedbacktfile],feedbackfilesize=$add[feedbackfilesize],feedbackfiletype='$add[feedbackfiletype]',searchtempvar=$add[searchtempvar],showinfolevel=$add[showinfolevel],navfh='".eaddslashes($add[navfh])."',spicwidth=$add[spicwidth],spicheight=$add[spicheight],spickill=$add[spickill],jpgquality=$add[jpgquality],markpct=$add[markpct],redoview=$add[redoview],reggetfen=$add[reggetfen],regbooktime=$add[regbooktime],revotetime=$add[revotetime],fpath=$add[fpath],filepath='$add[filepath]',openmembertranimg=$add[openmembertranimg],memberimgsize=$add[memberimgsize],openmembertranfile=$add[openmembertranfile],memberfilesize=$add[memberfilesize],memberimgtype='$add[memberimgtype]',memberfiletype='$add[memberfiletype]',canposturl='$add[canposturl]',openspace='$add[openspace]',realltime=$add[realltime],closeip='$add[closeip]',openip='$add[openip]',hopenip='$add[hopenip]',closewords='$add[closewords]',closewordsf='$add[closewordsf]',textpagelistnum=$add[textpagelistnum],memberlistlevel=$add[memberlistlevel],ebakcanlistdb=$add[ebakcanlistdb],keytog='$add[keytog]',keyrnd='$add[keyrnd]',keytime='$add[keytime]',regkey_ok='$add[regkey_ok]',opengetdown='$add[opengetdown]',gbkey_ok='$add[gbkey_ok]',fbkey_ok='$add[fbkey_ok]',newaddinfotime='$add[newaddinfotime]',classnavline='$add[classnavline]',classnavfh='".eaddslashes($add[classnavfh])."',sitekey='$add[sitekey]',siteintro='$add[siteintro]',docnewsnum='$add[docnewsnum]',dtcanbq='$add[dtcanbq]',dtcachetime='$add[dtcachetime]',regretime='$add[regretime]',regclosewords='$add[regclosewords]',regemailonly='$add[regemailonly]',repkeynum='$add[repkeynum]',getpasstime='$add[getpasstime]',acttime='$add[acttime]',regacttype='$add[regacttype]',acttext='".eaddslashes($add[acttext])."',getpasstext='".eaddslashes($add[getpasstext])."',acttitle='".eaddslashes($add[acttitle])."',getpasstitle='".eaddslashes($add[getpasstitle])."',opengetpass='$add[opengetpass]',hlistinfonum='$add[hlistinfonum]',qlistinfonum='$add[qlistinfonum]',dtncanbq='$add[dtncanbq]',dtncachetime='$add[dtncachetime]',readdinfotime='$add[readdinfotime]',qeditinfotime='$add[qeditinfotime]',ftpssl='$add[ftpssl]',ftppasv='$add[ftppasv]',ftpouttime='$add[ftpouttime]',onclicktype='$add[onclicktype]',onclickfilesize='$add[onclickfilesize]',onclickfiletime='$add[onclickfiletime]',closeqdt='$add[closeqdt]',settop='$add[settop]',qlistinfomod='$add[qlistinfomod]',gb_num='$add[gb_num]',member_num='$add[member_num]',space_num='$add[space_num]',opendoip='$add[opendoip]',closedoip='$add[closedoip]',doiptype='$doiptypes',infolday='$add[infolday]',filelday='$add[filelday]',baktempnum='$add[baktempnum]',dorepkey='$add[dorepkey]',dorepword='$add[dorepword]',onclickrnd='$add[onclickrnd]',indexpagedt='$add[indexpagedt]',keybgcolor='$add[keybgcolor]',keyfontcolor='$add[keyfontcolor]',keydistcolor='$add[keydistcolor]',closeqdtmsg='$add[closeqdtmsg]',openfileserver='$add[openfileserver]',closemods='$closemodss',fieldandtop='$add[fieldandtop]',fieldandclosetb='$add[fieldandclosetb]',closelisttemp='".eaddslashes($add[closelisttemp])."',chclasscolor='".eaddslashes($add[chclasscolor])."',timeclose='".eaddslashes($timecloses)."',timeclosedo='".eaddslashes($timeclosedos)."',ipaddinfonum='$add[ipaddinfonum]',ipaddinfotime='$add[ipaddinfotime]',closehmenu='$closehmenus',indexaddpage='$add[indexaddpage]',modmemberedittran='$add[modmemberedittran]',modinfoedittran='$add[modinfoedittran]',php_adminouttime='$add[php_adminouttime]',httptype='$add[httptype]',qinfoaddfen='$add[qinfoaddfen]',bakescapetype='$add[bakescapetype]',hkeytime='$add[hkeytime]',hkeyrnd='$add[hkeyrnd]',mhavedatedo='$add[mhavedatedo]',reportkey='$add[reportkey]',usetotalnum='$add[usetotalnum]',spacegids='".eaddslashes($spacegids)."',candocodetag='$add[candocodetag]',openern='".eaddslashes($openerns)."',ernurl='".eaddslashes($ernurl)."';");
+	//配置副表
+	$addpsql=$empire->query("update {$dbtbpre}enewspublicadd set toqjf='$add[toqjf]',qtoqjf='$add[qtoqjf]';");
 	DoSetFileServer($add);//远程附件更新
 	GetConfig();
 	//首页动态文件
@@ -392,6 +470,7 @@ elseif($enews=='CheckPostServerFtp')//测试远程发布FTP
 }
 
 $r=$empire->fetch1("select * from {$dbtbpre}enewspublic limit 1");
+$addpr=$empire->fetch1("select * from {$dbtbpre}enewspublicadd limit 1");
 //文件类别
 $filetype=substr($r[filetype],1,strlen($r[filetype]));
 $filetype=substr($filetype,0,strlen($filetype)-1);
@@ -409,6 +488,8 @@ $memberimgtype=substr($memberimgtype,0,strlen($memberimgtype)-1);
 $memberfiletype=substr($r[memberfiletype],1,strlen($r[memberfiletype]));
 $memberfiletype=substr($memberfiletype,0,strlen($memberfiletype)-1);
 //----------会员组
+$mgshowline=5;//一行显示五个
+$mgsi=0;
 $sql1=$empire->query("select groupid,groupname from {$dbtbpre}enewsmembergroup order by level");
 while($l_r=$empire->fetch($sql1))
 {
@@ -435,6 +516,18 @@ while($l_r=$empire->fetch($sql1))
 	$searchmembergroup.="<option value=".$l_r[groupid].$s_select.">".$l_r[groupname]."</option>";
 	$showinfolevel.="<option value=".$l_r[groupid].$showinfo_select.">".$l_r[groupname]."</option>";
 	$memberlistlevel.="<option value=".$l_r[groupid].$memberlist_select.">".$l_r[groupname]."</option>";
+	//会员空间
+	$mgsi++;
+	$mgsbr='';
+	if($mgsi%$mgshowline==0)
+	{
+		$mgsbr='<br>';
+	}
+	if(strstr($r['spacegids'],','.$l_r['groupid'].','))
+	{$mgschecked=' checked';}
+	else
+	{$mgschecked='';}
+	$spacegids.="<input type='checkbox' name='spacegid[]' value='$l_r[groupid]'".$mgschecked.">".$l_r[groupname]."&nbsp;".$mgsbr;
 }
 //远程附件
 if($r['openfileserver']==1)
@@ -461,7 +554,7 @@ $empire=null;
 <!-- the id is not needed. It is used here to be able to change css file at runtime -->
 <style type="text/css"> 
    .dynamic-tab-pane-control .tab-page { 
-          width:                100%;
+          width:                98%;
  } 
   .dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page { 
          height:                150px; 
@@ -504,11 +597,13 @@ function chgBg(obj,color){
   function foreColor(objf)
 {
   if (!Error())	return;
-  var arr = showModalDialog("ecmseditor/fieldfile/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("ecmseditor/fieldfile/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) objf.value=arr;
   else objf.focus();
 }
-  </script> 
+  </script>
+  <script type="text/javascript" src="ecmseditor/js/jstime/WdatePicker.js"></script>
+  <script type="text/javascript" src="ecmseditor/js/jscolor/jscolor.js"></script>
 </head>
 
 <body>
@@ -517,7 +612,7 @@ function chgBg(obj,color){
     <td>位置：<a href="SetEnews.php<?=$ecms_hashur['whehref']?>">参数设置</a></td>
   </tr>
 </table>
-<form name="form1" method="post" action="SetEnews.php">
+<form name="form1" method="post" action="SetEnews.php" autocomplete="off">
 <div class="tab-pane" id="TabPane1"> <script type="text/javascript">
 tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
 </script>
@@ -530,6 +625,17 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
         <input type=hidden name=enews value=SetEnews>
         <tr class="header"> 
           <td height="25" colspan="2">基本信息设置</td>
+        </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">传输协议</td>
+          <td height="25" bgcolor="#FFFFFF"><select name="httptype" id="httptype">
+            <option value="0"<?=$r['httptype']==0?' selected':''?>>系统自动识别</option>
+			<option value="1"<?=$r['httptype']==1?' selected':''?>>全站http://</option>
+            <option value="2"<?=$r['httptype']==2?' selected':''?>>全站https://</option>
+            <option value="3"<?=$r['httptype']==3?' selected':''?>>后台https,前台http</option>
+            <option value="4"<?=$r['httptype']==4?' selected':''?>>后台http,前台https</option>
+          </select>
+            <font color="#666666">(一般默认即可，使用https需要服务器支持)</font></td>
         </tr>
         <tr> 
           <td width="22%" height="25" bgcolor="#FFFFFF">站点名称</td>
@@ -587,9 +693,14 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
   不增加</td>
         </tr>
         <tr> 
-          <td height="25" bgcolor="#FFFFFF">PHP超时时间设置</td>
+          <td height="25" bgcolor="#FFFFFF">前台PHP超时时间设置</td>
           <td height="25" bgcolor="#FFFFFF"><input name="php_outtime" type="text" id="php_outtime" value="<?=$r[php_outtime]?>" size="38">
             秒 <font color="#666666">(一般不需要设置)</font></td>
+        </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">后台PHP超时时间设置</td>
+          <td height="25" bgcolor="#FFFFFF"><input name="php_adminouttime" type="text" id="php_adminouttime" value="<?=$r[php_adminouttime]?>" size="38">
+秒 <font color="#666666">(一般不需要设置)</font></td>
         </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">关闭前台所有动态页面</td>
@@ -617,7 +728,9 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
             <input name="closemods[]" type="checkbox" id="closemods[]" value="search"<?=strstr($r['closemods'],',search,')?' checked':''?>>
             搜索
 			<input name="closemods[]" type="checkbox" id="closemods[]" value="sch"<?=strstr($r['closemods'],',sch,')?' checked':''?>>
-            全站搜索<br>
+            全站搜索
+            <input name="closemods[]" type="checkbox" id="closemods[]" value="error"<?=strstr($r['closemods'],',error,')?' checked':''?>>
+            错误报告<br>
             <input name="closemods[]" type="checkbox" id="closemods[]" value="member"<?=strstr($r['closemods'],',member,')?' checked':''?>>
             会员
 			<input name="closemods[]" type="checkbox" id="closemods[]" value="pl"<?=strstr($r['closemods'],',pl,')?' checked':''?>>
@@ -627,7 +740,13 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
             <input name="closemods[]" type="checkbox" id="closemods[]" value="mconnect"<?=strstr($r['closemods'],',mconnect,')?' checked':''?>>
 外部登录
 <input name="closemods[]" type="checkbox" id="closemods[]" value="fieldand"<?=strstr($r['closemods'],',fieldand,')?' checked':''?>>
-            结合项</td>
+            结合项
+            <input name="closemods[]" type="checkbox" id="closemods[]" value="gb"<?=strstr($r['closemods'],',gb,')?' checked':''?>>
+留言板
+<input name="closemods[]" type="checkbox" id="closemods[]" value="fb"<?=strstr($r['closemods'],',fb,')?' checked':''?>>
+反馈
+<input name="closemods[]" type="checkbox" id="closemods[]" value="mlist"<?=strstr($r['closemods'],',mlist,')?' checked':''?>>
+会员列表</td>
         </tr>
         <tr>
           <td height="25" bgcolor="#FFFFFF">不开启操作的时间点</td>
@@ -711,38 +830,48 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
           <td height="25" bgcolor="#FFFFFF"><textarea name="canposturl" cols="80" rows="8" id="canposturl"><?=$r[canposturl]?></textarea></td>
         </tr>
         <tr> 
-          <td height="25" valign="top" bgcolor="#FFFFFF">验证码字符组成</td>
+          <td height="25" bgcolor="#FFFFFF">验证码字符组成</td>
           <td height="25" bgcolor="#FFFFFF"><select name="keytog" id="keytog">
               <option value="0"<?=$r[keytog]==0?' selected':''?>>数字</option>
               <option value="1"<?=$r[keytog]==1?' selected':''?>>字母</option>
               <option value="2"<?=$r[keytog]==2?' selected':''?>>数字+字母</option>
             </select></td>
         </tr>
-        <tr> 
-          <td height="25" valign="top" bgcolor="#FFFFFF">验证码过期时间</td>
-          <td height="25" bgcolor="#FFFFFF"><input name="keytime" type="text" id="keytime" value="<?=$r[keytime]?>" size="38">
-            分钟 </td>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">后台验证码过期时间</td>
+          <td height="25" bgcolor="#FFFFFF"><input name="hkeytime" type="text" id="hkeytime" value="<?=$r[hkeytime]?>" size="38">
+秒</td>
+        </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">后台验证码加密字符串</td>
+          <td height="25" bgcolor="#FFFFFF"><input name="hkeyrnd" type="text" id="hkeyrnd" value="<?=$r[hkeyrnd]?>" size="38">
+            <font color="#666666">(10~60个任意字符，最好多种字符组合)</font></td>
         </tr>
         <tr> 
-          <td height="25" valign="top" bgcolor="#FFFFFF">验证码加密字符串</td>
+          <td height="25" bgcolor="#FFFFFF">前台验证码过期时间</td>
+          <td height="25" bgcolor="#FFFFFF"><input name="keytime" type="text" id="keytime" value="<?=$r[keytime]?>" size="38">
+            秒 </td>
+        </tr>
+        <tr> 
+          <td height="25" bgcolor="#FFFFFF">前台验证码加密字符串</td>
           <td height="25" bgcolor="#FFFFFF"><input name="keyrnd" type="text" id="keyrnd" value="<?=$r[keyrnd]?>" size="38"> 
             <font color="#666666">(10~60个任意字符，最好多种字符组合)</font></td>
         </tr>
         <tr> 
           <td rowspan="3" bgcolor="#FFFFFF">验证码配色</td>
           <td height="25" bgcolor="#FFFFFF">背景颜色： 
-            <input name="keybgcolor" type="text" id="keybgcolor" value="<?=$r[keybgcolor]?>"> 
-            <a onclick="foreColor(document.form1.keybgcolor);"><img src="../data/images/color.gif" width="21" height="21" align="absbottom"></a>          </td>
+            <input name="keybgcolor" type="text" id="keybgcolor" value="<?=$r[keybgcolor]?>" class="color"> 
+                      </td>
         </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">文字颜色： 
-            <input name="keyfontcolor" type="text" id="keyfontcolor" value="<?=$r[keyfontcolor]?>"> 
-            <a onclick="foreColor(document.form1.keyfontcolor);"><img src="../data/images/color.gif" width="21" height="21" align="absbottom"></a>          </td>
+            <input name="keyfontcolor" type="text" id="keyfontcolor" value="<?=$r[keyfontcolor]?>" class="color"> 
+                      </td>
         </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">干扰颜色： 
-            <input name="keydistcolor" type="text" id="keydistcolor" value="<?=$r[keydistcolor]?>"> 
-            <a onclick="foreColor(document.form1.keydistcolor);"><img src="../data/images/color.gif" width="21" height="21" align="absbottom"></a>          </td>
+            <input name="keydistcolor" type="text" id="keydistcolor" value="<?=$r[keydistcolor]?>" class="color"> 
+                      </td>
         </tr>
       </table>
   </div>
@@ -882,12 +1011,29 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
           <td height="25" bgcolor="#FFFFFF"><input name="space_num" type="text" id="space_num" value="<?=$r[space_num]?>" size="38">
             个信息</td>
         </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">可使用会员空间的会员组<br>
+            <font color="#666666">(不选为不限)</font></td>
+          <td height="25" bgcolor="#FFFFFF"><?=$spacegids?></td>
+        </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">会员充值有效期</td>
+          <td height="25" bgcolor="#FFFFFF">当已有有效期,会员组不相同时处理：
+            <select name="mhavedatedo" id="mhavedatedo">
+              <option value="0"<?=$r['mhavedatedo']==0?' selected':''?>>不让充值</option>
+              <option value="1"<?=$r['mhavedatedo']==1?' selected':''?>>覆盖有效期</option>
+              <option value="2"<?=$r['mhavedatedo']==2?' selected':''?>>可叠加有效期</option>
+          </select></td>
+        </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">会员注册审核方式</td>
           <td height="25" bgcolor="#FFFFFF"><input name="regacttype" type="radio" value="0"<?=$r[regacttype]==0?' checked':''?>>
             无 
             <input name="regacttype" type="radio" value="1"<?=$r[regacttype]==1?' checked':''?>>
-            邮件激活</td>
+            邮件激活
+			<input name="regacttype" type="radio" value="2"<?=$r[regacttype]==2?' checked':''?>>
+            手动审核
+			</td>
         </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">激活帐号链接有效期</td>
@@ -941,6 +1087,33 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
                 <td><textarea name="getpasstext" cols="80" rows="12" style="WIDTH: 100%" id="textarea"><?=ehtmlspecialchars(stripSlashes($r[getpasstext]))?></textarea></td>
               </tr>
             </table></td>
+        </tr>
+		<tr class="header">
+          <td height="25" colspan="2">实名设置</td>
+        </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">需要实名的操作</td>
+          <td height="25" bgcolor="#FFFFFF"><input name="openern[]" type="checkbox" id="openern[]" value="info"<?=strstr($r['openern'],',info,')?' checked':''?>>
+投稿
+  <input name="openern[]" type="checkbox" id="openern[]" value="pl"<?=strstr($r['openern'],',pl,')?' checked':''?>>
+评论
+<input name="openern[]" type="checkbox" id="openern[]" value="gb"<?=strstr($r['openern'],',gb,')?' checked':''?>>
+留言板
+<input name="openern[]" type="checkbox" id="openern[]" value="msp"<?=strstr($r['openern'],',msp,')?' checked':''?>>
+会员空间
+<input name="openern[]" type="checkbox" id="openern[]" value="msps"<?=strstr($r['openern'],',msps,')?' checked':''?>>
+<a title="在会员空间留言或反馈">会员空间提交</a>
+<input name="openern[]" type="checkbox" id="openern[]" value="fb"<?=strstr($r['openern'],',fb,')?' checked':''?>>
+反馈</td>
+        </tr>
+		<tr>
+          <td height="25" bgcolor="#FFFFFF">&nbsp;</td>
+          <td height="25" bgcolor="#FFFFFF"><font color="#666666">(说明：投稿、评论、留言板、反馈操作需要设置会员以上发布权限才有效。)</font></td>
+        </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">实名认证地址</td>
+          <td height="25" bgcolor="#FFFFFF"><input name="ernurl" type="text" id="ernurl" value="<?=$r[ernurl]?>" size="38">
+            <font color="#666666">(提示没有实名后转向的地址。空为返回上一页。)</font></td>
         </tr>
       </table>
 	  
@@ -1125,14 +1298,12 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
         <tr>
           <td height="25" bgcolor="#FFFFFF">会员附件字段支持填写</td>
           <td height="25" bgcolor="#FFFFFF"><input type="radio" name="modmemberedittran" value="1"<?=$r[modmemberedittran]==1?' checked':''?>>是
-              <input type="radio" name="modmemberedittran" value="0"<?=$r[modmemberedittran]==0?' checked':''?>>否
-          </td>
+              <input type="radio" name="modmemberedittran" value="0"<?=$r[modmemberedittran]==0?' checked':''?>>否          </td>
         </tr>
         <tr>
           <td height="25" bgcolor="#FFFFFF">投稿附件字段支持填写</td>
           <td height="25" bgcolor="#FFFFFF"><input type="radio" name="modinfoedittran" value="1"<?=$r[modinfoedittran]==1?' checked':''?>>是
-              <input type="radio" name="modinfoedittran" value="0"<?=$r[modinfoedittran]==0?' checked':''?>>否
-          </td>
+              <input type="radio" name="modinfoedittran" value="0"<?=$r[modinfoedittran]==0?' checked':''?>>否          </td>
         </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">文件生成权限</td>
@@ -1176,7 +1347,15 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
         <tr> 
           <td height="25" bgcolor="#FFFFFF">支持MYSQL查询方式</td>
           <td height="25" bgcolor="#FFFFFF"><input name="limittype" type="checkbox" id="limittype" value="1"<?=$r[limittype]==1?' checked':''?>>
-            支持</td>
+            支持<font color="#666666">(即支持limit 0,-1方式，一般不用选择)</font></td>
+        </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">导出数据处理函数</td>
+          <td height="25" bgcolor="#FFFFFF"><select name="bakescapetype" id="bakescapetype">
+            <option value="1"<?=$r['bakescapetype']==1?' selected':''?>>addslashes()</option>
+            <option value="2"<?=$r['bakescapetype']==2?' selected':''?>>mysql_real_escape_string()</option>
+          </select>
+            <font color="#666666">(一般按默认即可)</font></td>
         </tr>
       </table>
 	</div>
@@ -1482,6 +1661,13 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
           <td height="25" bgcolor="#FFFFFF"><input name="qeditinfotime" type="text" id="qeditinfotime" value="<?=$r[qeditinfotime]?>" size="38">
             分钟<font color="#666666">(0为不限制)</font></td>
         </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">投稿扣点数方式</td>
+          <td height="25" bgcolor="#FFFFFF"><select name="qinfoaddfen" id="qinfoaddfen">
+            <option value="0"<?=$r['qinfoaddfen']==0?' selected':''?>>发布信息时扣除点数</option>
+            <option value="1"<?=$r['qinfoaddfen']==1?' selected':''?>>信息审核通过时扣除点数</option>
+          </select>          </td>
+        </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">投稿管理信息显示方式：</td>
           <td height="25" bgcolor="#FFFFFF"><input type="radio" name="qlistinfomod" value="0"<?=$r[qlistinfomod]==0?' checked':''?>>
@@ -1551,6 +1737,13 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
             <input type="radio" name="fbkey_ok" value="0"<?=$r[fbkey_ok]==0?' checked':''?>>
             关闭 </td>
         </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">错误报告验证码</td>
+          <td height="25" bgcolor="#FFFFFF"><input type="radio" name="reportkey" value="1"<?=$r[reportkey]==1?' checked':''?>>
+开启
+  <input type="radio" name="reportkey" value="0"<?=$r[reportkey]==0?' checked':''?>>
+关闭 </td>
+        </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">留言验证码</td>
           <td height="25" bgcolor="#FFFFFF"><input type="radio" name="gbkey_ok" value="1"<?=$r[gbkey_ok]==1?' checked':''?>>
@@ -1584,11 +1777,23 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
             <input type="button" name="Submit6222" value="管理列表模板" onclick="window.open('template/ListListtemp.php?gid=<?=$thegid?><?=$ecms_hashur['ehref']?>');"> 
             <font color="#666666">(多个ID用半角逗号“,”隔开)</font></td>
         </tr>
+        <tr>
+          <td height="25" bgcolor="#FFFFFF">分页启用totalnum变量</td>
+          <td height="25" bgcolor="#FFFFFF"><input name="usetotalnum" type="checkbox" id="usetotalnum" value="1"<?=$r['usetotalnum']==1?' checked':''?>>
+            是</td>
+        </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">模板支持程序代码</td>
           <td height="25" bgcolor="#FFFFFF"><input type="radio" name="candocode" value="1"<?=$r[candocode]==1?' checked':''?>>
             开启 
             <input type="radio" name="candocode" value="0"<?=$r[candocode]==0?' checked':''?>>
+            关闭</td>
+        </tr>
+		<tr> 
+          <td height="25" bgcolor="#FFFFFF">模板支持程序代码标签</td>
+          <td height="25" bgcolor="#FFFFFF"><input type="radio" name="candocodetag" value="1"<?=$r['candocodetag']==1?' checked':''?>>
+            开启 
+            <input type="radio" name="candocodetag" value="0"<?=$r['candocodetag']==0?' checked':''?>>
             关闭</td>
         </tr>
         <tr> 
@@ -1670,15 +1875,7 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
         </tr>
         <tr>
           <td height="25" bgcolor="#FFFFFF">选择终极栏目的背景颜色</td>
-          <td height="25" bgcolor="#FFFFFF"><input name="chclasscolor" type="text" id="chclasscolor" value="<?=$r[chclasscolor]?>" size="38"></td>
-        </tr>
-        <tr> 
-          <td height="25" bgcolor="#FFFFFF">九级头条名称</td>
-          <td height="25" bgcolor="#FFFFFF"><textarea name="firsttitlename" cols="80" rows="8" id="firsttitlename"><?=str_replace("|","\r\n",$r[firsttitlename])?></textarea></td>
-        </tr>
-        <tr> 
-          <td height="25" bgcolor="#FFFFFF">九级推荐名称</td>
-          <td height="25" bgcolor="#FFFFFF"><textarea name="isgoodname" cols="80" rows="8" id="isgoodname"><?=str_replace("|","\r\n",$r[isgoodname])?></textarea></td>
+          <td height="25" bgcolor="#FFFFFF"><input name="chclasscolor" type="text" id="chclasscolor" value="<?=$r[chclasscolor]?>" size="38" class="color"></td>
         </tr>
       </table>
 	</div>
@@ -1845,7 +2042,7 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
         <tr> 
           <td width="22%" height="25" bgcolor="#FFFFFF">下载验证码</td>
           <td height="25" bgcolor="#FFFFFF"><input name="downpass" type="text" id="downpass" value="<?=$r[downpass]?>" size="38"> 
-            <font color="#666666">(主要用于防盗链,请定期更新一次密码)</font></td>
+            <font color="#666666">(主要用于防盗链,请定期修改)</font></td>
         </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">开启直接下载</td>
@@ -1853,6 +2050,24 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
             是 
             <input type="radio" name="opengetdown" value="0"<?=$r[opengetdown]==0?' checked':''?>>
             否</td>
+        </tr>
+      </table>
+	  <table width="100%" border="0" cellspacing="1" cellpadding="3" class="tableborder">
+        <tr class="header"> 
+          <td height="25" colspan="2">信息半角/全角转换设置</td>
+        </tr>
+        <tr bgcolor="#FFFFFF"> 
+          <td width="22%" height="25" valign="top"><strong>前台半角转全角字段</strong><br>
+            (格式：表名.字段名。例如：news.title，多个字段用“|”隔开)<br>
+            <br>
+          <a href="db/ListTable.php<?=$ecms_hashur['whehref']?>" target="_blank"><font color="#666666">[点击查看字段]</font></a></td>
+          <td><textarea name="qtoqjf" cols="80" rows="8" id="qtoqjf"><?=$addpr['qtoqjf']?></textarea></td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+          <td height="25" valign="top">
+<strong>后台半角转全角字段</strong><br>
+            (格式：表名.字段名。例如：news.title，多个字段用“|”隔开)</td>
+          <td><textarea name="toqjf" cols="80" rows="8" id="toqjf"><?=$addpr['toqjf']?></textarea></td>
         </tr>
       </table>
     </div>
@@ -1937,8 +2152,8 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
         </tr>
         <tr> 
           <td height="25" bgcolor="#FFFFFF">文字颜色 
-            <input name="markfontcolor" type="text" id="markfontcolor" value="<?=$r[markfontcolor]?>"> 
-            <a onclick="foreColor(document.form1.markfontcolor);"><img src="../data/images/color.gif" width="21" height="21" align="absbottom"></a> 
+            <input name="markfontcolor" type="text" id="markfontcolor" value="<?=$r[markfontcolor]?>" class="color"> 
+            
           </td>
         </tr>
         <tr> 

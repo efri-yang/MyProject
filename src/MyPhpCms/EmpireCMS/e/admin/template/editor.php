@@ -22,6 +22,8 @@ $fun=ehtmlspecialchars($_GET['fun']);
 $notfullpage=ehtmlspecialchars($_GET['notfullpage']);
 db_close();
 $empire=null;
+include('../ecmseditor/eshoweditortemp.php');
+$loadeditorjs=ECMS_TempShowEditorJS('../ecmseditor/tempeditor/');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -30,21 +32,24 @@ $empire=null;
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <title>在线编辑模板</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="../ecmseditor/fckeditor/fckeditor.js"></script>
+<?=$loadeditorjs?>
 <script>
-function GetContents()
-{
-	// Get the editor instance that we want to interact with.
-	var oEditor = FCKeditorAPI.GetInstance('pagetext') ;
-
-	// Get the editor contents in XHTML.
-	return oEditor.GetXHTML( true );		// "true" means you want it formatted.
+function eSetPageText(){
+	var editor=CKEDITOR.instances.pagetext;
+	var textvalue=<?=$getvar?>;
+	editor.setData(textvalue);
 }
+
+function eGetPageText(){
+	var editor=CKEDITOR.instances.pagetext;
+	return editor.getData();
+}
+
 function SaveTemp(){
 var isok=confirm('确认要保存?');
 if(isok)
 {
-<?=$returnvar?>=GetContents();
+<?=$returnvar?>=eGetPageText();
 window.close();
 }
 return false;
@@ -73,28 +78,7 @@ return false;
     </tr>
     <tr> 
       <td colspan="2" bgcolor="#FFFFFF"><div align="center"> 
-          <script type="text/javascript">
-<!--
-// Automatically calculates the editor base path based on the _samples directory.
-// This is usefull only for these samples. A real application should use something like this:
-// oFCKeditor.BasePath = '/fckeditor/' ;	// '/fckeditor/' is the default value.
-var sBasePath = '../ecmseditor/fckeditor/' ;
-
-var oFCKeditor = new FCKeditor( 'pagetext' ) ;
-oFCKeditor.BasePath	= sBasePath ;
-<?php
-if(empty($notfullpage))
-{
-?>
-oFCKeditor.Config['FullPage'] = true ;
-<?php
-}
-?>
-oFCKeditor.Height	= 480 ;
-oFCKeditor.Value	= <?=$getvar?> ;
-oFCKeditor.Create() ;
-//-->
-			</script>
+	  <?=ECMS_TempShowEditorVar('pagetext','','','','480','100%',$notfullpage?0:1)?>
         </div></td>
     </tr>
     <tr> 
@@ -110,5 +94,8 @@ oFCKeditor.Create() ;
     </tr>
   </form>
 </table>
+<script>
+eSetPageText();
+</script>
 </body>
 </html>

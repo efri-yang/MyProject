@@ -30,7 +30,8 @@ if($enews=="EditPayfs")
 	{$userfen=" checked";}
 }
 //--------------------html编辑器
-include('../ecmseditor/infoeditor/fckeditor.php');
+include('../ecmseditor/eshoweditor.php');
+$loadeditorjs=ECMS_ShowEditorJS('../ecmseditor/infoeditor/');
 db_close();
 $empire=null;
 ?>
@@ -41,6 +42,7 @@ $empire=null;
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
 <title>支付方式</title>
+<?=$loadeditorjs?>
 <script>
 function on()
 {

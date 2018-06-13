@@ -101,18 +101,21 @@ function CheckReTitleAjax($add){
 
 //增加信息处理变量
 function DoPostInfoVar($add){
-	global $class_r;
+	global $class_r,$public_r;
+	$add['classid']=(int)$add['classid'];
 	//组合标题属性
-	$add[titlecolor]=RepPhpAspJspcodeText($add[titlecolor]);
-	$add['my_titlefont']=TitleFont($add[titlefont],$add[titlecolor]);
+	$add[titlecolor]=eDoRepPostComStr(RepPhpAspJspcodeText($add[titlecolor]));
+	$add['my_titlefont']=eDoRepPostComStr(TitleFont($add[titlefont],$add[titlecolor]));
 	//专题
 	$add['ztids']=RepPostVar($add['ztids']);
 	$add['zcids']=RepPostVar($add['zcids']);
 	$add['oldztids']=RepPostVar($add['oldztids']);
 	$add['oldzcids']=RepPostVar($add['oldzcids']);
 	//其它变量
-	$add[keyboard]=RepPhpAspJspcodeText(DoReplaceQjDh($add[keyboard]));
-	$add[titleurl]=RepPhpAspJspcodeText($add[titleurl]);
+	$add['title']=eDoInfoTbfToQj($class_r[$add['classid']]['tbname'],'title',$add['title'],$public_r['toqjf']);
+	$add[title]=eDoRepPostComStr($add[title],1);
+	$add[keyboard]=eDoRepPostComStr(RepPhpAspJspcodeText(DoReplaceQjDh($add[keyboard])),1);
+	$add[titleurl]=eDoRepPostComStr(RepPhpAspJspcodeText($add[titleurl]),1);
 	$add[checked]=(int)$add[checked];
 	$add[istop]=(int)$add[istop];
 	$add[dokey]=(int)$add[dokey];
@@ -126,10 +129,15 @@ function DoPostInfoVar($add){
 	$add[oldttid]=(int)$add[oldttid];
 	$add[onclick]=(int)$add[onclick];
 	$add[totaldown]=(int)$add[totaldown];
-	$add[infotags]=RepPhpAspJspcodeText(DoReplaceQjDh($add[infotags]));
+	$add[infotags]=eDoRepPostComStr(RepPhpAspJspcodeText(DoReplaceQjDh($add[infotags])),1);
+	$add[titlepic]=eDoRepPostComStr($add[titlepic],1);
 	$add[ispic]=$add[titlepic]?1:0;
 	$add[filename]=RepFilenameQz($add[filename],1);
 	$add[newspath]=RepFilenameQz($add[newspath],1);
+	$add['newspath']=hRepPostStr($add['newspath'],1);
+	$add['filename']=hRepPostStr($add['filename'],1);
+	$add['keyboard']=hRepPostStr($add['keyboard'],0);
+	$add['infotags']=hRepPostStr($add['infotags'],1);
 	$add['isurl']=$add['titleurl']?1:0;
 	return $add;
 }
@@ -159,7 +167,7 @@ function DoPostDiyOtherlinkID($keyid){
 
 //增加信息
 function AddNews($add,$userid,$username){
-	global $empire,$class_r,$class_zr,$bclassid,$public_r,$dbtbpre,$emod_r;
+	global $empire,$class_r,$class_zr,$bclassid,$public_r,$dbtbpre,$emod_r,$lur;
 	$add[classid]=(int)$add[classid];
 	$userid=(int)$userid;
 	if(!$add[title]||!$add[classid])
@@ -184,6 +192,12 @@ function AddNews($add,$userid,$username){
 			printerror("ReInfoTitle","history.go(-1)");
 	    }
     }
+	//修改文件名权限
+	if(!$doselfinfo['doinfofile'])
+	{
+		$add['newspath']=date($class_r[$add['classid']]['newspath']);
+		$add['filename']='';
+	}
 	$add=DoPostInfoVar($add);//返回变量
 	$ret_r=ReturnAddF($add,$class_r[$add[classid]][modid],$userid,$username,0,0,1);//返回自定义字段
 	$newspath=FormatPath($add[classid],$add[newspath],1);//查看目录是否存在，不存在则建立
@@ -204,12 +218,27 @@ function AddNews($add,$userid,$username){
 		$add['firsttitle']=0;
 		$add['istop']=0;
 	}
+	else
+	{
+		if(!eFirstTitleCheckLevel($add['isgood'],0))//推荐
+		{
+			$add['isgood']=0;
+		}
+		if(!eFirstTitleCheckLevel($add['firsttitle'],1))//头条
+		{
+			$add['firsttitle']=0;
+		}
+	}
 	//签发
 	$isqf=0;
 	if($class_r[$add[classid]][wfid])
 	{
-		$add[checked]=0;
-		$isqf=1;
+		$userisqf=EcmsReturnDoIsqf($userid,$username,$lur['groupid'],0);
+		if(!$userisqf)
+		{
+			$add[checked]=0;
+			$isqf=1;
+		}
 	}
 	$newstime=empty($add['newstime'])?time():to_time($add['newstime']);
 	$truetime=time();
@@ -291,15 +320,19 @@ function AddNews($add,$userid,$username){
 	{
 		eInsertTags($add[infotags],$add['classid'],$id,$newstime);
 	}
+	//处理函数
+	DoMFun($class_r[$add['classid']]['modid'],$add['classid'],$id,1,0);
 	//增加信息是否生成文件
 	if($ccr['addreinfo']&&$add['checked'])
 	{
 		GetHtml($add['classid'],$id,'',0);
 	}
 	//生成上一篇
+	$epreid=0;
 	if($ccr['repreinfo']&&$add['checked'])
 	{
 		$prer=$empire->fetch1("select * from {$dbtbpre}ecms_".$class_r[$add[classid]][tbname]." where id<$id and classid='$add[classid]' order by id desc limit 1");
+		$epreid=$prer['id'];
 		GetHtml($add['classid'],$prer['id'],$prer,1);
 	}
 	//生成栏目
@@ -321,6 +354,11 @@ function AddNews($add,$userid,$username){
 		{
 			UpdateInfoCopyids($add['classid'],$id,$copyids);
 		}
+	}
+	//更新动态缓存
+	if($public_r['ctimeopen']&&$add['checked'])
+	{
+		eUpCacheInfo(1,$add['classid'],0,$epreid,$add['ttid'],'',$add['infotags'],0,0);
 	}
 	if($sql)
 	{
@@ -372,7 +410,7 @@ function EditNews($add,$userid,$username){
 	}
 	//主表
 	$infotb=ReturnInfoMainTbname($class_r[$add[classid]][tbname],$index_checkr['checked']);
-	$checkr=$empire->fetch1("select id,classid,userid,username,ismember,stb,newspath,filename,isqf,fstb,isgood,firsttitle,istop from ".$infotb." where id='$add[id]' limit 1");
+	$checkr=$empire->fetch1("select id,classid,userid,username,ismember,stb,newspath,filename,isqf,fstb,isgood,firsttitle,istop,ttid,eckuid from ".$infotb." where id='$add[id]' limit 1");
 	if($doselfinfo['doselfinfo']&&($checkr['userid']<>$userid||$checkr['ismember']))//只能编辑自己的信息
 	{
 		printerror("NotDoSelfinfo","history.go(-1)");
@@ -381,6 +419,19 @@ function EditNews($add,$userid,$username){
 	if($doselfinfo['docheckedit']&&$index_checkr['checked'])
 	{
 		printerror("NotEditCheckInfoLevel","history.go(-1)");
+	}
+	//签发信息
+	if($checkr['isqf'])
+	{
+		$qfr=$empire->fetch1("select wfid,checktno from {$dbtbpre}enewswfinfo where id='$add[id]' and classid='$add[classid]' limit 1");
+		if($qfr['checktno']<100)
+		{
+			$qfwfr=$empire->fetch1("select wfid,canedit from {$dbtbpre}enewsworkflow where wfid='$qfr[wfid]' limit 1");
+			if($qfwfr['wfid']&&!$qfwfr['canedit'])
+			{
+				printerror("WorkflowCanNotEditInfo","history.go(-1)");
+			}
+		}
 	}
 	//审核权限
 	if(!$doselfinfo['docheckinfo'])
@@ -399,6 +450,17 @@ function EditNews($add,$userid,$username){
 		$add['firsttitle']=$checkr['firsttitle'];
 		$add['istop']=$checkr['istop'];
 	}
+	else
+	{
+		if(!eFirstTitleCheckLevel($add['isgood'],0))//推荐
+		{
+			$add['isgood']=$checkr['isgood'];
+		}
+		if(!eFirstTitleCheckLevel($add['firsttitle'],1))//头条
+		{
+			$add['firsttitle']=$checkr['firsttitle'];
+		}
+	}
 	if($ccr['sametitle'])//验证标题重复
 	{
 		if(ReturnCheckRetitle($add))
@@ -406,6 +468,12 @@ function EditNews($add,$userid,$username){
 			printerror("ReInfoTitle","history.go(-1)");
 	    }
     }
+	//修改文件名权限
+	if(!$doselfinfo['doinfofile'])
+	{
+		$add['newspath']=$checkr['newspath'];
+		$add['filename']=$checkr['filename'];
+	}
 	//公共表
 	$pubid=ReturnInfoPubid($add['classid'],$add['id']);
 	$pubcheckr=$empire->fetch1("select copyids from {$dbtbpre}enewsinfovote where pubid='$pubid' limit 1");
@@ -472,6 +540,14 @@ function EditNews($add,$userid,$username){
 		}
 		$urlfilename=$newfilename;
 	}
+	//审核人
+	if(!$index_checkr['checked']&&$index_checkr['checked']!=$newchecked)
+	{
+		if(!$checkr['eckuid']&&($checkr['ismember']||$checkr['userid']!=$userid))
+		{
+			$updatefile.=",eckuid='$userid'";
+		}
+	}
 	$newstime=empty($add['newstime'])?time():to_time($add['newstime']);
 	$lastdotime=time();
 	//返回关键字组合
@@ -535,15 +611,19 @@ function EditNews($add,$userid,$username){
 			AddClassInfos($add['classid'],'','-1');
 		}
 	}
+	//处理函数
+	DoMFun($class_r[$add['classid']]['modid'],$add['classid'],$add['id'],0,0);
 	//生成文件
 	if($ccr['addreinfo']&&$newchecked)
 	{
 		GetHtml($add['classid'],$add['id'],'',0);
 	}
 	//生成上一篇
+	$epreid=0;
 	if($ccr['repreinfo']&&($newchecked||$newchecked<>$add[oldchecked]))
 	{
 		$prer=$empire->fetch1("select * from {$dbtbpre}ecms_".$class_r[$add[classid]][tbname]." where id<$add[id] and classid='$add[classid]' order by id desc limit 1");
+		$epreid=$prer['id'];
 		GetHtml($prer['classid'],$prer['id'],$prer,1);
 	}
 	//生成栏目
@@ -577,6 +657,11 @@ function EditNews($add,$userid,$username){
 				UpdateInfoCopyids($add['classid'],$add['id'],$copyids);
 			}
 		}
+	}
+	//更新动态缓存
+	if($public_r['ctimeopen']&&($newchecked||$newchecked<>$add[oldchecked]))
+	{
+		eUpCacheInfo(1,$add['classid'],0,$epreid,$add['ttid'],'',$add['infotags'],0,$checkr['ttid']);
 	}
 	if($sql)
 	{
@@ -627,7 +712,7 @@ function EditInfoSimple($add,$userid,$username){
 	}
 	//主表
 	$infotb=ReturnInfoMainTbname($class_r[$add[classid]][tbname],$index_checkr['checked']);
-	$checkr=$empire->fetch1("select id,classid,userid,username,ismember,stb,newspath,filename,isqf,fstb,isgood,firsttitle,istop,groupid from ".$infotb." where id='$add[id]' limit 1");
+	$checkr=$empire->fetch1("select id,classid,userid,username,ismember,stb,newspath,filename,isqf,fstb,isgood,firsttitle,istop,groupid,ttid from ".$infotb." where id='$add[id]' limit 1");
 	if($doselfinfo['doselfinfo']&&($checkr['userid']<>$userid||$checkr['ismember']))//只能编辑自己的信息
 	{
 		printerror("NotDoSelfinfo","history.go(-1)",8);
@@ -636,6 +721,19 @@ function EditInfoSimple($add,$userid,$username){
 	if($doselfinfo['docheckedit']&&$index_checkr['checked'])
 	{
 		printerror("NotEditCheckInfoLevel","history.go(-1)");
+	}
+	//签发信息
+	if($checkr['isqf'])
+	{
+		$qfr=$empire->fetch1("select wfid,checktno from {$dbtbpre}enewswfinfo where id='$add[id]' and classid='$add[classid]' limit 1");
+		if($qfr['checktno']<100)
+		{
+			$qfwfr=$empire->fetch1("select wfid,canedit from {$dbtbpre}enewsworkflow where wfid='$qfr[wfid]' limit 1");
+			if($qfwfr['wfid']&&!$qfwfr['canedit'])
+			{
+				printerror("WorkflowCanNotEditInfo","history.go(-1)");
+			}
+		}
 	}
 	//审核权限
 	if(!$doselfinfo['docheckinfo'])
@@ -653,6 +751,17 @@ function EditInfoSimple($add,$userid,$username){
 		$add['isgood']=$checkr['isgood'];
 		$add['firsttitle']=$checkr['firsttitle'];
 		$add['istop']=$checkr['istop'];
+	}
+	else
+	{
+		if(!eFirstTitleCheckLevel($add['isgood'],0))//推荐
+		{
+			$add['isgood']=$checkr['isgood'];
+		}
+		if(!eFirstTitleCheckLevel($add['firsttitle'],1))//头条
+		{
+			$add['firsttitle']=$checkr['firsttitle'];
+		}
 	}
 	if($ccr['sametitle'])//验证标题重复
 	{
@@ -723,15 +832,19 @@ function EditInfoSimple($add,$userid,$username){
 			AddClassInfos($add['classid'],'','-1');
 		}
 	}
+	//处理函数
+	DoMFun($class_r[$add['classid']]['modid'],$add['classid'],$add['id'],0,0);
 	//生成文件
 	if($ccr['addreinfo']&&$newchecked)
 	{
 		GetHtml($add['classid'],$add['id'],'',0);
 	}
 	//生成上一篇
+	$epreid=0;
 	if($ccr['repreinfo']&&($newchecked||$newchecked<>$add[oldchecked]))
 	{
 		$prer=$empire->fetch1("select * from {$dbtbpre}ecms_".$class_r[$add[classid]][tbname]." where id<$add[id] and classid='$add[classid]' order by id desc limit 1");
+		$epreid=$prer['id'];
 		GetHtml($prer['classid'],$prer['id'],$prer,1);
 	}
 	//生成栏目
@@ -740,9 +853,14 @@ function EditInfoSimple($add,$userid,$username){
 		hAddListHtml($add[classid],$ccr['modid'],$ccr['haddlist'],$ccr['listdt']);//生成信息列表
 	}
 	//同时更新
-	if($checkr['copyids']&&$checkr['copyids']<>'1')
+	if($pubcheckr['copyids']&&$pubcheckr['copyids']<>'1')
 	{
 		EditInfoToCopyInfo($add[classid],$add[id],$userid,$username,$doselfinfo);
+	}
+	//更新动态缓存
+	if($public_r['ctimeopen']&&($newchecked||$newchecked<>$add[oldchecked]))
+	{
+		eUpCacheInfo(1,$add['classid'],0,$epreid,$add['ttid'],'','',0,$checkr['ttid']);
 	}
 	if($sql)
 	{
@@ -798,6 +916,7 @@ function DelNews($id,$classid,$userid,$username){
 		printerror("NotDoSelfinfo","history.go(-1)");
     }
 	$pubid=ReturnInfoPubid($classid,$id);
+	$pubcheckr=$empire->fetch1("select copyids from {$dbtbpre}enewsinfovote where pubid='$pubid' limit 1");
 	//附加链接参数
 	$addecmscheck=empty($index_r['checked'])?'&ecmscheck=1':'';
 	$mid=$class_r[$classid][modid];
@@ -830,17 +949,21 @@ function DelNews($id,$classid,$userid,$username){
 	AddClassInfos($classid,'-1','-1',$index_r['checked']);
 	//删除其它表记录和附件
 	DelSingleInfoOtherData($r['classid'],$id,$r,0,0);
+	$epreid=0;
+	$epreid2=0;
 	if($index_r['checked'])
 	{
 		//生成上一篇
 		if($ccr['repreinfo'])
 		{
 			$prer=$empire->fetch1("select * from {$dbtbpre}ecms_".$tbname." where id<$id and classid='$classid' order by id desc limit 1");
+			$epreid=$prer['id'];
 			GetHtml($prer['classid'],$prer['id'],$prer,1);
 			//下一篇
 			$nextr=$empire->fetch1("select * from {$dbtbpre}ecms_".$tbname." where id>$id and classid='$classid' order by id limit 1");
 			if($nextr['id'])
 			{
+				$epreid2=$nextr['id'];
 				GetHtml($nextr['classid'],$nextr['id'],$nextr,1);
 			}
 		}
@@ -851,13 +974,18 @@ function DelNews($id,$classid,$userid,$username){
 		}
 	}
 	//同步删除
-	if($r['copyids']&&$r['copyids']<>'1')
+	if($pubcheckr['copyids']&&$pubcheckr['copyids']<>'1')
 	{
-		DelInfoToCopyInfo($classid,$id,$r,$userid,$username,$doselfinfo);
+		DelInfoToCopyInfo($classid,$id,$r,$userid,$username,$doselfinfo,$pubcheckr['copyids']);
+	}
+	//更新动态缓存
+	if($public_r['ctimeopen']&&$index_r['checked'])
+	{
+		eUpCacheInfo(1,$classid,$epreid2,$epreid,$r['ttid'],'','',0,0);
 	}
 	if($sql)
 	{
-		$returl=$_SERVER['HTTP_REFERER'];
+		$returl=EcmsGetReturnUrl();
 		//发送通知
 		if($adddatar['causetext'])
 		{
@@ -927,6 +1055,7 @@ function DelNews_all($id,$classid,$userid,$username,$ecms=0){
 		$r=$empire->fetch1("select * from {$dbtbpre}ecms_".$tbname.$doctb." where id='$id[$i]'");
 		if($doselfinfo['doselfinfo']&&($r[userid]<>$userid||$r[ismember]))//只能编辑自己的信息
 		{
+			$add=str_replace("id='".$id[$i]."'","id='0'",$add);
 			continue;
 		}
 		$donum++;
@@ -970,6 +1099,11 @@ function DelNews_all($id,$classid,$userid,$username,$ecms=0){
 		}
 		//删除其它表记录和附件
 		DelSingleInfoOtherData($r['classid'],$id[$i],$r,0,0);
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$ecms==0)
+		{
+			eUpCacheInfo(1,$r['classid'],0,0,$r['ttid'],'','',0,0,1);
+		}
 		//更新栏目信息数
 		if($ecms==0||$ecms==2)
 		{
@@ -1005,7 +1139,7 @@ function DelNews_all($id,$classid,$userid,$username,$ecms=0){
 		{
 			insert_dolog("classid=".$classid."<br>classname=".$class_r[$classid][classname]."&ecms=$ecms");
 		}
-		printerror("DelNewsAllSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelNewsAllSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -1015,7 +1149,7 @@ function DelNews_all($id,$classid,$userid,$username,$ecms=0){
 
 //批量修改发布时间
 function EditMoreInfoTime($add,$userid,$username){
-	global $empire,$dbtbpre,$class_r;
+	global $empire,$dbtbpre,$class_r,$public_r;
 	$classid=(int)$add['classid'];
 	$infoid=$add['infoid'];
 	$newstime=$add['newstime'];
@@ -1060,6 +1194,11 @@ function EditMoreInfoTime($add,$userid,$username){
 		$empire->query("update {$dbtbpre}ecms_".$tbname."_index set newstime='$donewstime' where id='$doinfoid'");
 		$empire->query("update ".$infotb." set newstime='$donewstime' where id='$doinfoid'");
 	}
+	//更新动态缓存
+	if($public_r['ctimeopen']&&$index_r['checked'])
+	{
+		eUpCacheInfo(1,$classid,0,0,0,'','',0,0);
+	}
 	//操作日志
 	if($donum==1)
 	{
@@ -1069,12 +1208,14 @@ function EditMoreInfoTime($add,$userid,$username){
 	{
 		insert_dolog("classid=$classid<br>classname=".$class_r[$classid][classname]);
 	}
-	printerror('EditMoreInfoTimeSuccess',$_SERVER['HTTP_REFERER']);
+	printerror('EditMoreInfoTimeSuccess',EcmsGetReturnUrl());
 }
 
 //刷新页面
 function AddInfoToReHtml($classid,$dore){
 	global $class_r;
+	$classid=(int)$classid;
+	$dore=RepPostVar($dore);
 	hAddListHtml($classid,$class_r[$classid]['modid'],$dore,$class_r[$classid]['listdt']);//生成信息列表
 	insert_dolog("classid=".$classid."<br>do=".$dore);//操作日志
 	printerror('AddInfoToReHtmlSuccess','history.go(-1)');
@@ -1188,7 +1329,7 @@ function hReIndex(){
 
 //发布同时复制
 function AddInfoToCopyInfo($classid,$id,$to_classid,$userid,$username,$usergroupr){
-	global $empire,$public_r,$class_r,$dbtbpre,$emod_r;
+	global $empire,$public_r,$class_r,$dbtbpre,$emod_r,$lur;
 	$classid=(int)$classid;
 	$id=(int)$id;
 	$cr=$to_classid;
@@ -1228,6 +1369,7 @@ function AddInfoToCopyInfo($classid,$id,$to_classid,$userid,$username,$usergroup
 		$r['isurl']=1;
 		$copyinfourl=1;
 	}
+	$userisqf=EcmsReturnDoIsqf($userid,$username,$lur['groupid'],0);
 	$ids=',';
 	for($i=0;$i<$count;$i++)
 	{
@@ -1249,8 +1391,16 @@ function AddInfoToCopyInfo($classid,$id,$to_classid,$userid,$username,$usergroup
 		$ret_r=ReturnAddF($r,$mid,$userid,$username,9,1,0);
 		if($class_r[$newclassid][wfid])
 		{
-			$checked=0;
-			$isqf=1;
+			if($userisqf)
+			{
+				$checked=$class_r[$newclassid][checked];
+				$isqf=0;
+			}
+			else
+			{
+				$checked=0;
+				$isqf=1;
+			}
 	    }
 		else
 		{
@@ -1292,6 +1442,8 @@ function AddInfoToCopyInfo($classid,$id,$to_classid,$userid,$username,$usergroup
 			$updateinfourl=",titleurl='$infourl'";
 		}
 		$empire->query("update ".$infotbr['tbname']." set filename='$filename'".$updateinfourl." where id='$l_id' limit 1");
+		//处理函数
+		DoMFun($class_r[$newclassid]['modid'],$newclassid,$l_id,1,0);
 		//生成信息文件
 		if($checked)
 		{
@@ -1299,6 +1451,11 @@ function AddInfoToCopyInfo($classid,$id,$to_classid,$userid,$username,$usergroup
 			GetHtml($addr['classid'],$addr['id'],$addr,1);
 		}
 		$ids.=$l_id.',';
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$checked)
+		{
+			eUpCacheInfo(1,$newclassid,0,0,0,'','',0,0,1);
+		}
     }
 	if($ids==',')
 	{
@@ -1424,17 +1581,24 @@ function EditInfoToCopyInfo($classid,$id,$userid,$username,$usergroupr){
 				AddClassInfos($index_infor['classid'],'','-1');
 			}
 		}
+		//处理函数
+		DoMFun($class_r[$index_infor['classid']]['modid'],$index_infor['classid'],$infoid,0,0);
 		if($index_r['checked'])
 		{
 			//生成信息文件
 			$addr=$empire->fetch1("select * from {$dbtbpre}ecms_".$tbname." where id='$infoid' limit 1");
 			GetHtml($addr['classid'],$addr['id'],$addr,1);
 		}
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$index_r['checked'])
+		{
+			eUpCacheInfo(1,$index_infor['classid'],0,0,0,'','',0,0,1);
+		}
 	}
 }
 
 //发布同步删除
-function DelInfoToCopyInfo($classid,$id,$r,$userid,$username,$usergroupr){
+function DelInfoToCopyInfo($classid,$id,$r,$userid,$username,$usergroupr,$pubcopyids){
 	global $empire,$public_r,$class_r,$dbtbpre,$emod_r;
 	$classid=(int)$classid;
 	$id=(int)$id;
@@ -1447,8 +1611,8 @@ function DelInfoToCopyInfo($classid,$id,$r,$userid,$username,$usergroupr){
 	$stf=$emod_r[$mid]['savetxtf'];
 	//公共表
 	$pubid=ReturnInfoPubid($classid,$id);
-	$pub_r=$empire->fetch1("select copyids from {$dbtbpre}enewsinfovote where pubid='$pubid'");
-	$cr=explode(',',$pub_r['copyids']);
+	//$pub_r=$empire->fetch1("select copyids from {$dbtbpre}enewsinfovote where pubid='$pubid'");
+	$cr=explode(',',$pubcopyids);
 	$count=count($cr);
 	if(empty($r['id'])||$count<3)
 	{
@@ -1505,12 +1669,17 @@ function DelInfoToCopyInfo($classid,$id,$r,$userid,$username,$usergroupr){
 		AddClassInfos($infor['classid'],'-1','-1',$index_infor['checked']);
 		//删除其它表记录与附件
 		DelSingleInfoOtherData($infor['classid'],$infoid,$infor,0,0);
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$index_infor['checked'])
+		{
+			eUpCacheInfo(1,$infor['classid'],0,0,0,'','',0,0,1);
+		}
 	}
 }
 
 //信息置顶
 function TopNews_all($classid,$id,$istop,$userid,$username){
-	global $empire,$bclassid,$class_r,$dbtbpre;
+	global $empire,$bclassid,$class_r,$dbtbpre,$public_r;
 	$classid=(int)$classid;
 	if(empty($classid))
 	{
@@ -1559,6 +1728,11 @@ function TopNews_all($classid,$id,$istop,$userid,$username){
 		//刷新列表
 		ReListHtml($classid,1);
 	}
+	//更新动态缓存
+	if($public_r['ctimeopen']&&$index_r['checked'])
+	{
+		eUpCacheInfo(1,$classid,0,0,0,'','',0,0);
+	}
 	if($sql)
 	{
 		//操作日志
@@ -1570,7 +1744,7 @@ function TopNews_all($classid,$id,$istop,$userid,$username){
 		{
 			insert_dolog("classid=".$classid."<br>classname=".$class_r[$classid][classname]);
 		}
-		printerror("TopNewsSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("TopNewsSuccess",EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -1578,8 +1752,9 @@ function TopNews_all($classid,$id,$istop,$userid,$username){
 
 //审核信息
 function CheckNews_all($classid,$id,$userid,$username){
-	global $empire,$class_r,$dbtbpre,$emod_r,$adddatar;
+	global $empire,$class_r,$dbtbpre,$emod_r,$adddatar,$public_r;
 	$classid=(int)$classid;
+	$userid=(int)$userid;
 	if(empty($classid))
 	{
 		printerror("ErrorUrl","history.go(-1)");
@@ -1635,10 +1810,20 @@ function CheckNews_all($classid,$id,$userid,$username){
 		}
 		//未审核表转换
 		MoveCheckInfoData($class_r[$classid][tbname],0,$infor['stb'],"id='$infoid'");
+		//审核人
+		if(!$infor['eckuid']&&($infor['ismember']||$infor['userid']!=$userid))
+		{
+			$empire->query("update {$dbtbpre}ecms_".$class_r[$classid][tbname]." set eckuid='$userid' where id='$infoid'");
+		}
 		//更新栏目信息数
 		AddClassInfos($infor['classid'],'','+1');
 		//刷新信息
 		GetHtml($infor['classid'],$infor['id'],$infor,1);
+		//更新动态缓存
+		if($public_r['ctimeopen'])
+		{
+			eUpCacheInfo(1,$infor['classid'],0,0,$infor['ttid'],'',$infor['infotags'],0,0,1);
+		}
 		$donum++;
 		if($donum==1)
 		{
@@ -1648,7 +1833,7 @@ function CheckNews_all($classid,$id,$userid,$username){
     }
 	//刷新列表
 	//ReListHtml($classid,1);
-	$returl=$_SERVER['HTTP_REFERER'];
+	$returl=EcmsGetReturnUrl();
 	//发送通知
 	if($adddatar['causetext']&&$infoid)
 	{
@@ -1735,6 +1920,11 @@ function NoCheckNews_all($classid,$id,$userid,$username){
 			}
 		}
 		DelNewsFile($r[filename],$r[newspath],$r[classid],$r[$pf],$r[groupid]);
+		//更新动态缓存
+		if($public_r['ctimeopen'])
+		{
+			eUpCacheInfo(1,$r['classid'],0,0,$r['ttid'],'',$r['infotags'],0,0,1);
+		}
 		$donum++;
 		if($donum==1)
 		{
@@ -1744,7 +1934,7 @@ function NoCheckNews_all($classid,$id,$userid,$username){
 	}
 	//刷新列表
 	ReListHtml($classid,1);
-	$returl=$_SERVER['HTTP_REFERER'];
+	$returl=EcmsGetReturnUrl();
 	//发送通知
 	if($adddatar['causetext']&&$infoid)
 	{
@@ -1776,7 +1966,7 @@ function NoCheckNews_all($classid,$id,$userid,$username){
 
 //移动信息
 function MoveNews_all($classid,$id,$to_classid,$userid,$username){
-	global $empire,$class_r,$dbtbpre,$emod_r,$adddatar;
+	global $empire,$class_r,$dbtbpre,$emod_r,$adddatar,$public_r;
 	$classid=(int)$classid;
 	$to_classid=(int)$to_classid;
 	if(empty($classid)||empty($to_classid))
@@ -1822,7 +2012,7 @@ function MoveNews_all($classid,$id,$to_classid,$userid,$username){
 			$infotb=ReturnInfoMainTbname($tbname,$index_r['checked']);
 		}
 		//主表
-		$r=$empire->fetch1("select stb,classid,fstb,restb,id,isurl,filename,groupid,newspath,titleurl,title,ismember,userid,username,newstime,truetime from ".$infotb." where id='".$id[$i]."' limit 1");
+		$r=$empire->fetch1("select stb,classid,fstb,restb,id,isurl,filename,groupid,newspath,titleurl,title,ismember,userid,username,newstime,truetime,ttid from ".$infotb." where id='".$id[$i]."' limit 1");
 		$pubid=ReturnInfoPubid($r['classid'],$id[$i]);
 		//信息地址
 		$infourl=GotoGetTitleUrl($to_classid,$id[$i],$r['newspath'],$r['filename'],$r['groupid'],$r['isurl'],$r['titleurl']);
@@ -1837,6 +2027,11 @@ function MoveNews_all($classid,$id,$to_classid,$userid,$username){
 		AddClassInfos($to_classid,'+1','+1',$index_r['checked']);
 		//更新信息附加表
 		UpdateSingleInfoOtherData($r['classid'],$id[$i],$to_classid,$r,0,0);
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$index_r['checked'])
+		{
+			eUpCacheInfo(1,$r['classid'],0,0,$r['ttid'],'','',$to_classid,0,1);
+		}
 		$donum++;
 		if($donum==1)
 		{
@@ -1849,7 +2044,7 @@ function MoveNews_all($classid,$id,$to_classid,$userid,$username){
 	//刷新列表
 	ReListHtml($classid,1);
 	ReListHtml($to_classid,1);
-	$returl=$_SERVER['HTTP_REFERER'];
+	$returl=EcmsGetReturnUrl();
 	//发送通知
 	if($donum==1&&$r['id'])
 	{
@@ -1885,7 +2080,7 @@ function MoveNews_all($classid,$id,$to_classid,$userid,$username){
 
 //复制信息
 function CopyNews_all($classid,$id,$to_classid,$userid,$username){
-	global $empire,$public_r,$class_r,$dbtbpre,$emod_r;
+	global $empire,$public_r,$class_r,$dbtbpre,$emod_r,$lur;
 	$classid=(int)$classid;
 	$to_classid=(int)$to_classid;
 	if(empty($classid)||empty($to_classid))
@@ -1913,6 +2108,7 @@ function CopyNews_all($classid,$id,$to_classid,$userid,$username){
 	{
 		printerror("NotCopyNewsid","history.go(-1)");
 	}
+	$userisqf=EcmsReturnDoIsqf($userid,$username,$lur['groupid'],0);
 	$dopubid=0;
 	$donum=0;
 	$dolog='';
@@ -1951,8 +2147,16 @@ function CopyNews_all($classid,$id,$to_classid,$userid,$username){
 		$ret_r=ReturnAddF($r,$class_r[$to_classid][modid],$userid,$username,9,1,0);
 		if($class_r[$to_classid][wfid])
 		{
-			$checked=0;
-			$isqf=1;
+			if($userisqf)
+			{
+				$checked=$class_r[$to_classid][checked];
+				$isqf=0;
+			}
+			else
+			{
+				$checked=0;
+				$isqf=1;
+			}
 	    }
 		else
 		{
@@ -1984,12 +2188,17 @@ function CopyNews_all($classid,$id,$to_classid,$userid,$username){
 		}
 		$usql=$empire->query("update ".$update_infotbr['tbname']." set filename='$filename'".$updateinfourl." where id='$l_id'");
 		//更新栏目信息数
-		AddClassInfos($to_classid,'+1','+1',$index_r['checked']);
+		AddClassInfos($to_classid,'+1','+1',$checked);
 		//生成信息文件
 		if($checked)
 		{
 			$addr=$empire->fetch1("select * from ".$update_infotbr['tbname']." where id='$l_id'");
 			GetHtml($addr['classid'],$addr['id'],$addr,1);
+		}
+		//更新动态缓存
+		if($public_r['ctimeopen']&&$checked)
+		{
+			eUpCacheInfo(1,$to_classid,0,0,$r['ttid'],'',$r[infotags],0,0,1);
 		}
 		$donum++;
 		if($donum==1)
@@ -2009,12 +2218,12 @@ function CopyNews_all($classid,$id,$to_classid,$userid,$username){
 	{
 		insert_dolog("classid=".$classid."<br>classname=".$class_r[$classid][classname]."<br>to_classid=".$to_classid);
 	}
-	printerror("CopyNewsSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("CopyNewsSuccess",EcmsGetReturnUrl());
 }
 
 //批量转移信息
 function MoveClassNews($add,$userid,$username){
-	global $empire,$class_r,$dbtbpre,$emod_r;
+	global $empire,$class_r,$dbtbpre,$emod_r,$public_r;
 	$add[classid]=(int)$add[classid];
 	$add[toclassid]=(int)$add[toclassid];
 	if(empty($add[classid])||empty($add[toclassid]))
@@ -2054,6 +2263,11 @@ function MoveClassNews($add,$userid,$username){
 	UpdateMoreInfoOtherData($add[classid],$add[toclassid],0,0);
 	//生成信息列表
 	ListHtml($add[toclassid],$ret_r,0);
+	//更新动态缓存
+	if($public_r['ctimeopen'])
+	{
+		eUpCacheInfo(1,$add['classid'],0,0,0,'','',$add['toclassid'],0);
+	}
 	//移动数据
 	$opath=ECMS_PATH.$class_r[$add[classid]][classpath];
     DelPath($opath);//删除旧的栏目目录
@@ -2070,7 +2284,7 @@ function MoveClassNews($add,$userid,$username){
 
 //批量推荐/头条信息
 function GoodInfo_all($classid,$id,$isgood,$doing=0,$userid,$username){
-	global $empire,$class_r,$dbtbpre;
+	global $empire,$class_r,$dbtbpre,$public_r;
 	$classid=(int)$classid;
 	if(empty($classid))
 	{
@@ -2089,12 +2303,20 @@ function GoodInfo_all($classid,$id,$isgood,$doing=0,$userid,$username){
 	$doing=(int)$doing;
 	if($doing==0)//推荐
 	{
+		if(!eFirstTitleCheckLevel($isgood,0))
+		{
+			printerror("NotGoodInfoLevel","history.go(-1)");
+		}
 		$mess="EmptyGoodInfoId";
 		$domess="GoodInfoSuccess";
 		$setf="isgood=$isgood";
 	}
 	else//头条
 	{
+		if(!eFirstTitleCheckLevel($isgood,1))
+		{
+			printerror("NotGoodInfoLevel","history.go(-1)");
+		}
 		$mess="EmptyFirsttitleInfoId";
 		$domess="FirsttitleInfoSuccess";
 		$setf="firsttitle=$isgood";
@@ -2142,7 +2364,7 @@ function GoodInfo_all($classid,$id,$isgood,$doing=0,$userid,$username){
 		{
 			insert_dolog("classid=".$classid."<br>classname=".$class_r[$classid][classname]."<br>doing=".$doing);
 		}
-		printerror($domess,$_SERVER['HTTP_REFERER']);
+		printerror($domess,EcmsGetReturnUrl());
 	}
 	else
 	{printerror("DbError","history.go(-1)");}
@@ -2150,7 +2372,7 @@ function GoodInfo_all($classid,$id,$isgood,$doing=0,$userid,$username){
 
 //本栏目信息全部审核
 function SetAllCheckInfo($bclassid,$classid,$userid,$username){
-	global $empire,$dbtbpre,$class_r;
+	global $empire,$dbtbpre,$class_r,$public_r;
 	$classid=(int)$classid;
 	if(empty($classid))
 	{
@@ -2183,16 +2405,21 @@ function SetAllCheckInfo($bclassid,$classid,$userid,$username){
 		MoveCheckInfoData($class_r[$classid][tbname],0,$r['stb'],"id='$r[id]'");
 		$n++;
 	}
+	//更新动态缓存
+	if($public_r['ctimeopen']&&$n)
+	{
+		eUpCacheInfo(1,$classid,0,0,0,'','',0,0);
+	}
 	//更新栏目信息数
 	AddClassInfos($classid,'','+'.$n);
 	//操作日志
 	insert_dolog("classid=".$classid."<br>classname=".$class_r[$classid][classname]);
-	printerror("CheckNewsSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("CheckNewsSuccess",EcmsGetReturnUrl());
 }
 
 //签发信息
 function DoWfInfo($add,$userid,$username){
-	global $empire,$dbtbpre,$class_r,$emod_r,$lur;
+	global $empire,$dbtbpre,$class_r,$emod_r,$lur,$public_r;
 	$id=(int)$add[id];
 	$classid=(int)$add[classid];
 	$doing=(int)$add['doing'];
@@ -2221,7 +2448,7 @@ function DoWfInfo($add,$userid,$username){
 	$pubid=ReturnInfoPubid($classid,$id);
 	//附加链接参数
 	$addecmscheck=empty($_POST['ecmscheck'])?'&ecmscheck=1':'';
-	$checktext=ehtmlspecialchars($add[checktext]);
+	$checktext=hRepPostStr($add[checktext],1);
 	if($doing==1)//通过
 	{
 		if($wfitemr[lztype]==0)//普签
@@ -2240,6 +2467,11 @@ function DoWfInfo($add,$userid,$username){
 				//生成
 				GetHtml($ar['classid'],$ar['id'],$ar,1);
 				ListHtml($classid,$fr,0);
+				//更新动态缓存
+				if($public_r['ctimeopen'])
+				{
+					eUpCacheInfo(1,$ar['classid'],0,0,$ar['ttid'],'','',0,0);
+				}
 			}
 			else//流转
 			{
@@ -2271,6 +2503,11 @@ function DoWfInfo($add,$userid,$username){
 					//生成
 					GetHtml($ar['classid'],$ar['id'],$ar,1);
 					ListHtml($classid,$fr,0);
+					//更新动态缓存
+					if($public_r['ctimeopen'])
+					{
+						eUpCacheInfo(1,$ar['classid'],0,0,$ar['ttid'],'','',0,0);
+					}
 				}
 				else//流转
 				{
@@ -2543,7 +2780,7 @@ function DelInfoData($start,$classid,$from,$retype,$startday,$endday,$startid,$e
 	{
 		$b=1;
 		$new_start=$r[id];
-		$mid=$emod_r[$r[classid]]['modid'];
+		$mid=$class_r[$r[classid]]['modid'];
 		$pf=$emod_r[$mid]['pagef'];
 		$stf=$emod_r[$mid]['savetxtf'];
 		//未审核表
@@ -2912,8 +3149,8 @@ function DoInfoSendNotice($userid,$username,$to_userid,$to_username,$causetext,$
 		return '';
 	}
 	//操作者
-	$user_r=$empire->fetch1("select truename from {$dbtbpre}enewsuser where userid='$userid'");
-	$dousername=$user_r['truename']?$user_r['truename']:$username;
+	$user_r=$empire->fetch1("select wname from {$dbtbpre}enewsuser where userid='$userid'");
+	$dousername=$user_r['wname']?$user_r['wname']:'管理员';
 	//操作类型
 	if($ecms==1)
 	{
@@ -2946,6 +3183,8 @@ function DoInfoSendNotice($userid,$username,$to_userid,$to_username,$causetext,$
 	$classname=$class_r[$infor[classid]]['classname'];
 	$classurl=sys_ReturnBqClassname($infor,9);
 	$isadmin=$infor['ismember']==1?0:1;
+	$dousername=RepPostVar($dousername);
+	$to_username=RepPostVar($to_username);
 
 	$msgtext="您发布的信息被 <strong>$dousername</strong> 执行 <strong>$doing</strong> 操作<br>
 <br>

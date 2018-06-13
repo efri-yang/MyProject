@@ -452,7 +452,8 @@ function CheckAll(form)
                     菜单管理</td>
                   <td height="23"><input name="gr[domoreport]" type="checkbox" id="gr[domoreport]" value="1"<?=$r[domoreport]==1?' checked':''?>>
 网站多访问端管理</td>
-                  <td height="23">&nbsp;</td>
+                  <td height="23"><input name="gr[dochmoreport]" type="checkbox" id="gr[dochmoreport]" value="1"<?=$r[dochmoreport]==1?' checked':''?>>
+切换访问端后台</td>
                 </tr>
               </table></td>
           </tr>
@@ -464,11 +465,13 @@ function CheckAll(form)
                 <tr> 
                   <td width="33%" height="23"> <input name="gr[doall]" type="checkbox" id="gr[doall]3" value="1"<?=$doall?>>
                     可操作所有信息</td>
-                  <td><input name="gr[doselfinfo]" type="checkbox" id="gr[doselfinfo]" value="1"<?=$doselfinfo?>> 
+                  <td width="33%"><input name="gr[doselfinfo]" type="checkbox" id="gr[doselfinfo]" value="1"<?=$doselfinfo?>> 
                     <strong>只能操作自己发布的信息</strong></td>
+                  <td width="33%"><input name="gr[doisqf]" type="checkbox" id="gr[doisqf]" value="1"<?=$r['doisqf']==1?' checked':''?>>
+增加信息不需要签发</td>
                 </tr>
                 <tr> 
-                  <td height="23" colspan="2"><input name="gr[doaddinfo]" type="checkbox" id="gr[doaddinfo]" value="1"<?=$r['doaddinfo']==1?' checked':''?>>
+                  <td height="23" colspan="3"><input name="gr[doaddinfo]" type="checkbox" id="gr[doaddinfo]" value="1"<?=$r['doaddinfo']==1?' checked':''?>>
                     增加权限， 
                     <input name="gr[doeditinfo]" type="checkbox" id="gr[doeditinfo]" value="1"<?=$r['doeditinfo']==1?' checked':''?>>
                     修改权限， 
@@ -486,7 +489,11 @@ function CheckAll(form)
 <input name="gr[domustcheck]" type="checkbox" id="gr[domustcheck]" value="1"<?=$r['domustcheck']==1?' checked':''?>>
 发布的信息必须审核<br>
 <input name="gr[docheckedit]" type="checkbox" id="gr[docheckedit]" value="1"<?=$r['docheckedit']==1?' checked':''?>>
-审核后的信息不可修改</td>
+审核后的信息不可修改，
+<input name="gr[docanhtml]" type="checkbox" id="gr[docanhtml]" value="1"<?=$r['docanhtml']==1?' checked':''?>>
+支持录入HTML，
+<input name="gr[doinfofile]" type="checkbox" id="gr[doinfofile]" value="1"<?=$r['doinfofile']==1?' checked':''?>>
+修改文件名权限</td>
                 </tr>
               </table></td>
           </tr>
@@ -504,8 +511,8 @@ function CheckAll(form)
                     采集管理</td>
                 </tr>
                 <tr> 
-                  <td width="33%" height="23"><input name="gr[dopl]" type="checkbox" id="gr[dopl]2" value="1"<?=$dopl?>>
-                    评论管理</td>
+                  <td width="33%" height="23"><input name="gr[dodelclass]" type="checkbox" id="gr[dodelclass]" value="1"<?=$r['dodelclass']==1?' checked':''?>>
+删除栏目</td>
                   <td width="33%" height="23"><input name="gr[dosetmclass]" type="checkbox" id="gr[dosetmclass]" value="1"<?=$dosetmclass?>>
                     批量设置栏目属性</td>
                   <td width="33%" height="23"><input name="gr[doloadcj]" type="checkbox" id="gr[doloadcj]" value="1"<?=$r[doloadcj]==1?' checked':''?>>
@@ -566,6 +573,12 @@ function CheckAll(form)
                     附件分表管理</td>
                   <td><input name="gr[doinfodoc]" type="checkbox" id="gr[doinfodoc]" value="1"<?=$doinfodoc?>>
 批量归档信息</td>
+                </tr>
+                <tr>
+                  <td height="22"><input name="gr[dopl]" type="checkbox" id="gr[dopl]" value="1"<?=$dopl?>>
+评论管理</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
                 </tr>
               </table></td>
           </tr>
@@ -636,6 +649,20 @@ function CheckAll(form)
                     部门管理</td>
                   <td><input name="gr[domemberconnect]" type="checkbox" id="gr[domemberconnect]" value="1"<?=$r[domemberconnect]==1?' checked':''?>>
 外部登录管理</td>
+                </tr>
+                <tr>
+                  <td height="23"><input name="gr[doingroup]" type="checkbox" id="gr[doingroup]" value="1"<?=$r[doingroup]==1?' checked':''?>>
+会员内部组管理</td>
+                  <td><input name="gr[domembergroup]" type="checkbox" id="gr[domembergroup]" value="1"<?=$r[domembergroup]==1?' checked':''?>>
+会员组管理</td>
+                  <td><input name="gr[doviewgroup]" type="checkbox" id="gr[doviewgroup]" value="1"<?=$r[doviewgroup]==1?' checked':''?>>
+会员访问组管理</td>
+                </tr>
+                <tr>
+                  <td height="23"><input name="gr[domadmingroup]" type="checkbox" id="gr[domadmingroup]" value="1"<?=$r[domadmingroup]==1?' checked':''?>>
+会员管理组管理</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
                 </tr>
               </table></td>
           </tr>

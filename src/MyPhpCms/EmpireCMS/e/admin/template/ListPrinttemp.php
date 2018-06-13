@@ -32,7 +32,7 @@ function AddPrintTemp($add,$userid,$username){
 	$add[temptext]=RepPhpAspJspcode($add[temptext]);
 	$add[modid]=(int)$add[modid];
 	$gid=(int)$add['gid'];
-	$sql=$empire->query("insert into ".GetDoTemptb("enewsprinttemp",$gid)."(tempname,temptext,isdefault,showdate,modid) values('".$add[tempname]."','".eaddslashes2($add[temptext])."',0,'$add[showdate]','$add[modid]');");
+	$sql=$empire->query("insert into ".GetDoTemptb("enewsprinttemp",$gid)."(tempname,temptext,isdefault,showdate,modid) values('".$add[tempname]."','".eaddslashes2($add[temptext])."',0,'".eaddslashes($add[showdate])."','$add[modid]');");
 	$tempid=$empire->lastid();
 	//备份模板
 	AddEBakTemp('printtemp',$gid,$tempid,$add[tempname],$add[temptext],0,0,'',0,$add[modid],$add[showdate],0,0,0,$userid,$username);
@@ -67,7 +67,7 @@ function EditPrintTemp($add,$userid,$username){
 	$add[temptext]=RepPhpAspJspcode($add[temptext]);
 	$add[modid]=(int)$add[modid];
 	$gid=(int)$add['gid'];
-	$sql=$empire->query("update ".GetDoTemptb("enewsprinttemp",$gid)." set tempname='".$add[tempname]."',temptext='".eaddslashes2($add[temptext])."',showdate='$add[showdate]',modid='$add[modid]' where tempid='$tempid'");
+	$sql=$empire->query("update ".GetDoTemptb("enewsprinttemp",$gid)." set tempname='".$add[tempname]."',temptext='".eaddslashes2($add[temptext])."',showdate='".eaddslashes($add[showdate])."',modid='$add[modid]' where tempid='$tempid'");
 	//备份模板
 	AddEBakTemp('printtemp',$gid,$tempid,$add[tempname],$add[temptext],0,0,'',0,$add[modid],$add[showdate],0,0,0,$userid,$username);
 	//更新页面
@@ -237,7 +237,7 @@ $returnpage=page2($num,$line,$page_line,$start,$page,$search);
   ?>
   <tr bgcolor="<?=$color?>"<?=$movejs?>> 
     <td height="25"><div align="center"> 
-        <?=$r[tempid]?>
+        <a href="EditTempid.php?tempno=11&tempid=<?=$r['tempid']?>&gid=<?=$gid?><?=$ecms_hashur['ehref']?>" target="_blank" title="修改模板ID"><?=$r[tempid]?></a>
       </div></td>
     <td height="25"><div align="center"> 
         <?=$r[tempname]?>

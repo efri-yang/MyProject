@@ -19,7 +19,7 @@ if(empty($mid))
 {
 	printerror("ErrorUrl","history.go(-1)",1);
 }
-$ttr=$empire->fetch1("select typeid,tname,mid,yhid,tnum,listtempid,tpath,ttype,maxnum,reorder,tid,tbname,timg,intro,pagekey,listdt,repagenum from {$dbtbpre}enewsinfotype where typeid='$ttid'");
+$ttr=$empire->fetch1("select typeid,tname,mid,yhid,tnum,listtempid,tpath,ttype,maxnum,reorder,tid,tbname,timg,intro,pagekey,listdt,repagenum,fclast from {$dbtbpre}enewsinfotype where typeid='$ttid'");
 $tbname=$ttr['tbname'];
 if(empty($ttr['typeid'])||empty($tbname)||InfoIsInTable($tbname))
 {
@@ -73,6 +73,26 @@ $start=0;
 $line=$ttr['tnum'];//每页显示记录数
 $page_line=10;//每页显示链接数
 $offset=$page*$line;//总偏移量
+//缓存
+if($public_r['ctimeopen'])
+{
+	$public_r['usetotalnum']=0;
+}
+$ecms_tofunr=array();
+$ecms_tofunr['cacheuse']=0;
+$ecms_tofunr['cachetype']='ttpage';
+$ecms_tofunr['cacheids']=$ttid.','.$page;
+$ecms_tofunr['cachepath']='empirecms';
+$ecms_tofunr['cachedatepath']='cinfotype/'.$ttid;
+$ecms_tofunr['cachetime']=$public_r['ctimett'];
+$ecms_tofunr['cachelasttime']=$public_r['ctimelast'];
+$ecms_tofunr['cachelastedit']=$ttr['fclast'];
+$ecms_tofunr['cacheopen']=Ecms_eCacheCheckOpen($ecms_tofunr['cachetime']);
+if($ecms_tofunr['cacheopen']==1)
+{
+	$ecms_tofunr['cacheuse']=Ecms_eCacheOut($ecms_tofunr,0);
+}
+//缓存
 //系统模型
 $ret_r=ReturnReplaceListF($mid);
 //优化
@@ -85,6 +105,10 @@ if($yhid)
 }
 //总数
 $totalnum=(int)$_GET['totalnum'];
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 if($totalnum<1)
 {
 	$totalquery="select count(*) as total from {$dbtbpre}ecms_".$tbname." where ".$yhadd.$add;
@@ -94,7 +118,12 @@ else
 {
 	$num=$totalnum;
 }
-$search.='&totalnum='.$num;
+if($public_r['usetotalnum'])
+{
+	$search.='&totalnum='.$num;
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 $query="select ".ReturnSqlListF($mid)." from {$dbtbpre}ecms_".$tbname." where ".$yhadd.$add;
 $query.=" order by ".ReturnSetTopSql('list').$addorder." limit $offset,$line";
 $sql=$empire->query($query);
@@ -169,7 +198,16 @@ if($changerow<=$rownum&&$listtext<>$list_r[1])
 	$string.=$listtext;
 }
 $string=$list_r[0].$string.$list_r[2];
-echo stripSlashes($string);
+//缓存
+if($ecms_tofunr['cacheopen']==1)
+{
+	Ecms_eCacheIn($ecms_tofunr,stripSlashes($string));
+}
+else
+{
+	echo stripSlashes($string);
+}
+//缓存
 db_close();
 $empire=null;
 ?>

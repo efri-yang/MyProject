@@ -118,12 +118,12 @@ if($r[domember]||$r[domemberf])
 		?>
 		<tr> 
           <td class="file">
-			<a href="../../member/ListMemberGroup.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">管理会员组</a>
+			<a href="../../member/ListMember.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">管理会员</a>
           </td>
         </tr>
 		<tr> 
           <td class="file">
-			<a href="../../member/ListMember.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">管理会员</a>
+			<a href="../../member/ListMemberMore.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">管理会员(详细)</a>
           </td>
         </tr>
 		<tr> 
@@ -132,6 +132,46 @@ if($r[domember]||$r[domemberf])
           </td>
         </tr>
 		<?
+		}
+		if($r['domembergroup'])
+		{
+		?>
+		<tr> 
+          <td class="file">
+			<a href="../../member/ListMemberGroup.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">会员组</a>
+          </td>
+        </tr>
+		<?php
+		}
+		if($r['doingroup'])
+		{
+		?>
+		<tr> 
+          <td class="file">
+			<a href="../../member/ListInGroup.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">会员内部组</a>
+          </td>
+        </tr>
+		<?php
+		}
+		if($r['doviewgroup'])
+		{
+		?>
+		<tr> 
+          <td class="file">
+			<a href="../../member/ListViewGroup.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">会员访问组</a>
+          </td>
+        </tr>
+		<?php
+		}
+		if($r['domadmingroup'])
+		{
+		?>
+		<tr> 
+          <td class="file">
+			<a href="../../member/ListMAdminGroup.php<?=$ecms_hashur['whehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">会员管理组</a>
+          </td>
+        </tr>
+		<?php
 		}
 		if($r[domemberf])
 		{

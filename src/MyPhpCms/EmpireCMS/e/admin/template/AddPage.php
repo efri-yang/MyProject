@@ -175,8 +175,10 @@ function tempturnit(ss)
 	if($pagemod==2)
 	{
 		//--------------------html编辑器
-		include('../ecmseditor/infoeditor/fckeditor.php');
+		include('../ecmseditor/eshoweditor.php');
+		$loadeditorjs=ECMS_ShowEditorJS('../ecmseditor/infoeditor/');
 	?>
+		<?=$loadeditorjs?>
 	<tr bgcolor="#FFFFFF"> 
       <td height="25" valign="top"><strong>页面内容</strong>(*)</td>
       <td height="25"></td>

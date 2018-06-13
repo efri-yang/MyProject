@@ -36,7 +36,7 @@ while($tr=$empire->fetch($tsql))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>按条件删除信息</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -70,9 +70,9 @@ while($tr=$empire->fetch($tsql))
       <td height="25" bgcolor="#FFFFFF"> <input name="retype" type="radio" value="0" checked>
         按时间删除</td>
       <td bgcolor="#FFFFFF">从 
-        <input name="startday" type="text" size="12" onclick="setday(this)">
+        <input name="startday" type="text" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         到 
-        <input name="endday" type="text" size="12" onclick="setday(this)">
+        <input name="endday" type="text" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         之间的数据 <font color="#666666">(不填为不限)</font></td>
     </tr>
     <tr> 

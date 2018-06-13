@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(0);
 $classid=(int)$_GET['classid'];
 $tempid=(int)$_GET['tempid'];
 ?>

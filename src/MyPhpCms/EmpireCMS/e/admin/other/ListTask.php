@@ -50,6 +50,12 @@ function AddTask($add,$userid,$username){
 	$userid=(int)$add['userid'];
 	$isopen=(int)$add['isopen'];
 	$add['dominute']=ReturnTogMins($add['min']);
+	$add['taskname']=hRepPostStr($add['taskname'],1);
+	$add['filename']=hRepPostStr($add['filename'],1);
+	$add['doweek']=hRepPostStr($add['doweek'],1);
+	$add['doday']=hRepPostStr($add['doday'],1);
+	$add['dohour']=hRepPostStr($add['dohour'],1);
+	$add['dominute']=hRepPostStr($add['dominute'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewstask(taskname,userid,isopen,filename,lastdo,doweek,doday,dohour,dominute) values('$add[taskname]',$userid,$isopen,'$add[filename]',0,'$add[doweek]','$add[doday]','$add[dohour]','$add[dominute]');");
 	if($sql)
 	{
@@ -81,6 +87,12 @@ function EditTask($add,$userid,$username){
 	$userid=(int)$add['userid'];
 	$isopen=(int)$add['isopen'];
 	$add['dominute']=ReturnTogMins($add['min']);
+	$add['taskname']=hRepPostStr($add['taskname'],1);
+	$add['filename']=hRepPostStr($add['filename'],1);
+	$add['doweek']=hRepPostStr($add['doweek'],1);
+	$add['doday']=hRepPostStr($add['doday'],1);
+	$add['dohour']=hRepPostStr($add['dohour'],1);
+	$add['dominute']=hRepPostStr($add['dominute'],1);
 	$sql=$empire->query("update {$dbtbpre}enewstask set taskname='$add[taskname]',userid=$userid,isopen=$isopen,filename='$add[filename]',doweek='$add[doweek]',doday='$add[doday]',dohour='$add[dohour]',dominute='$add[dominute]' where id=$id");
 	if($sql)
 	{

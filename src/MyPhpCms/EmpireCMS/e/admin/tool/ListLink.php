@@ -28,8 +28,8 @@ function AddLink($add,$userid,$username){
 	CheckLevel($userid,$username,$classid,"link");
 	$ltime=date("Y-m-d H:i:s");
 	$add[lname]=hRepPostStr($add[lname],1);
-	$add[lpic]=hRepPostStr($add[lpic],1);
-	$add[lurl]=hRepPostStr($add[lurl],1);
+	$add[lpic]=hRepPostStr2(eDoRepPostComStr($add[lpic],1));
+	$add[lurl]=hRepPostStr2(eDoRepPostComStr($add[lurl],1));
 	$add[email]=hRepPostStr($add[email],1);
 	$add[onclick]=(int)$add[onclick];
 	$add[myorder]=(int)$add[myorder];
@@ -37,6 +37,9 @@ function AddLink($add,$userid,$username){
 	$add[checked]=(int)$add[checked];
 	$add[classid]=(int)$add[classid];
 	$add[cid]=(int)$add[cid];
+	$add['width']=hRepPostStr($add['width'],1);
+	$add['height']=hRepPostStr($add['height'],1);
+	$add['target']=hRepPostStr($add['target'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewslink(lname,lpic,lurl,ltime,onclick,width,height,target,myorder,email,lsay,ltype,checked,classid) values('".$add[lname]."','".$add[lpic]."','".$add[lurl]."','$ltime',$add[onclick],'$add[width]','$add[height]','$add[target]',$add[myorder],'".$add[email]."','".eaddslashes($add[lsay])."',$add[ltype],$add[checked],$add[classid]);");
 	$lastid=$empire->lastid();
 	if($sql)
@@ -58,8 +61,8 @@ function EditLink($add,$userid,$username){
 	//验证权限
 	CheckLevel($userid,$username,$classid,"link");
 	$add[lname]=hRepPostStr($add[lname],1);
-	$add[lpic]=hRepPostStr($add[lpic],1);
-	$add[lurl]=hRepPostStr($add[lurl],1);
+	$add[lpic]=hRepPostStr2(eDoRepPostComStr($add[lpic],1));
+	$add[lurl]=hRepPostStr2(eDoRepPostComStr($add[lurl],1));
 	$add[email]=hRepPostStr($add[email],1);
 	$add[onclick]=(int)$add[onclick];
 	$add[myorder]=(int)$add[myorder];
@@ -67,6 +70,9 @@ function EditLink($add,$userid,$username){
 	$add[checked]=(int)$add[checked];
 	$add[classid]=(int)$add[classid];
 	$add[cid]=(int)$add[cid];
+	$add['width']=hRepPostStr($add['width'],1);
+	$add['height']=hRepPostStr($add['height'],1);
+	$add['target']=hRepPostStr($add['target'],1);
 	$sql=$empire->query("update {$dbtbpre}enewslink set lname='".$add[lname]."',lpic='".$add[lpic]."',lurl='".$add[lurl]."',onclick=$add[onclick],width='$add[width]',height='$add[height]',target='$add[target]',myorder=$add[myorder],email='".$add[email]."',lsay='".eaddslashes($add[lsay])."',ltype=$add[ltype],checked=$add[checked],classid=$add[classid] where lid='$add[lid]'");
 	if($sql)
 	{

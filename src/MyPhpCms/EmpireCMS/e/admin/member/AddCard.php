@@ -55,7 +55,7 @@ $href="AddCard.php?enews=$enews&cardid=$cardid".$ecms_hashur['ehref'];
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>增加点卡</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -64,7 +64,7 @@ $href="AddCard.php?enews=$enews&cardid=$cardid".$ecms_hashur['ehref'];
     <td>位置：<?=$url?></td>
   </tr>
 </table>
-<form name="form1" method="post" action="ListCard.php">
+<form name="form1" method="post" action="ListCard.php" autocomplete="off">
   <table width="60%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 
@@ -77,12 +77,12 @@ $href="AddCard.php?enews=$enews&cardid=$cardid".$ecms_hashur['ehref'];
     <tr bgcolor="#FFFFFF"> 
       <td width="36%" height="25">点卡帐号：</td>
       <td width="64%" height="25"><input name="add[card_no]" type="text" id="add[card_no]" value="<?=$r[card_no]?>">
-        <font color="#666666">(&lt;30位)</font></td>
+        <font color="#666666">(&lt;30位，支持英文与数字组合)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">点卡密码：</td>
       <td height="25"><input name="add[password]" type="text" id="add[password]" value="<?=$r[password]?>">
-        <font color="#666666">(&lt;20位)</font></td>
+        <font color="#666666">(&lt;20位，支持英文与数字组合)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">点卡金额：</td>
@@ -116,7 +116,7 @@ $href="AddCard.php?enews=$enews&cardid=$cardid".$ecms_hashur['ehref'];
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">到期时间：</td>
-      <td height="25"><input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="20" onclick="setday(this)">
+      <td height="25"><input name="add[endtime]" type="text" id="add[endtime]" value="<?=$r[endtime]?>" size="20" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         <font color="#666666">(0000-00-00为不限制)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

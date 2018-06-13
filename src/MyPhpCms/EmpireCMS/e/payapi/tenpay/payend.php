@@ -3,6 +3,7 @@ require("../../class/connect.php");
 require("../../class/db_sql.php");
 require("../../class/q_functions.php");
 require("../../member/class/user.php");
+eCheckCloseMods('pay');//关闭模块
 $link=db_connect();
 $empire=new mysqlquery();
 $editor=1;
@@ -39,12 +40,18 @@ if($phome=='PayToFen'||$phome=='PayToMoney'||$phome=='BuyGroupPay')
 
 $paytype='tenpay';
 $payr=$empire->fetch1("select * from {$dbtbpre}enewspayapi where paytype='$paytype' limit 1");
+if(!$payr['payid']||$payr['isclose'])
+{
+	printerror('您来自的链接不存在','',1,0,1);
+}
 
 $bargainor_id=$payr['payuser'];//商户号
 
 $key=$payr['paykey'];//密钥
 
 //----------------------------------------------返回信息
+
+/*
 import_request_variables("gpc", "frm_");
 $strCmdno			= $frm_cmdno;
 $strPayResult		= $frm_pay_result;
@@ -57,12 +64,34 @@ $strTotalFee		= $frm_total_fee;
 $strFeeType		= $frm_fee_type;
 $strAttach			= $frm_attach;
 $strMd5Sign		= $frm_sign;
+*/
+
+if(!empty($_POST))
+{
+	foreach($_POST as $key => $data)
+	{
+		$_GET[$key]=$data;
+	}
+}
+
+$strCmdno			= $_GET['cmdno'];
+$strPayResult		= $_GET['pay_result'];
+$strPayInfo		= $_GET['pay_info'];
+$strBillDate		= $_GET['date'];
+$strBargainorId	= $_GET['bargainor_id'];
+$strTransactionId	= $_GET['transaction_id'];
+$strSpBillno		= $_GET['sp_billno'];
+$strTotalFee		= $_GET['total_fee'];
+$strFeeType		= $_GET['fee_type'];
+$strAttach			= $_GET['attach'];
+$strMd5Sign		= $_GET['sign'];
+
 
 //支付验证
 $checkkey="cmdno=".$strCmdno."&pay_result=".$strPayResult."&date=".$strBillDate."&transaction_id=".$strTransactionId."&sp_billno=".$strSpBillno."&total_fee=".$strTotalFee."&fee_type=".$strFeeType."&attach=".$strAttach."&key=".$key;
 $checkSign=strtoupper(md5($checkkey));
   
-if($checkSign!=$strMd5Sign)
+if('dg'.$checkSign!='dg'.$strMd5Sign)
 {
 	printerror('验证MD5签名失败.','../../../',1,0,1);
 }  

@@ -36,7 +36,7 @@ function ReturnSearchOptions($enter,$field,$record){
 	$count=count($r)-1;
 	for($i=0;$i<$count;$i++)
 	{
-		if($i==0)
+		if(!$sr['searchallfield'])
 		{
 			$or="";
 		}
@@ -66,7 +66,7 @@ if(empty($infomod_r['tbname']))
 {
 	printerror("ErrorUrl","history.go(-1)");
 }
-$infomod_r['enter'].='发布者<!--field--->username<!--record-->ID<!--field--->id<!--record-->';
+$infomod_r['enter'].='发布者<!--field--->username<!--record-->ID<!--field--->id<!--record-->关键字<!--field--->keyboard<!--record-->';
 $searchoptions_r=ReturnSearchOptions($infomod_r['enter'],$fieldexp,$recordexp);
 //审核表
 $search='';

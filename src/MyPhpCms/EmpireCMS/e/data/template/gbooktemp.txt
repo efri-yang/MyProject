@@ -10,6 +10,7 @@ require "../".LoadLang("pub/fun.php");
 $link=db_connect();
 $empire=new mysqlquery();
 $editor=1;
+eCheckCloseMods('gb');//关闭模块
 //分类id
 $bid=(int)$_GET['bid'];
 $gbr=$empire->fetch1("select bid,bname,groupid from {$dbtbpre}enewsgbookclass where bid='$bid'");
@@ -39,6 +40,10 @@ $line=$public_r['gb_num'];//每页显示条数
 $page_line=10;//每页显示链接数
 $offset=$start+$page*$line;//总偏移量
 $totalnum=(int)$_GET['totalnum'];
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 if($totalnum>0)
 {
 	$num=$totalnum;
@@ -48,7 +53,12 @@ else
 	$totalquery="select count(*) as total from {$dbtbpre}enewsgbook where bid='$bid' and checked=0";
 	$num=$empire->gettotal($totalquery);//取得总条数
 }
-$search.="&totalnum=$num";
+if($public_r['usetotalnum'])
+{
+	$search.="&totalnum=$num";
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 $query="select lyid,name,email,`mycall`,lytime,lytext,retext from {$dbtbpre}enewsgbook where bid='$bid' and checked=0";
 $query=$query." order by lyid desc limit $offset,$line";
 $sql=$empire->query($query);
@@ -59,8 +69,8 @@ $url="<a href='".ReturnSiteIndexUrl()."'>".$fun_r['index']."</a>&nbsp;>&nbsp;".$
 <?
 while($r=$empire->fetch($sql))
 {
-	$r['retext']=nl2br($r[retext]);
-	$r['lytext']=nl2br($r[lytext]);
+	$r['retext']=nl2br(stripSlashes($r[retext]));
+	$r['lytext']=nl2br(stripSlashes($r[lytext]));
 ?>
 <!--empire.listtemp.center-->
 <?

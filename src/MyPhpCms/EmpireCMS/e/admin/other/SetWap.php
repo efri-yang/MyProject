@@ -27,7 +27,9 @@ function SetWap($add,$userid,$username){
 	$waplistnum=(int)$add['waplistnum'];
 	$wapsubtitle=(int)$add['wapsubtitle'];
 	$wapchar=(int)$add['wapchar'];
-	$sql=$empire->query("update {$dbtbpre}enewspublic set wapopen=$wapopen,wapdefstyle=$wapdefstyle,wapshowmid='$wapshowmid',waplistnum=$waplistnum,wapsubtitle=$wapsubtitle,wapshowdate='$add[wapshowdate]',wapchar=$wapchar limit 1");
+	$add['wapshowdate']=hRepPostStr($add['wapshowdate'],1);
+	$add['wapchstyle']=(int)$add['wapchstyle'];
+	$sql=$empire->query("update {$dbtbpre}enewspublic set wapopen=$wapopen,wapdefstyle=$wapdefstyle,wapshowmid='$wapshowmid',waplistnum=$waplistnum,wapsubtitle=$wapsubtitle,wapshowdate='$add[wapshowdate]',wapchar='$wapchar',wapchstyle='$add[wapchstyle]' limit 1");
 	//操作日志
 	insert_dolog("");
 	printerror("SetWapSuccess","SetWap.php".hReturnEcmsHashStrHref2(1));
@@ -92,10 +94,12 @@ $empire=null;
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">WAP字符集</td>
-      <td height="25"><input type="radio" name="wapchar" value="1"<?=$r[wapchar]==1?' checked':''?>>
+      <td height="25"><input type="radio" name="wapchar" value="2"<?=$r[wapchar]==2?' checked':''?>>
+默认编码
+  <input type="radio" name="wapchar" value="1"<?=$r[wapchar]==1?' checked':''?>>
         UTF-8 
         <input type="radio" name="wapchar" value="0"<?=$r[wapchar]==0?' checked':''?>>
-        UNICODE <font color="#666666">(默认为 UNICODE 编码)</font></td>
+        UNICODE <font color="#666666">(一般按默认即可)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">只显示系统模型列表</td>
@@ -107,6 +111,11 @@ $empire=null;
       <td width="80%" height="25"><select name="wapdefstyle" id="wapdefstyle">
           <?=$wapdefstyles?>
         </select> </td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">支持改变使用模板</td>
+      <td height="25"><input type="radio" name="wapchstyle" value="1"<?=$r['wapchstyle']==1?' checked':''?>>是
+          <input type="radio" name="wapchstyle" value="0"<?=$r['wapchstyle']==0?' checked':''?>>否</td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">列表每页显示</td>

@@ -45,6 +45,7 @@ if(empty($enews))
 if($enews)
 {
 	hCheckEcmsRHash();
+	@set_time_limit(0);
 }
 //删除下载记录
 if($enews=="DelDownRecord")

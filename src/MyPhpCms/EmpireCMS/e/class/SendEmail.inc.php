@@ -495,6 +495,7 @@ class phpmailer
 		{
 			mt_srand(time());
 		}
+		mt_srand();
         $msg_id = md5(uniqid(mt_rand()));
         
         $fp = fopen($queue_path . $msg_id . ".pqm", "wb");
@@ -1602,6 +1603,8 @@ class Boundary
 //初使化邮件发送
 function FirstSendMail($r,$title,$msgtext){
 	global $ecms_config;
+	$r['fromemail']=RepPostVar($r['fromemail']);
+	$r['emailname']=RepPostVar($r['emailname']);
 	$mailer=new phpmailer();
 	if($r['sendmailtype']==1)//smtp
 	{
@@ -1645,6 +1648,7 @@ function EcmsToSendMail($email,$title,$text){
 		$count=count($email);
 		for($i=0;$i<$count;$i++)
 		{
+			$email[$i]=RepPostVar($email[$i]);
 			if($email[$i])
 			{
 				$mailer->AddAddress($email[$i]);
@@ -1653,6 +1657,7 @@ function EcmsToSendMail($email,$title,$text){
 	}
 	else
 	{
+		$email=RepPostVar($email);
 		$mailer->AddAddress($email);
 	}
 	if(!$mailer->Send())

@@ -29,6 +29,9 @@ else
 {
 	$url="../../../d/js/".$p."/".$js.".js";
 }
+//checkurl
+eCheckOtherViewUrl($url,0,1);
+
 ?>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
 <script src="<?=$url?>"></script>

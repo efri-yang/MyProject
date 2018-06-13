@@ -38,6 +38,7 @@ while($modr=$empire->fetch($modsql))
 <meta content="<?=$spacename?>" name="keywords" />
 <meta content="<?=$spacename?>" name="description" />
 <link href="template/default/images/style.css" rel="stylesheet" type="text/css" />
+<script src="<?=$public_r['newsurl']?>e/data/js/ajax.js"></script>
 <script>
 function ChangeMenuBg(doobj,dofont){
 	doobj.style.cursor="hand";

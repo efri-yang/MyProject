@@ -63,7 +63,8 @@ function register($add){
 	$password=trim($add['password']);
 	$username=RepPostVar($username);
 	$password=RepPostVar($password);
-	$email=RepPostStr($add['email']);
+	$email=addslashes(RepPostStr($add['email']));
+	$email=RepPostVar($email);
 	if(!$username||!$password||!$email)
 	{
 		printerror("EmptyMember","history.go(-1)",1);
@@ -138,10 +139,11 @@ function register($add){
 	$password=eDoMemberPw($password,$salt);
 	//审核
 	$checked=ReturnGroupChecked($groupid);
-	if($checked&&$public_r['regacttype']==1)
+	if($checked&&$public_r['regacttype'])
 	{
 		$checked=0;
 	}
+	$checked=(int)$checked;
 	//验证附加表必填项
 	$mr['add_filepass']=ReturnTranFilepass();
 	$fid=GetMemberFormId($groupid);

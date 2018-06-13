@@ -376,6 +376,9 @@ function EditIndextemp($temptext,$userid,$username){
 		NewsBq($classid,eaddslashes($temptext),1,0);
 		//删除动态模板缓存文件
 		DelOneTempTmpfile('indexpage');
+		//更新动态页面缓存
+		$ecms_fclast=time();
+		$empire->query("update {$dbtbpre}enewspublic_fc set fclastindex='$ecms_fclast' limit 1");
 	}
 	if($sql)
 	{

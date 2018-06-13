@@ -41,7 +41,7 @@ function CheckLoginNum($ip,$time){
 		{
 			if($loginnum>=$public_r['loginnum'])
 			{
-				printerror("LoginOutNum","index.php");
+				printerror("LoginOutNum",eAdminLoginReturnUrl(0));
 			}
 		}
 	}
@@ -50,7 +50,7 @@ function CheckLoginNum($ip,$time){
 	$num=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsloginfail where ip='$ip' and num>=$public_r[loginnum] and lasttime>$chtime limit 1");
 	if($num)
 	{
-		printerror("LoginOutNum","index.php");
+		printerror("LoginOutNum",eAdminLoginReturnUrl(0));
 	}
 }
 
@@ -61,45 +61,48 @@ function login($username,$password,$key,$post){
 	$password=RepPostVar($password);
 	if(!$username||!$password)
 	{
-		printerror("EmptyKey","index.php");
+		printerror("EmptyKey",eAdminLoginReturnUrl(0));
 	}
 	//验证码
 	$keyvname='checkkey';
 	if(!$public_r['adminloginkey'])
 	{
-		ecmsCheckShowKey($keyvname,$key,0,0);
+		ecmsCheckShowKey($keyvname,$key,0,0,1);
 	}
 	if(strlen($username)>30||strlen($password)>30)
 	{
-		printerror("EmptyKey","index.php");
+		printerror("EmptyKey",eAdminLoginReturnUrl(0));
 	}
 	$loginip=egetip();
 	$logintime=time();
 	CheckLoginNum($loginip,$logintime);
 	//认证码
-	if($ecms_config['esafe']['loginauth']&&$ecms_config['esafe']['loginauth']!=$post['loginauth'])
+	if($ecms_config['esafe']['loginauth'])
 	{
-		InsertErrorLoginNum($username,$password,1,$loginip,$logintime);
-		printerror("ErrorLoginAuth","index.php");
+		if('dg'.$ecms_config['esafe']['loginauth']!='dg'.$post['loginauth'])
+		{
+			InsertErrorLoginNum($username,$password,1,$loginip,$logintime);
+			printerror("ErrorLoginAuth",eAdminLoginReturnUrl(0));
+		}
 	}
 	$user_r=$empire->fetch1("select userid,password,salt,salt2,lasttime,lastip,addtime,addip,userprikey,lastipport,addipport from {$dbtbpre}enewsuser where username='".$username."' and checked=0 limit 1");
 	if(!$user_r['userid'])
 	{
 		InsertErrorLoginNum($username,$password,0,$loginip,$logintime);
-		printerror("LoginFail","index.php");
+		printerror("LoginFail",eAdminLoginReturnUrl(0));
 	}
 	$ch_password=DoEmpireCMSAdminPassword($password,$user_r['salt'],$user_r['salt2']);
-	if($user_r['password']!=$ch_password)
+	if('dg'.$user_r['password']!='dg'.$ch_password)
 	{
 		InsertErrorLoginNum($username,$password,0,$loginip,$logintime);
-		printerror("LoginFail","index.php");
+		printerror("LoginFail",eAdminLoginReturnUrl(0));
 	}
 	//安全问答
 	$user_addr=$empire->fetch1("select userid,equestion,eanswer,openip,certkey from {$dbtbpre}enewsuseradd where userid='$user_r[userid]'");
 	if(!$user_addr['userid'])
 	{
 		InsertErrorLoginNum($username,$password,0,$loginip,$logintime);
-		printerror("LoginFail","index.php");
+		printerror("LoginFail",eAdminLoginReturnUrl(0));
 	}
 	if($user_addr['equestion'])
 	{
@@ -108,13 +111,13 @@ function login($username,$password,$key,$post){
 		if($user_addr['equestion']!=$equestion)
 		{
 			InsertErrorLoginNum($username,$password,0,$loginip,$logintime);
-			printerror("LoginFail","index.php");
+			printerror("LoginFail",eAdminLoginReturnUrl(0));
 		}
 		$ckeanswer=ReturnHLoginQuestionStr($user_r['userid'],$username,$user_addr['equestion'],$eanswer);
-		if($ckeanswer!=$user_addr['eanswer'])
+		if('dg'.$ckeanswer!='dg'.$user_addr['eanswer'])
 		{
 			InsertErrorLoginNum($username,$password,0,$loginip,$logintime);
-			printerror("LoginFail","index.php");
+			printerror("LoginFail",eAdminLoginReturnUrl(0));
 		}
 	}
 	//IP限制
@@ -157,7 +160,7 @@ function login($username,$password,$key,$post){
 		$set5=esetcookie("ecmsdodbdata","",0,1);
 	}
 	
-	ecmsEmptyShowKey($keyvname,0);//清空验证码
+	ecmsEmptyShowKey($keyvname,0,1);//清空验证码
 	$set4=esetcookie("loginuserid",$r[userid],0,1);
 	$set1=esetcookie("loginusername",$username,0,1);
 	$set2=esetcookie("loginrnd",$rnd,0,1);
@@ -206,7 +209,7 @@ function login($username,$password,$key,$post){
 	}
 	else
 	{
-		printerror("NotCookie","index.php");
+		printerror("NotCookie",eAdminLoginReturnUrl(0));
 	}
 }
 
@@ -287,4 +290,11 @@ function eCheckAccessAdminLoginIp($openips){
 		}
 	}
 }
+
+//返回地址
+function eAdminLoginReturnUrl($ecms=0){
+	$eurl=EcmsGetReturnUrl();
+	return $eurl;
+}
+
 ?>

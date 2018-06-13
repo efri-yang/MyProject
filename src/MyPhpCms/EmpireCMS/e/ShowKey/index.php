@@ -28,6 +28,7 @@ function domake_password($pw_length){
 		{
 			mt_srand((double)microtime()*1000000);
 		}
+		mt_srand();
 		$randnum=mt_rand($low_ascii_bound,$upper_ascii_bound);
 		if(!in_array($randnum,$notuse))
 		{
@@ -192,6 +193,10 @@ function ecmsReturnKeyVarname($v){
 	elseif($v=='regsend')//重发激活邮件
 	{
 		$name='checkregsendkey';
+	}
+	elseif($v=='report')//报告
+	{
+		$name='checkreportkey';
 	}
 	else//评论pl
 	{

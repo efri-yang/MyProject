@@ -1,1 +1,0 @@
-document.write("<li><a href=\"/MyProject/src/MyPhpCms/EmpireCMS/article/xiaoshuo/3.html\" title=\"我的家\">我的家</a></li><li><a href=\"/MyProject/src/MyPhpCms/EmpireCMS/article/xiaoshuo/1.html\" title=\"历史上的父子宰相\">历史上的父子宰相</a></li>");

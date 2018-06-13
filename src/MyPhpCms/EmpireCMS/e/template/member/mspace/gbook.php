@@ -36,6 +36,7 @@ function CheckAll(form)
 			{
 				$private='*悄悄话* / ';
 			}
+			$r[uname]=stripSlashes($r[uname]);
 			$msg='';
 			if($r['uid'])
 			{
@@ -60,7 +61,7 @@ function CheckAll(form)
                   <td colspan="2"> <table border=0 width=100% cellspacing=1 cellpadding=10 bgcolor='#cccccc'>
                       <tr> 
                         <td width='100%' bgcolor='#FFFFFF' style='word-break:break-all'> 
-                          <?=nl2br($r['gbtext'])?>                        </td>
+                          <?=nl2br(stripSlashes($r['gbtext']))?>                        </td>
                       </tr>
                     </table>
 					<?
@@ -70,7 +71,7 @@ function CheckAll(form)
                     <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1">
                       <tr> 
                         <td><img src="../../data/images/regb.gif" width="18" height="18"><strong><font color="#FF0000">回复:</font></strong>
-                          <?=nl2br($r['retext'])?>                        </td>
+                          <?=nl2br(stripSlashes($r['retext']))?>                        </td>
                       </tr>
                     </table>
 					<?

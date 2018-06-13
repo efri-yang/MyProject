@@ -49,13 +49,13 @@ $empire=null;
     <tr bgcolor="#FFFFFF"> 
       <td width="20%" height="25">留言发表者:</td>
       <td width="80%" height="25"> 
-        <?=$r[name]?>&nbsp;(<?=$username?>)
+        <?=stripSlashes($r[name])?>&nbsp;(<?=$username?>)
       </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">留言内容:</td>
       <td height="25"> 
-        <?=nl2br($r[lytext])?>
+        <?=nl2br(stripSlashes($r[lytext]))?>
       </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
@@ -68,7 +68,7 @@ $empire=null;
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25"><strong>回复内容:</strong></td>
-      <td height="25"><textarea name="retext" cols="60" rows="9" id="retext"><?=$r[retext]?></textarea> </td>
+      <td height="25"><textarea name="retext" cols="60" rows="9" id="retext"><?=stripSlashes($r[retext])?></textarea> </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">&nbsp;</td>

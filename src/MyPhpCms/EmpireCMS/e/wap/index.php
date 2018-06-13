@@ -8,8 +8,11 @@ define('WapPage','index');
 $usewapstyle='';
 $wapstyle=0;
 $pr=array();
+$GLOBALS['navclassid']=0;
 require("wapfun.php");
-$pagetitle=$public_r['sitename'];
+$pagetitle=ehtmlspecialchars($public_r['sitename']);
+$pagekey=ehtmlspecialchars($pr['sitekey']);
+$pagedes=ehtmlspecialchars($pr['siteintro']);
 //参数
 $ecmsvar_mbr=array();
 $ecmsvar_mbr['wapstyle']=$wapstyle;

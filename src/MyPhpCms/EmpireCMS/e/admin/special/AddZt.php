@@ -183,7 +183,7 @@ function CheckForm(obj){
 	}
 }
   </script>
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -325,7 +325,7 @@ function CheckForm(obj){
     </tr>
     <tr>
       <td height="25" bgcolor="#FFFFFF">过期时间</td>
-      <td bgcolor="#FFFFFF"><input name="endtime" type="text" id="endtime" value="<?=$r[endtime]?date('Y-m-d',$r[endtime]):''?>" size="12" onClick="setday(this)">
+      <td bgcolor="#FFFFFF"><input name="endtime" type="text" id="endtime" value="<?=$r[endtime]?date('Y-m-d',$r[endtime]):''?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         <font color="#666666">(超过此期限不再更新和评论,空为不限制)
         <input name="oldendtime" type="hidden" id="oldendtime" value="<?=$r[endtime]?>">
         </font></td>
@@ -417,15 +417,18 @@ function CheckForm(obj){
       <td height="25" colspan="2" bgcolor="#FFFFFF"> <textarea name="classtext" cols="80" rows="23" id="classtext" style="WIDTH: 100%"><?=ehtmlspecialchars(stripSlashes($addr[classtext]))?></textarea></td>
     </tr>
     <?php
+	$loadeditorjs='';
   	$ztfnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsztf");
   	if($ztfnum)
   	{
   		$editorfnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsztf where fform='editor' limit 1");	
 		if($editorfnum)
 		{
-			include('../ecmseditor/infoeditor/fckeditor.php');
+			include('../ecmseditor/eshoweditor.php');
+			$loadeditorjs=ECMS_ShowEditorJS('../ecmseditor/infoeditor/');
 		}
   	?>
+		<?=$loadeditorjs?>
     <tr> 
       <td height="25" colspan="2">自定义字段设置</td>
     </tr>

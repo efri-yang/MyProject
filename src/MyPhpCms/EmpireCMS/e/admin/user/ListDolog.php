@@ -166,6 +166,14 @@ if($_GET['sear']==1)
 		{
 			$where.=$and."logip like '%$keyboard%'";
 		}
+		elseif($show==3)
+		{
+			$where.=$and."enews like '%$keyboard%'";
+		}
+		elseif($show==4)
+		{
+			$where.=$and."doing like '%$keyboard%'";
+		}
 		else
 		{
 			$where.=$and."(username like '%$keyboard%' or logip like '%$keyboard%')";
@@ -210,8 +218,8 @@ $returnpage=page2($num,$line,$page_line,$start,$page,$search);
 <html>
 <head>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css"> 
-<title>管理登陆日志</title>
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<title>管理操作日志</title>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 <script>
 function CheckAll(form)
   {
@@ -240,15 +248,16 @@ function CheckAll(form)
   <?=$ecms_hashur['eform']?>
     <tr> 
       <td height="25"> <div align="center">时间从 
-          <input name="startday" type="text" value="<?=$startday?>" size="12" onclick="setday(this)">
+          <input name="startday" type="text" value="<?=$startday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           到 
-          <input name="endday" type="text" value="<?=$endday?>" size="12" onclick="setday(this)">
+          <input name="endday" type="text" value="<?=$endday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           ，关键字： 
           <input name="keyboard" type="text" id="keyboard" value="<?=$keyboard?>">
           <select name="show" id="show">
-            <option value="0"<?=$show==0?' selected':''?>>不限</option>
             <option value="1"<?=$show==1?' selected':''?>>用户名</option>
-            <option value="2"<?=$show==2?' selected':''?>>登陆IP</option>
+            <option value="2"<?=$show==2?' selected':''?>>操作IP</option>
+			<option value="3"<?=$show==3?' selected':''?>>操作事件</option>
+			<option value="4"<?=$show==4?' selected':''?>>操作内容</option>
           </select>
           栏目ID：
           <input name="classid" type="text" id="classid" value="<?=$classid?>" size="10">
@@ -278,6 +287,7 @@ function CheckAll(form)
     <?
   while($r=$empire->fetch($sql))
   {
+	  $dologenews=$enews_r[$r['enews']]?$enews_r[$r['enews']]:$r['enews'];
   ?>
     <tr bgcolor="#DBEAF5" id=log<?=$r[logid]?>> 
       <td> 
@@ -303,7 +313,7 @@ function CheckAll(form)
       <td height="25" colspan="5"><table width="100%" border="0" cellspacing="1" cellpadding="3">
           <tr>
             <td width="9%">动作：</td>
-            <td width="25%"><?=$enews_r[$r[enews]]?></td>
+            <td width="25%"><?=$dologenews?></td>
             <td width="10%">操作对像：</td>
             <td width="56%"><?=$r[doing]?></td>
           </tr>
@@ -328,9 +338,9 @@ function CheckAll(form)
       <td><div align="center">
           <input name="enews" type="hidden" id="enews" value="DelDoLog_date">
           删除从 
-          <input name="startday" type="text" id="startday" onclick="setday(this)" value="<?=$startday?>" size="12">
+          <input name="startday" type="text" id="startday" value="<?=$startday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           到 
-          <input name="endday" type="text" id="endday" onclick="setday(this)" value="<?=$endday?>" size="12">
+          <input name="endday" type="text" id="endday" value="<?=$endday?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
           之间的日志
 <input type="submit" name="Submit2" value="提交">
           </div></td>

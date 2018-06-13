@@ -59,6 +59,12 @@ function AddWorkflowItem($add,$userid,$username){
 	{
 		printerror('EmptyWorkflowItemUser','history.go(-1)');
 	}
+	$add['tname']=hRepPostStr($add['tname'],1);
+	$add['ttext']=hRepPostStr($add['ttext'],1);
+	$groupid=hRepPostStr($groupid,1);
+	$userclass=hRepPostStr($userclass,1);
+	$username=hRepPostStr($username,1);
+	$add['tstatus']=hRepPostStr($add['tstatus'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsworkflowitem(wfid,tname,tno,ttext,groupid,userclass,username,lztype,tbdo,tddo,tstatus) values('$wfid','$add[tname]','$tno','$add[ttext]','$groupid','$userclass','$username','$lztype','$tbdo','$tddo','$add[tstatus]');");
 	$tid=$empire->lastid();
 	if($sql)
@@ -98,6 +104,12 @@ function EditWorkflowItem($add,$userid,$username){
 	{
 		printerror('EmptyWorkflowItemUser','history.go(-1)');
 	}
+	$add['tname']=hRepPostStr($add['tname'],1);
+	$add['ttext']=hRepPostStr($add['ttext'],1);
+	$groupid=hRepPostStr($groupid,1);
+	$userclass=hRepPostStr($userclass,1);
+	$username=hRepPostStr($username,1);
+	$add['tstatus']=hRepPostStr($add['tstatus'],1);
 	$sql=$empire->query("update {$dbtbpre}enewsworkflowitem set tname='$add[tname]',tno='$tno',ttext='$add[ttext]',groupid='$groupid',userclass='$userclass',username='$username',lztype='$lztype',tbdo='$tbdo',tddo='$tddo',tstatus='$add[tstatus]' where tid='$tid'");
 	if($sql)
 	{

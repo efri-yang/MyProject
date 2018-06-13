@@ -58,6 +58,7 @@ function AddPlface($add,$userid,$username){
 		$r[plface]='||';
 	}
 	$newplface=$r[plface].$faceword."##".$facefile."||";
+	$newplface=hRepPostStr($newplface,1);
 	$sql=$empire->query("update {$dbtbpre}enewspl_set set plface='$newplface' limit 1");
 	if($sql)
 	{
@@ -87,6 +88,7 @@ function EditPlface($add,$userid,$username){
 			$plface.=$faceword[$i]."##".$facefile[$i]."||";
 		}
 	}
+	$plface=hRepPostStr($plface,1);
 	$sql=$empire->query("update {$dbtbpre}enewspl_set set plface='$plface' limit 1");
 	if($sql)
 	{

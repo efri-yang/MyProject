@@ -590,6 +590,12 @@ function DelZt($ztid,$userid,$username){
 	//删除附件
 	DelFileOtherTable("id='$ztid' and modtype=2");
 	GetClass();//更新缓存
+	//moreportdo
+	if($r['ztpath'])
+	{
+		$eautodofname='delpath|'.$r['ztpath'].'||';
+		eAutodo_AddDo('eDelFileZT',0,0,0,0,0,$eautodofname);
+	}
 	if($sql){
 		insert_dolog("ztid=".$ztid."<br>ztname=".$r[ztname]);//操作日志
 		printerror("DelZtSuccess","special/ListZt.php".hReturnEcmsHashStrHref2(1));
@@ -826,7 +832,7 @@ function DelTogZtInfo($add,$userid,$username){
 	if($sql)
 	{
 		insert_dolog("togid=$togid&togztname=$r[togztname]");//操作日志
-		printerror('DelTogZtInfoSuccess',$_SERVER['HTTP_REFERER']);
+		printerror('DelTogZtInfoSuccess',EcmsGetReturnUrl());
 	}
 	else
 	{
@@ -1349,6 +1355,7 @@ function DoPostClassVar($add){
 	if(!$add[qaddgroupid])
 	{
 		$add[addinfofen]=0;
+		$add['oneinfo']=0;
 	}
 	$add[qaddshowkey]=(int)$add[qaddshowkey];
 	$add[adminqinfo]=(int)$add[adminqinfo];
@@ -1382,9 +1389,13 @@ function DoPostClassVar($add){
 	$add[wfid]=(int)$add[wfid];
 	$add['repagenum']=(int)$add['repagenum'];
 	$add['keycid']=(int)$add['keycid'];
+	$add['oneinfo']=(int)$add['oneinfo'];
+	$add['wapislist']=(int)$add['wapislist'];
 	$add['filepass']=(int)$add['filepass'];
 	$add[pripath]=eaddslashes($add[pripath]);
 	$add[classpath]=eaddslashes($add[classpath]);
+	$add['eclasspagetext']=AddAddsData(RepPhpAspJspcode($add['eclasspagetext']));
+	$add['addsql']=eaddslashes($add['addsql']);
 	if($add['islist']==3)
 	{
 		$add['bdinfoid']=RepPostVar($add['bdinfoid']);
@@ -1431,6 +1442,7 @@ function AddWbClass($add,$userid,$username){
 	}
 	$add[islast]=0;
 	$addtime=time();
+	$ecms_fclast=time();
 	//取得表名
 	$tabler=GetModTable($add[modid]);
 	$tabler[tid]=(int)$tabler[tid];
@@ -1458,11 +1470,11 @@ function AddWbClass($add,$userid,$username){
 		$featherclass=$r[featherclass].$add[bclassid]."|";
 		$sonclass="";
 	}
-	$sql=$empire->query("insert into {$dbtbpre}enewsclass(bclassid,classname,is_zt,sonclass,lencord,link_num,newstempid,onclick,listtempid,featherclass,islast,classpath,classtype,newspath,filename,filetype,openpl,openadd,newline,hotline,goodline,classurl,groupid,myorder,filename_qz,hotplline,modid,checked,firstline,bname,islist,searchtempid,tid,tbname,maxnum,checkpl,down_num,online_num,listorder,reorder,intro,classimg,jstempid,addinfofen,listdt,showclass,showdt,checkqadd,qaddlist,qaddgroupid,qaddshowkey,adminqinfo,doctime,classpagekey,dtlisttempid,classtempid,nreclass,nreinfo,nrejs,nottobq,ipath,addreinfo,haddlist,sametitle,definfovoteid,wburl,qeditchecked,wapstyleid,repreinfo,pltempid,cgroupid,yhid,wfid,cgtoinfo,bdinfoid,repagenum,keycid,addtime) values($add[bclassid],'$add[classname]',0,'$sonclass',$add[lencord],$add[link_num],$add[newstempid],0,$add[listtempid],'$featherclass',$add[islast],'$classpath','$add[classtype]','$add[newspath]',$add[filename],'$add[filetype]',$add[openpl],$add[openadd],$add[newline],$add[hotline],$add[goodline],'$add[classurl]',$add[groupid],$add[myorder],'$add[filename_qz]',$add[hotplline],$add[modid],$add[checked],$add[firstline],'$add[bname]',$add[islist],$add[searchtempid],$tabler[tid],'$tabler[tbname]',$add[maxnum],$add[checkpl],$add[down_num],$add[online_num],'$add[listorder]','$add[reorder]','$add[intro]','$add[classimg]',$add[jstempid],$add[addinfofen],$add[listdt],$add[showclass],$add[showdt],$add[checkqadd],$add[qaddlist],'$add[qaddgroupid]',$add[qaddshowkey],$add[adminqinfo],$add[doctime],'$add[classpagekey]','$add[dtlisttempid]','$add[classtempid]',$add[nreclass],$add[nreinfo],$add[nrejs],$add[nottobq],'$add[ipath]',$add[addreinfo],$add[haddlist],$add[sametitle],$add[definfovoteid],'$add[wburl]',$add[qeditchecked],$add[wapstyleid],'$add[repreinfo]','$add[pltempid]','$add[cgroupid]','$add[yhid]','$add[wfid]','$add[cgtoinfo]','$add[bdinfoid]','$add[repagenum]','$add[keycid]','$addtime');");
+	$sql=$empire->query("insert into {$dbtbpre}enewsclass(bclassid,classname,is_zt,sonclass,lencord,link_num,newstempid,onclick,listtempid,featherclass,islast,classpath,classtype,newspath,filename,filetype,openpl,openadd,newline,hotline,goodline,classurl,groupid,myorder,filename_qz,hotplline,modid,checked,firstline,bname,islist,searchtempid,tid,tbname,maxnum,checkpl,down_num,online_num,listorder,reorder,intro,classimg,jstempid,addinfofen,listdt,showclass,showdt,checkqadd,qaddlist,qaddgroupid,qaddshowkey,adminqinfo,doctime,classpagekey,dtlisttempid,classtempid,nreclass,nreinfo,nrejs,nottobq,ipath,addreinfo,haddlist,sametitle,definfovoteid,wburl,qeditchecked,wapstyleid,repreinfo,pltempid,cgroupid,yhid,wfid,cgtoinfo,bdinfoid,repagenum,keycid,addtime,oneinfo,addsql,wapislist,fclast) values($add[bclassid],'$add[classname]',0,'$sonclass',$add[lencord],$add[link_num],$add[newstempid],0,$add[listtempid],'$featherclass',$add[islast],'$classpath','$add[classtype]','$add[newspath]',$add[filename],'$add[filetype]',$add[openpl],$add[openadd],$add[newline],$add[hotline],$add[goodline],'$add[classurl]',$add[groupid],$add[myorder],'$add[filename_qz]',$add[hotplline],$add[modid],$add[checked],$add[firstline],'$add[bname]',$add[islist],$add[searchtempid],$tabler[tid],'$tabler[tbname]',$add[maxnum],$add[checkpl],$add[down_num],$add[online_num],'$add[listorder]','$add[reorder]','$add[intro]','$add[classimg]',$add[jstempid],$add[addinfofen],$add[listdt],$add[showclass],$add[showdt],$add[checkqadd],$add[qaddlist],'$add[qaddgroupid]',$add[qaddshowkey],$add[adminqinfo],$add[doctime],'$add[classpagekey]','$add[dtlisttempid]','$add[classtempid]',$add[nreclass],$add[nreinfo],$add[nrejs],$add[nottobq],'$add[ipath]',$add[addreinfo],$add[haddlist],$add[sametitle],$add[definfovoteid],'$add[wburl]',$add[qeditchecked],$add[wapstyleid],'$add[repreinfo]','$add[pltempid]','$add[cgroupid]','$add[yhid]','$add[wfid]','$add[cgtoinfo]','$add[bdinfoid]','$add[repagenum]','$add[keycid]','$addtime','$add[oneinfo]','$add[addsql]','$add[wapislist]','$ecms_fclast');");
 	$lastid=$empire->lastid();
 	//副表
 	$ret_cr=ReturnClassAddF($add,0);
-	$empire->query("replace into {$dbtbpre}enewsclassadd(classid,classtext".$ret_cr[0].") values('$lastid','".eaddslashes2($add[classtext])."'".$ret_cr[1].");");
+	$empire->query("replace into {$dbtbpre}enewsclassadd(classid,classtext,eclasspagetext".$ret_cr[0].") values('$lastid','".eaddslashes2($add[classtext])."','$add[eclasspagetext]'".$ret_cr[1].");");
 	//统计表
 	$empire->query("replace into {$dbtbpre}enewsclass_stats(classid) values('$lastid');");
 	//更新附件
@@ -1521,6 +1533,7 @@ function AddClass($add,$userid,$username){
 		printerror("ReClasspath","");
 	}
 	$addtime=time();
+	$ecms_fclast=time();
 	//取得表名
 	$tabler=GetModTable($add[modid]);
 	$tabler[tid]=(int)$tabler[tid];
@@ -1553,11 +1566,11 @@ function AddClass($add,$userid,$username){
 	    }
 		//建立目录
 		CreateClassPath($classpath);
-		$sql=$empire->query("insert into {$dbtbpre}enewsclass(bclassid,classname,is_zt,sonclass,lencord,link_num,newstempid,onclick,listtempid,featherclass,islast,classpath,classtype,newspath,filename,filetype,openpl,openadd,newline,hotline,goodline,classurl,groupid,myorder,filename_qz,hotplline,modid,checked,firstline,bname,islist,searchtempid,tid,tbname,maxnum,checkpl,down_num,online_num,listorder,reorder,intro,classimg,jstempid,addinfofen,listdt,showclass,showdt,checkqadd,qaddlist,qaddgroupid,qaddshowkey,adminqinfo,doctime,classpagekey,dtlisttempid,classtempid,nreclass,nreinfo,nrejs,nottobq,ipath,addreinfo,haddlist,sametitle,definfovoteid,wburl,qeditchecked,wapstyleid,repreinfo,pltempid,cgroupid,yhid,wfid,cgtoinfo,bdinfoid,repagenum,keycid,addtime) values($add[bclassid],'$add[classname]',0,'$sonclass',$add[lencord],$add[link_num],$add[newstempid],0,$add[listtempid],'$featherclass',$add[islast],'$classpath','$add[classtype]','$add[newspath]',$add[filename],'$add[filetype]',$add[openpl],$add[openadd],$add[newline],$add[hotline],$add[goodline],'$add[classurl]',$add[groupid],$add[myorder],'$add[filename_qz]',$add[hotplline],$add[modid],$add[checked],$add[firstline],'$add[bname]',$add[islist],$add[searchtempid],$tabler[tid],'$tabler[tbname]',$add[maxnum],$add[checkpl],$add[down_num],$add[online_num],'$add[listorder]','$add[reorder]','$add[intro]','$add[classimg]',$add[jstempid],$add[addinfofen],$add[listdt],$add[showclass],$add[showdt],$add[checkqadd],$add[qaddlist],'$add[qaddgroupid]',$add[qaddshowkey],$add[adminqinfo],$add[doctime],'$add[classpagekey]','$add[dtlisttempid]','$add[classtempid]',$add[nreclass],$add[nreinfo],$add[nrejs],$add[nottobq],'$add[ipath]',$add[addreinfo],$add[haddlist],$add[sametitle],$add[definfovoteid],'',$add[qeditchecked],$add[wapstyleid],'$add[repreinfo]','$add[pltempid]','$add[cgroupid]','$add[yhid]','$add[wfid]','$add[cgtoinfo]','$add[bdinfoid]','$add[repagenum]','$add[keycid]','$addtime');");
+		$sql=$empire->query("insert into {$dbtbpre}enewsclass(bclassid,classname,is_zt,sonclass,lencord,link_num,newstempid,onclick,listtempid,featherclass,islast,classpath,classtype,newspath,filename,filetype,openpl,openadd,newline,hotline,goodline,classurl,groupid,myorder,filename_qz,hotplline,modid,checked,firstline,bname,islist,searchtempid,tid,tbname,maxnum,checkpl,down_num,online_num,listorder,reorder,intro,classimg,jstempid,addinfofen,listdt,showclass,showdt,checkqadd,qaddlist,qaddgroupid,qaddshowkey,adminqinfo,doctime,classpagekey,dtlisttempid,classtempid,nreclass,nreinfo,nrejs,nottobq,ipath,addreinfo,haddlist,sametitle,definfovoteid,wburl,qeditchecked,wapstyleid,repreinfo,pltempid,cgroupid,yhid,wfid,cgtoinfo,bdinfoid,repagenum,keycid,addtime,oneinfo,addsql,wapislist,fclast) values($add[bclassid],'$add[classname]',0,'$sonclass',$add[lencord],$add[link_num],$add[newstempid],0,$add[listtempid],'$featherclass',$add[islast],'$classpath','$add[classtype]','$add[newspath]',$add[filename],'$add[filetype]',$add[openpl],$add[openadd],$add[newline],$add[hotline],$add[goodline],'$add[classurl]',$add[groupid],$add[myorder],'$add[filename_qz]',$add[hotplline],$add[modid],$add[checked],$add[firstline],'$add[bname]',$add[islist],$add[searchtempid],$tabler[tid],'$tabler[tbname]',$add[maxnum],$add[checkpl],$add[down_num],$add[online_num],'$add[listorder]','$add[reorder]','$add[intro]','$add[classimg]',$add[jstempid],$add[addinfofen],$add[listdt],$add[showclass],$add[showdt],$add[checkqadd],$add[qaddlist],'$add[qaddgroupid]',$add[qaddshowkey],$add[adminqinfo],$add[doctime],'$add[classpagekey]','$add[dtlisttempid]','$add[classtempid]',$add[nreclass],$add[nreinfo],$add[nrejs],$add[nottobq],'$add[ipath]',$add[addreinfo],$add[haddlist],$add[sametitle],$add[definfovoteid],'',$add[qeditchecked],$add[wapstyleid],'$add[repreinfo]','$add[pltempid]','$add[cgroupid]','$add[yhid]','$add[wfid]','$add[cgtoinfo]','$add[bdinfoid]','$add[repagenum]','$add[keycid]','$addtime','$add[oneinfo]','$add[addsql]','$add[wapislist]','$ecms_fclast');");
 		$lastid=$empire->lastid();
 		//副表
 		$ret_cr=ReturnClassAddF($add,0);
-		$empire->query("replace into {$dbtbpre}enewsclassadd(classid,classtext".$ret_cr[0].") values('$lastid','".eaddslashes2($add[classtext])."'".$ret_cr[1].");");
+		$empire->query("replace into {$dbtbpre}enewsclassadd(classid,classtext,eclasspagetext".$ret_cr[0].") values('$lastid','".eaddslashes2($add[classtext])."','$add[eclasspagetext]'".$ret_cr[1].");");
 		//统计表
 		$empire->query("replace into {$dbtbpre}enewsclass_stats(classid) values('$lastid');");
 		//更新附件
@@ -1628,11 +1641,11 @@ function AddClass($add,$userid,$username){
 		}
 		//建立栏目目录
 		CreateClassPath($classpath);
-		$sql=$empire->query("insert into {$dbtbpre}enewsclass(bclassid,classname,sonclass,is_zt,lencord,link_num,newstempid,onclick,listtempid,featherclass,islast,classpath,classtype,newspath,filename,filetype,openpl,openadd,newline,hotline,goodline,classurl,groupid,myorder,filename_qz,hotplline,modid,checked,firstline,bname,islist,searchtempid,tid,tbname,maxnum,checkpl,down_num,online_num,listorder,reorder,intro,classimg,jstempid,addinfofen,listdt,showclass,showdt,checkqadd,qaddlist,qaddgroupid,qaddshowkey,adminqinfo,doctime,classpagekey,dtlisttempid,classtempid,nreclass,nreinfo,nrejs,nottobq,ipath,addreinfo,haddlist,sametitle,definfovoteid,wburl,qeditchecked,wapstyleid,repreinfo,pltempid,cgroupid,yhid,wfid,cgtoinfo,bdinfoid,repagenum,keycid,addtime) values($add[bclassid],'$add[classname]','$sonclass',0,$add[lencord],$add[link_num],$add[newstempid],0,$add[listtempid],'$featherclass',$add[islast],'$classpath','$add[classtype]','$add[newspath]',$add[filename],'$add[filetype]',$add[openpl],$add[openadd],$add[newline],$add[hotline],$add[goodline],'$add[classurl]',$add[groupid],$add[myorder],'$add[filename_qz]',$add[hotplline],$add[modid],$add[checked],$add[firstline],'$add[bname]',$add[islist],$add[searchtempid],$tabler[tid],'$tabler[tbname]',$add[maxnum],$add[checkpl],$add[down_num],$add[online_num],'$add[listorder]','$add[reorder]','$add[intro]','$add[classimg]',$add[jstempid],$add[addinfofen],$add[listdt],$add[showclass],$add[showdt],$add[checkqadd],$add[qaddlist],'$add[qaddgroupid]',$add[qaddshowkey],$add[adminqinfo],$add[doctime],'$add[classpagekey]','$add[dtlisttempid]','$add[classtempid]',$add[nreclass],$add[nreinfo],$add[nrejs],$add[nottobq],'$add[ipath]',$add[addreinfo],$add[haddlist],$add[sametitle],$add[definfovoteid],'',$add[qeditchecked],$add[wapstyleid],'$add[repreinfo]','$add[pltempid]','$add[cgroupid]','$add[yhid]','$add[wfid]','$add[cgtoinfo]','$add[smallbdinfoid]','$add[repagenum]','$add[keycid]','$addtime');");
+		$sql=$empire->query("insert into {$dbtbpre}enewsclass(bclassid,classname,sonclass,is_zt,lencord,link_num,newstempid,onclick,listtempid,featherclass,islast,classpath,classtype,newspath,filename,filetype,openpl,openadd,newline,hotline,goodline,classurl,groupid,myorder,filename_qz,hotplline,modid,checked,firstline,bname,islist,searchtempid,tid,tbname,maxnum,checkpl,down_num,online_num,listorder,reorder,intro,classimg,jstempid,addinfofen,listdt,showclass,showdt,checkqadd,qaddlist,qaddgroupid,qaddshowkey,adminqinfo,doctime,classpagekey,dtlisttempid,classtempid,nreclass,nreinfo,nrejs,nottobq,ipath,addreinfo,haddlist,sametitle,definfovoteid,wburl,qeditchecked,wapstyleid,repreinfo,pltempid,cgroupid,yhid,wfid,cgtoinfo,bdinfoid,repagenum,keycid,addtime,oneinfo,addsql,wapislist,fclast) values($add[bclassid],'$add[classname]','$sonclass',0,$add[lencord],$add[link_num],$add[newstempid],0,$add[listtempid],'$featherclass',$add[islast],'$classpath','$add[classtype]','$add[newspath]',$add[filename],'$add[filetype]',$add[openpl],$add[openadd],$add[newline],$add[hotline],$add[goodline],'$add[classurl]',$add[groupid],$add[myorder],'$add[filename_qz]',$add[hotplline],$add[modid],$add[checked],$add[firstline],'$add[bname]',$add[islist],$add[searchtempid],$tabler[tid],'$tabler[tbname]',$add[maxnum],$add[checkpl],$add[down_num],$add[online_num],'$add[listorder]','$add[reorder]','$add[intro]','$add[classimg]',$add[jstempid],$add[addinfofen],$add[listdt],$add[showclass],$add[showdt],$add[checkqadd],$add[qaddlist],'$add[qaddgroupid]',$add[qaddshowkey],$add[adminqinfo],$add[doctime],'$add[classpagekey]','$add[dtlisttempid]','$add[classtempid]',$add[nreclass],$add[nreinfo],$add[nrejs],$add[nottobq],'$add[ipath]',$add[addreinfo],$add[haddlist],$add[sametitle],$add[definfovoteid],'',$add[qeditchecked],$add[wapstyleid],'$add[repreinfo]','$add[pltempid]','$add[cgroupid]','$add[yhid]','$add[wfid]','$add[cgtoinfo]','$add[smallbdinfoid]','$add[repagenum]','$add[keycid]','$addtime','$add[oneinfo]','$add[addsql]','$add[wapislist]','$ecms_fclast');");
 		$lastid=$empire->lastid();
 		//副表
 		$ret_cr=ReturnClassAddF($add,0);
-		$empire->query("replace into {$dbtbpre}enewsclassadd(classid,classtext".$ret_cr[0].") values('$lastid','".eaddslashes2($add[classtext])."'".$ret_cr[1].");");
+		$empire->query("replace into {$dbtbpre}enewsclassadd(classid,classtext,eclasspagetext".$ret_cr[0].") values('$lastid','".eaddslashes2($add[classtext])."','$add[eclasspagetext]'".$ret_cr[1].");");
 		//统计表
 		$empire->query("replace into {$dbtbpre}enewsclass_stats(classid) values('$lastid');");
 		//修改父栏目的子栏目
@@ -1731,6 +1744,7 @@ function EditWbClass($add,$userid,$username){
 		printerror("EmptyWbClass","");
 	}
 	$add[islast]=0;
+	$ecms_fclast=time();
 	//取得表名
 	$tabler=GetModTable($add[modid]);
 	$tabler[tid]=(int)$tabler[tid];
@@ -1780,10 +1794,10 @@ function EditWbClass($add,$userid,$username){
 		$change=",bclassid=$add[bclassid],featherclass='$featherclass'";
 	}
 	//修改数据库资料
-	$sql=$empire->query("update {$dbtbpre}enewsclass set classname='$add[classname]',classpath='$classpath',classtype='$add[classtype]',newline=$add[newline],hotline=$add[hotline],goodline=$add[goodline],classurl='$add[classurl]',groupid=$add[groupid],myorder=$add[myorder],filename_qz='$add[filename_qz]',hotplline=$add[hotplline],modid=$add[modid],checked=$add[checked],firstline=$add[firstline],bname='$add[bname]',islist=$add[islist],listtempid=$add[listtempid],lencord=$add[lencord],searchtempid=$add[searchtempid],tid=$tabler[tid],tbname='$tabler[tbname]',maxnum=$add[maxnum],checkpl=$add[checkpl],down_num=$add[down_num],online_num=$add[online_num],listorder='$add[listorder]',reorder='$add[reorder]',intro='$add[intro]',classimg='$add[classimg]',jstempid=$add[jstempid],listdt=$add[listdt],showclass=$add[showclass],showdt=$add[showdt],qaddgroupid='$add[qaddgroupid]',qaddshowkey=$add[qaddshowkey],adminqinfo=$add[adminqinfo],doctime=$add[doctime],classpagekey='$add[classpagekey]',dtlisttempid='$add[dtlisttempid]',classtempid='$add[classtempid]',nreclass=$add[nreclass],nreinfo=$add[nreinfo],nrejs=$add[nrejs],nottobq=$add[nottobq],ipath='$add[ipath]',addreinfo=$add[addreinfo],haddlist=$add[haddlist],sametitle=$add[sametitle],definfovoteid=$add[definfovoteid],wburl='$add[wburl]',qeditchecked=$add[qeditchecked],openadd=$add[openadd],wapstyleid='$add[wapstyleid]',repreinfo='$add[repreinfo]',pltempid='$add[pltempid]',cgroupid='$add[cgroupid]',yhid='$add[yhid]',wfid='$add[wfid]',cgtoinfo='$add[cgtoinfo]',bdinfoid='$add[bdinfoid]',repagenum='$add[repagenum]',keycid='$add[keycid]'".$change." where classid='$add[classid]'");
+	$sql=$empire->query("update {$dbtbpre}enewsclass set classname='$add[classname]',classpath='$classpath',classtype='$add[classtype]',newline=$add[newline],hotline=$add[hotline],goodline=$add[goodline],classurl='$add[classurl]',groupid=$add[groupid],myorder=$add[myorder],filename_qz='$add[filename_qz]',hotplline=$add[hotplline],modid=$add[modid],checked=$add[checked],firstline=$add[firstline],bname='$add[bname]',islist=$add[islist],listtempid=$add[listtempid],lencord=$add[lencord],searchtempid=$add[searchtempid],tid=$tabler[tid],tbname='$tabler[tbname]',maxnum=$add[maxnum],checkpl=$add[checkpl],down_num=$add[down_num],online_num=$add[online_num],listorder='$add[listorder]',reorder='$add[reorder]',intro='$add[intro]',classimg='$add[classimg]',jstempid=$add[jstempid],listdt=$add[listdt],showclass=$add[showclass],showdt=$add[showdt],qaddgroupid='$add[qaddgroupid]',qaddshowkey=$add[qaddshowkey],adminqinfo=$add[adminqinfo],doctime=$add[doctime],classpagekey='$add[classpagekey]',dtlisttempid='$add[dtlisttempid]',classtempid='$add[classtempid]',nreclass=$add[nreclass],nreinfo=$add[nreinfo],nrejs=$add[nrejs],nottobq=$add[nottobq],ipath='$add[ipath]',addreinfo=$add[addreinfo],haddlist=$add[haddlist],sametitle=$add[sametitle],definfovoteid=$add[definfovoteid],wburl='$add[wburl]',qeditchecked=$add[qeditchecked],openadd=$add[openadd],wapstyleid='$add[wapstyleid]',repreinfo='$add[repreinfo]',pltempid='$add[pltempid]',cgroupid='$add[cgroupid]',yhid='$add[yhid]',wfid='$add[wfid]',cgtoinfo='$add[cgtoinfo]',bdinfoid='$add[bdinfoid]',repagenum='$add[repagenum]',keycid='$add[keycid]',oneinfo='$add[oneinfo]',addsql='$add[addsql]',wapislist='$add[wapislist]',fclast='$ecms_fclast'".$change." where classid='$add[classid]'");
 	//副表
 	$ret_cr=ReturnClassAddF($add,1);
-	$empire->query("update {$dbtbpre}enewsclassadd set classtext='".eaddslashes2($add[classtext])."'".$ret_cr[0]." where classid='$add[classid]'");
+	$empire->query("update {$dbtbpre}enewsclassadd set classtext='".eaddslashes2($add[classtext])."',eclasspagetext='$add[eclasspagetext]'".$ret_cr[0]." where classid='$add[classid]'");
 	//更新附件
 	UpdateTheFileEditOther(1,$add['classid'],'other');
 	GetClass();
@@ -1852,6 +1866,7 @@ function EditClass($add,$userid,$username){
 	CheckLevel($userid,$username,$classid,"class");
 	$add=DoPostClassVar($add);
 	$add[oldmodid]=(int)$add[oldmodid];
+	$ecms_fclast=time();
 	//改变目录
 	$classpath=$add[pripath].$add[classpath];
 	if($add[oldclasspath]<>$classpath&&$checkclasspath==$add['oldcpath']){
@@ -1883,7 +1898,7 @@ function EditClass($add,$userid,$username){
 					$uosql=$empire->query("update {$dbtbpre}enewsclass set sonclass='$newsonclass' where classid='$o[classid]'");
 				}
 				//修改子栏目的父栏目
-				$osql=$empire->query("select featherclass,classid,classpath from {$dbtbpre}enewsclass where featherclass like '%|".$add[classid]."%|'");
+				$osql=$empire->query("select featherclass,classid,classpath from {$dbtbpre}enewsclass where featherclass like '%|".$add[classid]."|%'");
 				while($o=$empire->fetch($osql)){
 					$newclasspath=str_replace($r[classpath]."/",$classpath."/",$o[classpath]);
 					$newfeatherclass=str_replace($r[featherclass],"|",$o[featherclass]);
@@ -1968,10 +1983,10 @@ function EditClass($add,$userid,$username){
 			$empire->query("update {$dbtbpre}enewsclass set wapstyleid='$add[wapstyleid]' where featherclass like '%|".$add[classid]."|%'");
 		}
 		//修改数据库资料
-		$sql=$empire->query("update {$dbtbpre}enewsclass set classname='$add[classname]',classpath='$classpath',classtype='$add[classtype]',newline=$add[newline],hotline=$add[hotline],goodline=$add[goodline],classurl='$add[classurl]',groupid=$add[groupid],myorder=$add[myorder],filename_qz='$add[filename_qz]',hotplline=$add[hotplline],modid=$add[modid],checked=$add[checked],firstline=$add[firstline],bname='$add[bname]',islist=$add[islist],listtempid=$add[listtempid],lencord=$add[lencord],searchtempid=$add[searchtempid],tid=$tabler[tid],tbname='$tabler[tbname]',maxnum=$add[maxnum],checkpl=$add[checkpl],down_num=$add[down_num],online_num=$add[online_num],listorder='$add[listorder]',reorder='$add[reorder]',intro='$add[intro]',classimg='$add[classimg]',jstempid=$add[jstempid],listdt=$add[listdt],showclass=$add[showclass],showdt=$add[showdt],qaddgroupid='$add[qaddgroupid]',qaddshowkey=$add[qaddshowkey],adminqinfo=$add[adminqinfo],doctime=$add[doctime],classpagekey='$add[classpagekey]',dtlisttempid='$add[dtlisttempid]',classtempid='$add[classtempid]',nreclass=$add[nreclass],nreinfo=$add[nreinfo],nrejs=$add[nrejs],nottobq=$add[nottobq],ipath='$add[ipath]',addreinfo=$add[addreinfo],haddlist=$add[haddlist],sametitle=$add[sametitle],definfovoteid=$add[definfovoteid],wburl='',qeditchecked=$add[qeditchecked],openadd=$add[openadd],wapstyleid='$add[wapstyleid]',repreinfo='$add[repreinfo]',pltempid='$add[pltempid]',cgroupid='$add[cgroupid]',yhid='$add[yhid]',wfid='$add[wfid]',cgtoinfo='$add[cgtoinfo]',bdinfoid='$add[bdinfoid]',repagenum='$add[repagenum]',keycid='$add[keycid]'".$change." where classid='$add[classid]'");
+		$sql=$empire->query("update {$dbtbpre}enewsclass set classname='$add[classname]',classpath='$classpath',classtype='$add[classtype]',newline=$add[newline],hotline=$add[hotline],goodline=$add[goodline],classurl='$add[classurl]',groupid=$add[groupid],myorder=$add[myorder],filename_qz='$add[filename_qz]',hotplline=$add[hotplline],modid=$add[modid],checked=$add[checked],firstline=$add[firstline],bname='$add[bname]',islist=$add[islist],listtempid=$add[listtempid],lencord=$add[lencord],searchtempid=$add[searchtempid],tid=$tabler[tid],tbname='$tabler[tbname]',maxnum=$add[maxnum],checkpl=$add[checkpl],down_num=$add[down_num],online_num=$add[online_num],listorder='$add[listorder]',reorder='$add[reorder]',intro='$add[intro]',classimg='$add[classimg]',jstempid=$add[jstempid],listdt=$add[listdt],showclass=$add[showclass],showdt=$add[showdt],qaddgroupid='$add[qaddgroupid]',qaddshowkey=$add[qaddshowkey],adminqinfo=$add[adminqinfo],doctime=$add[doctime],classpagekey='$add[classpagekey]',dtlisttempid='$add[dtlisttempid]',classtempid='$add[classtempid]',nreclass=$add[nreclass],nreinfo=$add[nreinfo],nrejs=$add[nrejs],nottobq=$add[nottobq],ipath='$add[ipath]',addreinfo=$add[addreinfo],haddlist=$add[haddlist],sametitle=$add[sametitle],definfovoteid=$add[definfovoteid],wburl='',qeditchecked=$add[qeditchecked],openadd=$add[openadd],wapstyleid='$add[wapstyleid]',repreinfo='$add[repreinfo]',pltempid='$add[pltempid]',cgroupid='$add[cgroupid]',yhid='$add[yhid]',wfid='$add[wfid]',cgtoinfo='$add[cgtoinfo]',bdinfoid='$add[bdinfoid]',repagenum='$add[repagenum]',keycid='$add[keycid]',oneinfo='$add[oneinfo]',addsql='$add[addsql]',wapislist='$add[wapislist]',fclast='$ecms_fclast'".$change." where classid='$add[classid]'");
 		//副表
 		$ret_cr=ReturnClassAddF($add,1);
-		$empire->query("update {$dbtbpre}enewsclassadd set classtext='".eaddslashes2($add[classtext])."'".$ret_cr[0]." where classid='$add[classid]'");
+		$empire->query("update {$dbtbpre}enewsclassadd set classtext='".eaddslashes2($add[classtext])."',eclasspagetext='$add[eclasspagetext]'".$ret_cr[0]." where classid='$add[classid]'");
 		//更新附件
 		UpdateTheFileEditOther(1,$add['classid'],'other');
 		GetClass();
@@ -2077,10 +2092,10 @@ function EditClass($add,$userid,$username){
 		}
 		//文件前缀
 	    $add[filename_qz]=RepFilenameQz($add[filename_qz]);
-		$sql=$empire->query("update {$dbtbpre}enewsclass set classname='$add[classname]',classpath='$classpath',classtype='$add[classtype]',link_num=$add[link_num],lencord=$add[lencord],newstempid=$add[newstempid],listtempid=$add[listtempid],newspath='$add[newspath]',filename=$add[filename],filetype='$add[filetype]',openpl=$add[openpl],openadd=$add[openadd],newline=$add[newline],hotline=$add[hotline],goodline=$add[goodline],classurl='$add[classurl]',groupid=$add[groupid],myorder=$add[myorder],filename_qz='$add[filename_qz]',hotplline=$add[hotplline],modid=$add[modid],checked=$add[checked],firstline=$add[firstline],bname='$add[bname]',searchtempid=$add[searchtempid],tid=$tabler[tid],tbname='$tabler[tbname]',maxnum=$add[maxnum],checkpl=$add[checkpl],down_num=$add[down_num],online_num=$add[online_num],listorder='$add[listorder]',reorder='$add[reorder]',intro='$add[intro]',classimg='$add[classimg]',jstempid=$add[jstempid],addinfofen=$add[addinfofen],listdt=$add[listdt],showclass=$add[showclass],showdt=$add[showdt],checkqadd=$add[checkqadd],qaddlist=$add[qaddlist],qaddgroupid='$add[qaddgroupid]',qaddshowkey=$add[qaddshowkey],adminqinfo=$add[adminqinfo],doctime=$add[doctime],classpagekey='$add[classpagekey]',dtlisttempid='$add[dtlisttempid]',classtempid='$add[classtempid]',nreclass=$add[nreclass],nreinfo=$add[nreinfo],nrejs=$add[nrejs],nottobq=$add[nottobq],ipath='$add[ipath]',addreinfo=$add[addreinfo],haddlist=$add[haddlist],sametitle=$add[sametitle],definfovoteid=$add[definfovoteid],wburl='',qeditchecked=$add[qeditchecked],wapstyleid='$add[wapstyleid]',repreinfo='$add[repreinfo]',pltempid='$add[pltempid]',cgroupid='$add[cgroupid]',yhid='$add[yhid]',wfid='$add[wfid]',cgtoinfo='$add[cgtoinfo]',bdinfoid='$add[smallbdinfoid]',repagenum='$add[repagenum]',keycid='$add[keycid]'".$change." where classid='$add[classid]'");
+		$sql=$empire->query("update {$dbtbpre}enewsclass set classname='$add[classname]',classpath='$classpath',classtype='$add[classtype]',link_num=$add[link_num],lencord=$add[lencord],newstempid=$add[newstempid],listtempid=$add[listtempid],newspath='$add[newspath]',filename=$add[filename],filetype='$add[filetype]',openpl=$add[openpl],openadd=$add[openadd],newline=$add[newline],hotline=$add[hotline],goodline=$add[goodline],classurl='$add[classurl]',groupid=$add[groupid],myorder=$add[myorder],filename_qz='$add[filename_qz]',hotplline=$add[hotplline],modid=$add[modid],checked=$add[checked],firstline=$add[firstline],bname='$add[bname]',searchtempid=$add[searchtempid],tid=$tabler[tid],tbname='$tabler[tbname]',maxnum=$add[maxnum],checkpl=$add[checkpl],down_num=$add[down_num],online_num=$add[online_num],listorder='$add[listorder]',reorder='$add[reorder]',intro='$add[intro]',classimg='$add[classimg]',jstempid=$add[jstempid],addinfofen=$add[addinfofen],listdt=$add[listdt],showclass=$add[showclass],showdt=$add[showdt],checkqadd=$add[checkqadd],qaddlist=$add[qaddlist],qaddgroupid='$add[qaddgroupid]',qaddshowkey=$add[qaddshowkey],adminqinfo=$add[adminqinfo],doctime=$add[doctime],classpagekey='$add[classpagekey]',dtlisttempid='$add[dtlisttempid]',classtempid='$add[classtempid]',nreclass=$add[nreclass],nreinfo=$add[nreinfo],nrejs=$add[nrejs],nottobq=$add[nottobq],ipath='$add[ipath]',addreinfo=$add[addreinfo],haddlist=$add[haddlist],sametitle=$add[sametitle],definfovoteid=$add[definfovoteid],wburl='',qeditchecked=$add[qeditchecked],wapstyleid='$add[wapstyleid]',repreinfo='$add[repreinfo]',pltempid='$add[pltempid]',cgroupid='$add[cgroupid]',yhid='$add[yhid]',wfid='$add[wfid]',cgtoinfo='$add[cgtoinfo]',bdinfoid='$add[smallbdinfoid]',repagenum='$add[repagenum]',keycid='$add[keycid]',oneinfo='$add[oneinfo]',addsql='$add[addsql]',wapislist='$add[wapislist]',fclast='$ecms_fclast'".$change." where classid='$add[classid]'");
 		//副表
 		$ret_cr=ReturnClassAddF($add,1);
-		$empire->query("update {$dbtbpre}enewsclassadd set classtext='".eaddslashes2($add[classtext])."'".$ret_cr[0]." where classid='$add[classid]'");
+		$empire->query("update {$dbtbpre}enewsclassadd set classtext='".eaddslashes2($add[classtext])."',eclasspagetext='$add[eclasspagetext]'".$ret_cr[0]." where classid='$add[classid]'");
 		//更新附件
 		UpdateTheFileEditOther(1,$add['classid'],'other');
 		GetClass();
@@ -2275,13 +2290,13 @@ function ChangeClassIslast($reclassid,$userid,$username){
 		$empire->query("delete from {$dbtbpre}enewsclassnavcache where navtype='listclass' or navtype='listenews' or navtype='jsclass' or navtype='userenews' or (navtype='modclass' and modid='$r[modid]')");
 		DelFiletext("../d/js/js/addinfo".$r[modid].".js");
 		$cache_enews='doclass,doinfo,douserinfo,domod,dostemp';
-		$cache_ecmstourl=urlencode($_SERVER['HTTP_REFERER']);
+		$cache_ecmstourl=urlencode(EcmsGetReturnUrl());
 		$cache_mess=$mess;
 		$cache_mid=$r[modid];
 		$cache_url="CreateCache.php?enews=$cache_enews&mid=$cache_mid&ecmstourl=$cache_ecmstourl&mess=$cache_mess".hReturnEcmsHashStrHref2(0);
 		//操作日志
 		insert_dolog("classid=".$classid."<br>classname=".$r[classname]);
-		//printerror($mess,$_SERVER['HTTP_REFERER']);
+		//printerror($mess,EcmsGetReturnUrl());
 		echo'<meta http-equiv="refresh" content="0;url='.$cache_url.'">';
 		db_close();
 		$empire=null;
@@ -2302,7 +2317,7 @@ function DelClass($classid,$userid,$username){
 		printerror("NotDelClassid","");
 	}
 	//操作权限
-	CheckLevel($userid,$username,$classid,"class");
+	CheckLevel($userid,$username,$classid,"delclass");
 	$r=$empire->fetch1("select * from {$dbtbpre}enewsclass where classid='$classid'");
 	if(empty($r[classid]))
 	{
@@ -2443,6 +2458,12 @@ function DelClass1($classid){
 	}
 	//删除缓存
 	DelListEnews();
+	//moreportdo
+	if($r['classpath'])
+	{
+		$eautodofname='delpath|'.$r['classpath'].'||';
+		eAutodo_AddDo('eDelFileClass',0,0,0,0,0,$eautodofname);
+	}
 }
 
 //修改栏目顺序
@@ -2460,12 +2481,12 @@ function EditClassOrder($classid,$myorder,$userid,$username){
 	//删除导航缓存
 	$empire->query("delete from {$dbtbpre}enewsclassnavcache where navtype='listclass' or navtype='listenews' or navtype='jsclass' or navtype='userenews'");
 	$cache_enews='doclass,doinfo,douserinfo';
-	$cache_ecmstourl=urlencode($_SERVER['HTTP_REFERER']);
+	$cache_ecmstourl=urlencode(EcmsGetReturnUrl());
 	$cache_mess='EditClassOrderSuccess';
 	$cache_url="CreateCache.php?enews=$cache_enews&ecmstourl=$cache_ecmstourl&mess=$cache_mess".hReturnEcmsHashStrHref2(0);
 	//操作日志
 	insert_dolog("");
-	//printerror("EditClassOrderSuccess",$_SERVER['HTTP_REFERER']);
+	//printerror("EditClassOrderSuccess",EcmsGetReturnUrl());
 	echo'<meta http-equiv="refresh" content="0;url='.$cache_url.'">';
 	db_close();
 	$empire=null;
@@ -2477,6 +2498,12 @@ function ChangeSonclass($start,$userid,$username){
 	global $empire,$public_r,$fun_r,$dbtbpre;
 	//验证权限
 	CheckLevel($userid,$username,$classid,"changedata");
+	$moreportpid=(int)$_GET['moreportpid'];
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	$b=0;
 	$sql=$empire->query("select classid from {$dbtbpre}enewsclass where islast=0 and classid>".$start." order by classid limit ".$public_r[relistnum]);
@@ -2497,15 +2524,18 @@ function ChangeSonclass($start,$userid,$username){
 	if(empty($b))
 	{
 		GetClass();
-		printerror("ChangeSonclassSuccess","ReHtml/ChangeData.php".hReturnEcmsHashStrHref2(1));
+		printerror("ChangeSonclassSuccess","ReHtml/ChangeData.php?".hReturnEcmsHashStrHref2(0).$mphref);
 	}
-	echo $fun_r['OneChangeSonclassSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmsclass.php?enews=ChangeSonclass&start=$newstart".hReturnEcmsHashStrHref(0)."';</script>";
+	echo $fun_r['OneChangeSonclassSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmsclass.php?enews=ChangeSonclass&start=$newstart".hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
 }
 
 //删除栏目缓存文件
 function DelFcListClass(){
-	global $empire,$dbtbpre;
+	global $empire,$dbtbpre,$logininid,$loginin;
+	//验证权限
+	CheckLevel($logininid,$loginin,0,"changedata");
+
 	DelListEnews();
 	//删除导航缓存
 	$empire->query("delete from {$dbtbpre}enewsclassnavcache");
@@ -2527,6 +2557,54 @@ function SetMoreClass($add,$userid,$username){
 	global $empire,$dbtbpre;
 	//验证权限
 	CheckLevel($userid,$username,$classid,"setmclass");
+	//变量
+	$add[classtype]=eaddslashes($add[classtype]);
+	$add[listtempid]=(int)$add[listtempid];
+	$add[dtlisttempid]=(int)$add[dtlisttempid];
+	$add[maxnum]=(int)$add[maxnum];
+	$add[lencord]=(int)$add[lencord];
+	$add[searchtempid]=(int)$add[searchtempid];
+	$add[wapstyleid]=(int)$add[wapstyleid];
+	$add[listorder]=eaddslashes($add[listorder]);
+	$add[reorder]=eaddslashes($add[reorder]);
+	$add[listdt]=(int)$add[listdt];
+	$add[showdt]=(int)$add[showdt];
+	$add[showclass]=(int)$add[showclass];
+	$add[openadd]=(int)$add[openadd];
+	$add[classtempid]=(int)$add[classtempid];
+	$add[islist]=(int)$add[islist];
+	$add[newstempid]=(int)$add[newstempid];
+	$add[pltempid]=(int)$add[pltempid];
+	$add[link_num]=(int)$add[link_num];
+	$add[ipath]=eaddslashes($add[ipath]);
+	$add[newspath]=eaddslashes($add[newspath]);
+	$add[filename_qz]=eaddslashes($add[filename_qz]);
+	$add[filename]=eaddslashes($add[filename]);
+	$add[filetype]=eaddslashes($add[filetype]);
+	$add[openpl]=(int)$add[openpl];
+	$add[checkpl]=(int)$add[checkpl];
+	$add[qaddshowkey]=(int)$add[qaddshowkey];
+	$add[checkqadd]=(int)$add[checkqadd];
+	$add[qaddlist]=(int)$add[qaddlist];
+	$add[addinfofen]=(int)$add[addinfofen];
+	$add[adminqinfo]=(int)$add[adminqinfo];
+	$add[qeditchecked]=(int)$add[qeditchecked];
+	$add[addreinfo]=(int)$add[addreinfo];
+	$add[haddlist]=(int)$add[haddlist];
+	$add[sametitle]=(int)$add[sametitle];
+	$add[checked]=(int)$add[checked];
+	$add[repreinfo]=(int)$add[repreinfo];
+	$add[definfovoteid]=(int)$add[definfovoteid];
+	$add[groupid]=eaddslashes($add[groupid]);
+	$add[doctime]=(int)$add[doctime];
+	$add[down_num]=(int)$add[down_num];
+	$add[online_num]=(int)$add[online_num];
+	$add[jstempid]=(int)$add[jstempid];
+	$add[newline]=(int)$add[newline];
+	$add[hotline]=(int)$add[hotline];
+	$add[goodline]=(int)$add[goodline];
+	$add[hotplline]=(int)$add[hotplline];
+	$add[firstline]=(int)$add[firstline];
 	//栏目
 	$classid=$add['classid'];
 	$count=count($classid);
@@ -2665,6 +2743,7 @@ function SetMoreClass($add,$userid,$username){
 	if($add['doqaddgroupid'])
 	{
 		$add[qaddgroupid]=DoPostClassQAddGroupid($add[qaddgroupidck]);
+		$add[qaddgroupid]=eaddslashes($add[qaddgroupid]);
 		$seting.=",qaddgroupid='$add[qaddgroupid]'";
 	}
 	if($add['doqaddlist'])

@@ -26,7 +26,7 @@ if($enews=="EditTags")
 {
 	$postword='修改TAGS';
 	$tagid=(int)$_GET['tagid'];
-	$r=$empire->fetch1("select tagid,tagname,cid from {$dbtbpre}enewstags where tagid='$tagid'");
+	$r=$empire->fetch1("select * from {$dbtbpre}enewstags where tagid='$tagid'");
 	$url="<a href=ListTags.php".$ecms_hashur['whehref'].">管理TAGS</a> -&gt; 修改TAGS：<b>".$r[tagname]."</b>";
 }
 //分类
@@ -67,8 +67,8 @@ $empire=null;
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td width="18%" height="25">TAG名称:</td>
-      <td width="82%" height="25"> <input name="tagname" type="text" id="tagname" value="<?=$r[tagname]?>" size="42"> 
-      </td>
+      <td width="82%" height="25"> <input name="tagname" type="text" id="tagname" value="<?=$r[tagname]?>" size="42">
+        <font color="#666666">(最多20个字)</font> </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">所属分类:</td>
@@ -77,6 +77,21 @@ $empire=null;
 		  <?=$cs?>
         </select> 
         <input type="button" name="Submit62223" value="管理分类" onclick="window.open('TagsClass.php<?=$ecms_hashur['whehref']?>');"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">网页标题:</td>
+      <td height="25"><input name="tagtitle" type="text" id="tagtitle" value="<?=ehtmlspecialchars($r[tagtitle])?>" size="42">
+      <font color="#666666">(最多60个字)</font></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">网页关键词:</td>
+      <td height="25"><input name="tagkey" type="text" id="tagkey" value="<?=ehtmlspecialchars($r[tagkey])?>" size="42">
+      <font color="#666666">(最多100个字)</font></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">网页描述:</td>
+      <td height="25"><input name="tagdes" type="text" id="tagdes" value="<?=ehtmlspecialchars($r[tagdes])?>" size="42">
+      <font color="#666666">(最多255个字)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">&nbsp;</td>

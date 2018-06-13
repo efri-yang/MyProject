@@ -20,6 +20,9 @@ $loginrnd=$lur['rnd'];
 $loginlevel=$lur['groupid'];
 $loginadminstyleid=$lur['adminstyleid'];
 hCheckEcmsRHash();
+
+@set_time_limit(0);
+
 if($phome=="SetDb")//参数设置
 {
 }

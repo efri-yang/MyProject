@@ -165,6 +165,7 @@ if(empty($enews))
 if($enews)
 {
 	hCheckEcmsRHash();
+	@set_time_limit(0);
 }
 //执行SQL语句
 if($enews=='DoExecSql')

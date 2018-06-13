@@ -164,6 +164,7 @@ function SetSearchAll($add,$userid,$username){
 	$schallnum=(int)$add['schallnum'];
 	$schallpagenum=(int)$add['schallpagenum'];
 	$schalltime=(int)$add['schalltime'];
+	$schallnotcid=hRepPostStr($schallnotcid,1);
 	$sql=$empire->query("update {$dbtbpre}enewspublic set openschall=$openschall,schallfield=$schallfield,schallminlen=$schallminlen,schallmaxlen=$schallmaxlen,schallnotcid='$schallnotcid',schallnum='$schallnum',schallpagenum='$schallpagenum',schalltime='$schalltime' limit 1");
 	GetConfig();
 	//操作日志

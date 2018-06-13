@@ -86,6 +86,10 @@ if(empty($yhadd))
 		$where.=$and."newstime>'$ckinfolday'";
 		$search.="&infolday=$infolday";
 	}
+	if($infolday==1)
+	{
+		$search.="&infolday=$infolday";
+	}
 }
 if(!$gr['doall'])
 {
@@ -159,6 +163,8 @@ while($ttr=$empire->fetch($ttsql))
 }
 $stts=$tts?"<select name='ttid'><option value='0'>标题分类</option>$tts</select>":"";
 //搜索
+$showisgood=(int)$_GET['showisgood'];
+$showfirsttitle=(int)$_GET['showfirsttitle'];
 $sear=(int)$_GET['sear'];
 if($sear)
 {
@@ -189,13 +195,39 @@ if($sear)
 		$where.=$and."userid='$logininid' and ismember=0";
 	}
 	$and=$where?' and ':' where ';
+	//推荐
+	if($showisgood)
+	{
+		if($showisgood>0)
+		{
+			$where.=$and."isgood='$showisgood'";
+		}
+		else
+		{
+			$where.=$and.'isgood>0';
+		}
+	}
+	$and=$where?' and ':' where ';
+	//头条
+	if($showfirsttitle)
+	{
+		if($showfirsttitle>0)
+		{
+			$where.=$and."firsttitle='$showfirsttitle'";
+		}
+		else
+		{
+			$where.=$and.'firsttitle>0';
+		}
+	}
+	$and=$where?' and ':' where ';
 	if($_GET['keyboard'])
 	{
 		$keyboard=RepPostVar2($_GET['keyboard']);
 		$show=RepPostStr($_GET['show'],1);
 		if($show==0)//搜索全部
 		{
-			$where.=$and."(title like '%$keyboard%' or username like '%$keyboard%' or id='$keyboard')";
+			$where.=$and."(title like '%$keyboard%' or username like '%$keyboard%' or id='$keyboard' or keyboard like '%$keyboard%')";
 		}
 		elseif($show==1)//搜索标题
 		{
@@ -205,12 +237,16 @@ if($sear)
 		{
 			$where.=$and."(id='$keyboard')";
 		}
+		elseif($show==4)//搜索关键字
+		{
+			$where.=$and."(keyboard like '%$keyboard%')";
+		}
 		else
 		{
 			$where.=$and."(username like '%$keyboard%')";
 		}
 	}
-	$search.="&sear=1&keyboard=$keyboard&show=$show&showspecial=$showspecial";
+	$search.="&sear=1&keyboard=$keyboard&show=$show&showspecial=$showspecial&showisgood=$showisgood&showfirsttitle=$showfirsttitle";
 }
 //显示重复标题
 if($_GET['showretitle']==1)

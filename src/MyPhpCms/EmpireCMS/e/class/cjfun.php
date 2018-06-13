@@ -93,7 +93,7 @@ function DelCjNews_all($classid,$id,$userid,$username){
 	{
 		//操作日志
 	    insert_dolog("classid=".$classid."<br>classname=".$cr[classname]);
-		printerror("DelCjNewsAllSuccess",$_SERVER['HTTP_REFERER']);
+		printerror("DelCjNewsAllSuccess",EcmsGetReturnUrl());
     }
 	else
 	{
@@ -111,7 +111,7 @@ function DoClearSmalltextVal($value){
 
 //采集入库
 function CjNewsIn($classid,$id,$checked,$uptime,$userid,$username){
-	global $class_r,$empire,$public_r,$dbtbpre,$emod_r;
+	global $class_r,$empire,$public_r,$dbtbpre,$emod_r,$lur;
 	$checked=(int)$checked;
 	$classid=(int)$classid;
 	if(empty($classid))
@@ -134,6 +134,7 @@ function CjNewsIn($classid,$id,$checked,$uptime,$userid,$username){
 	{
 		@include_once("gd.php");
 	}
+	$userisqf=EcmsReturnDoIsqf($userid,$username,$lur['groupid'],0);
 	$mid=$class_r[$cr[newsclassid]][modid];
 	$savetxtf=$emod_r[$mid]['savetxtf'];
 	$stb=$emod_r[$mid]['deftb'];
@@ -291,8 +292,16 @@ function CjNewsIn($classid,$id,$checked,$uptime,$userid,$username){
 		//强制签发
 		if($class_r[$cr[newsclassid]][wfid])
 		{
-			$checked=0;
-			$isqf=1;
+			if($userisqf)
+			{
+				$checked=$checked;
+				$isqf=0;
+			}
+			else
+			{
+				$checked=0;
+				$isqf=1;
+			}
 		}
 		else
 		{
@@ -362,7 +371,7 @@ function CjNewsIn($classid,$id,$checked,$uptime,$userid,$username){
 
 //全部采集入库
 function CjNewsIn_all($classid,$checked,$uptime,$start,$userid,$username){
-	global $class_r,$empire,$public_r,$dbtbpre,$fun_r,$emod_r;
+	global $class_r,$empire,$public_r,$dbtbpre,$fun_r,$emod_r,$lur;
 	$checked=(int)$checked;
 	$classid=(int)$classid;
 	$start=(int)$start;
@@ -382,6 +391,7 @@ function CjNewsIn_all($classid,$checked,$uptime,$start,$userid,$username){
 	{
 		@include_once("gd.php");
 	}
+	$userisqf=EcmsReturnDoIsqf($userid,$username,$lur['groupid'],0);
 	if(empty($cr[insertnum]))
 	{$cr[insertnum]=10;}
 	$mid=$class_r[$cr[newsclassid]][modid];
@@ -527,8 +537,16 @@ function CjNewsIn_all($classid,$checked,$uptime,$start,$userid,$username){
 		//强制签发
 		if($class_r[$cr[newsclassid]][wfid])
 		{
-			$checked=0;
-			$isqf=1;
+			if($userisqf)
+			{
+				$checked=$checked;
+				$isqf=0;
+			}
+			else
+			{
+				$checked=0;
+				$isqf=1;
+			}
 		}
 		else
 		{
@@ -616,7 +634,8 @@ function CjNewsIn_all($classid,$checked,$uptime,$start,$userid,$username){
 			printerror("CjLoadDbSuccess","CheckCj.php?classid=$classid&from=".ehtmlspecialchars($_GET[from]).hReturnEcmsHashStrHref2(0));
 		}
 	}
-	echo "<b>$cr[classname]</b>&nbsp;&nbsp;".$fun_r['OneCjLoadDbSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmscj.php?enews=CjNewsIn_all&checked=$checked&uptime=$uptime&classid=$classid&start=$newstart&fm=$fm&from=".ehtmlspecialchars($_GET[from]).hReturnEcmsHashStrHref(0)."';</script>";
+	//echo "<b>$cr[classname]</b>&nbsp;&nbsp;".$fun_r['OneCjLoadDbSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ecmscj.php?enews=CjNewsIn_all&checked=$checked&uptime=$uptime&classid=$classid&start=$newstart&fm=$fm&from=".ehtmlspecialchars($_GET[from]).hReturnEcmsHashStrHref(0)."';</script>";
+	echo"<meta http-equiv=\"refresh\" content=\"".$cr['loadkeeptime'].";url=ecmscj.php?enews=CjNewsIn_all&checked=$checked&uptime=$uptime&classid=$classid&start=$newstart&fm=$fm&from=".ehtmlspecialchars($_GET[from]).hReturnEcmsHashStrHref(0)."\"><b>".$cr['classname']."</b>&nbsp;&nbsp;".$fun_r['OneCjLoadDbSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)";
 	exit();
 }
 
@@ -901,7 +920,7 @@ function PageEchoUrl($classid,$cr,$userid,$username){
 	if(empty($cr[num]))
 	{$cr[num]=10000;}
 	//生成检测值
-	$checkrnd=md5(uniqid(microtime()));
+	$checkrnd=md5(uniqid(microtime()).EcmsRandInt());
 
 	$url_r=explode("\r\n",$cr[infourl]);
 	$count=count($url_r);
@@ -973,7 +992,7 @@ function CJUrl($classid,$start,$checkrnd,$userid,$username){
 	{
 		$start=0;
 		//生成检测值
-		$checkrnd=md5(uniqid(microtime()));
+		$checkrnd=md5(uniqid(microtime()).EcmsRandInt());
 	}
 	$exp="newsurl";
 	$exp1="titlepic";
@@ -1400,7 +1419,7 @@ function GetMoreCjPagetext($self,$newstextzz,$smallpagezz,$pagezz,$pagetype,$fir
 		{
 			break;
 		}
-		if(!strstr($nextlink,"http://"))
+		if(!strstr($nextlink,"://"))
 		{
 			//根目录开始
 			if(strstr($nextlink,"/"))
@@ -1475,7 +1494,7 @@ function GetMoreCjPagetextall($self,$newstextzz,$smallpagezz,$pagezz,$pagetype,$
 		$nextlink=trim($r1[0]);
 		if(empty($nextlink))
 		{continue;}
-		if(!strstr($nextlink,"http://"))
+		if(!strstr($nextlink,"://"))
 		{
 			//根目录开始
 			if(strstr($nextlink,"/"))
@@ -1802,15 +1821,20 @@ function GetNewsInfo($classid,$checkrnd,$start,$userid,$username){
 				}
 			}
 			//替换关键字
-			if($dofield=="title"||$dofield=="newstext")
+			if(stristr($r['repf'],','.$dofield.','))
 			{
 				$zzvalue=RepInfoWord($zzvalue,$r[oldword],$r[newword]);
 			}
-			//新闻内容
-			if($dofield=="newstext")
+			//广告过滤
+			if(stristr($r['repadf'],','.$dofield.','))
 			{
 				$zzvalue=RepAd($r[repad],$zzvalue);
-				if($r['newstextisnull']==1&&empty($zzvalue))
+			}
+			//新闻内容
+			if(stristr($r['isnullf'],','.$dofield.','))
+			{
+				$ckzzvalue=trim($zzvalue);
+				if($r['newstextisnull']==1&&empty($ckzzvalue))
 				{
 					$next=1;
 					break;
@@ -2099,17 +2123,22 @@ function ViewGetNewsInfo($classid,$newspage,$userid,$username){
 			}
 		}
 		//替换关键字
-		if($dofield=="title"||$dofield=="newstext")
+		if(stristr($r['repf'],','.$dofield.','))
 		{
 			$zzvalue=RepInfoWord($zzvalue,$r[oldword],$r[newword]);
 		}
-		//新闻内容
-		if($dofield=="newstext")
+		//替换广告
+		if(stristr($r['repadf'],','.$dofield.','))
 		{
 			$zzvalue=RepAd($r[repad],$zzvalue);
-			if($r['newstextisnull']==1&&empty($zzvalue))
+		}
+		//新闻内容
+		if(stristr($r['isnullf'],','.$dofield.','))
+		{
+			$ckzzvalue=trim($zzvalue);
+			if($r['newstextisnull']==1&&empty($ckzzvalue))
 			{
-				echo $fun_r['CjEmptyNewstext'];
+				echo $dofield.$fun_r['CjEmptyNewstext'];
 			    exit();
 			}
 		}
@@ -2213,7 +2242,7 @@ function LoadOutCj($classid,$userid,$username){
 
 //返回主表字段列表
 function LoadOutCjMainField(){
-	$field='classname,infourl,bz,num,copyimg,renum,keyboard,oldword,newword,titlelen,retitlewriter,smalltextlen,zz_smallurl,zz_newsurl,httpurl,repad,imgurl,relistnum,zz_titlepicl,z_titlepicl,qz_titlepicl,save_titlepicl,keynum,insertnum,copyflash,pagetype,smallpagezz,pagezz,smallpageallzz,pageallzz,mark,enpagecode,recjtheurl,hiddenload,justloadin,justloadcheck,delloadinfo,pagerepad,getfirstpic,oldpagerep,newpagerep,keeptime,newstextisnull,getfirstspic,getfirstspicw,getfirstspich,doaddtextpage,infourlispage';
+	$field='classname,infourl,bz,num,copyimg,renum,keyboard,oldword,newword,titlelen,retitlewriter,smalltextlen,zz_smallurl,zz_newsurl,httpurl,repad,imgurl,relistnum,zz_titlepicl,z_titlepicl,qz_titlepicl,save_titlepicl,keynum,insertnum,copyflash,pagetype,smallpagezz,pagezz,smallpageallzz,pageallzz,mark,enpagecode,recjtheurl,hiddenload,justloadin,justloadcheck,delloadinfo,pagerepad,getfirstpic,oldpagerep,newpagerep,keeptime,newstextisnull,getfirstspic,getfirstspicw,getfirstspich,doaddtextpage,infourlispage,repf,repadf,loadkeeptime,isnullf';
 	return $field;
 }
 
@@ -2327,9 +2356,15 @@ function LoadInCj($add,$file,$file_name,$file_type,$file_size,$userid,$username)
 function LoadInCjInsertMainstr($classid,$tid,$tbname,$mainstr,$fieldexp,$sfieldexp){
 	global $empire,$dbtbpre;
 	$mainfield=LoadOutCjMainField();
+	$mainfieldr=explode(',',$mainfield);
+	$fcount=count($mainfieldr);
 	$mainr=explode($fieldexp,$mainstr);
 	$mainvalues='';
 	$count=count($mainr);
+	if($fcount<$count)
+	{
+		$count=$fcount;
+	}
 	for($i=0;$i<$count;$i++)
 	{
 		if($i==0)
@@ -2337,6 +2372,35 @@ function LoadInCjInsertMainstr($classid,$tid,$tbname,$mainstr,$fieldexp,$sfielde
 			$mainr[$i]=ehtmlspecialchars($mainr[$i],ENT_QUOTES);
 		}
 		$mainvalues.=",'".addslashes($mainr[$i])."'";
+	}
+	//字段不一致
+	if($fcount>$count)
+	{
+		$addcount=$fcount-$count;
+		for($addi=0;$addi<$addcount;$addi++)
+		{
+			if($addi==0)
+			{
+				$addval=',title,newstext,';
+			}
+			elseif($addi==1)
+			{
+				$addval=',newstext,';
+			}
+			elseif($addi==2)
+			{
+				$addval='0';
+			}
+			elseif($addi==3)
+			{
+				$addval=',newstext,';
+			}
+			else
+			{
+				$addval='';
+			}
+			$mainvalues.=",'$addval'";
+		}
 	}
 	$empire->query("insert into {$dbtbpre}enewsinfoclass(classid,bclassid,newsclassid,tid,tbname,".$mainfield.") values(NULL,'0','$classid','$tid','$tbname'".$mainvalues.");");
 	$lastid=$empire->lastid();

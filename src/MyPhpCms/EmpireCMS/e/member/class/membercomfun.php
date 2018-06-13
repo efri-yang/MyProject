@@ -15,7 +15,7 @@ function CardGetFen($username,$reusername,$card_no,$password){
 	{
 		printerror("DifCardUsername","history.go(-1)",1);
 	}
-	$user=$empire->fetch1("select ".eReturnSelectMemberF('userid,userdate,username')." from ".eReturnMemberTable()." where ".egetmf('username')."='$username' limit 1");
+	$user=$empire->fetch1("select ".eReturnSelectMemberF('userid,userdate,username,groupid')." from ".eReturnMemberTable()." where ".egetmf('username')."='$username' limit 1");
 	if(!$user['userid'])
 	{
 		printerror("ExiestCardUsername","history.go(-1)",1);

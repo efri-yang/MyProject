@@ -13,7 +13,14 @@ function ECMS_EditorPrintError($errorNumber,$fileUrl,$fileName,$customMsg,$filen
 		$customMsg=$message_r[$customMsg];
 	}
 	$errorNumber=(int)$errorNumber;
-	echo"<script type=\"text/javascript\">window.parent.OnUploadCompleted($errorNumber,'".addslashes($fileUrl)."','".addslashes($fileName)."','".addslashes($customMsg)."','".addslashes($fileno)."','$filesize');</script>";
+	$typer=ECMS_EditorReturnType('');
+	$type=$typer['ftype'];
+	//附件
+	if($type==0)
+	{
+		$fileUrl=$fileUrl.'##'.$fileno.'##'.$filesize;
+	}
+	ECMS_PTEditorShowError($type,addslashes($customMsg),addslashes($fileUrl),$add,0);
 	db_close();
 	exit();
 }
@@ -253,7 +260,9 @@ function eTranMorePic($file,$file_name,$file_type,$file_size,$add,$userid,$usern
 			}
 		}
 	}
-	echo "<script>window.parent.DoFile(\"".$classtext."\");</script>";
+	$typer=ECMS_EditorReturnType('');
+	$type=$typer['ftype'];
+	ECMS_PTEditorShowError($type,'',$classtext,$add,0);
 	db_close();
 	exit();
 }

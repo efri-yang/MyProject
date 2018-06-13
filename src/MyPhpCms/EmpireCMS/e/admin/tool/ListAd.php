@@ -38,6 +38,15 @@ function AddAd($add,$titlefont,$titlecolor,$userid,$username){
 	$add[t]=(int)$add[t];
 	$add[ylink]=(int)$add[ylink];
 	$add['filepass']=(int)$add['filepass'];
+	$add['picurl']=hRepPostStr2(eDoRepPostComStr($add['picurl'],1));
+	$add['url']=hRepPostStr2(eDoRepPostComStr($add['url'],1));
+	$add['target']=hRepPostStr($add['target'],1);
+	$add['alt']=hRepPostStr($add['alt'],1);
+	$add['starttime']=hRepPostStr($add['starttime'],1);
+	$add['endtime']=hRepPostStr($add['endtime'],1);
+	$add['adsay']=hRepPostStr2($add['adsay']);
+	$ttitlefont=AddAddsData($ttitlefont);
+	$titlecolor=AddAddsData($titlecolor);
 	$sql=$empire->query("insert into {$dbtbpre}enewsad(picurl,url,pic_width,pic_height,onclick,classid,adtype,title,target,alt,starttime,endtime,adsay,titlefont,titlecolor,htmlcode,t,ylink,reptext) values('$add[picurl]','$add[url]',$add[pic_width],$add[pic_height],0,$add[classid],$add[adtype],'$add[title]','$add[target]','$add[alt]','$add[starttime]','$add[endtime]','$add[adsay]','$ttitlefont','$titlecolor','$add[htmlcode]',$add[t],$add[ylink],'$add[reptext]');");
 	$adid=$empire->lastid();
 	//更新附件
@@ -76,6 +85,15 @@ function EditAd($add,$titlefont,$titlecolor,$userid,$username){
 	$add[t]=(int)$add[t];
 	$add[ylink]=(int)$add[ylink];
 	$add['filepass']=(int)$add['filepass'];
+	$add['picurl']=hRepPostStr2(eDoRepPostComStr($add['picurl'],1));
+	$add['url']=hRepPostStr2(eDoRepPostComStr($add['url'],1));
+	$add['target']=hRepPostStr($add['target'],1);
+	$add['alt']=hRepPostStr($add['alt'],1);
+	$add['starttime']=hRepPostStr($add['starttime'],1);
+	$add['endtime']=hRepPostStr($add['endtime'],1);
+	$add['adsay']=hRepPostStr2($add['adsay']);
+	$ttitlefont=AddAddsData($ttitlefont);
+	$titlecolor=AddAddsData($titlecolor);
 	$sql=$empire->query("update {$dbtbpre}enewsad set picurl='$add[picurl]',url='$add[url]',pic_width=$add[pic_width],pic_height=$add[pic_height],classid=$add[classid],adtype=$add[adtype],title='$add[title]',target='$add[target]',alt='$add[alt]',starttime='$add[starttime]',endtime='$add[endtime]',adsay='$add[adsay]',titlefont='$ttitlefont',titlecolor='$titlecolor',htmlcode='$add[htmlcode]',t=$add[t],ylink=$add[ylink],reptext='$add[reptext]'".$a." where adid='$add[adid]'");
 	UpdateTheFileEditOther(3,$add['adid'],'other');
 	GetAdJs($add[adid]);
@@ -116,6 +134,12 @@ function DelAd($adid,$userid,$username){
 //批量生成广告
 function ReAdJs_all($start=0,$from,$userid,$username){
 	global $empire,$public_r,$fun_r,$dbtbpre;
+	$moreportpid=(int)$_GET['moreportpid'];
+	$mphref='';
+	if($moreportpid)
+	{
+		$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+	}
 	$start=(int)$start;
 	if(empty($start))
 	{
@@ -135,7 +159,7 @@ function ReAdJs_all($start=0,$from,$userid,$username){
 		insert_dolog("");
 		printerror("ReAdJsSuccess",$from);
 	}
-	echo $fun_r['OneReAdJsSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ListAd.php?enews=ReAdJs_all&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0)."';</script>";
+	echo $fun_r['OneReAdJsSuccess']."(ID:<font color=red><b>".$newstart."</b></font>)<script>self.location.href='ListAd.php?enews=ReAdJs_all&start=$newstart&from=".urlencode($from).hReturnEcmsHashStrHref(0).$mphref."';</script>";
 	exit();
 }
 
@@ -151,7 +175,7 @@ function ClearHtmlZs($text){
 function GetAdJs($adid){
 	global $empire,$public_r,$dbtbpre;
 	$r=$empire->fetch1("select * from {$dbtbpre}enewsad where adid='$adid'");
-	$file="../../../d/js/acmsd/".$public_r[adfile].$adid.".js";
+	$file=eReturnTrueEcmsPath()."d/js/acmsd/".$public_r[adfile].$adid.".js";
 	//到期
 	if($r['endtime']<>'0000-00-00'&&time()>to_time($r['endtime']))
 	{
@@ -296,6 +320,12 @@ if(empty($enews))
 if($enews)
 {
 	hCheckEcmsRHash();
+}
+//设置访问端
+$moreportpid=0;
+if($enews=='ReAdJs_all')
+{
+	$moreportpid=Moreport_hDoSetSelfPath(0);
 }
 //增加广告
 if($enews=="AddAd")

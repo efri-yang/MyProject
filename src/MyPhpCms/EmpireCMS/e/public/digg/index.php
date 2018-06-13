@@ -10,16 +10,28 @@ if($id&&$classid)
 	$empire=new mysqlquery();
 	$doajax=(int)$_GET['doajax'];
 	$editor=1;
+	$mid=$class_r[$classid]['modid'];
 	if(empty($class_r[$classid][tbname]))
 	{
 		$doajax==1?ajax_printerror('','','ErrorUrl',1):printerror('ErrorUrl','',1);
     }
+	//是否启用
+	if($public_r['diggcmids'])
+	{
+		if(strstr($public_r['diggcmids'],','.$mid.','))
+		{
+			$doajax==1?ajax_printerror('','','ErrorUrl',1):printerror('ErrorUrl','',1);
+		}
+	}
 	$checkid=$classid.'n'.$id;
 	$checktime=time()+30*24*3600;
 	//连续提交
-	if(getcvar('lastdiggid')==$checkid)
+	if($public_r['digglevel']!=0)//cookie
 	{
-		$doajax==1?ajax_printerror('','','ReDigg',1):printerror('ReDigg','',1);
+		if(getcvar('lastdiggid')==$checkid)
+		{
+			$doajax==1?ajax_printerror('','','ReDigg',1):printerror('ReDigg','',1);
+		}
 	}
 	//字段
 	$fnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsf where tbname='".$class_r[$classid][tbname]."' and (f='diggtop' or f='diggdown')");
@@ -34,23 +46,44 @@ if($id&&$classid)
 		$doajax==1?ajax_printerror('','','ErrorUrl',1):printerror('ErrorUrl','',1);
 	}
 	//验证IP
-	$ip=egetip();
-	$ipr=$empire->fetch1("select classid,ips from {$dbtbpre}enewsdiggips where id='$id' and classid='$classid' limit 1");
-	if(strstr($ipr['ips'],','.$ip.','))
+	$ip='';
+	if($public_r['digglevel']==2)
 	{
-		$doajax==1?ajax_printerror('','','ReDigg',1):printerror('ReDigg','',1);
+		$ip=egetip();
 	}
-	else
+	//验证会员
+	if($public_r['digglevel']==3)
 	{
-		if(empty($ipr['classid']))
+		include("../../member/class/user.php");
+		$cklgr=qCheckLoginAuthstr();
+		if(!$cklgr['islogin'])
 		{
-			$newips=','.$ip.',';
-			$usql=$empire->query("insert into {$dbtbpre}enewsdiggips(id,classid,ips) values('$id','$classid','$newips');");
+			$doajax==1?ajax_printerror('','','NotLogin',1):printerror('NotLogin','',1);
+		}
+		$ip=(int)getcvar('mluserid');
+	}
+	$ip=str_replace(',','',$ip);
+	$ip=RepPostVar($ip);
+	//重复验证
+	if($public_r['digglevel']>1)
+	{
+		$ipr=$empire->fetch1("select classid,ips from {$dbtbpre}enewsdiggips where id='$id' and classid='$classid' limit 1");
+		if(strstr($ipr['ips'],','.$ip.','))
+		{
+			$doajax==1?ajax_printerror('','','ReDigg',1):printerror('ReDigg','',1);
 		}
 		else
 		{
-			$newips=$ipr['ips']?$ipr['ips'].$ip.',':','.$ip.',';
-			$usql=$empire->query("update {$dbtbpre}enewsdiggips set ips='$newips' where id='$id' and classid='$classid' limit 1");
+			if(empty($ipr['classid']))
+			{
+				$newips=','.$ip.',';
+				$usql=$empire->query("insert into {$dbtbpre}enewsdiggips(id,classid,ips) values('$id','$classid','$newips');");
+			}
+			else
+			{
+				$newips=$ipr['ips']?$ipr['ips'].$ip.',':','.$ip.',';
+				$usql=$empire->query("update {$dbtbpre}enewsdiggips set ips='$newips' where id='$id' and classid='$classid' limit 1");
+			}
 		}
 	}
 	$dotop=(int)$_GET['dotop'];
@@ -75,15 +108,18 @@ if($id&&$classid)
 	$sql=$empire->query("update {$dbtbpre}ecms_".$class_r[$classid][tbname]." set ".$f."=".$f.$n." where id='$id'");
 	if($sql)
 	{
-		esetcookie('lastdiggid',$checkid,$checktime);	//最后发布
+		if($public_r['digglevel']!=0)
+		{
+			esetcookie('lastdiggid',$checkid,$checktime);	//最后发布
+		}
 		if($doajax==1)
 		{
 			$nr=$empire->fetch1("select ".$f." from {$dbtbpre}ecms_".$class_r[$classid][tbname]." where id='$id'");
-			ajax_printerror($nr[$f],$_GET['ajaxarea'],$mess,1);
+			ajax_printerror($nr[$f],RepPostVar($_GET['ajaxarea']),$mess,1);
 		}
 		else
 		{
-			printerror($mess,$_SERVER['HTTP_REFERER'],1);
+			printerror($mess,EcmsGetReturnUrl(),1);
 		}
     }
 	else

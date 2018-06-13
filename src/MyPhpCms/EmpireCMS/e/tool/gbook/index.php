@@ -10,6 +10,7 @@ require "../".LoadLang("pub/fun.php");
 $link=db_connect();
 $empire=new mysqlquery();
 $editor=1;
+eCheckCloseMods('gb');//关闭模块
 //分类id
 $bid=(int)$_GET['bid'];
 $gbr=$empire->fetch1("select bid,bname,groupid from {$dbtbpre}enewsgbookclass where bid='$bid'");
@@ -39,6 +40,10 @@ $line=$public_r['gb_num'];//每页显示条数
 $page_line=10;//每页显示链接数
 $offset=$start+$page*$line;//总偏移量
 $totalnum=(int)$_GET['totalnum'];
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 if($totalnum>0)
 {
 	$num=$totalnum;
@@ -48,7 +53,12 @@ else
 	$totalquery="select count(*) as total from {$dbtbpre}enewsgbook where bid='$bid' and checked=0";
 	$num=$empire->gettotal($totalquery);//取得总条数
 }
-$search.="&totalnum=$num";
+if($public_r['usetotalnum'])
+{
+	$search.="&totalnum=$num";
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 $query="select lyid,name,email,`mycall`,lytime,lytext,retext from {$dbtbpre}enewsgbook where bid='$bid' and checked=0";
 $query=$query." order by lyid desc limit $offset,$line";
 $sql=$empire->query($query);
@@ -126,13 +136,13 @@ document.write('<script src="/MyProject/src/MyPhpCms/EmpireCMS/e/member/login/lo
 <?
 while($r=$empire->fetch($sql))
 {
-	$r['retext']=nl2br($r[retext]);
-	$r['lytext']=nl2br($r[lytext]);
+	$r['retext']=nl2br(stripSlashes($r[retext]));
+	$r['lytext']=nl2br(stripSlashes($r[lytext]));
 ?>
 
 								<table width="92%" border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#F4F9FD" class="tableborder">
 										<tr class="header">
-											<td width="55%" height="23">发布者: <?=$r[name]?> </td>
+											<td width="55%" height="23">发布者: <?=stripSlashes($r[name])?> </td>
 											<td width="45%">发布时间: <?=$r[lytime]?> </td>
 										</tr>
 										<tr bgcolor="#FFFFFF">
@@ -248,7 +258,7 @@ if($r[retext])
         </tr>
         <tr> 
           <td align="center">Powered by <strong><a href="http://www.phome.net" target="_blank">EmpireCMS</a></strong> 
-            <strong><font color="#FF9900">7.2</font></strong>&nbsp; &copy; 2002-2015 
+            <strong><font color="#FF9900">7.5</font></strong>&nbsp; &copy; 2002-2018 
             <a href="http://www.digod.com" target="_blank">EmpireSoft Inc.</a></td>
         </tr>
 	</table>

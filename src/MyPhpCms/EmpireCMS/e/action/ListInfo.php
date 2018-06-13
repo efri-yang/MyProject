@@ -146,7 +146,7 @@ if($public_r['fieldandclosetb']&&stristr($public_r['fieldandclosetb'],','.$tbnam
 if($_GET['firsttitle'])
 {
 	$firsttitle=(int)$_GET['firsttitle'];
-	if($firsttitle==10)
+	if($firsttitle==-1)
 	{
 		$add.=" and firsttitle>0";
 	}
@@ -160,7 +160,7 @@ if($_GET['firsttitle'])
 if($_GET['isgood'])
 {
 	$isgood=(int)$_GET['isgood'];
-	if($isgood==10)
+	if($isgood==-1)
 	{
 		$add.=" and isgood>0";
 	}
@@ -191,7 +191,7 @@ if($_GET['endtime'])
 }
 //每页显示记录数
 $line=(int)$_GET['line'];
-if($line<1||$line>80)
+if($line<10||$line>80)
 {
 	if($class_r[$trueclassid]['lencord'])
 	{
@@ -246,6 +246,10 @@ if(!empty($emod_r[$mid]['listandf'])&&$_GET['ph']==1)
 		$andval=$_GET[$andr[$i]];
 		if(!empty($andval))
 		{
+			if(strlen($andval)>$public_r['max_keyboard'])
+			{
+				printerror("MinKeyboard","",1);
+			}
 			$andval=RepPostVar2($andval);
 			$doandor=empty($listandf)?'':' '.$andor.' ';
 			if(strstr($andval,'__'))
@@ -298,6 +302,10 @@ if($yhid)
 }
 //总数
 $totalnum=(int)$_GET['totalnum'];
+if(!$public_r['usetotalnum'])
+{
+	$totalnum=0;
+}
 if($totalnum<1)
 {
 	$totalquery="select count(*) as total from {$dbtbpre}ecms_".$tbname.ReturnYhAndSql($yhadd,$add,1);
@@ -307,7 +315,12 @@ else
 {
 	$num=$totalnum;
 }
-$search.='&totalnum='.$num;
+if($public_r['usetotalnum'])
+{
+	$search.='&totalnum='.$num;
+}
+//checkpageno
+eCheckListPageNo($page,$line,$num);
 //置顶
 if($public_r['fieldandtop'])
 {

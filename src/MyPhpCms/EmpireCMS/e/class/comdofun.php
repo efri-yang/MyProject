@@ -103,6 +103,8 @@ function AddUserpage($add,$userid,$username){
 	{
 		printerror("EmptyUserpagePath","history.go(-1)");
     }
+	$title=hRepPostStr($title,1);
+	$path=hRepPostStr($path,1);
 	$pagetext=RepPhpAspJspcode($pagetext);
 	$pagetitle=RepPhpAspJspcode($add[pagetitle]);
 	$pagekeywords=RepPhpAspJspcode($add[pagekeywords]);
@@ -143,6 +145,8 @@ function EditUserpage($add,$userid,$username){
 	{
 		DelFiletext($add['oldpath']);
 	}
+	$title=hRepPostStr($title,1);
+	$path=hRepPostStr($path,1);
 	$pagetext=RepPhpAspJspcode($pagetext);
 	$pagetitle=RepPhpAspJspcode($add[pagetitle]);
 	$pagekeywords=RepPhpAspJspcode($add[pagekeywords]);
@@ -181,6 +185,13 @@ function DelUserpage($id,$cid,$userid,$username){
 	}
 	$sql=$empire->query("delete from {$dbtbpre}enewspage where id='$id'");
 	DelFiletext($r['path']);
+	//moreportdo
+	$eautodofile=str_replace('../../','',$r['path']);
+	if($eautodofile)
+	{
+		$eautodofname='delfile|'.$eautodofile.'||';
+		eAutodo_AddDo('eDelFileUserpage',0,0,0,0,0,$eautodofname);
+	}
 	if($sql)
 	{
 		//操作日志
@@ -216,7 +227,7 @@ function DoReUserpage($add,$userid,$username){
 	}
 	//操作日志
 	insert_dolog("");
-	printerror("DoReUserpageSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("DoReUserpageSuccess",EcmsGetReturnUrl());
 }
 
 //批量替换字段值
@@ -634,6 +645,7 @@ function AddThisClass($add,$userid,$username){
     }
 	//验证权限
     CheckLevel($userid,$username,$classid,$thisr['thelevel']);
+	$add['classname']=hRepPostStr($add['classname'],1);
 	$sql=$empire->query("insert into ".$thisr['tbname']."(classname) values('$add[classname]');");
 	if($sql)
 	{
@@ -660,6 +672,7 @@ function EditThisClass($add,$userid,$username){
     }
 	//验证权限
     CheckLevel($userid,$username,$classid,$thisr['thelevel']);
+	$add['classname']=hRepPostStr($add['classname'],1);
 	$sql=$empire->query("update ".$thisr['tbname']." set classname='$add[classname]' where classid='$classid'");
 	if($sql)
 	{
@@ -991,7 +1004,7 @@ function ClearTmpFileData($add,$userid,$username){
 	//验证权限
 	CheckLevel($userid,$username,$classid,"changedata");
 	//临时文件目录
-	$tmppath=ECMS_PATH.'e/data/tmp';
+	$tmppath=eReturnTrueEcmsPath().'e/data/tmp';
 	$hand=@opendir($tmppath);
 	while($file=@readdir($hand))
 	{
@@ -1006,7 +1019,7 @@ function ClearTmpFileData($add,$userid,$username){
 		}
 	}
 	//临时模板导出目录
-	$temppath=ECMS_PATH.'e/data/tmp/temp';
+	$temppath=eReturnTrueEcmsPath().'e/data/tmp/temp';
 	$hand=@opendir($temppath);
 	while($file=@readdir($hand))
 	{
@@ -1021,7 +1034,7 @@ function ClearTmpFileData($add,$userid,$username){
 		}
 	}
 	//临时模型导出目录
-	$modpath=ECMS_PATH.'e/data/tmp/mod';
+	$modpath=eReturnTrueEcmsPath().'e/data/tmp/mod';
 	$hand=@opendir($modpath);
 	while($file=@readdir($hand))
 	{
@@ -1036,7 +1049,7 @@ function ClearTmpFileData($add,$userid,$username){
 		}
 	}
 	//临时采集导出目录
-	$cjpath=ECMS_PATH.'e/data/tmp/cj';
+	$cjpath=eReturnTrueEcmsPath().'e/data/tmp/cj';
 	$hand=@opendir($cjpath);
 	while($file=@readdir($hand))
 	{
@@ -1112,7 +1125,7 @@ function ResetAddDataNum($type,$from,$userid,$username){
 	}
 	CheckLevel($userid,$username,$classid,"changedata");//验证权限
 	DoResetAddDataNum($type);
-	$returnurl=$from?$from:$_SERVER['HTTP_REFERER'];
+	$returnurl=$from?$from:EcmsGetReturnUrl();
 	//操作日志
 	insert_dolog("type=".$type);
 	printerror("ResetAddDataNumSuccess",$returnurl);

@@ -51,7 +51,7 @@ self.location.href='../../doaction.php?enews=DelFavaClass&cid='+cid;
               <td><div align="center"> 
                   <input name="enews" type="hidden" id="enews" value="EditFavaClass">
                   <input name="cid" type="hidden" value="<?=$r[cid]?>">
-                  <input name="cname" type="text" id="cname" value="<?=$r[cname]?>">
+                  <input name="cname" type="text" id="cname" value="<?=stripSlashes($r[cname])?>">
                 </div></td>
               <td><div align="center"> 
                   <input type="submit" name="Submit2" value="修改">

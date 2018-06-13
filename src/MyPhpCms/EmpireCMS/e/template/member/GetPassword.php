@@ -25,7 +25,15 @@ require(ECMS_PATH.'e/template/incfile/header.php');
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">验证码</td>
-      <td><input name="key" type="text" id="key" size="6"> <img src="../../ShowKey/?v=getpassword" name="getpasswordKeyImg" id="getpasswordKeyImg" onclick="getpasswordKeyImg.src='../../ShowKey/?v=getpassword&t='+Math.random()" title="看不清楚,点击刷新"></td>
+      <td>
+	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr> 
+                  <td width="52"><input name="key" type="text" id="key" size="6"> 
+                  </td>
+                  <td id="getpasswordshowkey"><a href="#EmpireCMS" onclick="edoshowkey('getpasswordshowkey','getpassword','<?=$public_r['newsurl']?>');" title="点击显示验证码">点击显示验证码</a></td>
+                </tr>
+            </table>
+	  </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">&nbsp; </td>

@@ -61,11 +61,14 @@ $doing=(int)$_GET['doing'];
 $field=RepPostVar($_GET['field']);
 $tranfrom=ehtmlspecialchars($_GET['tranfrom']);
 $fileno=ehtmlspecialchars($_GET['fileno']);
+$doecmspage=RepPostStr($_GET['doecmspage'],1);
 if(empty($field))
 {
 	$field="ecms";
 }
-$search="&classid=$classid&infoid=$infoid&filepass=$filepass&type=$type&modtype=$modtype&fstb=$fstb&doing=$doing&tranfrom=$tranfrom&field=$field&fileno=$fileno".$ecms_hashur['ehref'];
+include('eshoweditor.php');
+
+$search="&classid=$classid&infoid=$infoid&filepass=$filepass&type=$type&modtype=$modtype&fstb=$fstb&doing=$doing&tranfrom=$tranfrom&field=$field&fileno=$fileno&doecmspage=$doecmspage".$ecms_hashur['ehref'];
 
 //基目录
 $basepath=eReturnEcmsMainPortPath()."d/file";//moreport
@@ -135,31 +138,18 @@ else
 }
 //编辑器选择
 function EditorChangeFile(fileurl,filename,filetype,filesize,name){
-	parent.opener.OnUploadCompleted(2,fileurl,filename,'',name,filesize);
-<?php
-if($type==1)
-{
-?>
-	if(parent.opener.document.getElementById('txtAlt').value=='')
+	var returnstr;
+	returnstr=fileurl;
+	<?php
+	$useeditor_r=ECMS_EditorReturnType('');
+	if($useeditor_r['ftype']==0)
 	{
-		parent.opener.document.getElementById('txtAlt').value=name;
+	?>
+	returnstr=fileurl+'##'+name+'##'+filesize;
+	<?php
 	}
-<?php
-}
-elseif($type==0)
-{
-?>
-	if(parent.opener.document.getElementById('fname').value=='')
-	{
-		parent.opener.document.getElementById('fname').value=name;
-	}
-	if(parent.opener.document.getElementById('filesize').value=='')
-	{
-		parent.opener.document.getElementById('filesize').value=filesize;
-	}
-<?php
-}
-?>
+	?>
+	window.parent.opener.<?=$useeditor_r['jsfun']?>(returnstr);
 	parent.window.close();
 }
 //变量层选择
@@ -197,6 +187,7 @@ function ReloadChangeFilePage(){
   <form name="dofile" method="post" action="../ecmsfile.php">
   <?=$ecms_hashur['form']?>
     <input name="enews" type="hidden" id="enews" value="DelPathFile">
+	<input type=hidden name=doecmspage value="<?=$doecmspage?>">
     <tr class="header">
       <td><div align="center">选择</div></td>
       <td height="25"><div align="center">文件名</div></td>

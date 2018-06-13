@@ -127,27 +127,19 @@ function _4_Setup()
 ------------------------*/
 else if($step==4)
 {
+    $conn = mysql_connect($dbhost,$dbuser,$dbpwd) or die("<script>alert('数据库服务器或登录密码无效，\\n\\n无法连接数据库，请重新设定！');history.go(-1);</script>");
 
-    if ( $dbtype == 'sqlite' )
-    {
-        $db = new SQLite3(DEDEDATA.'/'.$dbname.'.db');
-    } else {
-        $dbtype = 'mysql';
-        $conn = mysql_connect($dbhost,$dbuser,$dbpwd) or die("<script>alert('数据库服务器或登录密码无效，\\n\\n无法连接数据库，请重新设定！');history.go(-1);</script>");
+    mysql_query("CREATE DATABASE IF NOT EXISTS `".$dbname."`;",$conn);
 
-        mysql_query("CREATE DATABASE IF NOT EXISTS `".$dbname."`;",$conn);
+    mysql_select_db($dbname, $conn) or die("<script>alert('选择数据库失败，可能是你没权限，请预先创建一个数据库！');history.go(-1);</script>");
 
-        mysql_select_db($dbname, $conn) or die("<script>alert('选择数据库失败，可能是你没权限，请预先创建一个数据库！');history.go(-1);</script>");
+    //获得数据库版本信息
+    $rs = mysql_query("SELECT VERSION();",$conn);
+    $row = mysql_fetch_array($rs);
+    $mysqlVersions = explode('.',trim($row[0]));
+    $mysqlVersion = $mysqlVersions[0].".".$mysqlVersions[1];
 
-        //获得数据库版本信息
-        $rs = mysql_query("SELECT VERSION();",$conn);
-        $row = mysql_fetch_array($rs);
-        $mysqlVersions = explode('.',trim($row[0]));
-        $mysqlVersion = $mysqlVersions[0].".".$mysqlVersions[1];
-
-        mysql_query("SET NAMES '$dblang',character_set_client=binary,sql_mode='';",$conn);
-    }
-    
+    mysql_query("SET NAMES '$dblang',character_set_client=binary,sql_mode='';",$conn);
 
     $fp = fopen(dirname(__FILE__)."/common.inc.php","r");
     $configStr1 = fread($fp,filesize(dirname(__FILE__)."/common.inc.php"));
@@ -158,7 +150,6 @@ else if($step==4)
     fclose($fp);
 
     //common.inc.php
-    $configStr1 = str_replace("~dbtype~",$dbtype,$configStr1);
     $configStr1 = str_replace("~dbhost~",$dbhost,$configStr1);
     $configStr1 = str_replace("~dbname~",$dbname,$configStr1);
     $configStr1 = str_replace("~dbuser~",$dbuser,$configStr1);
@@ -209,44 +200,19 @@ else if($step==4)
         {
             $query .= $line."\n";
             $query = str_replace('#@__',$dbprefix,$query);
-            if ( $dbtype == 'sqlite' )
+            if($mysqlVersion < 4.1)
             {
-                $query = preg_replace('/character set (.*?) /i','',$query);
-                $query = str_replace('unsigned','',$query);
-                $query = str_replace('TYPE=MyISAM','',$query);
-                
-                $query = preg_replace ('/TINYINT\(([\d]+)\)/i','INTEGER',$query);
-                $query = preg_replace ('/mediumint\(([\d]+)\)/i','INTEGER',$query);
-                $query = preg_replace ('/smallint\(([\d]+)\)/i','INTEGER',$query);
-                $query = preg_replace('/int\(([\d]+)\)/i','INTEGER',$query);
-                $query = preg_replace('/auto_increment/i','PRIMARY KEY AUTOINCREMENT',$query);
-                $query = preg_replace('/,  KEY(.*?)MyISAM;/','',$query);
-                $query = preg_replace('/,  KEY(.*?);/',');',$query);
-                $query = preg_replace('/,  UNIQUE KEY(.*?);/',');',$query);
-                $query = preg_replace('/set\(([^\)]*?)\)/','varchar',$query);
-                $query = preg_replace('/enum\(([^\)]*?)\)/','varchar',$query);
-                if ( preg_match("/PRIMARY KEY AUTOINCREMENT/",$query) )
-                {
-                    $query = preg_replace('/,([\t\s ]+)PRIMARY KEY  \(`([0-9a-zA-Z]+)`\)/i','',$query);
-                    $query = str_replace(',	PRIMARY KEY (`id`)','',$query);
-                }
-                $db->exec($query);
+                $rs = mysql_query($query,$conn);
             } else {
-                if($mysqlVersion < 4.1)
+                if(preg_match('#CREATE#i', $query))
+                {
+                    $rs = mysql_query(preg_replace("#TYPE=MyISAM#i",$sql4tmp,$query),$conn);
+                }
+                else
                 {
                     $rs = mysql_query($query,$conn);
-                } else {
-                    if(preg_match('#CREATE#i', $query))
-                    {
-                        $rs = mysql_query(preg_replace("#TYPE=MyISAM#i",$sql4tmp,$query),$conn);
-                    }
-                    else
-                    {
-                        $rs = mysql_query($query,$conn);
-                    }
                 }
             }
-    
             $query='';
         } else if(!preg_match("#^(\/\/|--)#", $line))
         {
@@ -263,19 +229,10 @@ else if($step==4)
         $line = rtrim(fgets($fp, 1024));
         if(preg_match("#;$#", $line))
         {
-            if ( $dbtype == 'sqlite' )
-            {
-                $query .= $line;
-                $query = str_replace('#@__',$dbprefix,$query);
-                $query = str_replace("\'","\"",$query);
-                $db->exec($query);
-            } else {
-                $query .= $line;
-                $query = str_replace('#@__',$dbprefix,$query);
-                if($mysqlVersion < 4.1) $rs = mysql_query($query,$conn);
-                else $rs = mysql_query(str_replace('#~lang~#',$dblang,$query),$conn);
-            }
-    
+            $query .= $line;
+            $query = str_replace('#@__',$dbprefix,$query);
+            if($mysqlVersion < 4.1) $rs = mysql_query($query,$conn);
+            else $rs = mysql_query(str_replace('#~lang~#',$dblang,$query),$conn);
             $query='';
         } else if(!preg_match("#^(\/\/|--)#", $line))
         {
@@ -286,40 +243,40 @@ else if($step==4)
 
     //更新配置
     $cquery = "Update `{$dbprefix}sysconfig` set value='{$baseurl}' where varname='cfg_basehost';";
-    $dbtype == 'sqlite'?  $db->exec($cquery) : mysql_query($cquery,$conn);
+    mysql_query($cquery,$conn);
     $cquery = "Update `{$dbprefix}sysconfig` set value='{$cmspath}' where varname='cfg_cmspath';";
-    $dbtype == 'sqlite'?  $db->exec($cquery) : mysql_query($cquery,$conn);
+    mysql_query($cquery,$conn);
     $cquery = "Update `{$dbprefix}sysconfig` set value='{$indexUrl}' where varname='cfg_indexurl';";
-    $dbtype == 'sqlite'?  $db->exec($cquery) : mysql_query($cquery,$conn);
+    mysql_query($cquery,$conn);
     $cquery = "Update `{$dbprefix}sysconfig` set value='{$cookieencode}' where varname='cfg_cookie_encode';";
-    $dbtype == 'sqlite'?  $db->exec($cquery) : mysql_query($cquery,$conn);
+    mysql_query($cquery,$conn);
     $cquery = "Update `{$dbprefix}sysconfig` set value='{$webname}' where varname='cfg_webname';";
-    $dbtype == 'sqlite'?  $db->exec($cquery) : mysql_query($cquery,$conn);
+    mysql_query($cquery,$conn);
     $cquery = "Update `{$dbprefix}sysconfig` set value='{$adminmail}' where varname='cfg_adminemail';";
-    $dbtype == 'sqlite'?  $db->exec($cquery) : mysql_query($cquery,$conn);
+    mysql_query($cquery,$conn);
 
     //增加管理员帐号
     $adminquery = "INSERT INTO `{$dbprefix}admin` VALUES (1, 10, '$adminuser', '".substr(md5($adminpwd),5,20)."', 'admin', '', '', 0, '".time()."', '127.0.0.1');";
-    $dbtype == 'sqlite'?  $db->exec($adminquery) : mysql_query($adminquery,$conn);
+    mysql_query($adminquery,$conn);
 
     //关连前台会员帐号
     $adminquery = "INSERT INTO `{$dbprefix}member` (`mid`,`mtype`,`userid`,`pwd`,`uname`,`sex`,`rank`,`money`,`email`,
                    `scores` ,`matt` ,`face`,`safequestion`,`safeanswer` ,`jointime` ,`joinip` ,`logintime` ,`loginip` )
                VALUES ('1','个人','$adminuser','".md5($adminpwd)."','$adminuser','男','100','0','','10000','10','','0','','".time()."','','0',''); ";
-    $dbtype == 'sqlite'?  $db->exec($adminquery) : mysql_query($adminquery,$conn);
+    mysql_query($adminquery,$conn);
 
     $adminquery = "INSERT INTO `{$dbprefix}member_person` (`mid`,`onlynet`,`sex`,`uname`,`qq`,`msn`,`tel`,`mobile`,`place`,`oldplace`,`birthday`,`star`,
                    `income` , `education` , `height` , `bodytype` , `blood` , `vocation` , `smoke` , `marital` , `house` ,`drink` , `datingtype` , `language` , `nature` , `lovemsg` , `address`,`uptime`)
                 VALUES ('1', '1', '男', '{$adminuser}', '', '', '', '', '0', '0','1980-01-01', '1', '0', '0', '160', '0', '0', '0', '0', '0', '0','0', '0', '', '', '', '','0'); ";
-    $dbtype == 'sqlite'?  $db->exec($adminquery) : mysql_query($adminquery,$conn);
+    mysql_query($adminquery,$conn);
 
     $adminquery = "INSERT INTO `{$dbprefix}member_tj` (`mid`,`article`,`album`,`archives`,`homecount`,`pagecount`,`feedback`,`friend`,`stow`)
                      VALUES ('1','0','0','0','0','0','0','0','0'); ";
-    $dbtype == 'sqlite'?  $db->exec($adminquery): mysql_query($adminquery,$conn);
+    mysql_query($adminquery,$conn);
 
     $adminquery = "Insert Into `{$dbprefix}member_space`(`mid` ,`pagesize` ,`matt` ,`spacename` ,`spacelogo` ,`spacestyle`, `sign` ,`spacenews`)
                 Values('1','10','0','{$adminuser}的空间','','person','',''); ";
-    $dbtype == 'sqlite'?  $db->exec($adminquery) : mysql_query($adminquery,$conn);
+    mysql_query($adminquery,$conn);
 
 	//安装体验数据
     if($installdemo == 1)

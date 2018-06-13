@@ -75,6 +75,10 @@ $r[smalltextlen]=200;
 $r[titlelen]=0;
 $r['getfirstspicw']=$public_r['spicwidth'];
 $r['getfirstspich']=$public_r['spicheight'];
+$r['repf']=',title,newstext,';
+$r['repadf']=',newstext,';
+$r['loadkeeptime']=0;
+$r['isnullf']=',newstext,';
 $pagetype0="";
 $pagetype1=" checked";
 //复制结点
@@ -172,10 +176,10 @@ function AddRepAd(obj,val){
 	}
 }
 </script>
+<script type="text/javascript" src="ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
-<script src="ecmseditor/fieldfile/setday.js"></script>
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="0">
   <tr>
     <td>位置：<?=$url?></td>
@@ -259,12 +263,12 @@ function AddRepAd(obj,val){
     </tr>
     <tr> 
       <td height="23" bgcolor="#FFFFFF">开始时间：</td>
-      <td height="23" bgcolor="#FFFFFF"> <input name="add[startday]" type="text" id="add[startday]" value="<?=$r[startday]?>" size="12" onclick="setday(this)"> 
+      <td height="23" bgcolor="#FFFFFF"> <input name="add[startday]" type="text" id="add[startday]" value="<?=$r[startday]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})"> 
         <font color="#666666">(格式：2007-11-01)</font></td>
     </tr>
     <tr> 
       <td height="23" bgcolor="#FFFFFF">结束时间：</td>
-      <td height="23" bgcolor="#FFFFFF"> <input name="add[endday]" type="text" id="add[endday]" value="<?=$r[endday]?>" size="12" onclick="setday(this)"> 
+      <td height="23" bgcolor="#FFFFFF"> <input name="add[endday]" type="text" id="add[endday]" value="<?=$r[endday]?>" size="15" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})"> 
         <font color="#666666">(格式：2007-11-01)</font></td>
     </tr>
     <tr> 
@@ -332,6 +336,11 @@ function AddRepAd(obj,val){
       <td height="23" bgcolor="#FFFFFF">每组采集时间间隔</td>
       <td height="23" bgcolor="#FFFFFF"> <input name="add[keeptime]" type="text" id="add[keeptime]" value="<?=$r[keeptime]?>" size="6">
         秒 <font color="#666666">(0为连续采集)</font></td>
+    </tr>
+    <tr>
+      <td height="23" bgcolor="#FFFFFF">每组入库时间间隔</td>
+      <td height="23" bgcolor="#FFFFFF"><input name="add[loadkeeptime]" type="text" id="add[loadkeeptime]" value="<?=$r[loadkeeptime]?>" size="6">
+秒 <font color="#666666">(0为连续入库)</font></td>
     </tr>
     <tr class="header"> 
       <td height="23" colspan="2">附加选项</td>
@@ -488,6 +497,11 @@ function AddRepAd(obj,val){
     <tr> 
       <td height="23" bgcolor="#FFFFFF"><font color="#666666">(原字符多个请用&quot;,&quot;格开,如果是新字符是多个，可以用&quot;,&quot;格开，系统会对应替换)</font></td>
     </tr>
+    <tr>
+      <td valign="top" bgcolor="#FFFFFF">要替换的字段名</td>
+      <td height="23" bgcolor="#FFFFFF"><input name="repf" type="text" id="repf" value="<?=substr($r[repf],1,-1)?>" size="60">
+        <font color="#666666">(多个字段用半角逗号&quot;,&quot;格开)</font></td>
+    </tr>
     <tr> 
       <td height="23" valign="top" bgcolor="#FFFFFF"><strong>过滤广告正则：</strong><br> 
         <font color="#666666">格式：广告开始[!--ad--]广告结束<br>
@@ -534,10 +548,17 @@ function AddRepAd(obj,val){
           </tr>
         </table></td>
     </tr>
+    <tr>
+      <td height="23" bgcolor="#FFFFFF">要过滤广告的字段名</td>
+      <td height="23" bgcolor="#FFFFFF"><input name="repadf" type="text" id="repadf" value="<?=substr($r[repadf],1,-1)?>" size="60">
+        <font color="#666666">(多个字段用半角逗号&quot;,&quot;格开)</font></td>
+    </tr>
     <tr> 
       <td height="23" bgcolor="#FFFFFF">内容为空不采集</td>
       <td height="23" bgcolor="#FFFFFF"><input name="add[newstextisnull]" type="checkbox" id="add[newstextisnull]" value="1"<?=$r[newstextisnull]==1?' checked':''?>>
-        是<font color="#666666"> (newstext字段)</font></td>
+        是，验证字段名：<font color="#666666">
+        <input name="isnullf" type="text" id="isnullf" value="<?=substr($r['isnullf'],1,-1)?>" size="40">
+        (多个字段用半角逗号&quot;,&quot;格开)</font></td>
     </tr>
     <tr> 
       <td height="23" bgcolor="#FFFFFF">过滤相似：</td>

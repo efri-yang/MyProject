@@ -23,16 +23,19 @@ function AddMemberFeedback($add){
 		$uid=0;
 		$uname='';
 	}
-	$uname=RepPostStr($uname);
-	$name=RepPostStr($add['name']);
-	$company=RepPostStr($add['company']);
-	$phone=RepPostStr($add['phone']);
-	$fax=RepPostStr($add['fax']);
-	$email=RepPostStr($add['email']);
-	$address=RepPostStr($add['address']);
-	$zip=RepPostStr($add['zip']);
-	$title=RepPostStr($add['title']);
-	$ftext=RepPostStr($add['ftext']);
+	//实名验证
+	eCheckHaveTruenameCK('msps',0);
+
+	$uname=dgdb_tosave($uname);
+	$name=dgdb_tosave($add['name']);
+	$company=dgdb_tosave($add['company']);
+	$phone=dgdb_tosave($add['phone']);
+	$fax=dgdb_tosave($add['fax']);
+	$email=dgdb_tosave($add['email']);
+	$address=dgdb_tosave($add['address']);
+	$zip=dgdb_tosave($add['zip']);
+	$title=dgdb_tosave($add['title']);
+	$ftext=dgdb_tosave($add['ftext']);
 	if(!trim($name)||!trim($title)||!trim($ftext))
 	{
 		printerror("EmptyMemberFeedback","history.go(-1)",1);
@@ -44,7 +47,7 @@ function AddMemberFeedback($add){
 	ecmsEmptyShowKey($keyvname);//清空验证码
 	if($sql)
 	{
-		printerror("AddMemberFeedbackSuccess",$_SERVER['HTTP_REFERER'],1);
+		printerror("AddMemberFeedbackSuccess",EcmsGetReturnUrl(),1);
 	}
 	else
 	{
@@ -64,7 +67,7 @@ function DelMemberFeedback($add){
 	$sql=$empire->query("delete from {$dbtbpre}enewsmemberfeedback where fid='$fid' and userid='$user_r[userid]'");
 	if($sql)
 	{
-		printerror("DelMemberFeedbackSuccess",$_SERVER['HTTP_REFERER'],1);
+		printerror("DelMemberFeedbackSuccess",EcmsGetReturnUrl(),1);
 	}
 	else
 	{
@@ -90,7 +93,7 @@ function DelMemberFeedback_All($add){
 	$sql=$empire->query("delete from {$dbtbpre}enewsmemberfeedback where (".$addsql.") and userid='$user_r[userid]'");
 	if($sql)
 	{
-		printerror("DelMemberFeedbackSuccess",$_SERVER['HTTP_REFERER'],1);
+		printerror("DelMemberFeedbackSuccess",EcmsGetReturnUrl(),1);
 	}
 	else
 	{

@@ -81,7 +81,7 @@ $empire=null;
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
 <script>
 function ShowFieldFormSet(obj,val){
-	if(val=='text'||val=='password'||val=='flash'||val=='file'||val=='date'||val=='color')
+	if(val=='text'||val=='password'||val=='flash'||val=='file'||val=='date'||val=='color'||val=='datetime')
 	{
 		fsizediv.style.display="";
 		fwidthdiv.style.display="none";
@@ -321,6 +321,7 @@ function ShowFieldFormSet(obj,val){
           <option value="flash"<?=$formflash?>>FLASH文件(flash)</option>
           <option value="file"<?=$formfile?>>文件(file)</option>
           <option value="date"<?=$formdate?>>日期(date)</option>
+		  <option value="datetime"<?=$formdatetime?>>日期时间(datetime)</option>
           <option value="color"<?=$formcolor?>>颜色(color)</option>
 		  <option value="morevaluefield"<?=$formmorevaluefield?>>多值字段(morevaluefield)</option>
           <option value="linkfield"<?=$formlinkfield?>>选择外表关联字段(linkfield)</option>

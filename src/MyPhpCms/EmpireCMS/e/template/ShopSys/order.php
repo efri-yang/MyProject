@@ -184,52 +184,52 @@ else
       <td><table width="100%%" border="0" cellspacing="1" cellpadding="3">
           <tr> 
             <td width="20%" height="25">真实姓名:</td>
-            <td width="80%"><input name="truename" type="text" id="truename" value="<?=$useraddr[truename]?>" size="65">
+            <td width="80%"><input name="truename" type="text" id="truename" value="<?=stripSlashes($useraddr[truename])?>" size="65">
               <?=stristr($shoppr['ddmust'],',truename,')?'*':''?></td>
           </tr>
           <tr> 
             <td height="25">固定电话:</td>
-            <td><input name="mycall" type="text" id="mycall" value="<?=$useraddr[mycall]?>" size="65">
+            <td><input name="mycall" type="text" id="mycall" value="<?=stripSlashes($useraddr[mycall])?>" size="65">
               <?=stristr($shoppr['ddmust'],',mycall,')?'*':''?></td>
           </tr>
           <tr> 
             <td height="25">手机:</td>
-            <td><input name="phone" type="text" id="phone" value="<?=$useraddr[phone]?>" size="65">
+            <td><input name="phone" type="text" id="phone" value="<?=stripSlashes($useraddr[phone])?>" size="65">
 			  <?=stristr($shoppr['ddmust'],',phone,')?'*':''?></td>
           </tr>
           <tr> 
             <td height="25">联系邮箱:</td>
-            <td><input name="email" type="text" id="email" value="<?=$email?>" size="65">
+            <td><input name="email" type="text" id="email" value="<?=stripSlashes($email)?>" size="65">
               <?=stristr($shoppr['ddmust'],',email,')?'*':''?></td>
           </tr>
 		  <tr> 
             <td height="25">OICQ:</td>
-            <td><input name="oicq" type="text" id="oicq" value="<?=$useraddr[oicq]?>" size="65">
+            <td><input name="oicq" type="text" id="oicq" value="<?=stripSlashes($useraddr[oicq])?>" size="65">
 			  <?=stristr($shoppr['ddmust'],',oicq,')?'*':''?></td>
           </tr>
           <tr> 
             <td height="25">MSN:</td>
-            <td><input name="msn" type="text" id="msn" value="<?=$useraddr[msn]?>" size="65">
+            <td><input name="msn" type="text" id="msn" value="<?=stripSlashes($useraddr[msn])?>" size="65">
 			  <?=stristr($shoppr['ddmust'],',msn,')?'*':''?></td>
           </tr>
           <tr> 
             <td height="25">联系地址:</td>
-            <td><input name="address" type="text" id="address" value="<?=$useraddr[address]?>" size="65">
+            <td><input name="address" type="text" id="address" value="<?=stripSlashes($useraddr[address])?>" size="65">
               <?=stristr($shoppr['ddmust'],',address,')?'*':''?></td>
           </tr>
           <tr> 
             <td height="25">邮编:</td>
-            <td><input name="zip" type="text" id="zip" value="<?=$useraddr[zip]?>" size="65">
+            <td><input name="zip" type="text" id="zip" value="<?=stripSlashes($useraddr[zip])?>" size="65">
 			  <?=stristr($shoppr['ddmust'],',zip,')?'*':''?></td>
           </tr>
           <tr>
             <td height="25">周边标志建筑:</td>
-            <td><input name="signbuild" type="text" id="signbuild" value="<?=$useraddr[signbuild]?>" size="65">
+            <td><input name="signbuild" type="text" id="signbuild" value="<?=stripSlashes($useraddr[signbuild])?>" size="65">
               <?=stristr($shoppr['ddmust'],',signbuild,')?'*':''?></td>
           </tr>
           <tr>
             <td height="25">最佳送货时间:</td>
-            <td><input name="besttime" type="text" id="besttime" value="<?=$useraddr[besttime]?>" size="65">
+            <td><input name="besttime" type="text" id="besttime" value="<?=stripSlashes($useraddr[besttime])?>" size="65">
               <?=stristr($shoppr['ddmust'],',besttime,')?'*':''?></td>
           </tr>
           <tr> 

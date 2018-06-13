@@ -36,7 +36,7 @@ function TranTruePathFile($level,$path,$file,$file_name,$file_type,$file_size,$a
 	DoChmodFile($r['name']);
 	//操作日志
 	insert_dolog("path=$path<br>filename=".$r['filename']);
-	echo'<meta http-equiv="refresh" content="0;url='.$_SERVER['HTTP_REFERER'].'">';
+	echo'<meta http-equiv="refresh" content="0;url='.EcmsGetReturnUrl().'">';
 	db_close();
 	$empire=null;
 }
@@ -61,6 +61,6 @@ function DelTruePathFile($level,$path,$filename,$userid,$username){
     }
 	//操作日志
 	insert_dolog("path=$path");
-	printerror("DelFileSuccess",$_SERVER['HTTP_REFERER']);
+	printerror("DelFileSuccess",EcmsGetReturnUrl());
 }
 ?>

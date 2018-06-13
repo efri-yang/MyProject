@@ -95,7 +95,10 @@ function CheckAll(form)
     <tr>
       <td width="50%" class="emenubutton"><input type="button" name="Submit52" value="增加节点" onclick="self.location.href='AddInfoC.php?from=1<?=$ecms_hashur['ehref']?>';">
 	  &nbsp;&nbsp;
-        <input type="button" name="Submit52" value="导入采集规则" onclick="self.location.href='cj/LoadInCj.php?from=1<?=$ecms_hashur['ehref']?>';"></td>
+        <input type="button" name="Submit52" value="导入采集规则" onclick="self.location.href='cj/LoadInCj.php?from=1<?=$ecms_hashur['ehref']?>';">
+		&nbsp;&nbsp;
+		<input type="button" name="Submit6" value="数据更新中心" onclick="window.open('ReHtml/ChangeData.php<?=$ecms_hashur['whehref']?>#ReIfInfoHtml');">
+		</td>
       <td width="50%" height="32">
 <div align="right">搜索: 
           <input name="keyboard" type="text" id="keyboard" value="<?=$keyboard?>">
@@ -134,7 +137,7 @@ function CheckAll(form)
 		if($r[newsclassid])
 		{
 			$lastcjtime=!$r['lasttime']?'从未采集':date("Y-m-d H:i:s",$r['lasttime']);
-			$cj="<a href='DoCj.php?enews=CjUrl&classid[]=".$r[classid]."&from=1".$ecms_hashur['href']."' title='最后采集时间：".$lastcjtime."'><u>".$fun_r['StartCj']."</u></a>";
+			$cj="<a href='DoCj.php?enews=CjUrl&classid[]=".$r[classid]."&from=1".$ecms_hashur['href']."' title='最后采集时间：".$lastcjtime."' target=_blank><u>".$fun_r['StartCj']."</u></a>";
 			$emptydb="&nbsp;[<a href='ListInfoClass.php?enews=EmptyCj&classid=$r[classid]&from=1".$ecms_hashur['href']."' onclick=\"return confirm('".$fun_r['CheckEmptyCjRecord']."');\">".$fun_r['EmptyCjRecord']."</a>]";
 			$loadoutcj="&nbsp;[<a href=ecmscj.php?enews=LoadOutCj&classid=$r[classid]&from=1".$ecms_hashur['href']." onclick=\"return confirm('确认要导出?');\">导出</a>]";
 			$checkbox="<input type=checkbox name=classid[] value='$r[classid]' onClick=\"if(this.checked){c".$r[classid].".style.backgroundColor='#DBEAF5';}else{c".$r[classid].".style.backgroundColor='#ffffff';}\">";

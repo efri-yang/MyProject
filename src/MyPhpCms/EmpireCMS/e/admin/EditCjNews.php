@@ -63,9 +63,11 @@ if(strstr($enter,',downpath,')||strstr($enter,',onlinepath,'))
 	}
 }
 //html编辑器
+$loadeditorjs='';
 if($emod_r[$modid]['editorf']&&$emod_r[$modid]['editorf']!=',')
 {
-	include('ecmseditor/infoeditor/fckeditor.php');
+	include('ecmseditor/eshoweditor.php');
+	$loadeditorjs=ECMS_ShowEditorJS('ecmseditor/infoeditor/');
 }
 //栏目名称
 $newsclassid=$cr[newsclassid];
@@ -82,7 +84,6 @@ $cjfile="../data/html/editcj".$modid.".php";
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <title>修改采集信息</title>
 <link href="adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<?=$htmlareacode?>
 <script>
 function doSpChangeFile(name,url,filesize,filetype,idvar){
 	document.getElementById(idvar).value=url;
@@ -112,18 +113,20 @@ function bs(){
 }
 function foreColor(){
   if(!Error())	return;
-  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) document.add.titlecolor.value=arr;
   else document.add.titlecolor.focus();
 }
 function FieldChangeColor(obj){
   if(!Error())	return;
-  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:18.5em; dialogHeight:17.5em; status:0");
+  var arr = showModalDialog("../data/html/selcolor.html", "", "dialogWidth:296px; dialogHeight:280px; status:0");
   if (arr != null) obj.value=arr;
   else obj.focus();
 }
 </script>
-<script src="ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="ecmseditor/js/jstime/WdatePicker.js"></script>
+<script type="text/javascript" src="ecmseditor/js/jscolor/jscolor.js"></script>
+<?=$loadeditorjs?>
 </head>
 
 <body>

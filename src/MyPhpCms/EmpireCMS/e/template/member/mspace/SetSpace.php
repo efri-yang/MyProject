@@ -17,12 +17,12 @@ require(ECMS_PATH.'e/template/incfile/header.php');
           <tr bgcolor="#FFFFFF"> 
             <td width="17%" height="25">空间名称</td>
             <td width="83%"> 
-              <input name="spacename" type="text" id="spacename" value="<?=$addr[spacename]?>"></td>
+              <input name="spacename" type="text" id="spacename" value="<?=stripSlashes($addr[spacename])?>"></td>
           </tr>
           <tr bgcolor="#FFFFFF"> 
             <td>空间公告</td>
             <td> 
-              <textarea name="spacegg" cols="60" rows="6" id="spacegg"><?=$addr[spacegg]?></textarea></td>
+              <textarea name="spacegg" cols="60" rows="6" id="spacegg"><?=stripSlashes($addr[spacegg])?></textarea></td>
           </tr>
           <tr bgcolor="#FFFFFF"> 
             <td height="25">&nbsp;</td>

@@ -9,6 +9,7 @@ $link=db_connect();
 $empire=new mysqlquery();
 $userid=0;
 $username='';
+$groupid=0;
 $spacestyle='';
 require('CheckUser.php');//验证用户
 $p=RepPostVar($_GET['p']);
@@ -40,6 +41,8 @@ if($groupid)
 		}
 		$pagetext=$addur[$p];
 	}
+	$pagename=stripSlashes($pagename);
+	$pagetext=stripSlashes($pagetext);
 }
 require('template/'.$spacestyle.'/page.temp.php');
 db_close();

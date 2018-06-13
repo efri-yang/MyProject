@@ -49,6 +49,7 @@ function AddDo($add,$userid,$username){
 	$add[isopen]=(int)$add[isopen];
 	$add[doing]=(int)$add[doing];
 	$classid=AddDoTogClassid($add[classid]);
+	$add['doname']=hRepPostStr($add['doname'],1);
 	$sql=$empire->query("insert into {$dbtbpre}enewsdo(doname,dotime,isopen,doing,classid,lasttime) values('$add[doname]',$add[dotime],$add[isopen],$add[doing],'$classid',$lasttime);");
 	$doid=$empire->lastid();
 	if($sql)
@@ -80,6 +81,7 @@ function EditDo($add,$userid,$username){
 	$add[isopen]=(int)$add[isopen];
 	$add[doing]=(int)$add[doing];
 	$classid=AddDoTogClassid($add[classid]);
+	$add['doname']=hRepPostStr($add['doname'],1);
 	$sql=$empire->query("update {$dbtbpre}enewsdo set doname='$add[doname]',dotime=$add[dotime],isopen=$add[isopen],doing=$add[doing],classid='$classid' where doid='$add[doid]'");
 	if($sql)
 	{

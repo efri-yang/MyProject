@@ -121,7 +121,7 @@ function AddFriendClass($add){
     }
 	//是否登陆
 	$user_r=islogin();
-	$add[cname]=RepPostStr($add[cname]);
+	$add[cname]=dgdb_tosave($add[cname]);
 	$sql=$empire->query("insert into {$dbtbpre}enewshyclass(cname,userid) values('$add[cname]','$user_r[userid]');");
 	if($sql)
 	{
@@ -143,7 +143,7 @@ function EditFriendClass($add){
     }
 	//是否登陆
 	$user_r=islogin();
-	$add[cname]=RepPostStr($add[cname]);
+	$add[cname]=dgdb_tosave($add[cname]);
 	$sql=$empire->query("update {$dbtbpre}enewshyclass set cname='$add[cname]' where cid='$add[cid]' and userid='$user_r[userid]'");
 	if($sql)
 	{
@@ -179,6 +179,7 @@ function DelFriendClass($cid){
 //返回好友分类
 function ReturnFriendclass($userid,$cid){
 	global $empire,$dbtbpre;
+	$userid=(int)$userid;
 	$sql=$empire->query("select cid,cname from {$dbtbpre}enewshyclass where userid='$userid' order by cid");
 	$select='';
 	while($r=$empire->fetch($sql))

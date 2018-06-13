@@ -15,10 +15,10 @@ function AddGbook($add){
 	{
 		$bid=(int)getcvar('gbookbid');
 	}
-	$name=RepPostStr(trim($add[name]));
-	$email=RepPostStr($add[email]);
-	$mycall=RepPostStr($add[mycall]);
-	$lytext=RepPostStr($add[lytext]);
+	$name=dgdb_tosave(trim($add[name]));
+	$email=dgdb_tosave($add[email]);
+	$mycall=dgdb_tosave($add[mycall]);
+	$lytext=dgdb_tosave($add[lytext]);
 	if(empty($bid)||empty($name)||empty($email)||!trim($lytext))
 	{
 		printerror("EmptyGbookname","history.go(-1)",1);
@@ -48,6 +48,7 @@ function AddGbook($add){
 		printerror("EmptyGbook","history.go(-1)",1);
 	}
 	//权限
+	$user=array();
 	if($br['groupid'])
 	{
 		$user=islogin();
@@ -56,6 +57,9 @@ function AddGbook($add){
 			printerror("HaveNotEnLevel","history.go(-1)",1);
 		}
 	}
+	//实名验证
+	eCheckHaveTruename('gb',$user['userid'],$user['username'],$user['isern'],$user['checked'],0);
+
 	$lytime=date("Y-m-d H:i:s");
 	$ip=egetip();
 	$eipport=egetipport();

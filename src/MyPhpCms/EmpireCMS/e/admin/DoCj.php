@@ -26,7 +26,7 @@ if(!$count)
 $add['from']=ehtmlspecialchars($add['from']);
 esetcookie("recjnum",$count,0,1);
 $url="ecmscj.php?enews=CjUrl".$ecms_hashur['href'];
-echo"<center>采集节点的总个数为:<font color=red>$count</font>个</center><br>";
+echo"<center><b>采集节点的总个数为:<font color=red>$count</font>个。</b>&nbsp;&nbsp; (<a href='ReHtml/ChangeData.php".$ecms_hashur['whehref']."#ReIfInfoHtml' target=_blank>数据更新中心</a>)</center><br>";
 for($i=0;$i<$count;$i++)
 {
 	$classid[$i]=(int)$classid[$i];

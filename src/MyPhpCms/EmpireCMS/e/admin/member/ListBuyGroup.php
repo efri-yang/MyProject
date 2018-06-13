@@ -28,6 +28,8 @@ function ReturnBuyGroupVar($add){
 	$add[gzgroupid]=(int)$add[gzgroupid];
 	$add[buygroupid]=(int)$add[buygroupid];
 	$add[myorder]=(int)$add[myorder];
+	$add['gname']=hRepPostStr($add['gname'],1);
+	$add['gsay']=hRepPostStr2($add['gsay']);
 	return $add;
 }
 

@@ -4,7 +4,7 @@
 # 
 # http://www.PHome.Net
 # 
-# EmpireCMS Version 7.2
+# EmpireCMS Version 7.5
 # 
 # --------------------------------------------------------
 
@@ -62,6 +62,46 @@ CREATE TABLE `phome_enewsadminstyle` (
 
 INSERT INTO `phome_enewsadminstyle` VALUES (1, '管理员后台界面', 1, 1);
 INSERT INTO `phome_enewsadminstyle` VALUES (2, '编辑后台界面', 2, 0);
+
+# --------------------------------------------------------
+
+DROP TABLE IF EXISTS `phome_enewsag`;
+CREATE TABLE `phome_enewsag` (
+  `agid` int(10) unsigned NOT NULL auto_increment,
+  `agname` varchar(60) NOT NULL default '',
+  `isadmin` tinyint(1) NOT NULL default '0',
+  `auids` text NOT NULL,
+  PRIMARY KEY  (`agid`),
+  KEY `isadmin` (`isadmin`)
+) TYPE=MyISAM;
+
+INSERT INTO `phome_enewsag` VALUES (1, '管理员', 9, '');
+INSERT INTO `phome_enewsag` VALUES (2, '版主', 5, '');
+
+# --------------------------------------------------------
+
+DROP TABLE IF EXISTS `phome_enewsautodo`;
+CREATE TABLE `phome_enewsautodo` (
+  `doid` bigint(20) unsigned NOT NULL auto_increment,
+  `dotype` char(50) NOT NULL default '',
+  `classid` int(11) NOT NULL default '0',
+  `id` int(10) unsigned NOT NULL default '0',
+  `tid` int(10) unsigned NOT NULL default '0',
+  `userid` int(10) unsigned NOT NULL default '0',
+  `dotime` int(10) unsigned NOT NULL default '0',
+  `addtime` int(10) unsigned NOT NULL default '0',
+  `pid` int(11) NOT NULL default '0',
+  `ckstr` char(32) NOT NULL default '',
+  `fname` char(255) NOT NULL default '',
+  `ecmspno` char(32) NOT NULL default '',
+  `ckpass` char(32) NOT NULL default '',
+  PRIMARY KEY  (`doid`),
+  KEY `userid` (`userid`),
+  KEY `pid` (`pid`),
+  KEY `dotime` (`dotime`),
+  KEY `ckstr` (`ckstr`),
+  KEY `ecmspno` (`ecmspno`)
+) TYPE=MyISAM;
 
 # --------------------------------------------------------
 
@@ -268,6 +308,10 @@ CREATE TABLE `phome_enewsclass` (
   `allinfos` int(10) unsigned NOT NULL default '0',
   `infos` int(10) unsigned NOT NULL default '0',
   `addtime` int(10) unsigned NOT NULL default '0',
+  `oneinfo` tinyint(1) NOT NULL default '0',
+  `addsql` varchar(255) NOT NULL default '',
+  `wapislist` tinyint(1) NOT NULL default '0',
+  `fclast` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`classid`),
   KEY `bclassid` (`bclassid`)
 ) TYPE=MyISAM;
@@ -315,7 +359,7 @@ CREATE TABLE `phome_enewsclass_stats_set` (
   `changedate` int(10) unsigned NOT NULL default '0'
 ) TYPE=MyISAM;
 
-INSERT INTO `phome_enewsclass_stats_set` VALUES (1, 3600, 0, 20130717);
+INSERT INTO `phome_enewsclass_stats_set` VALUES (0, 3600, 0, 20170227);
 
 # --------------------------------------------------------
 
@@ -324,6 +368,7 @@ CREATE TABLE `phome_enewsclassadd` (
   `classid` smallint(5) unsigned NOT NULL default '0',
   `classtext` mediumtext NOT NULL,
   `ttids` text NOT NULL,
+  `eclasspagetext` mediumtext NOT NULL,
   PRIMARY KEY  (`classid`)
 ) TYPE=MyISAM;
 
@@ -740,6 +785,44 @@ CREATE TABLE `phome_enewsgfenip` (
 
 # --------------------------------------------------------
 
+DROP TABLE IF EXISTS `phome_enewsgoodtype`;
+CREATE TABLE `phome_enewsgoodtype` (
+  `tid` smallint(5) unsigned NOT NULL auto_increment,
+  `tname` varchar(60) NOT NULL default '',
+  `ttype` tinyint(1) NOT NULL default '0',
+  `levelid` tinyint(3) unsigned NOT NULL default '0',
+  `myorder` smallint(6) NOT NULL default '0',
+  `groupid` varchar(255) NOT NULL default '',
+  `showall` tinyint(1) NOT NULL default '0',
+  `showcid` text NOT NULL,
+  `hiddencid` text NOT NULL,
+  PRIMARY KEY  (`tid`),
+  KEY `ttype` (`ttype`),
+  KEY `levelid` (`levelid`),
+  KEY `myorder` (`myorder`)
+) TYPE=MyISAM;
+
+INSERT INTO `phome_enewsgoodtype` VALUES (1, '一级头条', 1, 1, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (2, '二级头条', 1, 2, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (3, '三级头条', 1, 3, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (4, '四级头条', 1, 4, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (5, '五级头条', 1, 5, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (6, '六级头条', 1, 6, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (7, '七级头条', 1, 7, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (8, '八级头条', 1, 8, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (9, '九级头条', 1, 9, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (10, '一级推荐', 0, 1, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (11, '二级推荐', 0, 2, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (12, '三级推荐', 0, 3, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (13, '四级推荐', 0, 4, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (14, '五级推荐', 0, 5, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (15, '六级推荐', 0, 6, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (16, '七级推荐', 0, 7, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (17, '八级推荐', 0, 8, 0, '', 0, '', '');
+INSERT INTO `phome_enewsgoodtype` VALUES (18, '九级推荐', 0, 9, 0, '', 0, '', '');
+
+# --------------------------------------------------------
+
 DROP TABLE IF EXISTS `phome_enewsgroup`;
 CREATE TABLE `phome_enewsgroup` (
   `groupid` smallint(6) NOT NULL auto_increment,
@@ -842,10 +925,19 @@ CREATE TABLE `phome_enewsgroup` (
   `domemberconnect` tinyint(1) NOT NULL default '0',
   `doprecode` tinyint(1) NOT NULL default '0',
   `domoreport` tinyint(1) NOT NULL default '0',
+  `docanhtml` tinyint(1) NOT NULL default '0',
+  `dodelclass` tinyint(1) NOT NULL default '0',
+  `doinfofile` tinyint(1) NOT NULL default '0',
+  `doingroup` tinyint(1) NOT NULL default '0',
+  `domembergroup` tinyint(1) NOT NULL default '0',
+  `doviewgroup` tinyint(1) NOT NULL default '0',
+  `domadmingroup` tinyint(1) NOT NULL default '0',
+  `dochmoreport` tinyint(1) NOT NULL default '0',
+  `doisqf` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`groupid`)
 ) TYPE=MyISAM;
 
-INSERT INTO `phome_enewsgroup` VALUES (1, '超级管理员', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1);
+INSERT INTO `phome_enewsgroup` VALUES (1, '超级管理员', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0);
 
 # --------------------------------------------------------
 
@@ -967,6 +1059,10 @@ CREATE TABLE `phome_enewsinfoclass` (
   `getfirstspich` smallint(6) NOT NULL default '0',
   `doaddtextpage` tinyint(1) NOT NULL default '0',
   `infourlispage` tinyint(1) NOT NULL default '0',
+  `repf` varchar(255) NOT NULL default '',
+  `repadf` varchar(255) NOT NULL default '',
+  `loadkeeptime` smallint(6) NOT NULL default '0',
+  `isnullf` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`classid`),
   KEY `newsclassid` (`newsclassid`)
 ) TYPE=MyISAM;
@@ -1000,6 +1096,7 @@ CREATE TABLE `phome_enewsinfotype` (
   `nrejs` tinyint(1) NOT NULL default '0',
   `listdt` tinyint(1) NOT NULL default '0',
   `repagenum` smallint(5) unsigned NOT NULL default '0',
+  `fclast` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`typeid`),
   KEY `mid` (`mid`),
   KEY `myorder` (`myorder`)
@@ -1028,6 +1125,17 @@ CREATE TABLE `phome_enewsinfovote` (
   `copyids` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`pubid`),
   KEY `id` (`id`,`classid`)
+) TYPE=MyISAM;
+
+# --------------------------------------------------------
+
+DROP TABLE IF EXISTS `phome_enewsingroup`;
+CREATE TABLE `phome_enewsingroup` (
+  `gid` smallint(5) unsigned NOT NULL auto_increment,
+  `gname` char(60) NOT NULL default '',
+  `myorder` smallint(6) NOT NULL default '0',
+  PRIMARY KEY  (`gid`),
+  KEY `myorder` (`myorder`)
 ) TYPE=MyISAM;
 
 # --------------------------------------------------------
@@ -1140,9 +1248,13 @@ CREATE TABLE `phome_enewsmember` (
   `checked` tinyint(1) NOT NULL default '0',
   `salt` char(8) NOT NULL default '',
   `userkey` char(12) NOT NULL default '',
+  `ingid` smallint(5) unsigned NOT NULL default '0',
+  `agid` smallint(5) unsigned NOT NULL default '0',
+  `isern` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`userid`),
   UNIQUE KEY `username` (`username`),
-  KEY `groupid` (`groupid`)
+  KEY `groupid` (`groupid`),
+  KEY `ingid` (`ingid`)
 ) TYPE=MyISAM;
 
 # --------------------------------------------------------
@@ -1229,18 +1341,18 @@ CREATE TABLE `phome_enewsmemberf` (
   PRIMARY KEY  (`fid`)
 ) TYPE=MyISAM;
 
-INSERT INTO `phome_enewsmemberf` VALUES (1, 'truename', '真实姓名', 'text', '\r\n<input name="truename" type="text" id="truename" value="<?=$ecmsfirstpost==1?"":htmlspecialchars(stripSlashes($addr[truename]))?>">\r\n', '', 1, 'VARCHAR', '20', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (2, 'oicq', 'QQ号码', 'text', '<input name=\\"oicq\\" type=\\"text\\" id=\\"oicq\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":htmlspecialchars(stripSlashes($addr[oicq]))?>\\">\r\n', '', 5, 'VARCHAR', '25', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (3, 'msn', 'MSN', 'text', '<input name=\\"msn\\" type=\\"text\\" id=\\"msn\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":htmlspecialchars(stripSlashes($addr[msn]))?>\\">\r\n', '', 6, 'VARCHAR', '120', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (4, 'mycall', '联系电话', 'text', '<input name=\\"mycall\\" type=\\"text\\" id=\\"mycall\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":htmlspecialchars(stripSlashes($addr[mycall]))?>\\">\r\n', '', 2, 'VARCHAR', '30', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (5, 'phone', '手机', 'text', '<input name=\\"phone\\" type=\\"text\\" id=\\"phone\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":htmlspecialchars(stripSlashes($addr[phone]))?>\\">\r\n', '', 4, 'VARCHAR', '30', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (6, 'address', '联系地址', 'text', '<input name=\\"address\\" type=\\"text\\" id=\\"address\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":htmlspecialchars(stripSlashes($addr[address]))?>\\" size=\\"50\\">\r\n', '', 9, 'VARCHAR', '255', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (7, 'zip', '邮编', 'text', '<input name=\\"zip\\" type=\\"text\\" id=\\"zip\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":htmlspecialchars(stripSlashes($addr[zip]))?>\\" size=\\"8\\">\r\n', '', 10, 'VARCHAR', '8', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (9, 'homepage', '网址', 'text', '\r\n<input name="homepage" type="text" id="homepage" value="<?=$ecmsfirstpost==1?"":htmlspecialchars(stripSlashes($addr[homepage]))?>">\r\n', '', 7, 'VARCHAR', '200', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (1, 'truename', '真实姓名', 'text', '\r\n<input name="truename" type="text" id="truename" value="<?=$ecmsfirstpost==1?"":ehtmlspecialchars(stripSlashes($addr[truename]))?>">\r\n', '', 1, 'VARCHAR', '20', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (2, 'oicq', 'QQ号码', 'text', '<input name=\\"oicq\\" type=\\"text\\" id=\\"oicq\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":ehtmlspecialchars(stripSlashes($addr[oicq]))?>\\">\r\n', '', 5, 'VARCHAR', '25', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (3, 'msn', 'MSN', 'text', '<input name=\\"msn\\" type=\\"text\\" id=\\"msn\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":ehtmlspecialchars(stripSlashes($addr[msn]))?>\\">\r\n', '', 6, 'VARCHAR', '120', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (4, 'mycall', '联系电话', 'text', '<input name=\\"mycall\\" type=\\"text\\" id=\\"mycall\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":ehtmlspecialchars(stripSlashes($addr[mycall]))?>\\">\r\n', '', 2, 'VARCHAR', '30', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (5, 'phone', '手机', 'text', '<input name=\\"phone\\" type=\\"text\\" id=\\"phone\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":ehtmlspecialchars(stripSlashes($addr[phone]))?>\\">\r\n', '', 4, 'VARCHAR', '30', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (6, 'address', '联系地址', 'text', '<input name=\\"address\\" type=\\"text\\" id=\\"address\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":ehtmlspecialchars(stripSlashes($addr[address]))?>\\" size=\\"50\\">\r\n', '', 9, 'VARCHAR', '255', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (7, 'zip', '邮编', 'text', '<input name=\\"zip\\" type=\\"text\\" id=\\"zip\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":ehtmlspecialchars(stripSlashes($addr[zip]))?>\\" size=\\"8\\">\r\n', '', 10, 'VARCHAR', '8', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (9, 'homepage', '网址', 'text', '\r\n<input name="homepage" type="text" id="homepage" value="<?=$ecmsfirstpost==1?"":ehtmlspecialchars(stripSlashes($addr[homepage]))?>">\r\n', '', 7, 'VARCHAR', '200', '', '');
 INSERT INTO `phome_enewsmemberf` VALUES (10, 'saytext', '简介', 'textarea', '<textarea name=\\"saytext\\" cols=\\"65\\" rows=\\"10\\" id=\\"saytext\\"><?=$ecmsfirstpost==1?\\"\\":stripSlashes($addr[saytext])?></textarea>\r\n', '', 11, 'TEXT', '', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (11, 'company', '公司名称', 'text', '<input name=\\"company\\" type=\\"text\\" id=\\"company\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":htmlspecialchars(stripSlashes($addr[company]))?>\\" size=\\"38\\">\r\n', '', 0, 'VARCHAR', '255', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (12, 'fax', '传真', 'text', '\r\n<input name="fax" type="text" id="fax" value="<?=$ecmsfirstpost==1?"":htmlspecialchars(stripSlashes($addr[fax]))?>">\r\n', '', 3, 'VARCHAR', '30', '', '');
-INSERT INTO `phome_enewsmemberf` VALUES (13, 'userpic', '会员头像', 'img', '<input type=\\"file\\" name=\\"userpicfile\\">&nbsp;&nbsp;\r\n<?=empty($addr[userpic])?\\"\\":\\"<img src=\\\'\\".htmlspecialchars(stripSlashes($addr[userpic])).\\"\\\' border=0>\\"?>', '', 8, 'VARCHAR', '200', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (11, 'company', '公司名称', 'text', '<input name=\\"company\\" type=\\"text\\" id=\\"company\\" value=\\"<?=$ecmsfirstpost==1?\\"\\":ehtmlspecialchars(stripSlashes($addr[company]))?>\\" size=\\"38\\">\r\n', '', 0, 'VARCHAR', '255', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (12, 'fax', '传真', 'text', '\r\n<input name="fax" type="text" id="fax" value="<?=$ecmsfirstpost==1?"":ehtmlspecialchars(stripSlashes($addr[fax]))?>">\r\n', '', 3, 'VARCHAR', '30', '', '');
+INSERT INTO `phome_enewsmemberf` VALUES (13, 'userpic', '会员头像', 'img', '<input type=\\"file\\" name=\\"userpicfile\\">&nbsp;&nbsp;\r\n<?=empty($addr[userpic])?\\"\\":\\"<img src=\\\'\\".ehtmlspecialchars(stripSlashes($addr[userpic])).\\"\\\' border=0>\\"?>', '', 8, 'VARCHAR', '200', '', '');
 
 # --------------------------------------------------------
 
@@ -1411,6 +1523,10 @@ CREATE TABLE `phome_enewsmod` (
   `isdefault` tinyint(1) NOT NULL default '0',
   `listfile` varchar(30) NOT NULL default '',
   `printtempid` smallint(6) NOT NULL default '0',
+  `maddfun` varchar(255) NOT NULL default '',
+  `meditfun` varchar(255) NOT NULL default '',
+  `qmaddfun` varchar(255) NOT NULL default '',
+  `qmeditfun` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`mid`),
   KEY `tid` (`tid`)
 ) TYPE=MyISAM;
@@ -1430,11 +1546,13 @@ CREATE TABLE `phome_enewsmoreport` (
   `isclose` tinyint(1) NOT NULL default '0',
   `closeadd` tinyint(1) NOT NULL default '0',
   `headersign` char(255) NOT NULL default '',
+  `openadmin` tinyint(1) NOT NULL default '0',
+  `rehtml` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`pid`),
   KEY `isclose` (`isclose`)
 ) TYPE=MyISAM;
 
-INSERT INTO `phome_enewsmoreport` VALUES (1, '主访问端', '', '', '', '', 0, 0, 0, 0, '');
+INSERT INTO `phome_enewsmoreport` VALUES (1, '主访问端', '', '', '', '', 0, 0, 0, 0, '', 0, 0);
 
 # --------------------------------------------------------
 
@@ -1613,7 +1731,7 @@ CREATE TABLE `phome_enewspl_set` (
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
-INSERT INTO `phome_enewspl_set` VALUES (1, 20, 500, 0, 1, '||[~e.jy~]##1.gif||[~e.kq~]##2.gif||[~e.se~]##3.gif||[~e.sq~]##4.gif||[~e.lh~]##5.gif||[~e.ka~]##6.gif||[~e.hh~]##7.gif||[~e.ys~]##8.gif||[~e.ng~]##9.gif||[~e.ot~]##10.gif||', 10, 0, '', '', '', ',1,', 1, 12, 1, '/ecms72/e/pl/', 0, '<div class=\\"ecomment\\">\r\n<span class=\\"ecommentauthor\\">网友 [!--username--] 的原文：</span>\r\n<p class=\\"ecommenttext\\">[!--pltext--]</p>\r\n</div>');
+INSERT INTO `phome_enewspl_set` VALUES (1, 20, 500, 0, 1, '||[~e.jy~]##1.gif||[~e.kq~]##2.gif||[~e.se~]##3.gif||[~e.sq~]##4.gif||[~e.lh~]##5.gif||[~e.ka~]##6.gif||[~e.hh~]##7.gif||[~e.ys~]##8.gif||[~e.ng~]##9.gif||[~e.ot~]##10.gif||', 10, 0, '', '', '', ',1,', 1, 12, 1, '/ecms75/e/pl/', 0, '<div class=\\"ecomment\\">\r\n<span class=\\"ecommentauthor\\">网友 [!--username--] 的原文：</span>\r\n<p class=\\"ecommenttext\\">[!--pltext--]</p>\r\n</div>');
 
 # --------------------------------------------------------
 
@@ -1630,6 +1748,9 @@ INSERT INTO `phome_enewsplayer` VALUES (1, 'RealPlayer', 'realplayer.php', 'Real
 INSERT INTO `phome_enewsplayer` VALUES (2, 'MediaPlayer', 'mediaplayer.php', 'MediaPlayer播放器');
 INSERT INTO `phome_enewsplayer` VALUES (3, 'FLASH', 'flasher.php', 'FLASH播放器');
 INSERT INTO `phome_enewsplayer` VALUES (4, 'FLV播放器', 'flver.php', 'FLV播放器');
+INSERT INTO `phome_enewsplayer` VALUES (5, 'HTML5Video', 'htmlvideo.php', 'HTML5的video播放标签');
+INSERT INTO `phome_enewsplayer` VALUES (6, 'JWPlayer', 'jwplayer.php', 'JWPlayer播放器');
+INSERT INTO `phome_enewsplayer` VALUES (7, 'HTML5Audio', 'htmlaudio.php', 'HTML5的audio播放标签');
 
 # --------------------------------------------------------
 
@@ -1919,8 +2040,6 @@ CREATE TABLE `phome_enewspublic` (
   `fieldandclosetb` text NOT NULL,
   `filedatatbs` text NOT NULL,
   `filedeftb` smallint(5) unsigned NOT NULL default '0',
-  `firsttitlename` varchar(255) NOT NULL default '',
-  `isgoodname` varchar(255) NOT NULL default '',
   `closelisttemp` varchar(255) NOT NULL default '',
   `chclasscolor` varchar(8) NOT NULL default '',
   `timeclose` varchar(255) NOT NULL default '',
@@ -1936,15 +2055,42 @@ CREATE TABLE `phome_enewspublic` (
   `rewritepl` varchar(150) NOT NULL default '',
   `modmemberedittran` tinyint(1) NOT NULL default '0',
   `modinfoedittran` tinyint(1) NOT NULL default '0',
+  `php_adminouttime` int(11) NOT NULL default '0',
+  `httptype` tinyint(1) NOT NULL default '0',
+  `qinfoaddfen` tinyint(1) NOT NULL default '0',
+  `bakescapetype` tinyint(1) NOT NULL default '0',
+  `hkeytime` int(11) NOT NULL default '0',
+  `hkeyrnd` varchar(60) NOT NULL default '',
+  `mhavedatedo` tinyint(1) NOT NULL default '0',
+  `reportkey` tinyint(1) NOT NULL default '0',
+  `wapchstyle` tinyint(1) NOT NULL default '0',
+  `usetotalnum` tinyint(1) NOT NULL default '0',
+  `spacegids` varchar(255) NOT NULL default '',
+  `candocodetag` tinyint(1) NOT NULL default '0',
+  `openern` varchar(255) NOT NULL default '',
+  `ernurl` varchar(200) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
-INSERT INTO `phome_enewspublic` VALUES (1, '/ecms72/', '帝国网站管理系统', 'admin@phome.net', '|.gif|.jpg|.swf|.rar|.zip|.mp3|.wmv|.txt|.doc|', 2048, 10, 10, 8, 100, 2, 20, 20, 10, 0, 0, 30, 5, 60, 0, 0, '.html', 0, '', 10, '.html', 40, 160, 1, '/ecms72/d/file/', 0, '', '21', '', '', '', 0, 0, 10, '7.0,1357574410', 1222406370, 300, 50, 10, 'bdata', 'zip', 'ZWfUcSHhRGvMfC5Xf4Q9', 3, 20, 6, 20, 1, 1, 'news', 0, 0, 1, 1, 0, 50, 100, 100, 1, 50, 1, 300, 5, '../data/mark/maskdef.gif', '', '5', '', '../data/mark/cour.ttf', 1, 0, 'sys_ShowListPage', 'sys_ShowTextPage', 'thea', '', 1, 50, 300, ',article.newstext,', 300, 'sys_ShowListMorePage', 10, 100, 0, 0, 100, 8, 1, '|.gif|.jpg|', 1, 500, '|.zip|.rar|', 1, 'smtp.163.com', 'ecms@163.com', 1, 'ecms', 'ecms', '25', '帝国CMS', 0, 1, 500, '|.zip|.rar|', 1, 0, '>', 105, 118, 1, 80, 65, 24, 0, 30, 30, ',', ',', ',', 0, 'Y-m-d', 1, 50, '|.gif|.jpg|', 1, 500, '|.zip|.rar|', ',', 1, '', 0, 1, 0, '', '', '', '', '', 6, 0, 1, 1, '', 10, 30, 'm-d', 0, 0, 10, 1, 2, 'AEuFgKy82pL6Zw3YGm582CGCc7DFkn', 30, 0, 0, 0, 0, 0, 20, '&nbsp;|&nbsp;', ',1,2,', '帝国网站管理系统,EmpireCMS', '　　帝国软件是一家专注于网络软件开发的科技公司，其主营产品“帝国网站管理系统(EmpireCMS)”是目前国内应用最广泛的CMS程序。通过十多年的不断创新与完善，使系统集安全、稳定、强大、灵活于一身。目前EmpireCMS程序已经广泛应用在国内上百万家网站，覆盖国内上千万上网人群，并经过上千家知名网站的严格检测，被称为国内最安全、最稳定的开源CMS系统。', 300, 0, 1, 3, 20, ',,', 20, 10, 1, 43200, 0, '', 1, 0, 72, 720, 0, '[!--username--] ，\r\n这封信是由 [!--sitename--] 发送的。\r\n\r\n您收到这封邮件，是因为在我们网站的新用户注册 Email 使用\r\n了您的地址。如果您并没有访问过我们的网站，或没有进行上述操作，请忽\r\n略这封邮件。您不需要退订或进行其他进一步的操作。\r\n\r\n----------------------------------------------------------------------\r\n帐号激活说明\r\n----------------------------------------------------------------------\r\n\r\n您是我们网站的新用户，注册 Email 时使用了本地址，我们需\r\n要对您的地址有效性进行验证以避免垃圾邮件或地址被滥用。\r\n\r\n您只需点击下面的链接即可激活您的帐号：\r\n\r\n[!--pageurl--]\r\n\r\n(如果上面不是链接形式，请将地址手工粘贴到浏览器地址栏再访问)\r\n\r\n感谢您的访问，祝您使用愉快！\r\n\r\n\r\n\r\n此致\r\n\r\n[!--sitename--] 管理团队.\r\n[!--news.url--]', '[!--username--] ，\r\n这封信是由 [!--sitename--] 发送的。\r\n\r\n您收到这封邮件，是因为在我们的网站上这个邮箱地址被登记为用户邮箱，\r\n且该用户请求使用 Email 密码重置功能所致。\r\n\r\n----------------------------------------------------------------------\r\n重要！\r\n----------------------------------------------------------------------\r\n\r\n如果您没有提交密码重置的请求或不是我们网站的注册用户，请立即忽略\r\n并删除这封邮件。只在您确认需要重置密码的情况下，才继续阅读下面的\r\n内容。\r\n\r\n----------------------------------------------------------------------\r\n密码重置说明\r\n----------------------------------------------------------------------\r\n\r\n您只需在提交请求后的三天之内，通过点击下面的链接重置您的密码：\r\n\r\n[!--pageurl--]\r\n\r\n(如果上面不是链接形式，请将地址手工粘贴到浏览器地址栏再访问)\r\n\r\n上面的页面打开后，输入新的密码后提交，之后您即可使用新的密码登录\r\n网站了。您可以在用户控制面板中随时修改您的密码。\r\n\r\n\r\n\r\n此致\r\n\r\n[!--sitename--] 管理团队.\r\n[!--news.url--]', '[[!--sitename--]] Email 地址验证', '[[!--sitename--]] 取回密码说明', 0, 30, 25, 1, 43200, 0, 0, 0, 0, 0, 0, 10, 60, 0, 1, 1, 1, ',1,2,3,4,5,6,7,8,', '', 25, 0, 0, 0, 20, 20, 25, '', '', '', 0, 0, 3, 0, 0, '', 0, '', '', '', 0, '', 0, '', 0, '', ',1,', 1, '一级头条|二级头条|三级头条|四级头条|五级头条|六级头条|七级头条|八级头条|九级头条', '一级推荐|二级推荐|三级推荐|四级推荐|五级推荐|六级推荐|七级推荐|八级推荐|九级推荐', '', '#99C4E3', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0);
+INSERT INTO `phome_enewspublic` VALUES (1, '/ecms75/', '帝国网站管理系统', 'admin@phome.net', '|.gif|.jpg|.swf|.rar|.zip|.mp3|.wmv|.txt|.doc|', 2048, 10, 10, 8, 100, 2, 20, 20, 10, 0, 0, 30, 5, 60, 0, 0, '.html', 0, '', 10, '.html', 40, 160, 1, '/ecms75/d/file/', 0, '', '21', '', '', '', 0, 0, 10, '7.2,1421510410', 1222406370, 300, 50, 10, 'bdata', 'zip', 'BEA0edeiQmotdkzjcA38', 3, 20, 6, 20, 1, 1, 'news', 0, 0, 1, 1, 0, 50, 100, 100, 1, 50, 1, 300, 5, '../data/mark/maskdef.gif', '', '5', '', '../data/mark/cour.ttf', 1, 0, 'sys_ShowListPage', 'sys_ShowTextPage', 'thea', '', 1, 50, 300, ',article.newstext,', 300, 'sys_ShowListMorePage', 10, 100, 0, 0, 100, 8, 1, '|.gif|.jpg|', 1, 500, '|.zip|.rar|', 1, 'smtp.163.com', 'ecms@163.com', 1, 'ecms', 'ecms', '25', '帝国CMS', 0, 1, 500, '|.zip|.rar|', 1, 0, '>', 105, 118, 1, 80, 65, 24, 0, 30, 30, ',', ',', ',', 1, 'Y/m-d', 1, 50, '|.gif|.jpg|', 1, 500, '|.zip|.rar|', ',', 1, '', 0, 1, 0, '', '', '', '', '', 6, 0, 1, 1, '', 10, 30, 'm-d', 2, 0, 10, 1, 2, '0ZR0hHW2Pgn0O49QoTh5FzinsUv9DdvGeT7cYoq0Js', 30, 0, 0, 0, 0, 0, 20, '&nbsp;|&nbsp;', ',1,2,', '帝国网站管理系统,EmpireCMS', '　　帝国软件是一家专注于网络软件开发的科技公司，其主营产品“帝国网站管理系统(EmpireCMS)”是目前国内应用超高广泛的CMS程序。通过十多年的不断创新与完善，使系统集安全、稳定、强大、灵活于一身。目前EmpireCMS程序已经广泛应用在国内上百万家网站，覆盖国内数千万上网人群，并经过上千家知名网站的严格检测，被称为国内超高安全、超高稳定的开源CMS系统。', 300, 0, 1, 3, 20, ',,', 20, 10, 1, 43200, 0, '', 1, 0, 72, 720, 0, '[!--username--] ，\r\n这封信是由 [!--sitename--] 发送的。\r\n\r\n您收到这封邮件，是因为在我们网站的新用户注册 Email 使用\r\n了您的地址。如果您并没有访问过我们的网站，或没有进行上述操作，请忽\r\n略这封邮件。您不需要退订或进行其他进一步的操作。\r\n\r\n----------------------------------------------------------------------\r\n帐号激活说明\r\n----------------------------------------------------------------------\r\n\r\n您是我们网站的新用户，注册 Email 时使用了本地址，我们需\r\n要对您的地址有效性进行验证以避免垃圾邮件或地址被滥用。\r\n\r\n您只需点击下面的链接即可激活您的帐号：\r\n\r\n[!--pageurl--]\r\n\r\n(如果上面不是链接形式，请将地址手工粘贴到浏览器地址栏再访问)\r\n\r\n感谢您的访问，祝您使用愉快！\r\n\r\n\r\n\r\n此致\r\n\r\n[!--sitename--] 管理团队.\r\n[!--news.url--]', '[!--username--] ，\r\n这封信是由 [!--sitename--] 发送的。\r\n\r\n您收到这封邮件，是因为在我们的网站上这个邮箱地址被登记为用户邮箱，\r\n且该用户请求使用 Email 密码重置功能所致。\r\n\r\n----------------------------------------------------------------------\r\n重要！\r\n----------------------------------------------------------------------\r\n\r\n如果您没有提交密码重置的请求或不是我们网站的注册用户，请立即忽略\r\n并删除这封邮件。只在您确认需要重置密码的情况下，才继续阅读下面的\r\n内容。\r\n\r\n----------------------------------------------------------------------\r\n密码重置说明\r\n----------------------------------------------------------------------\r\n\r\n您只需在提交请求后的三天之内，通过点击下面的链接重置您的密码：\r\n\r\n[!--pageurl--]\r\n\r\n(如果上面不是链接形式，请将地址手工粘贴到浏览器地址栏再访问)\r\n\r\n上面的页面打开后，输入新的密码后提交，之后您即可使用新的密码登录\r\n网站了。您可以在用户控制面板中随时修改您的密码。\r\n\r\n\r\n\r\n此致\r\n\r\n[!--sitename--] 管理团队.\r\n[!--news.url--]', '[[!--sitename--]] Email 地址验证', '[[!--sitename--]] 取回密码说明', 0, 30, 25, 1, 43200, 60, 0, 0, 0, 0, 0, 10, 60, 0, 1, 1, 1, ',1,2,3,4,5,6,7,8,', '', 25, 0, 0, 0, 20, 20, 25, '', '', '', 0, 0, 3, 0, 0, '', 0, '', '', '', 0, '', 0, '', 0, '', ',1,', 1, '', '99C4E3', '', '', 0, 0, '', '', '', '', '', 0, '', 0, 0, 1000, 0, 0, 1, 30, 's065M0bBWmmJPPDdqYf2T4BXgKY1rOpc53C', 0, 0, 0, 0, '', 0, '', '');
+
+UPDATE `phome_enewspublic` SET openspace=1,keytime='900',wapopen=0,memberlistlevel=2,showinfolevel=2,addnews_ok=1,closemods=',error,gb,fb,';
 
 # --------------------------------------------------------
 
-DROP TABLE IF EXISTS `phome_enewspublic_update`;
-CREATE TABLE `phome_enewspublic_update` (
+DROP TABLE IF EXISTS `phome_enewspublic_fc`;
+CREATE TABLE `phome_enewspublic_fc` (
+  `id` tinyint(3) unsigned NOT NULL auto_increment,
+  `fclastindex` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+
+INSERT INTO `phome_enewspublic_fc` VALUES (1, 0);
+
+# --------------------------------------------------------
+
+DROP TABLE IF EXISTS `phome_enewspublic_up`;
+CREATE TABLE `phome_enewspublic_up` (
   `id` tinyint(3) unsigned NOT NULL auto_increment,
   `lasttimeinfo` int(10) unsigned NOT NULL default '0',
   `lasttimepl` int(10) unsigned NOT NULL default '0',
@@ -1961,7 +2107,49 @@ CREATE TABLE `phome_enewspublic_update` (
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
-INSERT INTO `phome_enewspublic_update` VALUES (1, 1355124469, 1355124476, 0, 0, '', '', 1408520771, 1408520771, 0, 0, 0, 0);
+INSERT INTO `phome_enewspublic_up` VALUES (1, 1355124469, 1355124476, 0, 0, '', '', 1408520771, 1408520771, 0, 0, 0, 0);
+
+# --------------------------------------------------------
+
+DROP TABLE IF EXISTS `phome_enewspublicadd`;
+CREATE TABLE `phome_enewspublicadd` (
+  `id` tinyint(3) unsigned NOT NULL auto_increment,
+  `ctimeopen` tinyint(1) NOT NULL default '0',
+  `ctimelast` int(10) unsigned NOT NULL default '0',
+  `ctimeindex` int(11) NOT NULL default '0',
+  `ctimeclass` int(11) NOT NULL default '0',
+  `ctimelist` int(11) NOT NULL default '0',
+  `ctimetext` int(11) NOT NULL default '0',
+  `ctimett` int(11) NOT NULL default '0',
+  `ctimetags` int(11) NOT NULL default '0',
+  `ctimegids` varchar(255) NOT NULL default '',
+  `ctimecids` varchar(255) NOT NULL default '',
+  `ctimernd` varchar(60) NOT NULL default '',
+  `ctimeaddre` tinyint(4) NOT NULL default '0',
+  `ctimeqaddre` tinyint(4) NOT NULL default '0',
+  `autodoopen` tinyint(1) NOT NULL default '0',
+  `autodouser` varchar(30) NOT NULL default '',
+  `autodopass` varchar(32) NOT NULL default '',
+  `autodosalt` varchar(20) NOT NULL default '',
+  `autodoshowkey` tinyint(1) NOT NULL default '0',
+  `autodotime` int(11) NOT NULL default '0',
+  `autodoline` int(11) NOT NULL default '0',
+  `autodovar` varchar(20) NOT NULL default '',
+  `autodoval` varchar(60) NOT NULL default '',
+  `autodoshow` tinyint(1) NOT NULL default '0',
+  `autodofile` tinyint(1) NOT NULL default '0',
+  `autodopostpass` varchar(120) NOT NULL default '',
+  `autodoss` tinyint(1) NOT NULL default '0',
+  `autodoaction` varchar(200) NOT NULL default '',
+  `autodock` tinyint(1) NOT NULL default '0',
+  `digglevel` int(11) NOT NULL default '0',
+  `diggcmids` varchar(255) NOT NULL default '',
+  `toqjf` text NOT NULL,
+  `qtoqjf` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+
+INSERT INTO `phome_enewspublicadd` VALUES (1, 0, 0, 0, 0, 0, 0, 0, 0, '', '', 'pLnmZpF4fqbKQmhv82WQAekQAyktoARuFccZjnLb21', 0, 0, 0, '', '', '', 0, 100, 12, '', '', 1, 0, 'EmpireCMS', 0, ',emp,', 0, 0, '', '', '');
 
 # --------------------------------------------------------
 
@@ -2219,7 +2407,7 @@ CREATE TABLE `phome_enewsshoppayfs` (
 
 INSERT INTO `phome_enewsshoppayfs` VALUES (1, '邮政汇款', '', '邮政汇款地址:******', 0, 0, 0, 0);
 INSERT INTO `phome_enewsshoppayfs` VALUES (2, '银行转帐', '', '银行转帐帐号:******', 0, 0, 0, 0);
-INSERT INTO `phome_enewsshoppayfs` VALUES (3, '网银支付', '/ecms72/e/payapi/ShopPay.php?paytype=alipay', '<p>网银支付</p>', 0, 0, 0, 1);
+INSERT INTO `phome_enewsshoppayfs` VALUES (3, '网银支付', '/ecms75/e/payapi/ShopPay.php?paytype=alipay', '<p>网银支付</p>', 0, 0, 0, 1);
 INSERT INTO `phome_enewsshoppayfs` VALUES (4, '预付款支付', '', '预付款支付', 1, 0, 0, 0);
 INSERT INTO `phome_enewsshoppayfs` VALUES (5, '货到付款(或上门收款)', '', '货到付款(或上门收款)说明', 0, 0, 0, 0);
 INSERT INTO `phome_enewsshoppayfs` VALUES (6, '点数购买', '', '点数购买', 0, 1, 0, 0);
@@ -2395,6 +2583,10 @@ CREATE TABLE `phome_enewstags` (
   `num` int(10) unsigned NOT NULL default '0',
   `isgood` tinyint(1) NOT NULL default '0',
   `cid` smallint(5) unsigned NOT NULL default '0',
+  `tagtitle` char(60) NOT NULL default '',
+  `tagkey` char(100) NOT NULL default '',
+  `tagdes` char(255) NOT NULL default '',
+  `fclast` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`tagid`),
   UNIQUE KEY `tagname` (`tagname`),
   KEY `isgood` (`isgood`),
@@ -2498,6 +2690,10 @@ CREATE TABLE `phome_enewsuser` (
   `preipport` varchar(6) NOT NULL default '',
   `addipport` varchar(6) NOT NULL default '',
   `uprnd` varchar(32) NOT NULL default '',
+  `wname` varchar(60) NOT NULL default '',
+  `tel` varchar(20) NOT NULL default '',
+  `wxno` varchar(80) NOT NULL default '',
+  `qq` varchar(20) NOT NULL default '',
   PRIMARY KEY  (`userid`),
   UNIQUE KEY `username` (`username`)
 ) TYPE=MyISAM;
@@ -2584,6 +2780,32 @@ CREATE TABLE `phome_enewsuserloginck` (
   `userid` int(10) unsigned NOT NULL auto_increment,
   `andauth` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`userid`)
+) TYPE=MyISAM;
+
+# --------------------------------------------------------
+
+DROP TABLE IF EXISTS `phome_enewsvg`;
+CREATE TABLE `phome_enewsvg` (
+  `vgid` smallint(5) unsigned NOT NULL auto_increment,
+  `gname` char(60) NOT NULL default '',
+  `gids` char(255) NOT NULL default '',
+  `ingids` char(255) NOT NULL default '',
+  `agids` char(255) NOT NULL default '',
+  `mlist` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`vgid`)
+) TYPE=MyISAM;
+
+# --------------------------------------------------------
+
+DROP TABLE IF EXISTS `phome_enewsvglist`;
+CREATE TABLE `phome_enewsvglist` (
+  `vgid` smallint(5) unsigned NOT NULL default '0',
+  `addtime` int(10) unsigned NOT NULL default '0',
+  `userid` int(10) unsigned NOT NULL default '0',
+  `outtime` int(10) unsigned NOT NULL default '0',
+  KEY `vgid` (`vgid`),
+  KEY `userid` (`userid`),
+  KEY `addtime` (`addtime`)
 ) TYPE=MyISAM;
 
 # --------------------------------------------------------
@@ -2692,6 +2914,7 @@ CREATE TABLE `phome_enewsworkflow` (
   `myorder` smallint(5) unsigned NOT NULL default '0',
   `addtime` int(10) unsigned NOT NULL default '0',
   `adduser` varchar(30) NOT NULL default '',
+  `canedit` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`wfid`)
 ) TYPE=MyISAM;
 
@@ -2830,7 +3053,7 @@ DROP TABLE IF EXISTS `phome_enewsztinfo`;
 CREATE TABLE `phome_enewsztinfo` (
   `zid` int(10) unsigned NOT NULL auto_increment,
   `ztid` smallint(5) unsigned NOT NULL default '0',
-  `cid` smallint(5) unsigned NOT NULL default '0',
+  `cid` mediumint(8) unsigned NOT NULL default '0',
   `classid` smallint(5) unsigned NOT NULL default '0',
   `id` int(10) unsigned NOT NULL default '0',
   `newstime` int(10) unsigned NOT NULL default '0',
@@ -2861,6 +3084,7 @@ CREATE TABLE `phome_enewszttype` (
   `reorder` varchar(50) NOT NULL default '',
   `ttype` varchar(10) NOT NULL default '',
   `endtime` int(10) unsigned NOT NULL default '0',
+  `tfile` varchar(60) NOT NULL default '',
   PRIMARY KEY  (`cid`),
   KEY `ztid` (`ztid`),
   KEY `myorder` (`myorder`)

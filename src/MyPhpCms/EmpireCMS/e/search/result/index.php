@@ -42,6 +42,10 @@ if(empty($search_r[myorder]))
 }
 $add=stripSlashes($search_r['andsql']);
 $num=$search_r[result_num];
+if(strstr($add,"\\"))
+{
+	exit();
+}
 $query="select * from {$dbtbpre}ecms_".$search_r[tbname].($add?' where '.substr($add,5):'');
 $query.=" order by ".$myorder." limit $offset,$line";
 $sql=$empire->query($query);
@@ -72,7 +76,7 @@ $listtemp=str_replace("[!--keyboard--]",$search_r[keyboard],$listtemp);
 $listtemp=str_replace("[!--ecms.num--]",$num,$listtemp);
 $url="<a href='".ReturnSiteIndexUrl()."'>".$fun_r['index']."</a>&nbsp;>&nbsp;".$fun_r['adsearch'];
 $pagetitle=$fun_r['adsearch']." ".$search_r[keyboard];
-$listtemp=ReplaceSvars($listtemp,$url,0,$pagetitle,$pagetitle,$pagetitle,$add,0);
+$listtemp=ReplaceSvars($listtemp,$url,0,$pagetitle,$pagetitle,$pagetitle,$addr,0);
 $rownum=$tempr[rownum];
 if(empty($rownum))
 {

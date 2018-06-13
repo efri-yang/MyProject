@@ -42,7 +42,7 @@ $empire=null;
     <td><div align="right" class="emenubutton"></div></td>
   </tr>
 </table>
-<form name="setmemberconnectform" method="post" action="MemberConnect.php" enctype="multipart/form-data">
+<form name="setmemberconnectform" method="post" action="MemberConnect.php" enctype="multipart/form-data" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 

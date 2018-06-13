@@ -59,7 +59,7 @@ $href="AddPrecode.php?enews=$enews&time=$time&id=$id".$ecms_hashur['ehref'];
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>增加优惠码</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -68,7 +68,7 @@ $href="AddPrecode.php?enews=$enews&time=$time&id=$id".$ecms_hashur['ehref'];
     <td>位置：<?=$url?></td>
   </tr>
 </table>
-<form name="form1" method="post" action="ListPrecode.php">
+<form name="form1" method="post" action="ListPrecode.php" autocomplete="off">
   <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <?=$ecms_hashur['form']?>
     <tr class="header"> 
@@ -103,7 +103,7 @@ $href="AddPrecode.php?enews=$enews&time=$time&id=$id".$ecms_hashur['ehref'];
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">过期时间：</td>
-      <td height="25"><input name="endtime" type="text" id="endtime" value="<?=$endtime?>" size="42" onclick="setday(this)">
+      <td height="25"><input name="endtime" type="text" id="endtime" value="<?=$endtime?>" size="42" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         <font color="#666666">(空为不限制)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF">

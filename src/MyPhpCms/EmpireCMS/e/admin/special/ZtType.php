@@ -39,6 +39,17 @@ function DoPostZtTypeVar($add){
 	$add['tnum']=(int)$add['tnum'];
 	$add['reorder']=RepPostVar2($add['reorder']);
 	$add['classtext']=RepPhpAspJspcode($add['classtext']);
+	if($add['tfile'])
+	{
+		if(!eReturnCkCFile($add['tfile']))
+		{
+			$add['tfile']='';
+		}
+		$add['tfile']=RepFilenameQz($add['tfile'],0);
+	}
+	$add['ttype']=hRepPostStr($add['ttype'],1);
+	$add['tfile']=hRepPostStr($add['tfile'],1);
+	$add['tfile']=eaddslashes($add['tfile']);
 	return $add;
 }
 
@@ -53,9 +64,28 @@ function AddZtType($add,$userid,$username){
 	}
 	//验证权限
 	//CheckLevel($userid,$username,$classid,"zt");
-	$sql=$empire->query("insert into {$dbtbpre}enewszttype(ztid,cname,myorder,islist,listtempid,maxnum,tnum,reorder,ttype) values('$ztid','$add[cname]','$add[myorder]','$add[islist]','$add[listtempid]','$add[maxnum]','$add[tnum]','$add[reorder]','$add[ttype]');");
+	//验证文件名
+	if($add['tfile'])
+	{
+		if($add['tfile']=='index')
+		{
+			printerror("ZtTypeFileExist","history.go(-1)");
+		}
+		$filenum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewszttype where ztid='$ztid' and tfile='$add[tfile]' limit 1");
+		if($filenum)
+		{
+			printerror("ZtTypeFileExist","history.go(-1)");
+		}
+	}
+	$sql=$empire->query("insert into {$dbtbpre}enewszttype(ztid,cname,myorder,islist,listtempid,maxnum,tnum,reorder,ttype,tfile) values('$ztid','$add[cname]','$add[myorder]','$add[islist]','$add[listtempid]','$add[maxnum]','$add[tnum]','$add[reorder]','$add[ttype]','$add[tfile]');");
 	$lastid=$empire->lastid();
 	$empire->query("insert into {$dbtbpre}enewszttypeadd(cid,classtext) values('$lastid','".eaddslashes2($add[classtext])."');");
+	//文件名
+	if(empty($add['tfile']))
+	{
+		$tfile='type'.$lastid;
+		$empire->query("update {$dbtbpre}enewszttype set tfile='$tfile' where cid='$lastid'");
+	}
 	//生成页面
 	ListHtmlIndex($lastid,'',1);
 	if($sql)
@@ -82,13 +112,35 @@ function EditZtType($add,$userid,$username){
 	}
 	//验证权限
 	//CheckLevel($userid,$username,$classid,"zt");
-	$r=$empire->fetch1("select ztid,cname from {$dbtbpre}enewszttype where cid='$cid' and ztid='$ztid' limit 1");
+	$r=$empire->fetch1("select * from {$dbtbpre}enewszttype where cid='$cid' and ztid='$ztid' limit 1");
 	if(!$r['ztid'])
 	{
 		printerror('ErrorUrl','');
 	}
-	$sql=$empire->query("update {$dbtbpre}enewszttype set cname='$add[cname]',myorder='$add[myorder]',islist='$add[islist]',listtempid='$add[listtempid]',maxnum='$add[maxnum]',tnum='$add[tnum]',reorder='$add[reorder]',ttype='$add[ttype]' where cid='$cid'");
+	//验证文件名
+	if($add['tfile']&&$add['tfile']<>$r['tfile'])
+	{
+		if($add['tfile']=='index')
+		{
+			printerror("ZtTypeFileExist","history.go(-1)");
+		}
+		$filenum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewszttype where ztid='$ztid' and cid<>$cid and tfile='$add[tfile]' limit 1");
+		if($filenum)
+		{
+			printerror("ZtTypeFileExist","history.go(-1)");
+		}
+	}
+	if(empty($add['tfile']))
+	{
+		$add['tfile']='type'.$cid;
+	}
+	$sql=$empire->query("update {$dbtbpre}enewszttype set cname='$add[cname]',myorder='$add[myorder]',islist='$add[islist]',listtempid='$add[listtempid]',maxnum='$add[maxnum]',tnum='$add[tnum]',reorder='$add[reorder]',ttype='$add[ttype]',tfile='$add[tfile]' where cid='$cid'");
 	$empire->query("update {$dbtbpre}enewszttypeadd set classtext='".eaddslashes2($add[classtext])."' where cid='$cid'");
+	//改变文件名
+	if($add['tfile'].$add['ttype']<>$r['tfile'].$r['ttype'])
+	{
+		DelZtcFile($cid,$r);
+	}
 	//生成页面
 	ListHtmlIndex($cid,'',1);
 	if($sql)
@@ -114,16 +166,16 @@ function DelZtType($add,$userid,$username){
 	}
 	//验证权限
 	//CheckLevel($userid,$username,$classid,"zt");
-	$r=$empire->fetch1("select ztid,cname from {$dbtbpre}enewszttype where cid='$cid' and ztid='$ztid' limit 1");
+	$r=$empire->fetch1("select * from {$dbtbpre}enewszttype where cid='$cid' and ztid='$ztid' limit 1");
 	if(!$r['ztid'])
 	{
 		printerror('ErrorUrl','');
 	}
 	$sql=$empire->query("delete from {$dbtbpre}enewszttype where cid='$cid'");
 	$empire->query("delete from {$dbtbpre}enewszttypeadd where cid='$cid'");
-	$empire->query("update {$dbtbpre}enewsztinfo set cid=0 where cid='$cid'");
 	//删除页面
-	DelZtcFile($cid);
+	DelZtcFile($cid,$r);
+	$empire->query("update {$dbtbpre}enewsztinfo set cid=0 where cid='$cid'");
 	if($sql)
 	{
 		//操作日志
@@ -177,7 +229,7 @@ else
 {
 	$ztlink=$public_r['newsurl'].$ztr[ztpath];
 }
-$sql=$empire->query("select cid,cname,ttype from {$dbtbpre}enewszttype where ztid='$ztid' order by cid");
+$sql=$empire->query("select cid,cname,ttype,tfile from {$dbtbpre}enewszttype where ztid='$ztid' order by cid");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -209,7 +261,7 @@ $sql=$empire->query("select cid,cname,ttype from {$dbtbpre}enewszttype where zti
   <?
   while($r=$empire->fetch($sql))
   {
-	  $curl=$ztlink.'/type'.$r[cid].$r[ttype];
+	  $curl=$ztlink.'/'.$r[tfile].$r[ttype];
   ?>
     <tr bgcolor="#FFFFFF" onmouseout="this.style.backgroundColor='#ffffff'" onmouseover="this.style.backgroundColor='#C3EFFF'"> 
       <td><div align="center">

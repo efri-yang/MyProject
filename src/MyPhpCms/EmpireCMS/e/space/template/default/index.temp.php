@@ -81,7 +81,7 @@ $usersay=RepFieldtextNbsp(stripSlashes($usersay));
           </td>
         </tr>
         <tr> 
-          <td>OICQ</td>
+          <td>QQ</td>
           <td> 
             <?=$addur[oicq]?>
           </td>

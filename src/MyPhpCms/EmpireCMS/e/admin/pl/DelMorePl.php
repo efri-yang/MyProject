@@ -182,7 +182,7 @@ $empire=null;
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>批量删除评论</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -247,9 +247,9 @@ $empire=null;
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25" valign="top">评论时间 介于：</td>
-      <td height="25"><input name="startsaytime" type="text" id="startsaytime" onclick="setday(this)">
+      <td height="25"><input name="startsaytime" type="text" id="startsaytime" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         -- 
-        <input name="endsaytime" type="text" id="endsaytime" onclick="setday(this)">
+        <input name="endsaytime" type="text" id="endsaytime" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         <font color="#666666">(格式：2011-01-27)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

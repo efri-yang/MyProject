@@ -24,13 +24,13 @@ if(!defined('InEmpireCMS'))
     <tr bgcolor="#FFFFFF"> 
       <td width="20%" height="25">留言发表者:</td>
       <td width="80%" height="25"> 
-        <?=$r['uname']?>
+        <?=stripSlashes($r['uname'])?>
       </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">留言内容:</td>
       <td height="25" style='word-break:break-all'> 
-        <?=nl2br($r[gbtext])?>
+        <?=nl2br(stripSlashes($r[gbtext]))?>
       </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
@@ -43,7 +43,7 @@ if(!defined('InEmpireCMS'))
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25"><strong>回复内容:</strong></td>
-      <td height="25"><textarea name="retext" cols="60" rows="9" id="retext"><?=$r[retext]?></textarea> </td>
+      <td height="25"><textarea name="retext" cols="60" rows="9" id="retext"><?=stripSlashes($r[retext])?></textarea> </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">&nbsp;</td>

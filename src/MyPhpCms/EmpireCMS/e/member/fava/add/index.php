@@ -26,7 +26,7 @@ $titleurl=sys_ReturnBqTitleLink($r);
 //返回分类
 $cid=(int)$_GET['cid'];
 $select=ReturnFavaClass($user[userid],$cid);
-$from=RepPostStrUrl($_SERVER['HTTP_REFERER']);
+$from=EcmsGetReturnUrl();
 //导入模板
 require(ECMS_PATH.'e/template/member/AddFava.php');
 db_close();

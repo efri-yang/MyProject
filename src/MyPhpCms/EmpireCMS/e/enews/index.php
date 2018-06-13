@@ -69,15 +69,18 @@ elseif($enews=='AddInfoPfen')//信息评分
 }
 elseif($enews=="AddGbook")//增加留言
 {
+	eCheckCloseMods('gb');//关闭模块
 	AddGbook($_POST);
 }
 elseif($enews=="AddFeedback")//增加反馈
 {
+	eCheckCloseMods('fb');//关闭模块
 	$doetran=1;
 	AddFeedback($_POST);
 }
 elseif($enews=="AddError")//增加错误报告
 {
+	eCheckCloseMods('error');//关闭模块
 	AddError($_POST);
 }
 else

@@ -247,6 +247,23 @@ else
 {
 	$options=ShowClass_AddClass("",$r[bclassid],0,"|-",0,0);
 }
+//访问组
+$group='';
+$vgsql=$empire->query("select vgid,gname from {$dbtbpre}enewsvg order by vgid");
+while($vgr=$empire->fetch($vgsql))
+{
+	$vselected='';
+	$vgid=0-$vgr['vgid'];
+	if($r['groupid']==$vgid)
+	{
+		$vselected=' selected';
+	}
+	$group.="<option value=".$vgid."".$vselected.">".$vgr['gname']."</option>";
+}
+if($group)
+{
+	$group="<option value=''>-- 访问组 --</option>".$group."<option value=''>-- 会员组 --</option>";
+}
 //会员组
 $qgroup='';
 $qgbr='';
@@ -364,6 +381,9 @@ while($wfr=$empire->fetch($wfsql))
 	}
 	$workflows.="<option value='".$wfr[wfid]."'".$select.">".$wfr[wfname]."</option>";
 }
+//编辑器
+include('ecmseditor/eshoweditor.php');
+$loadeditorjs=ECMS_ShowEditorJS('ecmseditor/infoeditor/');
 //当前使用的模板组
 $thegid=GetDoTempGid();
 ?>
@@ -378,7 +398,7 @@ $thegid=GetDoTempGid();
 <!-- the id is not needed. It is used here to be able to change css file at runtime -->
 <style type="text/css"> 
    .dynamic-tab-pane-control .tab-page { 
-          width:                100%;
+          width:                98%;
  } 
   .dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page { 
          height:                150px; 
@@ -403,6 +423,7 @@ $thegid=GetDoTempGid();
          background: transparent; 
  } 
   </style>
+  <?=$loadeditorjs?>
  <script type="text/javascript" src="../data/images/tabpane.js"></script> <script type="text/javascript"> 
   function setLinkSrc( sStyle ) { 
          document.getElementById( "luna-tab-style-sheet" ).disabled = sStyle != "luna"; 
@@ -839,6 +860,12 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
             <td height="25"> <input name="addinfofen" type="text" id="addinfofen2" value="<?=$r[addinfofen]?>" size="6">
               点数 <font color="#666666">(不增加请设为0,扣点请设为负数，使用此项需将投稿权限设置为会员以上)</font></td>
           </tr>
+          <tr bgcolor="#FFFFFF">
+            <td>会员最大发布信息数</td>
+            <td height="25"><input name="oneinfo" type="text" id="oneinfo" value="<?=$r[oneinfo]?>" size="6">
+              条
+              <font color="#666666">(单个会员最多能发布多少条信息，使用此项需将投稿权限设置为会员以上)</font></td>
+          </tr>
           <tr bgcolor="#FFFFFF"> 
             <td>管理投稿</td>
             <td height="25"><strong> 
@@ -1039,6 +1066,15 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
             <input name="wapstylesclass" type="checkbox" id="wapstylesclass" value="1">
             应用于子栏目) </td>
         </tr>
+        <tr bgcolor="#FFFFFF">
+          <td height="25">WAP页面模式</td>
+          <td><select name="wapislist" id="wapislist">
+            <option value="0"<?=$r['wapislist']==0?' selected':''?>>列表式</option>
+            <option value="1"<?=$r['wapislist']==1?' selected':''?>>封面式</option>
+            <option value="2"<?=$r['wapislist']==2?' selected':''?>>页面式</option>
+          </select>
+            <font color="#666666">(封面式：模板目录要建“cpage.temp.php”模板文件；页面式：模板目录要建“c+栏目ID.php”模板文件，比如c2.php)</font></td>
+        </tr>
         <tbody id="bigclasssetclasstext">
           <tr bgcolor="#FFFFFF"> 
             <td height="25">页面内容<font color="#666666">(支持标签同封面模板)</font></td>
@@ -1101,6 +1137,11 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
               <option value="totaldown DESC">按下载数降序排序</option>
               <option value="plnum DESC">按评论数降序排序</option>
             </select> </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+          <td height="25">列表式显示附加SQL条件</td>
+          <td><input name="addsql" type="text" id="addsql" value="<?=ehtmlspecialchars($r['addsql'])?>" size="38">
+            <font color="#666666">(最多255个字符)</font></td>
         </tr>
         <tr bgcolor="#FFFFFF"> 
           <td height="25">是否生成</td>
@@ -1217,6 +1258,23 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
         </tbody>
       </table>
   </div>
+  
+  <div class="tab-page" id="setsinglepage"> 
+      <h2 class="tab">&nbsp;<font class="tabcolor">单页内容</font>&nbsp;</h2>
+                    <script type="text/javascript">tb1.addTabPage( document.getElementById( "setsinglepage" ) );</script>
+      <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
+        <tr class="header"> 
+      <td height="30">单页内容设置</td>
+    </tr>
+    <tr bgcolor="#FFFFFF"> 
+          <td height="25">当栏目是单页面内容时设置，比如：公司简介、联系方式等单页。在模板中调用本内容用：<strong>&lt;?=ReturnClassAddField(0,'eclasspagetext')?&gt;</strong></td>
+      </tr>
+    <tr bgcolor="#FFFFFF"> 
+          <td height="25"><?=ECMS_ShowEditorVar("eclasspagetext",$ecmsfirstpost==1?"":$addr['eclasspagetext'],"Default","","500","100%")?></td>
+      </tr>
+  </table>
+  </div>
+  
   <div class="tab-page" id="setjs"> 
       <h2 class="tab">&nbsp;<font class="tabcolor">JS调用设置</font>&nbsp;</h2>
                     <script type="text/javascript">tb1.addTabPage( document.getElementById( "setjs" ) );</script>
@@ -1267,11 +1325,6 @@ tb1 = new WebFXTabPane( document.getElementById( "TabPane1" ) );
   $classfnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsclassf");
   if($classfnum)
   {
-  	$editorfnum=$empire->gettotal("select count(*) as total from {$dbtbpre}enewsclassf where fform='editor' limit 1");	
-	if($editorfnum)
-	{
-		include('ecmseditor/infoeditor/fckeditor.php');
-	}
   ?>
   <div class="tab-page" id="setaddfield"> 
       <h2 class="tab">&nbsp;<font class="tabcolor">自定义字段设置</font>&nbsp;</h2>

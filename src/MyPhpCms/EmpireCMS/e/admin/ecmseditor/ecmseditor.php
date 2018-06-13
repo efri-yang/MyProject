@@ -28,6 +28,7 @@ if($public_r['phpmode'])
 	$incftp=1;
 }
 require("editorfun.php");
+include('eshoweditor.php');
 $doetran=1;
 if($enews=="TranFile")//上传文件
 {

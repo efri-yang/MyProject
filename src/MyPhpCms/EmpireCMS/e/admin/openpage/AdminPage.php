@@ -32,11 +32,21 @@ if(empty($title))
 {
 	$title='管理';
 }
+//check
+if(stristr($leftfile,'://'))
+{
+	exit();
+}
+if(stristr($mainfile,'://'))
+{
+	exit();
+}
+
 ?>
 <HTML>
 <HEAD>
-<title><?=$title?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title><?=$title?></title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
 </HEAD>
 <script language=javascript>

@@ -27,6 +27,14 @@ while($r=$empire->fetch($sql))
 $select=ReturnFriendclass($user[userid],$cid);
 $fm=RepPostVar($_GET['fm']);
 $f=RepPostVar($_GET['f']);
+if($fm)
+{
+	eCheckStrType(4,$fm,1);
+}
+if($f)
+{
+	eCheckStrType(4,$f,1);
+}
 $addvar="fm=".$fm."&f=".$f;
 //导入模板
 require(ECMS_PATH.'e/template/member/ChangeFriend.php');

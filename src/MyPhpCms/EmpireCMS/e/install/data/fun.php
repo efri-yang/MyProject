@@ -39,6 +39,7 @@ function InstallMakePassword($pw_length){
 		{
 			mt_srand((double)microtime()*1000000);
 		}
+		mt_srand();
 		$randnum=mt_rand($low_ascii_bound,$upper_ascii_bound);
 		if(!in_array($randnum,$notuse))
 		{
@@ -116,13 +117,13 @@ function GetPhpSafemod(){
 }
 //是否支持mysql
 function CanMysql(){
-	$r['can']=HaveFun("mysql_connect");
+	$r['can']=function_exists('mysql_connect')||function_exists('mysqli_connect')?'支持':'不支持';
 	$r['result']=$r[can]=="支持"?ReturnResult(1):ReturnResult(0);
 	return $r;
 }
 //取得mysql版本
 function GetMysqlVer(){
-	$r['ver']=@mysql_get_server_info();
+	$r['ver']=do_eGetDBVer(0);
 	if(empty($r['ver']))
 	{
 		$r['ver']="---";
@@ -136,8 +137,8 @@ function GetMysqlVer(){
 }
 //取得mysql版本(数据库)
 function GetMysqlVerForDb(){
-	$sql=mysql_query("select version() as version");
-	$r=mysql_fetch_array($sql);
+	$sql=do_dbquery_common("select version() as version",$GLOBALS['link']);
+	$r=do_dbfetch_common($sql);
 	return ReturnMysqlVer($r['version']);
 }
 //返回mysql版本
@@ -366,11 +367,11 @@ function DoRunQuery($sql,$mydbchar,$mydbtbpre,$mydbver){
 			{
 				$name=preg_replace("/CREATE TABLE `([a-z0-9_]+)` .*/is","\\1",$query);
 				echo"建立数据表: <b>".$name."</b> 完毕......<br>";
-				mysql_query(DoCreateTable($query,$mydbver,$mydbchar)) or die(mysql_error()."<br>".$query);
+				do_dbquery_common(DoCreateTable($query,$mydbver,$mydbchar),$GLOBALS['link'],1);
 			}
 			else
 			{
-				mysql_query($query) or die(mysql_error()."<br>".$query);
+				do_dbquery_common($query,$GLOBALS['link'],1);
 			}
 		}
 	}
@@ -393,6 +394,7 @@ function ins_make_password($pw_length){
 		{
 			mt_srand((double)microtime()*1000000);
 		}
+		mt_srand();
 		$randnum=mt_rand($low_ascii_bound,$upper_ascii_bound);
 		if(!in_array($randnum,$notuse))
 		{
@@ -452,9 +454,9 @@ function FirstAdmin($add){
 	$addtime=time();
 	$addip=ins_egetip();
 	$addipport=ins_egetipport();
-	$sql=mysql_query("INSERT INTO `".$dbtbpre."enewsuser`(userid,username,password,rnd,adminclass,groupid,checked,styleid,filelevel,salt,loginnum,lasttime,lastip,truename,email,classid,pretime,preip,addtime,addip,userprikey,salt2,lastipport,preipport,addipport) VALUES (1,'$username','$password','$rnd','',1,0,1,0,'$salt',0,0,'','','',0,0,'','$addtime','$addip','$userprikey','$salt2','$addipport','$addipport','$addipport');");
-	$sql2=mysql_query("INSERT INTO `".$dbtbpre."enewsuseradd` VALUES (1,0,'','','',0);");
-	mysql_close();
+	$sql=do_dbquery_common("INSERT INTO `".$dbtbpre."enewsuser`(userid,username,password,rnd,adminclass,groupid,checked,styleid,filelevel,salt,loginnum,lasttime,lastip,truename,email,classid,pretime,preip,addtime,addip,userprikey,salt2,lastipport,preipport,addipport) VALUES (1,'$username','$password','$rnd','',1,0,1,0,'$salt',0,0,'','','',0,0,'','$addtime','$addip','$userprikey','$salt2','$addipport','$addipport','$addipport');",$GLOBALS['link']);
+	$sql2=do_dbquery_common("INSERT INTO `".$dbtbpre."enewsuseradd` VALUES (1,0,'','','',0);",$GLOBALS['link']);
+	do_dbclose($GLOBALS['link']);
 	//认证码
 	RepEcmsConfigLoginauth($add);
 	if($sql)
@@ -474,7 +476,7 @@ function InstallDefaultData($add){
 	$dbver=InstallConnectDb($ecms_config['db']['dbver'],$ecms_config['db']['dbserver'],$ecms_config['db']['dbport'],$ecms_config['db']['dbusername'],$ecms_config['db']['dbpassword'],$ecms_config['db']['dbname'],$ecms_config['db']['setchar'],$ecms_config['db']['dbchar']);
 	//执行SQL语句
 	DoRunQuery(ReturnInstallSql(1),$ecms_config['db']['dbchar'],$dbtbpre,$ecms_config['db']['dbver']);
-	mysql_close();
+	do_dbclose($GLOBALS['link']);
 	echo"导入测试数据完毕!<script>self.location.href='index.php?enews=firstadmin&f=5&defaultdata=$add[defaultdata]';</script>";
 	exit();
 }
@@ -485,7 +487,7 @@ function InstallTemplateData($add){
 	$dbver=InstallConnectDb($ecms_config['db']['dbver'],$ecms_config['db']['dbserver'],$ecms_config['db']['dbport'],$ecms_config['db']['dbusername'],$ecms_config['db']['dbpassword'],$ecms_config['db']['dbname'],$ecms_config['db']['setchar'],$ecms_config['db']['dbchar']);
 	//执行SQL语句
 	DoRunQuery(ReturnInstallSql(2),$ecms_config['db']['dbchar'],$dbtbpre,$ecms_config['db']['dbver']);
-	mysql_close();
+	do_dbclose($GLOBALS['link']);
 	if(empty($add['defaultdata']))
 	{
 		InstallDelArticleTxtFile();
@@ -504,19 +506,14 @@ function InstallModData($add){
 	$dbver=InstallConnectDb($ecms_config['db']['dbver'],$ecms_config['db']['dbserver'],$ecms_config['db']['dbport'],$ecms_config['db']['dbusername'],$ecms_config['db']['dbpassword'],$ecms_config['db']['dbname'],$ecms_config['db']['setchar'],$ecms_config['db']['dbchar']);
 	//执行SQL语句
 	DoRunQuery(ReturnInstallSql(3),$ecms_config['db']['dbchar'],$dbtbpre,$ecms_config['db']['dbver']);
-	mysql_close();
+	do_dbclose($GLOBALS['link']);
 	echo"导入系统模型数据完毕，正进入模板数据导入......<script>self.location.href='index.php?enews=templatedata&f=4&ok=1&defaultdata=$add[defaultdata]';</script>";
 	exit();
 }
 //链接数据库
 function InstallConnectDb($phome_use_dbver,$phome_db_server,$phome_db_port,$phome_db_username,$phome_db_password,$phome_db_dbname,$phome_db_char,$phome_db_dbchar){
-	$dblocalhost=$phome_db_server;
-	//端口
-	if($phome_db_port)
-	{
-		$dblocalhost.=":".$phome_db_port;
-	}
-	$link=@mysql_connect($dblocalhost,$phome_db_username,$phome_db_password);
+	global $link;
+	$link=do_dbconnect_common($phome_db_server,$phome_db_port,$phome_db_username,$phome_db_password,$phome_db_dbname);
 	if(!$link)
 	{
 		InstallShowMsg('您的数据库用户名或密码有误，链接不上MYSQL数据库');
@@ -544,26 +541,26 @@ function InstallConnectDb($phome_use_dbver,$phome_db_server,$phome_db_port,$phom
 		}
 		if($q)
 		{
-			@mysql_query('SET '.$q);
+			do_dbquery_common('SET '.$q,$link);
 		}
 	}
-	$db=@mysql_select_db($phome_db_dbname);
+	$db=do_eUseDb($phome_db_dbname,$link);
 	//数据库不存在
 	if(!$db)
 	{
 		if($phome_use_dbver>='4.1')
 		{
-			$createdb=@mysql_query("CREATE DATABASE IF NOT EXISTS ".$phome_db_dbname." DEFAULT CHARACTER SET ".$phome_db_dbchar);
+			$createdb=do_dbquery_common("CREATE DATABASE IF NOT EXISTS ".$phome_db_dbname." DEFAULT CHARACTER SET ".$phome_db_dbchar,$link);
 		}
 		else
 		{
-			$createdb=@mysql_query("CREATE DATABASE IF NOT EXISTS ".$phome_db_dbname);
+			$createdb=do_dbquery_common("CREATE DATABASE IF NOT EXISTS ".$phome_db_dbname,$link);
 		}
 		if(!$createdb)
 		{
 			InstallShowMsg('您输入的数据库名不存在');
 		}
-		@mysql_select_db($phome_db_dbname);
+		do_eUseDb($phome_db_dbname,$link);
 	}
 	return $phome_use_dbver;
 }
@@ -582,16 +579,20 @@ function SetDb($add){
 	}
 	//初使化网站信息
 	$siteurl=ReturnEcmsSiteUrl();
-	$add[keyrnd]=ins_make_password(30);
-	$add[downpass]=ins_make_password(20);
+	$add['keyrnd']=ins_make_password(32);
+	$add['downpass']=ins_make_password(20);
+	$add['hkeyrnd']=ins_make_password(36);
+	$add['ctimernd']=ins_make_password(42);
+	$add['autodopostpass']=ins_make_password(60);
 	//配置文件
 	RepEcmsConfig($add,$siteurl);
 	//执行SQL语句
 	DoRunQuery(ReturnInstallSql(0),$add['mydbchar'],$add['mydbtbpre'],$add['mydbver']);
-	@mysql_query("update ".$add['mydbtbpre']."enewspublic set newsurl='$siteurl',fileurl='".$siteurl."d/file/',softversion='$version',keyrnd='$add[keyrnd]',downpass='$add[downpass]' limit 1");
-	@mysql_query("update ".$add['mydbtbpre']."enewspl_set set plurl='".$siteurl."e/pl/' limit 1");
-	@mysql_query("update ".$add['mydbtbpre']."enewsshoppayfs set payurl='".$siteurl."e/payapi/ShopPay.php?paytype=alipay' where payid=3");
-	@mysql_close();
+	do_dbquery_common("update ".$add['mydbtbpre']."enewspublic set newsurl='$siteurl',fileurl='".$siteurl."d/file/',softversion='$version',keyrnd='$add[keyrnd]',downpass='$add[downpass]',hkeyrnd='$add[hkeyrnd]' limit 1",$GLOBALS['link']);
+	do_dbquery_common("update ".$add['mydbtbpre']."enewspublicadd set ctimernd='$add[ctimernd]',autodopostpass='$add[autodopostpass]' limit 1",$GLOBALS['link']);
+	do_dbquery_common("update ".$add['mydbtbpre']."enewspl_set set plurl='".$siteurl."e/pl/' limit 1",$GLOBALS['link']);
+	do_dbquery_common("update ".$add['mydbtbpre']."enewsshoppayfs set payurl='".$siteurl."e/payapi/ShopPay.php?paytype=alipay' where payid=3",$GLOBALS['link']);
+	do_dbclose($GLOBALS['link']);
 	echo"配置数据库完毕，正进入系统模型数据导入......<script>self.location.href='index.php?enews=moddata&f=4&ok=1&defaultdata=$add[defaultdata]';</script>";
 	exit();
 }
@@ -619,13 +620,19 @@ function RepEcmsConfig($add,$siteurl){
 	$data=str_replace('<!--cookiepre.phome.net-->',$add['mycookievarpre'],$data);
 	$data=str_replace('<!--admincookiepre.phome.net-->',$add['myadmincookievarpre'],$data);
 	$data=str_replace('<!--headerchar.phome.net-->',$headerchar,$data);
-	$data=str_replace('<!--cookiernd.phome.net-->',ins_make_password(30),$data);
-	$data=str_replace('<!--qcookiernd.phome.net-->',ins_make_password(30),$data);
-	$data=str_replace('<!--qcookierndtwo.phome.net-->',ins_make_password(30),$data);
+	$data=str_replace('<!--cookiernd.phome.net-->',ins_make_password(36),$data);
+	$data=str_replace('<!--qcookiernd.phome.net-->',ins_make_password(35),$data);
+	$data=str_replace('<!--qcookierndtwo.phome.net-->',ins_make_password(34),$data);
+	$data=str_replace('<!--qcookierndthree.phome.net-->',ins_make_password(33),$data);
+	$data=str_replace('<!--qcookierndfour.phome.net-->',ins_make_password(32),$data);
+	$data=str_replace('<!--qcookierndfive.phome.net-->',ins_make_password(31),$data);
 	$data=str_replace('<!--ecms.newsurl-->',$siteurl,$data);
 	$data=str_replace('<!--ecms.fileurl-->',$siteurl."d/file/",$data);
 	$data=str_replace('<!--ecms.plurl-->',$siteurl."e/pl/",$data);
 	$data=str_replace('<!--ecms.downpass-->',$add['downpass'],$data);
+	$data=str_replace('<!--ecms.hkeyrnd-->',$add['hkeyrnd'],$data);
+	$data=str_replace('<!--ecms.ctimernd-->',$add['ctimernd'],$data);
+	$data=str_replace('<!--ecms.autodopostpass-->',$add['autodopostpass'],$data);
 	$data=str_replace('<!--ecms.keyrnd-->',$add['keyrnd'],$data);
 	//写入配置文件
 	$fp1=@fopen("../config/config.php","w");
@@ -707,7 +714,7 @@ function InstallDelArticleTxtFile(){
 //替换测试数据网址
 function InstallReplaceTestDataUrl($text){
 	$baseurl=ReturnEcmsSiteUrl();
-	$text=str_replace('/ecms72/',$baseurl,$text);
+	$text=str_replace('/ecms75/',$baseurl,$text);
 	$text=str_replace('http://demo.phome.net/defdata/demopic/',$baseurl.'testdata/demopic/',$text);
 	return $text;
 }

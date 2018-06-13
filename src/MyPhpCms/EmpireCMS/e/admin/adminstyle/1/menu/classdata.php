@@ -382,6 +382,35 @@ if($r[dotags])
 ?>
 
 <?
+if($r['doclass'])
+{
+?>
+  <tr> 
+    <td id="prgoodtype" class="menu1" onclick="chengstate('goodtype')">
+		<a onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">头条/推荐级别</a>
+	</td>
+  </tr>
+  <tr id="itemgoodtype" style="display:none"> 
+    <td class="list">
+		<table border='0' cellspacing='0' cellpadding='0'>
+        <tr> 
+          <td class="file">
+			<a href="../../info/ListGoodType.php?ttype=1<?=$ecms_hashur['ehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">管理头条级别</a>
+          </td>
+        </tr>
+		<tr> 
+          <td class="file1">
+			<a href="../../info/ListGoodType.php?ttype=0<?=$ecms_hashur['ehref']?>" target="main" onmouseout="this.style.fontWeight=''" onmouseover="this.style.fontWeight='bold'">管理推荐级别</a>
+          </td>
+        </tr>
+      </table>
+	</td>
+  </tr>
+<?
+}
+?>
+
+<?
 if($r[dofile])
 {
 ?>

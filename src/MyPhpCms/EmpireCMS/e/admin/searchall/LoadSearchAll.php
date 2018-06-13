@@ -18,10 +18,16 @@ $ecms_hashur=hReturnEcmsHashStrAll();
 hCheckEcmsRHash();
 //验证权限
 CheckLevel($logininid,$loginin,$classid,"searchall");
+
+@set_time_limit(0);
+
 require("../../data/dbcache/class.php");
 require "../".LoadLang("pub/fun.php");
 require('../../class/schallfun.php');
 //编码
+$iconv='';
+$char='';
+$targetchar='';
 if($ecms_config['sets']['pagechar']!='gb2312')
 {
 	include_once(ECMS_PATH.'e/class/doiconv.php');

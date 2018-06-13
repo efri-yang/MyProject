@@ -35,7 +35,7 @@ function AddJstemp($add,$userid,$username){
 	$subtitle=(int)$add['subtitle'];
 	$add[temptext]=str_replace("\r\n","",$add[temptext]);
 	$gid=(int)$add['gid'];
-	$sql=$empire->query("insert into ".GetDoTemptb("enewsjstemp",$gid)."(tempname,temptext,classid,showdate,modid,subnews,subtitle) values('$add[tempname]','".eaddslashes2($add[temptext])."',$classid,'$add[showdate]','$modid','$subnews','$subtitle');");
+	$sql=$empire->query("insert into ".GetDoTemptb("enewsjstemp",$gid)."(tempname,temptext,classid,showdate,modid,subnews,subtitle) values('$add[tempname]','".eaddslashes2($add[temptext])."',$classid,'".eaddslashes($add[showdate])."','$modid','$subnews','$subtitle');");
 	$tempid=$empire->lastid();
 	//备份模板
 	AddEBakTemp('jstemp',$gid,$tempid,$add[tempname],$add[temptext],$subnews,0,'',0,$modid,$add[showdate],$subtitle,$classid,0,$userid,$username);
@@ -68,7 +68,7 @@ function EditJstemp($add,$userid,$username){
 	$subtitle=(int)$add['subtitle'];
 	$add[temptext]=str_replace("\r\n","",$add[temptext]);
 	$gid=(int)$add['gid'];
-	$sql=$empire->query("update ".GetDoTemptb("enewsjstemp",$gid)." set tempname='$add[tempname]',temptext='".eaddslashes2($add[temptext])."',classid=$classid,showdate='$add[showdate]',modid='$modid',subnews='$subnews',subtitle='$subtitle' where tempid=$tempid");
+	$sql=$empire->query("update ".GetDoTemptb("enewsjstemp",$gid)." set tempname='$add[tempname]',temptext='".eaddslashes2($add[temptext])."',classid=$classid,showdate='".eaddslashes($add[showdate])."',modid='$modid',subnews='$subnews',subtitle='$subtitle' where tempid=$tempid");
 	//备份模板
 	AddEBakTemp('jstemp',$gid,$tempid,$add[tempname],$add[temptext],$subnews,0,'',0,$modid,$add[showdate],$subtitle,$classid,0,$userid,$username);
 	if($sql)
@@ -261,7 +261,7 @@ while($cr=$empire->fetch($csql))
   ?>
   <tr bgcolor="<?=$color?>"<?=$movejs?>> 
     <td height="25"><div align="center"> 
-        <?=$r[tempid]?>
+        <a href="EditTempid.php?tempno=2&tempid=<?=$r['tempid']?>&gid=<?=$gid?><?=$ecms_hashur['ehref']?>" target="_blank" title="修改模板ID"><?=$r[tempid]?></a>
       </div></td>
     <td height="25"><div align="center"> 
         <?=$r[tempname]?>

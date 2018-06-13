@@ -44,6 +44,37 @@ if($class_r[$classid]['showdt']!=2)
 	Header("Location:$titleurl");
 	exit();
 }
+//缓存
+if($public_r['ctimeopen'])
+{
+	$public_r['usetotalnum']=0;
+}
+$ecms_tofunr=array();
+$ecms_tofunr['cacheuse']=0;
+$ecms_tofunr['cacheselfcid']=$classid;
+$ecms_tofunr['cachetype']='textpage';
+$ecms_tofunr['cacheids']=$classid.','.$id.','.$page;
+$ecms_tofunr['cachepath']='empirecms';
+$ecms_tofunr['cachedatepath']='ctext/'.date('Y/md',$r['truetime']);
+$ecms_tofunr['cachetime']=$public_r['ctimetext'];
+$ecms_tofunr['cachelasttime']=$public_r['ctimelast'];
+$ecms_tofunr['cachelastedit']=$r['lastdotime'];
+$ecms_tofunr['cacheopen']=Ecms_eCacheCheckOpen($ecms_tofunr['cachetime']);
+$ecms_tofunr['cachehavedo']=0;
+if($ecms_tofunr['cacheopen']==1&&!($r['groupid']||$class_r[$classid]['cgtoinfo']))
+{
+	$ecms_tofunr['cacheuse']=Ecms_eCacheOut($ecms_tofunr,2);
+	if($ecms_tofunr['cacheuse'])
+	{
+		//更新点击
+		$empire->query("update {$dbtbpre}ecms_".$tbname." set onclick=onclick+1 where id='$id' limit 1");
+		db_close();
+		$empire=null;
+		exit();
+	}
+	$ecms_tofunr['cachehavedo']=1;
+}
+//缓存
 //副表
 $finfor=$empire->fetch1("select ".ReturnSqlFtextF($mid)." from {$dbtbpre}ecms_".$tbname."_data_".$r['stb']." where id='$r[id]' limit 1");
 $r=array_merge($r,$finfor);
@@ -59,6 +90,20 @@ if($r['groupid']||$class_r[$classid]['cgtoinfo'])
 	$checkinfor=$r;
 	@include("../class/CheckLevel.php");
 }
+//缓存
+if($ecms_tofunr['cacheopen']==1&&!$ecms_tofunr['cachehavedo'])
+{
+	$ecms_tofunr['cacheuse']=Ecms_eCacheOut($ecms_tofunr,2);
+	if($ecms_tofunr['cacheuse'])
+	{
+		//更新点击
+		$empire->query("update {$dbtbpre}ecms_".$tbname." set onclick=onclick+1 where id='$id' limit 1");
+		db_close();
+		$empire=null;
+		exit();
+	}
+}
+//缓存
 //存文本
 if($emod_r[$mid]['savetxtf'])
 {
@@ -108,6 +153,8 @@ function DtGetHtml($add,$newstemp_r,$mid,$tbname,$line,$page_line,$start,$page,$
 	{
 		$n_r=explode($expage,$add[$pf]);
 		$thispagenum=count($n_r);
+		//checkpageno
+		eCheckListPageNo($page,$line,$thispagenum);
 		if($page<0||$page>$thispagenum-1)
 		{
 			$page=0;
@@ -164,6 +211,14 @@ function DtGetHtml($add,$newstemp_r,$mid,$tbname,$line,$page_line,$start,$page,$
 		else
 		{
 			$thisnextlink=eReturnRewritePageLink($pagefunr,$page+1);
+		}
+	}
+	else
+	{
+		//checkpageno
+		if($page!=0)
+		{
+			printerror('ErrorUrl','history.go(-1)',1);
 		}
 	}
 	//返回替换验证字符
@@ -361,7 +416,16 @@ else
 	}
 }
 $string=DtGetHtml($r,$newstemp_r,$mid,$tbname,$line,$page_line,$start,$page,$search);
-echo stripSlashes($string);
+//缓存
+if($ecms_tofunr['cacheopen']==1)
+{
+	Ecms_eCacheIn($ecms_tofunr,stripSlashes($string));
+}
+else
+{
+	echo stripSlashes($string);
+}
+//缓存
 db_close();
 $empire=null;
 ?>

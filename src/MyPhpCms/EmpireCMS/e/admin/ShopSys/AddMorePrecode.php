@@ -41,7 +41,7 @@ while($level_r=$empire->fetch($mgsql))
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>批量增加优惠码</title>
 <link href="../adminstyle/<?=$loginadminstyleid?>/adminstyle.css" rel="stylesheet" type="text/css">
-<script src="../ecmseditor/fieldfile/setday.js"></script>
+<script type="text/javascript" src="../ecmseditor/js/jstime/WdatePicker.js"></script>
 </head>
 
 <body>
@@ -87,7 +87,7 @@ while($level_r=$empire->fetch($mgsql))
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">过期时间：</td>
-      <td height="25"><input name="endtime" type="text" id="endtime" size="42" onclick="setday(this)">
+      <td height="25"><input name="endtime" type="text" id="endtime" size="42" class="Wdate" onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd'})">
         <font color="#666666">(空为不限制)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF">
@@ -115,7 +115,7 @@ while($level_r=$empire->fetch($mgsql))
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">可使用的栏目商品：</td>
-      <td height="25"><input name="classid" type="text" id="classid" size="42" onclick="setday(this)">
+      <td height="25"><input name="classid" type="text" id="classid" size="42">
         <font color="#666666">(空为不限，要填写终极栏目ID，多个ID可用半角逗号隔开“,”)</font></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 

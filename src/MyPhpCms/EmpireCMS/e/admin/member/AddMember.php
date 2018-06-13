@@ -18,6 +18,7 @@ $loginadminstyleid=$lur['adminstyleid'];
 $ecms_hashur=hReturnEcmsHashStrAll();
 //验证权限
 CheckLevel($logininid,$loginin,$classid,"member");
+$r=array();
 $userdate=0;
 $enews=ehtmlspecialchars($_GET['enews']);
 $changegroupid=(int)$_GET['changegroupid'];
@@ -68,6 +69,45 @@ while($level_r=$empire->fetch($sql))
 	else
 	{$zselect="";}
 	$zgroup.="<option value=".$level_r[groupid].$zselect.">".$level_r[groupname]."</option>";
+}
+//内部组
+$ingroup='';
+$inmsql=$empire->query("select * from {$dbtbpre}enewsingroup order by myorder");
+while($inm_r=$empire->fetch($inmsql))
+{
+	if($r['ingid']==$inm_r['gid'])
+	{$select=" selected";}
+	else
+	{$select="";}
+	$ingroup.="<option value=".$inm_r['gid'].$select.">".$inm_r['gname']."</option>";
+}
+//管理组
+$magname='';
+$magadminname='';
+if($r['agid'])
+{
+	$r['agid']=(int)$r['agid'];
+	$magr=$empire->fetch1("select * from {$dbtbpre}enewsag where agid='".$r['agid']."'");
+	$magname=$magr['agname'];
+	if($magname)
+	{
+		if($magr['isadmin']==9)
+		{
+			$magadminname='管理员 ('.$magr['isadmin'].')';
+		}
+		elseif($magr['isadmin']==5)
+		{
+			$magadminname='版主 ('.$magr['isadmin'].')';
+		}
+		elseif($magr['isadmin']==1)
+		{
+			$magadminname='实习版主 ('.$magr['isadmin'].')';
+		}
+		else
+		{
+			$magadminname='('.$magr['isadmin'].')';
+		}
+	}
 }
 //风格
 $spacestyle='';
@@ -122,11 +162,23 @@ $formfile='../../data/html/memberform'.$formid.'.php';
       <td height="25"><input name="add[checked]" type="checkbox" id="add[checked]" value="1"<?=$r[checked]==1?' checked':''?>>
         审核通过</td>
     </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">实名状态</td>
+      <td height="25"><input type="radio" name="add[isern]" value="0"<?=$r['isern']==0?' checked':''?>>未实名
+        <input type="radio" name="add[isern]" value="1"<?=$r['isern']==1?' checked':''?>>已实名</td>
+    </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25" valign="top">所属会员组<br> <br> <input type="button" name="Submit3" value="管理会员组" onclick="window.open('ListMemberGroup.php<?=$ecms_hashur['whehref']?>');">      </td>
       <td height="25"><select name="add[groupid]" size="6" id="add[groupid]" onchange="self.location.href='AddMember.php?<?=$ecms_hashur['ehref']?>&enews=EditMember&userid=<?=$userid?>&changegroupid='+this.options[this.selectedIndex].value;">
           <?=$group?>
         </select></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">所属内部组</td>
+      <td height="25"><select name="add[ingid]" id="add[ingid]">
+        <option value="0"<?=$r['ingid']==0?' selected':''?>>不属于</option>
+		<?=$ingroup?>
+      </select>      </td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">邮箱</td>
@@ -151,11 +203,24 @@ $formfile='../../data/html/memberform'.$formid.'.php';
       <td height="25"><input name=add[money] type=text id="add[money]" value='<?=$r[money]?>' size="6">
         元 </td>
     </tr>
-    <tr bgcolor="#FFFFFF"> 
-      <td height="25">空间使用模板</td>
-      <td height="25"><select name="add[spacestyleid]" id="add[spacestyleid]">
-          <?=$spacestyle?>
-        </select> <input type="button" name="Submit32" value="管理空间模板" onclick="window.open('ListSpaceStyle.php<?=$ecms_hashur['whehref']?>');"></td>
+    
+    <tr bgcolor="#FFFFFF">
+      <td height="25">所属管理组</td>
+      <td height="25">
+	  <?php
+	  if($r['agid'])
+	  {
+	  ?>
+	  组ID：<?=$r['agid']?>，组名称：<a href="#ecms" title="<?=$magadminname?>"><?=$magname?></a>
+	  <?php
+	  }
+	  else
+	  {
+	  ?>
+	  ----
+	  <?php
+	  }
+	  ?>	  </td>
     </tr>
     <tr bgcolor="#FFFFFF">
       <td height="25">注册时间</td>
@@ -177,6 +242,23 @@ $formfile='../../data/html/memberform'.$formid.'.php';
         <?php
 	  @include($formfile);
 	  ?>      </td>
+    </tr>
+    <tr bgcolor="#FFFFFF" class="header">
+      <td height="25" colspan="2">会员空间设置</td>
+    </tr>
+	<tr bgcolor="#FFFFFF"> 
+      <td height="25">空间使用模板</td>
+      <td height="25"><select name="add[spacestyleid]" id="add[spacestyleid]">
+          <?=$spacestyle?>
+        </select> <input type="button" name="Submit32" value="管理空间模板" onclick="window.open('ListSpaceStyle.php<?=$ecms_hashur['whehref']?>');"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">空间名称</td>
+      <td height="25"><input name="add[spacename]" type="text" id="add[spacename]" value="<?=ehtmlspecialchars(stripSlashes($addr['spacename']))?>"></td>
+    </tr>
+    <tr bgcolor="#FFFFFF">
+      <td height="25">空间公告</td>
+      <td height="25"><textarea name="add[spacegg]" cols="60" rows="6" id="add[spacegg]"><?=stripSlashes($addr['spacegg'])?></textarea></td>
     </tr>
     <tr bgcolor="#FFFFFF"> 
       <td height="25">&nbsp;</td>

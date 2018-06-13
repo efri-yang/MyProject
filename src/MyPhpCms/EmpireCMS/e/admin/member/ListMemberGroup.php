@@ -17,7 +17,7 @@ $loginadminstyleid=$lur['adminstyleid'];
 //ehash
 $ecms_hashur=hReturnEcmsHashStrAll();
 //验证权限
-CheckLevel($logininid,$loginin,$classid,"member");
+CheckLevel($logininid,$loginin,$classid,"membergroup");
 $url="<a href=ListMemberGroup.php".$ecms_hashur['whehref'].">管理会员组</a>";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

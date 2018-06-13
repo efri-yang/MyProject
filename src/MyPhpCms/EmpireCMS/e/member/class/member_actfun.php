@@ -21,7 +21,7 @@ function QMReturnCheckThePass($ckuserid,$ckpass,$cktime,$authstr,$ecms=1){
 		printerror('GPOutTime',$public_r['newsurl'],1);
 	}
 	$pass=md5(md5($ar[2].'-'.$ckuserid.'-'.$ar[0].'-'.$ar[1]).$ecms_config['cks']['ckrnd']);
-	if($pass!=$ckpass)
+	if('dg'.$pass!='dg'.$ckpass)
 	{
 		printerror('GPErrorPass',$public_r['newsurl'],1);
 	}
@@ -66,7 +66,8 @@ function SendGetPasswordEmail($add){
 	$keyvname='checkgetpasskey';
 	ecmsCheckShowKey($keyvname,$key,1);
 	$username=RepPostVar($username);
-	$email=RepPostStr($email);
+	$email=addslashes(RepPostStr($email));
+	$email=RepPostVar($email);
 	if(!chemail($email))
 	{
 		printerror("EmailFail","history.go(-1)",1);
@@ -145,6 +146,7 @@ function DoGetPassword($add){
 //发送激活帐号邮件
 function SendActUserEmail($userid,$username,$email){
 	global $empire,$dbtbpre,$public_r;
+	$email=addslashes($email);
 	$passr=QMReturnCheckPass($userid,$username,$email,2);
 	$authstr=$passr['dotime'].'||'.$passr['ecms'].'||'.$passr['rnd'];
 	$sql=DoUpdateMemberAuthstr($userid,$authstr);
@@ -195,8 +197,10 @@ function DoRegSend($add){
 	$username=RepPostVar($username);
 	$password=RepPostVar($password);
 	$username=RepPostStr($username);
-	$email=RepPostStr($email);
-	$newemail=RepPostStr($newemail);
+	$email=addslashes(RepPostStr($email));
+	$newemail=addslashes(RepPostStr($newemail));
+	$email=RepPostVar($email);
+	$newemail=RepPostVar($newemail);
 	if(!chemail($email))
 	{
 		printerror("EmailFail","history.go(-1)",1);

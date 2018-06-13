@@ -1,8 +1,33 @@
 <?php
 $editor=1;
-//字符过虑
+
+//字符过滤
 function escape_str($str){
-	$str=mysql_real_escape_string($str);
+	global $public_r;
+	if($public_r['bakescapetype']==2)//real_escape_string
+	{
+		$str=escape_dbstr($str);
+	}
+	else//addslashes
+	{
+		$str=escape_addsstr($str);
+	}
+	return $str;
+}
+
+//字符过虑(addslashes)
+function escape_addsstr($str){
+	$str=addslashes($str);
+	$str=str_replace('\\\'','\'\'',$str);
+	$str=str_replace("\\\\","\\\\\\\\",$str);
+	$str=str_replace('$','\$',$str);
+	return $str;
+}
+
+//字符过虑(db)
+function escape_dbstr($str){
+	global $empire,$dbtbpre,$public_r;
+	$str=$empire->EDbEscapeStr($str);
 	$str=str_replace('\\\'','\'\'',$str);
 	$str=str_replace("\\\\","\\\\\\\\",$str);
 	$str=str_replace('$','\$',$str);
@@ -926,21 +951,21 @@ function Ebak_DelZip($file,$userid,$username){
 	CheckLevel($userid,$username,$classid,"dbdata");
 	$file=RepPostStr($file,1);
 	if(strstr($file,".."))
-	{printerror("FileNotExist","history.go(-1)");}
+	{printerror("FileNotExist","history.go(-1)",8);}
 	if(empty($file))
 	{
-		printerror("FileNotExist","history.go(-1)");
+		printerror("FileNotExist","history.go(-1)",8);
     }
 	$bakzippath=$public_r['bakdbzip'];
 	$filename=$bakzippath."/".$file;
 	if(!file_exists($filename))
 	{
-		printerror("FileNotExist","history.go(-1)");
+		printerror("FileNotExist","history.go(-1)",8);
 	}
 	DelFiletext($filename);
 	//操作日志
 	insert_dolog("file=".$file);
-	printerror("DelZipFileSuccess","history.go(-1)");
+	printerror("DelZipFileSuccess","history.go(-1)",8);
 }
 
 //压缩目录
@@ -950,19 +975,19 @@ function Ebak_Dozip($path,$userid,$username){
 	CheckLevel($userid,$username,$classid,"dbdata");
 	$path=RepPostStr($path,1);
 	if(strstr($path,".."))
-	{printerror("ThisPathNotExist","history.go(-1)");}
+	{printerror("ThisPathNotExist","history.go(-1)",8);}
 	if(empty($path))
 	{
-		printerror("ThisPathNotExist","history.go(-1)");
+		printerror("ThisPathNotExist","history.go(-1)",8);
     }
 	$bakpath=$public_r['bakdbpath'];
     $bakzippath=$public_r['bakdbzip'];
 	$mypath=$bakpath."/".$path;
 	if(!file_exists($mypath))
 	{
-		printerror("ThisPathNotExist","history.go(-1)");
+		printerror("ThisPathNotExist","history.go(-1)",8);
 	}
-	$zipname=$path.".zip";
+	$zipname=$path.make_password(10).".zip";
 	ZipFile($path,$zipname);
 	echo"<script>self.location.href='DownZip.php?f=$zipname&p=$path".hReturnEcmsHashStrHref2(0)."';</script>";
 }

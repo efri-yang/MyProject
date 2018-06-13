@@ -66,6 +66,7 @@ function Shopsys_CheckMaxnum($num,$maxnum,$shoppr){
 //减少库存
 function Shopsys_CutMaxnum($ddid,$buycar,$havecut,$shoppr,$ecms=0){
 	global $class_r,$empire,$dbtbpre,$public_r;
+	$ddid=(int)$ddid;
 	if(empty($buycar))
 	{
 		return '';
@@ -439,19 +440,19 @@ function AddDd($add){
 		printerror("EmptyBuycar","history.go(-1)",1);
     }
 	$add[ddno]=RepPostVar($add[ddno]);
-	$add[truename]=RepPostStr($add[truename]);
-	$add[oicq]=RepPostStr($add[oicq]);
-	$add[msn]=RepPostStr($add[msn]);
-	$add[mycall]=RepPostStr($add[mycall]);
-	$add[phone]=RepPostStr($add[phone]);
-	$add[email]=RepPostStr($add[email]);
-	$add[address]=RepPostStr($add[address]);
-	$add[zip]=RepPostStr($add[zip]);
-	$add[signbuild]=RepPostStr($add[signbuild]);
-	$add[besttime]=RepPostStr($add[besttime]);
-	$add[bz]=RepPostStr($add[bz]);
-	$add[fptt]=RepPostStr($add[fptt]);
-	$add[fpname]=RepPostStr($add[fpname]);
+	$add[truename]=dgdb_tosave($add[truename]);
+	$add[oicq]=dgdb_tosave($add[oicq]);
+	$add[msn]=dgdb_tosave($add[msn]);
+	$add[mycall]=dgdb_tosave($add[mycall]);
+	$add[phone]=dgdb_tosave($add[phone]);
+	$add[email]=dgdb_tosave($add[email]);
+	$add[address]=dgdb_tosave($add[address]);
+	$add[zip]=dgdb_tosave($add[zip]);
+	$add[signbuild]=dgdb_tosave($add[signbuild]);
+	$add[besttime]=dgdb_tosave($add[besttime]);
+	$add[bz]=dgdb_tosave($add[bz]);
+	$add[fptt]=dgdb_tosave($add[fptt]);
+	$add[fpname]=dgdb_tosave($add[fpname]);
 	$add[fp]=(int)$add[fp];
 	$add[psid]=(int)$add[psid];
 	$add[payfsid]=(int)$add[payfsid];
@@ -498,6 +499,7 @@ function AddDd($add){
 	$username=RepPostVar(getcvar('mlusername'));
 	if($userid)
 	{
+		islogin();
 		$rnd=RepPostVar(getcvar('mlrnd'));
 		$user=$empire->fetch1("select ".eReturnSelectMemberF('userid,money,userfen,groupid')." from ".eReturnMemberTable()." where ".egetmf('userid')."='$userid' and ".egetmf('rnd')."='$rnd' limit 1");
 		if(!$user['userid'])
@@ -684,7 +686,7 @@ function ReturnBuycardd($shoppr){
 		//附加属性
 		if($shoppr['haveatt'])
 		{
-			$addattstr=ShopSys_BuycarRepvar2(RepPostStr($pr[2]));
+			$addattstr=dgdb_tosave(ShopSys_BuycarRepvar2(RepPostStr($pr[2])));
 		}
 		else
 		{
@@ -724,6 +726,9 @@ function ReturnBuycardd($shoppr){
 		$title=str_replace("!","",$productr[title]);
 		$title=str_replace("|","",$title);
 		$title=str_replace(",","",$title);
+		$title=dgdb_tosave($title);
+		$productr[price]=dgdb_tosave($productr[price]);
+		$productr[buyfen]=dgdb_tosave($productr[buyfen]);
 		$newbuycar.="|".$classid.",".$id."|".$addattstr."|".$num."|".$productr[price]."|".$productr[buyfen]."|".$title."!";
     }
 	$return[2]=$alltotal;
@@ -838,17 +843,17 @@ function ShopSys_AddAddress($add){
 	global $empire,$dbtbpre,$public_r;
 	//是否登陆
 	$user_r=islogin();
-	$add['addressname']=RepPostStr($add['addressname']);
-	$add['truename']=RepPostStr($add['truename']);
-	$add['oicq']=RepPostStr($add['oicq']);
-	$add['msn']=RepPostStr($add['msn']);
-	$add['email']=RepPostStr($add['email']);
-	$add['address']=RepPostStr($add['address']);
-	$add['zip']=RepPostStr($add['zip']);
-	$add['mycall']=RepPostStr($add['mycall']);
-	$add['phone']=RepPostStr($add['phone']);
-	$add['signbuild']=RepPostStr($add['signbuild']);
-	$add['besttime']=RepPostStr($add['besttime']);
+	$add['addressname']=dgdb_tosave($add['addressname']);
+	$add['truename']=dgdb_tosave($add['truename']);
+	$add['oicq']=dgdb_tosave($add['oicq']);
+	$add['msn']=dgdb_tosave($add['msn']);
+	$add['email']=dgdb_tosave($add['email']);
+	$add['address']=dgdb_tosave($add['address']);
+	$add['zip']=dgdb_tosave($add['zip']);
+	$add['mycall']=dgdb_tosave($add['mycall']);
+	$add['phone']=dgdb_tosave($add['phone']);
+	$add['signbuild']=dgdb_tosave($add['signbuild']);
+	$add['besttime']=dgdb_tosave($add['besttime']);
 	if(!trim($add['addressname']))
 	{
 		printerror("EmptyAddress","history.go(-1)",1);
@@ -872,17 +877,17 @@ function ShopSys_EditAddress($add){
 	//是否登陆
 	$user_r=islogin();
 	$addressid=(int)$add['addressid'];
-	$add['addressname']=RepPostStr($add['addressname']);
-	$add['truename']=RepPostStr($add['truename']);
-	$add['oicq']=RepPostStr($add['oicq']);
-	$add['msn']=RepPostStr($add['msn']);
-	$add['email']=RepPostStr($add['email']);
-	$add['address']=RepPostStr($add['address']);
-	$add['zip']=RepPostStr($add['zip']);
-	$add['mycall']=RepPostStr($add['mycall']);
-	$add['phone']=RepPostStr($add['phone']);
-	$add['signbuild']=RepPostStr($add['signbuild']);
-	$add['besttime']=RepPostStr($add['besttime']);
+	$add['addressname']=dgdb_tosave($add['addressname']);
+	$add['truename']=dgdb_tosave($add['truename']);
+	$add['oicq']=dgdb_tosave($add['oicq']);
+	$add['msn']=dgdb_tosave($add['msn']);
+	$add['email']=dgdb_tosave($add['email']);
+	$add['address']=dgdb_tosave($add['address']);
+	$add['zip']=dgdb_tosave($add['zip']);
+	$add['mycall']=dgdb_tosave($add['mycall']);
+	$add['phone']=dgdb_tosave($add['phone']);
+	$add['signbuild']=dgdb_tosave($add['signbuild']);
+	$add['besttime']=dgdb_tosave($add['besttime']);
 	if(!$addressid||!trim($add['addressname']))
 	{
 		printerror("EmptyAddress","history.go(-1)",1);

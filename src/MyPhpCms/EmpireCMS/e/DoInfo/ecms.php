@@ -21,6 +21,7 @@ $musername=RepPostVar(getcvar('mlusername'));
 $mrnd=RepPostVar(getcvar('mlrnd'));
 $loginin='[Member]'.$musername;
 $doetran=1;
+include('../data/ecmseditor/eshoweditor.php');
 //增加投稿
 if($enews=="MAddInfo")
 {

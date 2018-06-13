@@ -25,6 +25,12 @@ $add[startday]=RepPostStr($add[startday],1);
 $add[endday]=RepPostStr($add[endday],1);
 $add[startid]=RepPostVar($add[startid]);
 $add[endid]=RepPostVar($add[endid]);
+$moreportpid=(int)$_GET['moreportpid'];
+$mphref='';
+if($moreportpid)
+{
+	$mphref=Moreport_ReturnUrlCsPid($moreportpid,0,0,'');
+}
 $tbname=$add['tbname'];
 $count=count($tbname);
 //刷新所有表
@@ -41,7 +47,7 @@ if(!$count)
 }
 esetcookie("retablenum",$count,0,1);
 esetcookie("rechecktablenum",0,0,1);
-$url="../ecmschtml.php?enews=ReNewsHtml&classid=$add[classid]&from=".urlencode($add[from])."&retype=$add[retype]&startday=$add[startday]&endday=$add[endday]&startid=$add[startid]&endid=$add[endid]&havehtml=$havehtml&reallinfotime=".time().$ecms_hashur['href'];
+$url="../ecmschtml.php?enews=ReNewsHtml&classid=$add[classid]&from=".urlencode($add[from])."&retype=$add[retype]&startday=$add[startday]&endday=$add[endday]&startid=$add[startid]&endid=$add[endid]&havehtml=$havehtml&reallinfotime=".time().$ecms_hashur['href'].$mphref;
 echo"<link href='../adminstyle/".$loginadminstyleid."/adminstyle.css' rel='stylesheet' type='text/css'><center>要刷新的表的总个数为:<font color=red>$count</font>个</center><br>";
 for($i=0;$i<$count;$i++)
 {
@@ -55,5 +61,5 @@ db_close();
 $empire=null;
 ?>
 <iframe frameborder=0 height=35 id="checkrehtml" scrolling=no 
-            src="CheckRehtml.php?first=1&from=<?=urlencode($add[from])?><?=$ecms_hashur['href']?>" 
+            src="CheckRehtml.php?first=1&from=<?=urlencode($add[from])?><?=$ecms_hashur['href']?><?=$mphref?>" 
             width="100%"></iframe>

@@ -149,6 +149,11 @@ function CheckFileMod($filename,$smallfile=""){
                   <?=CheckFileMod("../../t");?>
                 </div></td>
             </tr>
+			<tr bgcolor="#FFFFFF">
+			  <td height="25">/ecachefiles</td>
+			  <td><div align="center"><font color="#666666">动态页面缓存目录</font></div></td>
+			  <td><div align="center"><?=CheckFileMod("../../ecachefiles","../../ecachefiles/empirecms");?></div></td>
+		    </tr>
             <tr bgcolor="#FFFFFF"> 
               <td height="25"> <div align="left">/search</div></td>
               <td> <div align="center"><font color="#666666">搜索表单</font></div></td>

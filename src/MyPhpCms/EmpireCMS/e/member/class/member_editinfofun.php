@@ -14,7 +14,8 @@ function EditSafeInfo($add){
 	{
 		printerror("EmailFail","history.go(-1)",1);
 	}
-	$email=RepPostStr($email);
+	$email=addslashes(RepPostStr($email));
+	$email=RepPostVar($email);
 	//验证原密码
 	$oldpassword=RepPostVar($add[oldpassword]);
 	if(!$oldpassword)

@@ -59,6 +59,15 @@ function GoToUrl(url,totarget){
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('pub/SetRewrite.php<?=$ecms_hashur['whehref']?>','');">伪静态参数设置</a></td>
         </tr>
         <tr>
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('pub/SetPageCache.php<?=$ecms_hashur['whehref']?>','');">动态页缓存设置</a></td>
+        </tr>
+        <tr>
+          <td>&nbsp;&nbsp;<a href="#ecms" title="Not for free version.">页面同步设置</a></td>
+        </tr>
+		<tr>
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('pub/SetDigg.php<?=$ecms_hashur['whehref']?>','');">DIGG顶设置</a></td>
+        </tr>
+        <tr>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('pub/ListPubVar.php<?=$ecms_hashur['whehref']?>','');">扩展变量</a></td>
         </tr>
         <tr> 
@@ -75,6 +84,9 @@ function GoToUrl(url,totarget){
         </tr>
         <tr>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('ReHtml/ReInfoUrl.php<?=$ecms_hashur['whehref']?>','');">更新信息页地址</a></td>
+        </tr>
+		<tr>
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('ReHtml/ChangePageCache.php<?=$ecms_hashur['whehref']?>','');">更新动态页缓存</a></td>
         </tr>
         <tr>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('ReHtml/DoUpdateData.php<?=$ecms_hashur['whehref']?>','');">数据整理</a></td>
@@ -254,25 +266,37 @@ function GoToUrl(url,totarget){
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('tags/ListTags.php<?=$ecms_hashur['whehref']?>','');">管理TAGS</a></td>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('SearchKey.php<?=$ecms_hashur['whehref']?>','');">管理搜索关键字</a></td>
         </tr>
-        <tr> 
-          <td><strong>附件管理</strong></td>
+        <tr>
+          <td><strong>头条/推荐级别</strong></td>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('db/RepNewstext.php<?=$ecms_hashur['whehref']?>','');">批量替换字段值</a></td>
         </tr>
-        <tr> 
-          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('openpage/AdminPage.php?leftfile=<?=urlencode('../file/FileNav.php'.$ecms_hashur['whehref'])?>&title=<?=urlencode('管理附件')?><?=$ecms_hashur['ehref']?>','');">管理附件</a></td>
+        <tr>
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('info/ListGoodType.php?ttype=1<?=$ecms_hashur['ehref']?>','');">管理头条级别</a></td>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('MoveClassNews.php<?=$ecms_hashur['whehref']?>','');">批量转移信息</a></td>
         </tr>
-        <tr> 
-          <td><strong>全站全文搜索</strong></td>
+        <tr>
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('info/ListGoodType.php?ttype=0<?=$ecms_hashur['ehref']?>','');">管理推荐级别</a></td>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('InfoDoc.php<?=$ecms_hashur['whehref']?>','');">信息批量归档</a></td>
         </tr>
         <tr> 
-          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('searchall/SetSearchAll.php<?=$ecms_hashur['whehref']?>','');">全站搜索设置</a></td>
+          <td><strong>附件管理</strong></td>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('db/DelData.php<?=$ecms_hashur['whehref']?>','');">批量删除信息</a></td>
         </tr>
         <tr> 
-          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('searchall/ListSearchLoadTb.php<?=$ecms_hashur['whehref']?>','');">管理搜索数据源</a></td>
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('openpage/AdminPage.php?leftfile=<?=urlencode('../file/FileNav.php'.$ecms_hashur['whehref'])?>&title=<?=urlencode('管理附件')?><?=$ecms_hashur['ehref']?>','');">管理附件</a></td>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('other/ListVoteMod.php<?=$ecms_hashur['whehref']?>','');">管理预设投票</a></td>
+        </tr>
+        <tr> 
+          <td><strong>全站全文搜索</strong></td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('searchall/SetSearchAll.php<?=$ecms_hashur['whehref']?>','');">全站搜索设置</a></td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('searchall/ListSearchLoadTb.php<?=$ecms_hashur['whehref']?>','');">管理搜索数据源</a></td>
+          <td>&nbsp;</td>
         </tr>
         <tr> 
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('searchall/ClearSearchAll.php<?=$ecms_hashur['whehref']?>','');">清理搜索数据</a></td>
@@ -397,7 +421,7 @@ function GoToUrl(url,totarget){
         </tr>
         <tr> 
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('template/ListPltemp.php?gid=<?=$gid?><?=$ecms_hashur['ehref']?>','');">管理评论模板</a></td>
-          <td><a href="#ecms" onclick="GoToUrl('template/TempGroup.php<?=$ecms_hashur['whehref']?>','');"></a></td>
+          <td><a href="#ecms" onclick="GoToUrl('template/EditTempid.php?gid=<?=$gid?><?=$ecms_hashur['ehref']?>','');"><strong>修改模板ID</strong></a></td>
           <td>&nbsp;</td>
         </tr>
       </table></td>
@@ -430,14 +454,26 @@ function GoToUrl(url,totarget){
           <td><strong>会员管理</strong></td>
         </tr>
         <tr> 
-          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ListMemberGroup.php<?=$ecms_hashur['whehref']?>','');">管理会员组</a></td>
-        </tr>
-        <tr> 
           <td> &nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ListMember.php<?=$ecms_hashur['whehref']?>','');">管理会员</a></td>
+        </tr>
+        <tr>
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ListMemberMore.php<?=$ecms_hashur['whehref']?>','');">管理会员(详细)</a></td>
         </tr>
         <tr>
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ClearMember.php<?=$ecms_hashur['whehref']?>','');">批量清理会员</a></td>
         </tr>
+		<tr> 
+          <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ListMemberGroup.php<?=$ecms_hashur['whehref']?>','');">会员组</a></td>
+        </tr>
+		<tr>
+		  <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ListInGroup.php<?=$ecms_hashur['whehref']?>','');">会员内部组</a></td>
+	    </tr>
+		<tr>
+		  <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ListViewGroup.php<?=$ecms_hashur['whehref']?>','');">会员访问组</a></td>
+	    </tr>
+		<tr>
+		  <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ListMAdminGroup.php<?=$ecms_hashur['whehref']?>','');">会员管理组</a></td>
+	    </tr>
         <tr> 
           <td>&nbsp;&nbsp;<a href="#ecms" onclick="GoToUrl('member/ListMemberF.php<?=$ecms_hashur['whehref']?>','');">管理会员字段</a></td>
         </tr>

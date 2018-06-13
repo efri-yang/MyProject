@@ -30,6 +30,7 @@ if($viewuid==$userid)
 	<?php
 	while($r=$empire->fetch($sql))
 	{
+		$r['uname']=stripSlashes($r['uname']);
 		if($r['uid'])
 		{
 			$r['uname']="<b><a href='../space/?userid=$r[uid]' target='_blank'>$r[uname]</a></b>";
@@ -67,7 +68,7 @@ if($viewuid==$userid)
         </tr>
         <tr bgcolor="#FFFFFF"> 
           <td height="25" style='word-break:break-all'>
-		  	<?=nl2br($r['gbtext'])?>
+		  	<?=nl2br(stripSlashes($r['gbtext']))?>
 			<?
 			if($r['retext'])
 			{
@@ -75,7 +76,7 @@ if($viewuid==$userid)
 			<table border=0 width='100%' cellspacing=1 cellpadding=10 bgcolor='#cccccc'>
             <tr> 
             <td width='100%' bgcolor='#FFFFFF' style='word-break:break-all'> 
-             <?=nl2br($r['retext'])?>
+             <?=nl2br(stripSlashes($r['retext']))?>
             </td>
             </tr>
             </table>
@@ -121,10 +122,10 @@ if($viewuid==$userid)
         <tr> 
           <td>验证码：</td>
             <td> 
-              <table width="160" border="0" cellspacing="0" cellpadding="0">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td width="75"><input name="key" type="text" size="10" /></td>
-                  <td width="85"><img src="<?=$public_r[newsurl]?>e/ShowKey/?v=spacegb" name="spacegbKeyImg" id="spacegbKeyImg" onclick="spacegbKeyImg.src='<?=$public_r[newsurl]?>e/ShowKey/?v=spacegb&t='+Math.random()" title="看不清楚,点击刷新" /></td>
+                  <td width="52"><input name="key" type="text" id="key" size="6" /></td>
+                  <td id="spacegbshowkey"><a href="#EmpireCMS" onclick="edoshowkey('spacegbshowkey','spacegb','<?=$public_r['newsurl']?>');" title="点击显示验证码">点击显示验证码</a></td>
                 </tr>
               </table></td>
         </tr>

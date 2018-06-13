@@ -26,7 +26,7 @@ if($enews=="EditWorkflow")
 {
 	$postword='修改工作流';
 	$wfid=(int)$_GET['wfid'];
-	$r=$empire->fetch1("select wfid,wfname,wftext,myorder from {$dbtbpre}enewsworkflow where wfid='$wfid'");
+	$r=$empire->fetch1("select wfid,wfname,wftext,myorder,canedit from {$dbtbpre}enewsworkflow where wfid='$wfid'");
 	$url="<a href=ListWf.php".$ecms_hashur['whehref'].">管理工作流</a> -&gt; 修改工作流：<b>".$r[wfname]."</b>";
 }
 db_close();
@@ -52,17 +52,20 @@ $empire=null;
     <tr class="header"> 
       <td height="25" colspan="2"> 
         <?=$postword?>
-        <input name="enews" type="hidden" id="enews" value="<?=$enews?>"> <input name="wfid" type="hidden" id="wfid" value="<?=$wfid?>"> 
-      </td>
+        <input name="enews" type="hidden" id="enews" value="<?=$enews?>"> <input name="wfid" type="hidden" id="wfid" value="<?=$wfid?>">      </td>
     </tr>
     <tr> 
-      <td width="18%" height="25" bgcolor="#FFFFFF">工作流名称</td>
-      <td width="82%" height="25" bgcolor="#FFFFFF"> <input name="wfname" type="text" id="wfname" value="<?=$r[wfname]?>" size="42"> 
-      </td>
+      <td width="20%" height="25" bgcolor="#FFFFFF">工作流名称</td>
+      <td width="80%" height="25" bgcolor="#FFFFFF"> <input name="wfname" type="text" id="wfname" value="<?=$r[wfname]?>" size="42">      </td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF">工作流描述</td>
       <td height="25" bgcolor="#FFFFFF"> <textarea name="wftext" cols="60" rows="5" id="wftext"><?=ehtmlspecialchars($r[wftext])?></textarea></td>
+    </tr>
+    <tr>
+      <td height="25" bgcolor="#FFFFFF">流转中的信息可修改</td>
+      <td height="25" bgcolor="#FFFFFF"><input type="radio" name="canedit" value="1"<?=$r['canedit']==1?' checked':''?>>可以修改
+          <input type="radio" name="canedit" value="0"<?=$r['canedit']==0?' checked':''?>>不能修改</td>
     </tr>
     <tr> 
       <td height="25" bgcolor="#FFFFFF">排序</td>

@@ -119,12 +119,17 @@ for($i=1;$i<=12;$i++)
 
 <table width="100%" border="0" align="center" cellpadding="3" cellspacing="1" class="tableborder">
   <tr class="header"> 
-    <td width="40%" height="25"> 
+    <td width="20%" height="25"> 
       <div align="center">日期</div></td>
-    <td width="30%" height="25"> 
+    <td width="12%" height="25"> 
       <div align="center">发布数</div></td>
-    <td width="30%">
+    <td width="12%">
 <div align="center">未审核数</div></td>
+    <td width="11%"><div align="center">审发数</div></td>
+    <td width="11%"><div align="center">审投数</div></td>
+    <td width="12%"><div align="center">点击数</div></td>
+    <td width="11%"><div align="center">评论数</div></td>
+    <td width="11%"><div align="center">下载数</div></td>
   </tr>
   <?php
   $dr=explode('-',$date);
@@ -147,6 +152,15 @@ for($i=1;$i<=12;$i++)
 	$totalnum=$empire->gettotal("select count(*) as total from {$dbtbpre}ecms_".$tbname." where userid='$userid' and ismember=0 and truetime>=".to_time($thisday." 00:00:00")." and truetime<=".to_time($thisday." 23:59:59"));
 	//未审核数
 	$totalchecknum=$empire->gettotal("select count(*) as total from {$dbtbpre}ecms_".$tbname."_check where userid='$userid' and ismember=0 and truetime>=".to_time($thisday." 00:00:00")." and truetime<=".to_time($thisday." 23:59:59"));
+	//点击数
+	$totalonclick=$empire->gettotal("select sum(onclick) as total from {$dbtbpre}ecms_".$tbname." where userid='$userid' and ismember=0 and truetime>=".to_time($thisday." 00:00:00")." and truetime<=".to_time($thisday." 23:59:59"));
+	//评论数
+	$totalplnum=$empire->gettotal("select sum(plnum) as total from {$dbtbpre}ecms_".$tbname." where userid='$userid' and ismember=0 and truetime>=".to_time($thisday." 00:00:00")." and truetime<=".to_time($thisday." 23:59:59"));
+	//下载数
+	$totaldown=$empire->gettotal("select sum(totaldown) as total from {$dbtbpre}ecms_".$tbname." where userid='$userid' and ismember=0 and truetime>=".to_time($thisday." 00:00:00")." and truetime<=".to_time($thisday." 23:59:59"));
+	//审稿
+	$checkhinfonum=$empire->gettotal("select count(*) as total from {$dbtbpre}ecms_".$tbname." where truetime>=".to_time($thisday." 00:00:00")." and truetime<=".to_time($thisday." 23:59:59")." and eckuid='$userid' and ismember=0");
+	$checkqinfonum=$empire->gettotal("select count(*) as total from {$dbtbpre}ecms_".$tbname." where truetime>=".to_time($thisday." 00:00:00")." and truetime<=".to_time($thisday." 23:59:59")." and eckuid='$userid' and ismember=1");
   ?>
   <tr bgcolor="#FFFFFF"> 
     <td height="25"><div align="center">
@@ -156,6 +170,11 @@ for($i=1;$i<=12;$i++)
         <?=($totalnum+$totalchecknum)?>
       </div></td>
     <td><div align="center"><?=$totalchecknum?></div></td>
+    <td><div align="center"><?=$checkhinfonum?></div></td>
+    <td><div align="center"><?=$checkqinfonum?></div></td>
+    <td><div align="center"><?=$totalonclick?></div></td>
+    <td><div align="center"><?=$totalplnum?></div></td>
+    <td><div align="center"><?=$totaldown?></div></td>
   </tr>
   <?php
   }

@@ -9,6 +9,8 @@ function EmpireCMSPlayVideo(vtype,furl,width,height,autostart,baseurl){
 	var filetypemediaplayer='|.wmv|.asf|.wma|.mp3|.asx|.mid|.midi|';
 	var filetyperealplayer='|.rm|.ra|.rmvb|.mp4|.mov|.avi|.wav|.ram|.mpg|.mpeg|';
 	var filetypejwplayer='|.flv|.mp4|';
+	var filetypehtml5video='|.ogg|.mp4|.webm|';
+	var filetypehtml5audio='|.ogg|.mp3|.wav|';
 	if(vtype=='auto'||vtype=='')
 	{
 		filetype=EmpireCMSPlayerGetFiletype(furl);
@@ -16,6 +18,18 @@ function EmpireCMSPlayVideo(vtype,furl,width,height,autostart,baseurl){
 		if(filetypejwplayer.indexOf(cfiletype)!=-1)//jwplayer
 		{
 			playstr=EmpireCMSShowJwplayer(furl,width,height,autostart,baseurl);
+		}
+		else if(filetypehtml5video.indexOf(cfiletype)!=-1)//html5video
+		{
+			playstr=EmpireCMSShowHtml5video(furl,width,height,autostart,baseurl);
+		}
+		else if(filetypehtml5audio.indexOf(cfiletype)!=-1)//html5audio
+		{
+			playstr=EmpireCMSShowHtml5audio(furl,width,height,autostart,baseurl);
+		}
+		else if(filetypeflv.indexOf(cfiletype)!=-1)//flv
+		{
+			playstr=EmpireCMSShowFlv(furl,width,height,autostart,baseurl);
 		}
 		else if(filetypeflash.indexOf(cfiletype)!=-1)//flash
 		{
@@ -35,6 +49,18 @@ function EmpireCMSPlayVideo(vtype,furl,width,height,autostart,baseurl){
 		if(vtype=='jwplayer')//jwplayer
 		{
 			playstr=EmpireCMSShowJwplayer(furl,width,height,autostart,baseurl);
+		}
+		else if(vtype=='html5video')//html5video
+		{
+			playstr=EmpireCMSShowHtml5video(furl,width,height,autostart,baseurl);
+		}
+		else if(vtype=='html5audio')//html5audio
+		{
+			playstr=EmpireCMSShowHtml5audio(furl,width,height,autostart,baseurl);
+		}
+		else if(vtype=='flv')//flv
+		{
+			playstr=EmpireCMSShowFlv(furl,width,height,autostart,baseurl);
 		}
 		else if(vtype=='flash')//flash
 		{
@@ -93,5 +119,29 @@ function EmpireCMSShowRealPlayer(furl,width,height,autostart,baseurl){
 function EmpireCMSShowJwplayer(furl,width,height,autostart,baseurl){
 	var str='';
 	str='<scri'+'pt type="text/javascript" src="'+baseurl+'e/data/modadd/moreplayer/jwplayer/jwplayer.js"></scri'+'pt><div id="EmpireCMSmyElement">Loading the player...</div><scri'+'pt type="text/javascript">jwplayer("EmpireCMSmyElement").setup({ autostart:'+autostart+',file: "'+furl+'",height:'+height+',width:'+width+' });</scri'+'pt>';
+	return str;
+}
+
+//html5video
+function EmpireCMSShowHtml5video(furl,width,height,autostart,baseurl){
+	var str='';
+	var addauto='';
+	if(autostart==1)
+	{
+		addauto=' autoplay="autoplay"';
+	}
+	str='<video id="ecmsvideoid" width="'+width+'" height="'+height+'" controls="controls"'+addauto+'><source src="'+furl+'"></source> Your browser is not supported </video>';
+	return str;
+}
+
+//audio
+function EmpireCMSShowHtml5audio(furl,width,height,autostart,baseurl){
+	var str='';
+	var addauto='';
+	if(autostart==1)
+	{
+		addauto=' autoplay="autoplay"';
+	}
+	str='<audio id="ecmsaudioid" src="'+furl+'" controls="controls"'+addauto+'> Your browser is not supported </audio>';
 	return str;
 }

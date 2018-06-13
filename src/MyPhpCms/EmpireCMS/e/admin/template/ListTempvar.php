@@ -221,7 +221,7 @@ while($cr=$empire->fetch($csql))
   ?>
   <tr bgcolor="#FFFFFF" onmouseout="this.style.backgroundColor='#ffffff'" onmouseover="this.style.backgroundColor='#C3EFFF'"> 
     <td height="25"> <div align="center"> 
-        <?=$r[varid]?>
+        <a href="EditTempid.php?tempno=7&tempid=<?=$r['varid']?>&gid=<?=$gid?><?=$ecms_hashur['ehref']?>" target="_blank" title="修改模板ID"><?=$r[varid]?></a>
       </div></td>
 	<td height="25"> <div align="center"> 
         <?=$r[varname]?>

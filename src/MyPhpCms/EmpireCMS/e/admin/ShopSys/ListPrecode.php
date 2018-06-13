@@ -155,6 +155,7 @@ function EditPrecode($add,$userid,$username){
 	$groupids=ReturnPreGroupids($add['groupid']);
 	$add['classid']=trim($add['classid']);
 	$classids=$add['classid']?','.$add['classid'].',':'';
+	$classids=eaddslashes($classids);
 	$sql=$empire->query("update {$dbtbpre}enewsshop_precode set prename='$add[prename]',precode='$add[precode]',premoney='$add[premoney]',pretype='$add[pretype]',reuse='$add[reuse]',endtime='$add[endtime]',groupid='$groupids',classid='$classids',musttotal='$add[musttotal]',usenum='$add[usenum]' where id='$add[id]'");
 	if($sql)
 	{

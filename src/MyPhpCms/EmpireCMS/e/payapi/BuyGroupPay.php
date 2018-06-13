@@ -36,6 +36,17 @@ if($buyr[buygroupid]&&$level_r[$buyr[buygroupid]][level]>$level_r[$user[groupid]
 {
 	printerror('此充值类型需要 '.$level_r[$buyr[buygroupid]][groupname].' 会员级别以上','',1,0,1);
 }
+//有效期验证
+if($buyr['gdate']&&$user['groupid']!=$buyr['ggroupid'])
+{
+	if($user['userdate']&&$user['userdate']>=time())
+	{
+		if(!$public_r['mhavedatedo'])
+		{
+			printerror('您当前的会员组有效期未到，不能充值新会员组','',1,0,1);
+		}
+	}
+}
 include('payfun.php');
 
 $money=$buyr['gmoney'];

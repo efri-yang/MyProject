@@ -35,6 +35,8 @@ function ReturnYhVar($add){
 	$add['dojs']=(int)$add['dojs'];
 	$add['dosbq']=(int)$add['dosbq'];
 	$add['rehtml']=(int)$add['rehtml'];
+	$add['yhname']=hRepPostStr($add['yhname'],1);
+	$add['yhtext']=hRepPostStr($add['yhtext'],1);
 	return $add;
 }
 

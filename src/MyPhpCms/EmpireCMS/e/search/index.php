@@ -9,8 +9,8 @@ $empire=new mysqlquery();
 
 //处理关键字
 function SearchDoKeyboardVar($keyboard){
-	$keyboard=RepPostVar2(trim($keyboard));
 	$keyboard=str_replace('  ','',$keyboard);
+	$keyboard=RepPostVar2(trim($keyboard));
 	return $keyboard;
 }
 
@@ -335,10 +335,18 @@ for($i=0;$i<$count;$i++)
 		continue;
 	}
 	$searchclass[$i]=RepPostVar($searchclass[$i]);
+	if(stristr(','.$newsearchclass.',',','.$searchclass[$i].','))
+	{
+		continue;
+	}
 	$dh=empty($newsearchclass)?'':',';
 	$newsearchclass.=$dh.$searchclass[$i];
 	$dohh=$hhone==1?$hh:$hh[$i];
 	$dokeyboard=$keyboardone==1?$keyboard:$keyboard[$i];
+	if(strlen($dokeyboard)>$public_r['max_keyboard'])
+	{
+		printerror("MinKeyboard",$getfrom,1);
+	}
 	$onewhere=SearchDoKeyboard($searchclass[$i],$dohh,$dokeyboard);
 	if($onewhere)
 	{
