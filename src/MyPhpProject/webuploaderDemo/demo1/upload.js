@@ -41,9 +41,9 @@ $(function() {
         server: '../server/fileupload.php',
         swf: '../../dist/Uploader.swf',
         //限制文件的大小
-        fileSingleSizeLimit:10,
+         fileSingleSizeLimit:2 * 1024 * 1024,
         fileNumLimit:20,
-        fileSizeLimit: 1024
+        fileSizeLimit: 4 * 1024 * 1024
     });
 
 
