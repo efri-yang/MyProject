@@ -173,7 +173,7 @@ class Auth {
         if (isset($_authList[$uid . $t])) {
             return $_authList[$uid . $t];
         }
-        //1为实时认证  2为登录验证
+        //1为实时认证  2为登录验证，如果是登录验证，同时拥有session中拥有authlist,那么直接返回权限列表
         if (2 == $this->config['auth_type'] && Session::has('_auth_list_' . $uid . $t)) {
             return Session::get('_auth_list_' . $uid . $t);
         }
@@ -183,6 +183,7 @@ class Auth {
         foreach ($groups as $g) {
             $ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
         }
+        //去掉重复rule 中的值
         $ids = array_unique($ids);
         if (empty($ids)) {
             $_authList[$uid . $t] = [];
