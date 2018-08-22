@@ -7,15 +7,32 @@
 </head>
 <body>
 	<div id="app">
-	  <p>Using mustaches: {{ rawHtml }}</p>
-	  <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+		 <form v-on:submit.prevent="onSubmit" method="post" action="https://www.baidu.com/">
+			<p><input type="text" name="txt-1"></p>
+			<p><input type="submit"></p>
+		 </form>
+
+		 <div v-on:click.self="outclick">外框框 <span v-on:click.stop="inclick">内框框</span></div>
 	</div>
 
 <script type="text/javascript">
 		var app=new Vue({
 			el:"#app",
 			data:{
-				rawHtml:'<span style="color: red">This should be red.</span>'
+				
+			},
+			methods:{
+				onSubmit:function(){
+					alert("ASdfasdfasdfa");
+				},
+
+				outclick:function(){
+					alert("outclick");
+				},
+
+				inclick:function(){
+					alert("inclick");
+				},
 			}
 		})
 </script>

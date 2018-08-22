@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+
+
+	<script type="text/javascript">
+
+
+
+
+function defineReactive (obj, key, val) {
+	
+  Object.defineProperty(obj, key, {
+    get () {
+      // 触发getter
+      console.log(`我的${key}属性被读取了！`)
+      return val
+    },
+    set (newVal) {
+
+      // 触发setter
+      console.log(`我的${key}属性被修改了！`)
+      val = newVal
+    }
+  })
+}
+
+
+function observable (obj) {
+  const keys = Object.keys(obj)
+  keys.forEach((key) => {
+    defineReactive(obj, key, obj[key])
+  })
+  return obj
+}
+
+
+const hero = observable({
+  health: 3000,
+  IQ: 150
+})
+
+
+
+
+	</script>
+	
+</body>
+</html>
