@@ -7,14 +7,15 @@
 </head>
 <body>
 	<div id="app">
-  {{message}}
-</div>
+	  <p>Using mustaches: {{ rawHtml }}</p>
+	  <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+	</div>
 
 <script type="text/javascript">
 		var app=new Vue({
 			el:"#app",
 			data:{
-				message:"asdfasfdasdfasdfsadf"
+				rawHtml:'<span style="color: red">This should be red.</span>'
 			}
 		})
 </script>
