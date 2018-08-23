@@ -9,30 +9,29 @@
 
 <body>
     <div id="demo">
-        <div v-bind:class="{ active: isActive }">幸福幸福</div>
-        <div v-bind:class="classObject"></div>
+        <template v-if="loginType === 'username'">
+  <label>Username</label>
+  <input placeholder="Enter your username" key="username-input">
+</template>
+<template v-else>
+  <label>Email</label>
+  <input placeholder="Enter your email address" key="email-input">
+</template>
 
-        <button v-on:click="clk1">单机</button>
+        <button v-on:click="change1">改变登录类型</button>
     </div>
     <script type="text/javascript">
     var app = new Vue({
         el: '#demo',
         data: {
-            isActive: true,
-            error: null
-        },
-        computed: {
-            classObject: function() {
-                return {
-                    active: this.isActive && !this.error,
-                    'text-danger': this.error && this.error.type === 'fatal'
-                }
-            }
+          loginType:"username" 
         },
         methods:{
-            clk1:function(){
-                this.error={
-                    type:"fatal"
+            change1:function(){
+                if(this.loginType){
+                    this.loginType="";
+                }else{
+                    this.loginType="username";
                 }
             }
         }

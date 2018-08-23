@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <ul id="demo" class="demo">
+  <li v-for="(value,key,index) in object">
+    {{ key }}——{{value}}——{{index}}
+  </li>
+</ul>
+    <script type="text/javascript">
+    var vm = new Vue({
+        el: '#demo',
+        data: {
+            object: {
+                firstName: 'John',
+                lastName: 'Doe',
+                age: 30
+            }
+        }
+    })
+    </script>
+</body>
+
+</html>

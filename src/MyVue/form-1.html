@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+</head>
+
+<body>
+    <div id="app1">
+        <form action="./php/form1.php" method="post" @submit.prevent="submit">
+            <div class="item">用户:
+                <input type="text" name="username"  v-model="formData.username" />
+            </div>
+            <div class="item">密码:
+                <input type="password" name="password" v-model="formData.password" />
+            </div>
+            <div class="item">兴趣爱好:
+                <label>
+                    <input type="checkbox" v-model="formData.love"   value="1" name="love[]">篮球</label>
+                <label>
+                    <input type="checkbox" v-model="formData.love" value="2" name="love[]">足球</label>
+                <label>
+                    <input type="checkbox" v-model="formData.love"  value="3" name="love[]">乒乓球</label>
+            </div>
+            <div class="item">性别:
+                <label>
+                    <input type="radio" value="1" name="sex">男</label>
+                <label>
+                    <input type="radio" value="2" name="sex">女</label>
+            </div>
+            <input type="submit" value="提交" />
+        </form>
+    </div>
+    <script type="text/javascript">
+    var vm = new Vue({
+        el: "#app1",
+        data: {
+            formData: {
+                username: "111",
+                password: "",
+                love:[1,2],
+                sex: ""
+            }
+        },
+        methods: {
+            submit: function() {
+            	console.dir(this.formData);
+                // axios({
+                //     method: 'post',
+                //     url: './php/form1.php',
+                //     data:this.formData
+                // });
+            } 
+        }
+    })
+    </script>
+</body>
+
+</html>
