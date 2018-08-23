@@ -6,18 +6,12 @@
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-	<div id="app">
-	  <p>Using mustaches: {{ rawHtml }}</p>
-	  <p>Using v-html directive: <span v-html="rawHtml"></span></p>
-	</div>
+	<div id="demo">{{ fullName }}</div>
 
 <script type="text/javascript">
-		var app=new Vue({
-			el:"#app",
-			data:{
-				rawHtml:'<span style="color: red">This should be red.</span>'
-			}
-		})
+		var vm=new Vue({
+			el:"#demo",
+		});
 </script>
 </body>
 </html>
