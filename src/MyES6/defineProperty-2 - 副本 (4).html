@@ -7,33 +7,10 @@
 <body>
 
 	<script type="text/javascript">
-		function defineReactive(obj,key,val){
-			Object.defineProperty(obj,key,{
-				get(){
-					console.log('我的${key}属性被读取了！');
-				},
-				set(newVal){
-					console.log(`我的${key}属性被修改了！`)
-      				val = newVal
-				}
-			})
-		}
-
-
-		function observable(obj){
-			const keys=Object.keys(obj);
-			keys.forEach((key)=>{
-				defineReactive(obj,key,obj[key]);
-			})
-			return obj;
-		}
-
-		var hero=observable({
-			health:300,
-			IQ:150
-		});
-
-		hero.health=350;
+		var o = {};
+Object.defineProperty(o, "a", { get : function(){return 1;}, 
+                                configurable : true } );
+		Object.defineProperty(o, "a", {configurable : true}); 
 
 	</script>
 	

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    var o = {}; // 创建一个新对象
+    Object.defineProperty(o,"a",{
+    	value:37,
+    	writable:true,
+    	enumerable:true,
+    	configurable:true
+    });
+
+
+    var bValue;
+    Object.defineProperty(o,"b",{
+    	get:function(){
+    		console.dir('执行get方法,key=:${key}');
+    		return bValue;
+    	},
+    	set:function(newValue){
+    		console.dir('执行set方法,key=:${key}');
+    		bValue=newValue;
+    	},
+    	enumerable:true,
+    	configurable:true
+    });
+    o.b=38;
+
+
+    Object.defineProperty(o, "conflict", {
+  value: 0x9f91102, 
+  get: function() { 
+    return 0xdeadbeef; 
+  } 
+});
+
+    </script>
+</body>
+
+</html>
