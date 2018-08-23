@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="demo">
+        <div v-bind:class="{ active: isActive }">幸福幸福</div>
+        <div v-bind:class="classObject"></div>
+
+        <button v-on:click="clk1">单机</button>
+    </div>
+    <script type="text/javascript">
+    var app = new Vue({
+        el: '#demo',
+        data: {
+            isActive: true,
+            error: null
+        },
+        computed: {
+            classObject: function() {
+                return {
+                    active: this.isActive && !this.error,
+                    'text-danger': this.error && this.error.type === 'fatal'
+                }
+            }
+        },
+        methods:{
+            clk1:function(){
+                this.error={
+                    type:"fatal"
+                }
+            }
+        }
+    })
+    </script>
+</body>
+
+</html>
