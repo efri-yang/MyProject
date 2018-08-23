@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    function onComputedUpdate(val) {
+        console.log(`我的类型是：${val}`);
+    }
+
+    function watcher(obj, key, cb) {
+        Object.defineProperty(obj, key, {
+            get() {
+                const val = cb()
+                onComputedUpdate(val)
+                return val
+            },
+            set() {
+                console.error('计算属性无法被赋值！')
+            }
+        })
+    }
+    var hero={};
+    watcher(hero, 'type', () => {
+        return hero.health > 4000 ? '坦克' : '脆皮'
+    })
+    hero.type
+    hero.health = 5000
+    hero.type
+    //改变health的时候并没有做到动态通知
+    </script>
+</body>
+
+</html>

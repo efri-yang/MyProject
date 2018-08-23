@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    let hero = {
+        age: 222
+    }
+    let val = 3000;
+    Object.defineProperty(hero, 'health', {
+        get() {
+            console.log('我的health属性被读取了！')
+            return val
+        },
+        set(newVal) {
+            console.log('我的health属性被修改了！')
+            val = newVal
+        }
+    })
+
+    console.dir(hero.health);
+    hero.health = 5000;
+    </script>
+</body>
+
+</html>
