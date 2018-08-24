@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <!-- 单项数据流*************************** -->
+    <div id="demo">
+        <component-1 v-bind:user-info="userInfo"></component-1>
+
+        <button @click="change1">改变fullName</button>
+        
+        <button @click="change4">获取userInfo</button>
+    </div>
+    <script type="text/javascript">
+        Vue.component('component-1',{
+            props:['userInfo'],
+            data(){
+                return {
+                    userInfo:this.userInfo
+                }
+            },
+            methods:{
+                change1:function(){
+                    this.userInfo.fullName="jjjyyy";
+                },
+                change2:function(){
+                    this.userInfo.members.push("asdfadfasdfs");
+                }
+            },
+            template:`<div>
+                    <p>fullName:{{userInfo.fullName}}</p>
+                    <p>age:{{userInfo.age}}</p>
+                    <p>成员:{{userInfo.members.join(",")}}</p>
+                    <p><button v-on:click="change1">通过子组件改变fullName</button>  <button v-on:click="change2">通过子组件改变member</button></p>
+            </div>`
+        })
+        var vm=new Vue({
+            el:"#demo",
+            data:{
+                //子组件可以冬天改变值
+                userInfo:{
+                    fullName:"杨艺辉",
+                    age:30,
+                    members:["杨河金","刘木兰","杨鹏辉"]
+                }
+            },
+            methods:{
+                change1:function(){
+                    this.userInfo.fullName=(Math.random() >0.5) ? "某某" : "yyy";
+                },
+                change4:function(){
+                    console.dir(this.userInfo);
+                }
+            }
+
+        })
+    </script>
+
+   
+</body>
+
+</html>

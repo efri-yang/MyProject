@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <!-- 单项数据流*************************** -->
+    <div id="demo">
+        <component-1 :title="title" :age="age" :full-name="fullName" :comment-ids="commentIds" ></component-1>
+        <button @click="change1">动态改变值</button>
+    </div>
+    <script type="text/javascript">
+    Vue.component('component-1', {
+        // 在 JavaScript 中是 camelCase 的
+        props: {
+          title: String,
+          age: Number,
+          fullName: Boolean,
+          commentIds: Array,
+          author: Object
+        },
+        template: `<div>
+                    <p>title:{{title}}</p>
+                    <p>age:{{age}}</p>
+                    <p>fullName:{{fullName}}</p>
+                    <p>commentIds01:{{commentIds[0]}}</p>
+                    
+        </div>`
+    })
+
+    var vm=new Vue({
+        el:"#demo",
+        data:{
+            title:"测试",
+            age:28,
+            fullName:"杨艺辉",
+            commentIds:[1,2,3],
+            author:{say:"say"}
+        },
+        methods:{
+            change1:function(){
+               this.title="ccccccc";
+            }
+        }
+    });
+    </script>
+</body>
+
+</html>

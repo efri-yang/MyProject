@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <!-- 单项数据流*************************** -->
+    <div id="demo">
+        <component-1 v-on:my-event="doSomething"></component-1>
+    </div>
+    <script type="text/javascript">
+    Vue.component('component-1', {
+        data() {
+            return {
+
+            }
+        },
+        methods: {
+            //这个方法是调用不到的
+            doSomething: function() {
+                alert("doSomething");
+            }
+        },
+        template: `<div><button v-on:click="$emit('my-event')">触发父组件的方法</button></div>`
+
+    });
+    var vm = new Vue({
+        el: "#demo",
+        data: {},
+        methods: {
+            doSomething: function() {
+                alert("sadfasdfasdf");
+            }
+        }
+    });
+    </script>
+</body>
+
+</html>
