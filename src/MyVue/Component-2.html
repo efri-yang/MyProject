@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    //全局和局部组件的注册
+    <div id="app1">
+        <component-1></component-1>
+
+        <component-2></component-2>
+
+         <component-3></component-3>
+       
+
+    </div>
+
+    <script type="text/javascript">
+        Vue.component("component-1",{
+            data(){
+                return {
+                    age:30
+                }
+            },
+            template:"<h3>{{age}}</h3>"
+        })
+
+        var component3={
+            template:"<h3>component3</h3>"
+        }
+
+       
+        var vm=new Vue({
+            el:"#app1",
+            data:{
+
+            },
+            components: {
+                "component-2":{
+                    template:"<div>这是一个局部的组件测试</div>"
+                },
+                "component-3":component3
+            }
+        });
+
+    </script>
+</body>
+</html>

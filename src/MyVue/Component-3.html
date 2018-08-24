@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app-1">
+
+
+
+
+       <!-- 传入一个数字 的时候 -->
+       <component-1  v-bind:age=42></component-1>
+
+
+       <component-2  age=42></component-2>
+
+
+
+       <!-- 传入一个布尔值 -->
+        
+    
+       <component-3  v-bind:is-published="false"></component-3>
+
+
+
+       <component-4  v-bind:comment-ids="[234, 266, 273]"></component-4>
+
+
+        <component-5  v-bind:author="{ name: 'Veronica', company: 'Veridian Dynamics' }"></component-5>
+
+
+        <component-6  v-bind:myinfo="myInfo"></component-6>
+
+
+
+
+
+    </div>
+    
+    <script type="text/javascript">
+        Vue.component('component-1',{
+            props:["age"],
+            template:`<div><p>{{age===42 ? "数值":"字符串"}}</p></div>`
+        });
+
+        Vue.component('component-2',{
+            props:["age"],
+            template:`<div><p>{{age===42 ? "数值":"字符串"}}</p></div>`
+        });
+
+        Vue.component('component-3',{
+            props:["isPublished"],
+            template:`<div v-if="isPublished"><p>幸福</p></div>`
+        });
+
+        Vue.component('component-4',{
+            props:["commentIds"],
+            template:`<div><p>{{commentIds[1]}}</p></div>`
+        });
+
+        Vue.component('component-5',{
+            props:["author"],
+            template:`<div><p>{{author["name"]}}</p></div>`
+        });
+
+
+         Vue.component('component-6',{
+            props:["myinfo"],
+            template:`<div><p>{{myinfo["fullName"]}}</p></div>`
+        });
+
+
+
+        var vm=new Vue({
+            el:"#app-1",
+            data:{
+                myInfo:{
+                    fullName:"杨艺辉",
+                    age:30
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
