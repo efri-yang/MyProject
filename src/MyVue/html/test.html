@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app1">
+		<div id="mount-point"></div>
+		
+	</div>
+
+	<script type="text/javascript">
+		var Profile=Vue.extend({
+			template:'<p>{{firstName}} {{lastName}} aka {{alias}}</p>',
+			data:function(){
+				return {
+					firstName:"Walter",
+					lastName: 'White',
+					alias: 'Heisenberg'
+				}
+			}
+		});
+
+		new Profile().$mount('#mount-point');
+
+	</script>
+</body>
+</html>
