@@ -4,7 +4,7 @@ class classname
 {
     function __construct()
     {
-        echo __METHOD__,"\n";
+        echo __METHOD__,"\n---";
     }
 }
 function funcname()

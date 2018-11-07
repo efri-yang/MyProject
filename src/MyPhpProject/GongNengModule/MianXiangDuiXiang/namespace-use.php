@@ -3,7 +3,7 @@
 	include("namespace-use-2.php");
 
 	
-	new classname();
+	new B:classname();
 	
 
 ?>

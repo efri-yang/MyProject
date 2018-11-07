@@ -7,7 +7,7 @@ class classname
         echo __METHOD__."<br/>";
     }
 
-    public static run(){
+    public static function run(){
     	echo "namespace A run";
     }
 }
