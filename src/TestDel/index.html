@@ -9,8 +9,14 @@
 	<div class="box1">sadfasdf</div>
 
 	<script type="text/javascript">
-		var a={hy:"01",name:"ccc"};
-		alert(a.length)
+		var arr=[{id:1},{id:2},{id:3}];
+		var newArr=[];
+		for (var i =0; i <arr.length; i++) {
+			newArr.push(arr[i]);
+		}
+		arr[0].id=10;
+		console.dir(arr);
+		console.dir(newArr);
 	</script>
 </body>
 </html>
