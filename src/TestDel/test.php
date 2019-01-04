@@ -1,11 +1,8 @@
 <?php
 
-$files = array("1.txt", "2.txt", "3.txt", "4.txt");
-usort($files, function ($a, $b) {
-    return strnatcmp($b, $a);
-});
-
-print_r($files);
+spl_autoload_register(function ($class) {
+		    include $class . '.php';
+		});
 // $increment = 7;
 // $add = function ($i, $j) use ($increment) {
 //     return $i + $j + $increment;
