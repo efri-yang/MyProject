@@ -10,11 +10,13 @@
 
 <body>
     <script>
-function f() {
-  console.log('aaa');
+function Point(x = 0, y = 0) {
+  this.x = x;
+  this.y = y;
 }
 
-let [x = f()] = [1];
+const p = new Point();
+console.log(p.x)
 
     </script>
 </body>
