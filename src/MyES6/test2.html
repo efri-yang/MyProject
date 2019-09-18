@@ -10,12 +10,12 @@
 
 <body>
     <script>
-{
-  let a = 'secret';
-  let f = function () {
-    return a;
-  };
+function f() {
+  console.log('aaa');
 }
+
+let [x = f()] = [1];
+
     </script>
 </body>
 
