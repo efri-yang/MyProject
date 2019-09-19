@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    
+   var len1=(function (a) {}).length // 1
+   var len2=(function (a = 5) {}).length // 0
+   var len3=(function (a, b, c = 5) {}).length // 2
+
+
+   console.log(len1);
+   console.log(len2);
+   console.log(len3);
+
+
+
+   var len4=(function (a = 0, b, c) {}).length // 0
+   var len5=(function (a, b = 1, c) {}).length // 1
+
+   var len6=(function (a, b , c=5) {}).length // 1
+   console.log(len4);
+   console.log(len5);
+   console.log(len6);
+    </script>
+</body>
+</html>

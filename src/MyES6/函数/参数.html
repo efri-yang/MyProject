@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+function test1(x=0,y=0){
+    console.log(x,y);
+}
+test1();//x=0,y=0
+test1(x=1,y=1);//x=1,y=1
+test1(1,1);//x=1,y=1
+test1(undefined,1);//x=0,y=1;
+test1(null,1);//x=null,y=1;
+
+
+function test2({x=10,y=10}){
+    console.log(x,y);
+}
+// test2(); //报错
+// test2({});//报错
+test2({x:11});//x=11,y=10
+test2({y:11});//x=10,y=11
+
+
+
+function test3({x=10,y=10}={}){
+    console.log(x,y);
+}
+console.group("test3");
+test3(); //报错
+test3({});//报错
+test3({x:11});//x=11,y=10
+test3({y:11});//x=10,y=11
+
+
+
+console.group("testxxxxxx")
+
+function m1({x = 0, y = 0} = {}) {
+  return [x, y];
+}
+
+// 写法二
+function m2({x, y} = { x: 0, y: 0 }) {
+  return [x, y];
+}
+
+
+console.log(m1()); // [0, 0]
+console.log(m2()); // [0, 0]
+
+
+
+m1({x: 3}) // [3, 0]
+m2({x: 3}) // [3, undefined]
+
+
+
+
+
+    </script>
+</body>
+
+</html>

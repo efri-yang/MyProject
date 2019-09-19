@@ -10,14 +10,19 @@
 
 <body>
     <script>
-function Point(x = 0, y = 0) {
-  this.x = x;
-  this.y = y;
-}
+        let foo='outer';
 
-const p = new Point();
-console.log(p.x)
+        function bar1(func=()=>foo){
+            let foo='inner';
+            console.log(func())
+        }
 
+        function bar2(func=()=>foo=10){
+            let foo='inner';
+            console.log(func())
+        }
+        bar1(); //outer
+        bar2(); //10
     </script>
 </body>
 
