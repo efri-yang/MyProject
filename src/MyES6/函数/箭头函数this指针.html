@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>点击</p>
+    <script>
+        var name = "yyh";
+
+
+        let person1 = {
+            name: 'jike',
+            init: function () {
+                //为body添加一个点击事件，看看这个点击后的this属性有什么不同
+                document.body.onclick = () => {
+                    alert(this
+                    .name); //执向person1       init是function，以person.init调用，其内部this就是person本身           
+                }
+            }
+        }
+        person1.init();
+
+
+        let person2 = {
+            name: 'jike',
+            init: () => {
+                //为body添加一个点击事件，看看这个点击后的this属性有什么不同
+                document.body.onclick = () => {
+                    alert(this
+                    .name); //执向 init  而init执向window   init为箭头函数，其内部的this为全局window，onclick的this也就是init函数的this，也是window，       
+                }
+            }
+        }
+        person2.init();
+
+
+
+        let obj2 = {
+            a: 10,
+            b: function (n) {
+                let f = (n) => n + this.a;
+                return f(n);
+            },
+            c: function (n) {
+                let f = (n) => n + this.a;
+                let m = {
+                    a: 20
+                };
+                return f.call(m, n);
+            }
+        };
+
+        console.log(obj2.b(1));  // 11
+        console.log(obj2.c(1)); // 11
+
+
+        function foo(){
+           
+                console.log('id:', this.id);
+           
+        }
+        var id = 21;
+
+foo.call({id:42});
+    </script>
+</body>
+
+</html>

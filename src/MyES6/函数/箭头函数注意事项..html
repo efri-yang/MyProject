@@ -1,26 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
+    <p>xxx</p>
     <script>
-        var obj={
-            age:31,
-            test:()=>{
+        var age = 40;
+        var obj = {
+            age: 31,
+            test: () => {
                 console.log("test");
-                console.log(this.age);
+                console.log(this.age); //指向window
             },
-            test1:function(){
+            test1: function () {
                 console.log(this.age);
             }
         }
         obj.test();
         obj.test1();
-    
+
+        let person = {
+            name: 'jike',
+            init: function () {
+                //为body添加一个点击事件，看看这个点击后的this属性有什么不同
+                document.body.onclick = () => {
+                    alert(this.name); //?? this在浏览器默认是调用时的对象,可变的？                  
+                }
+            }
+        }
+        person.init();
     </script>
 </body>
+
 </html>
