@@ -8,26 +8,16 @@
 </head>
 <body>
     <script>
-function* fibs() {
-  let a = 0;
-  let b = 1;
- 
-  while (true) {
-    console.log(a);
-    yield a;
+const promise = new Promise(function(resolve, reject) {
+  // ... some code
 
-    //下面的代码只有第二次调用的时候才会执行
-    
-    //第一次  a=0 
-    //第二次  [a,b]=[1,1]  a=1
-    //第三次  [a,b]=[1,2]   a=1
-    //第四次  [a,b]=[2,3]   a=2
-    //第五次  [a,b]=[3,5]   a=3
-    [a, b] = [b, a + b];
+  if (/* 异步操作成功 */){
+    resolve(value);
+  } else {
+    reject(error);
   }
-}
+});
 
-let [first, second, third, fourth, fifth, sixth] = fibs();
 
 
     </script>
