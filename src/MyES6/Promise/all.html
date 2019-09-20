@@ -45,18 +45,12 @@
         }
 
 
-        
-        runAsync1()
-            .then(function (data) {
-                console.log(data);
-                return runAsync2()
-            })
-            .then(function(data){
-                console.log(data);
-                return runAsync3();
-            }).then(function(data){
-                console.log(data)
-            })
+
+        Promise
+            .all([runAsync1(), runAsync2(), runAsync3()])
+            .then(function (results) {
+                console.log(results);
+            });
     </script>
 </body>
 

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function getNumber() {
+            var p = new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    var num = Math.ceil(Math.random() * 10);
+                    if (num <= 5) {
+                        resolve(num);
+                    } else {
+                        reject('数字太大了');
+                    }
+                }, 2000)
+            });
+            return p;
+        }
+
+
+        getNumber()
+            .then(function (data) {
+                console.log('resolved');
+                console.log(data);
+                console.log(somedata); //此处会在catch中报错提示
+            })
+            .catch(function (reason) {
+                console.log('rejected');
+                console.log(reason);
+            });
+    </script>
+
+</body>
+
+</html>
