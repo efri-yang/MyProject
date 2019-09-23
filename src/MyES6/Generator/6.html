@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function* objectEntries() {
+            let propKeys = Object.keys(this);
+            for (let propKey of propKeys) {
+
+                yield [propKey, this[propKey]];
+            }
+        }
+        let jane = {
+            first: '杨',
+            last: '艺辉'
+        };
+        jane[Symbol.iterator] = objectEntries;
+        for (let [key, value] of jane) {
+            console.log(`${key}: ${value}`);
+        }
+    </script>
+</body>
+
+</html>
