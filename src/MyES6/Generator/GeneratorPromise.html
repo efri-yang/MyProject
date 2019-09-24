@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function co(gen) {
+            return new Promise((resolve, reject) => {
+                var it = gen();
+                function step(next) {
+                    console.log(next)
+                    if (next.done) {
+                        console.log("xxx done");
+                        return resolve(next.value);
+                    } else {
+                        console.log("xxx do")
+                        Promise.resolve(next.value).then((res) => {
+                           
+                            return step(it.next(res))
+                        }, (e) => {
+                            return step(it.throw(e));
+                        })
+                    }
+                }
+                step(it.next());
+            })
+        }
+        function sayhello() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(123)
+                    console.log(123)
+                }, 100)
+            })
+        }
+        co(
+            function* helloworld() {
+                const data = yield sayhello()
+                console.log(data)
+                console.log(456)
+            }
+        )
+    </script>
+</body>
+
+</html>

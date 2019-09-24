@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        class Parent {
+            static myMethod(msg) {
+                console.log('static', msg);
+            }
+            myMethod(msg) {
+                console.log('instance', msg);
+            }
+        }
+
+        class Child extends Parent{
+            static myMethod(msg) {
+                super.myMethod(msg);
+            }
+            myMethod(msg) {
+                super.myMethod(msg);
+            }
+        }
+
+        Child.myMethod(1); // static 1
+
+        var child = new Child();
+child.myMethod(2); // instance 2
+    </script>
+</body>
+
+</html>
