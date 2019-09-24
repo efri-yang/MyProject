@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class MyClass{
+            constructor(){
+
+            }
+            get prop(){
+                return 'getter';
+            }
+            set prop(value){
+                console.log('setter: '+value);
+            }
+        }
+        let  inst=new MyClass();
+        inst.prop = 123;
+        console.log(inst.prop);
+    </script>
+</body>
+</html>

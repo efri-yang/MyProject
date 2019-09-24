@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class CustomHTMLElement{
+            constructor(element){
+                this.element=element;
+            }
+            get html(){
+                return this.element.innerHTML;
+            }
+            SET html(value){
+                this.element.innerHTML=value;
+            }
+        }
+        var descriptor=Object.getOwnPropertyDescriptor(
+            CustomHTMLElement.prototype,'html'
+        );
+    </script>
+</body>
+</html>
