@@ -1,0 +1,1 @@
+export default({a:10,c:20},{b:20,d:20});
