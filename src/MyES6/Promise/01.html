@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // const promise=new Promise(function(resolve,reject){
+        //     var obj={a:11};
+        //     if(obj.a==10){
+        //         resolve(obj);
+        //     }else{
+        //         reject("reject执行了")
+        //     }
+        // });
+        // promise.then(res=>{
+        //     console.dir(res);
+        // },res=>{
+        //     console.dir(res);
+        // })
+
+        // promise.then(function(value){
+        //     console.dir(value)
+        // },function(value){
+        //     console.dir(value)
+        // })
+
+
+
+        // function timeout(ms) {
+        //     return new Promise((resolve, reject) => {
+        //         setTimeout(resolve, ms, 'done');
+        //     });
+        // }
+
+        // timeout(100).then((value) => {
+        //     console.log(value);
+        // });
+
+
+        /*
+        Hi!
+        resolved.
+        Promise-setTimeout
+        
+        **/
+        // let promise = new Promise(function (resolve, reject) {
+        //     setTimeout(function(){
+        //         console.log("Promise-setTimeout");
+        //     },2000)
+        //     resolve();
+        // });
+        // promise.then(res=>{
+        //     console.log('resolved.');
+        // });
+        // console.log('Hi!');
+
+        /*
+            如果resolve放在setTimeout外面就会立刻执行 先后顺序变了
+        */
+
+        // const p1 = new Promise(function (resolve, reject) {
+        //     setTimeout(() =>{
+        //         console.log("p1的setTimeout执行了了")
+        //         resolve({a:20})
+        //     }, 3000)
+
+        // })
+
+        // const p2 = new Promise(function (resolve, reject) {
+        //     setTimeout(() => resolve(p1), 1000)
+        // })
+
+        // p2
+        //     .then(result => console.log(result))
+        //     .catch(error => console.log(error))
+        const p3 = function () {
+            return new Promise(function (resolve, reject) {
+                reject(new Error('fail'))
+            })
+        }
+
+        
+        const p1 = new Promise(function (resolve, reject) {
+            setTimeout(() => resolve(p3()), 3000)
+        })
+
+        
+
+        const p2 = new Promise(function (resolve, reject) {
+            setTimeout(() => resolve(p1), 1000)
+        })
+
+
+
+        //         p2
+        //   .then(result => console.log(result))
+        //   .catch(error => console.log(error))
+        // p2.then(res => {
+        //     console.log(res)
+        // }, res => {
+        //     console.log(res);
+        // })
+
+
+        new Promise((resolve, reject) => {
+            resolve(1);
+            console.log(2);
+        }).then(r => {
+            console.log(r);
+        });
+    </script>
+</body>
+
+</html>
