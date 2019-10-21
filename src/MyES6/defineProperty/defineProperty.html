@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+			var dep=[];
+			function defineReactive(obj, key, val) {
+				Object.defineProperty(obj,key,{
+					get(){
+						console.log(`触发get方法，作用在${key}上面`);
+						return val;
+					},
+					set(newval){
+						console.log(`触发set方法，作用在${key}上面`);
+						val=newval;
+						return val;
+					}
+				});
+			}
+
+
+			
+
+			function observable(obj){
+				var keys=Object.keys(obj);
+				for(let i=0;i<keys.length;i++){
+					defineReactive(obj,keys[i],obj[keys[i]]);
+				}
+				return obj;
+			}
+
+
+			function watcher(obj,key,cb){
+				Object.defineProperty(obj,key,{
+					set(){
+						
+					},
+					get(){
+						
+					}
+				})
+			}
+
+			var obj=observable({
+				age:31,
+				name:"杨艺辉"
+			});
+
+			watcher(obj,"adultType",function(){
+				return obj.age > 18 ? "成年" :"未成年";
+			});
+
+			//age改变的时候 调用set 调用依赖收集器，(依赖收集器执行return),调用  age的get
+
+
+
+			
+
+
+
+
+
+
+
+
+
+
+			
+
+	</script>
+</body>
+</html>
