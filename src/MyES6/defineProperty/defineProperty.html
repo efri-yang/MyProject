@@ -1,75 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title></title>
 </head>
+
 <body>
 	<script type="text/javascript">
-			var dep=[];
-			function defineReactive(obj, key, val) {
-				Object.defineProperty(obj,key,{
-					get(){
-						console.log(`触发get方法，作用在${key}上面`);
-						return val;
-					},
-					set(newval){
-						console.log(`触发set方法，作用在${key}上面`);
-						val=newval;
-						return val;
+		const Dep = {
+			target: null
+		}
+
+		function defineReactive(obj, key, val) {
+			const deps = []
+			Object.defineProperty(obj, key, {
+				get() {
+					console.log(`我的${key}属性被读取了！`)
+					if (Dep.target && deps.indexOf(Dep.target) === -1) {
+						deps.push(Dep.target)
 					}
-				});
-			}
-
-
-			
-
-			function observable(obj){
-				var keys=Object.keys(obj);
-				for(let i=0;i<keys.length;i++){
-					defineReactive(obj,keys[i],obj[keys[i]]);
+					return val
+				},
+				set(newVal) {
+					console.log(`我的${key}属性被修改了！`)
+					val = newVal
+					deps.forEach((dep) => {
+						dep()
+					})
 				}
-				return obj;
+			})
+		}
+
+
+		/**
+		 * 当计算属性的值被更新时调用
+		 * @param { Any } val 计算属性的值
+		 */
+		function onComputedUpdate(val) {
+			console.log(`我的类型是：${val}`)
+		}
+
+
+
+
+		function observable(obj) {
+			var keys = Object.keys(obj);
+			for (let i = 0; i < keys.length; i++) {
+				defineReactive(obj, keys[i], obj[keys[i]]);
 			}
+			return obj;
+		}
 
 
-			function watcher(obj,key,cb){
-				Object.defineProperty(obj,key,{
-					set(){
-						
-					},
-					get(){
-						
-					}
-				})
+		
+
+		function watcher(obj, key, cb) {
+			const onDepUpdated = () => {
+				const val = cb()
+				onComputedUpdate(val)
 			}
+			Object.defineProperty(obj, key, {
+				set() {
 
-			var obj=observable({
-				age:31,
-				name:"杨艺辉"
-			});
+				},
+				get() {
+					console.log("watcher-get");
+					Dep.target = onDepUpdated;
+					const val = cb()
 
-			watcher(obj,"adultType",function(){
-				return obj.age > 18 ? "成年" :"未成年";
-			});
+					Dep.target = null;
+					return val;
+				}
+			})
+		}
+		var obj = observable({
+			age: 31,
+			name: "杨艺辉"
+		});
 
-			//age改变的时候 调用set 调用依赖收集器，(依赖收集器执行return),调用  age的get
-
-
-
-			
-
-
-
-
-
-
-
+		watcher(obj, "adultType", function () {
+			return obj.age > 18 ? "成年" : "未成年";
+		});
 
 
+		watcher(obj, "adultType2", function () {
+			return obj.age > 60 ? "老年人" : "不是老年人";
+		});
 
-			
+		obj.adultType; //初始化
 
+
+		
+
+		//watcher的时候定义依赖
+		//age改变的时候 
+		//搜集依赖
+		//执行依赖
+		//依赖的执行会触发age的get() 返回age的值  最终会返回adultType
+		//
 	</script>
 </body>
+
 </html>
