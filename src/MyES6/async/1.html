@@ -8,20 +8,20 @@
 </head>
 <body>
     <script>
-        // async function f(){
-        //     return 'hello world';
-        // }
-        // f().then(v=>console.log(v));
+        async function f(){
+            return 'hello world';
+        }
+        f().then(v=>console.log(v));
 
 
-        async function f() {
-  throw new Error('出错了');
-}
+//         async function f() {
+//   throw new Error('出错了');
+// }
 
-f().then(
-  v => console.log(v),
-  e => console.log(e)
-)
+// f().then(
+//   v => console.log(v),
+//   e => console.log(e)
+// )
     </script>
 </body>
 </html>
