@@ -7,32 +7,37 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="Access-Control-Allow-Origin" content="*" />
     <title>Document</title>
-    <script
-  src="https://code.jquery.com/jquery-2.2.4.min.js"
-  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-  crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <script>
-        const promise = new Promise(function (resolve, reject) {
-            var res
-            $.ajax({
-                url:"http://localhost/MyProject/src/MyES6/php/xxx.php",
-                type:"get",
-                dataType:"json",
-                
-                success:function(res){
-                    console.log(res);
-                    resolve(res);
-                }
-            })
-           
+        const p1=new Promise(function(resolve,reject){
+            setTimeout(()=>reject(new Error('fail')),3000)
         });
 
-        promise.then(res=>{
-            console.log(res);
+        const p2=new Promise(function(resolve,reject){
+            setTimeout(()=>resolve(p1),1000);
+        });
+
+        p2.then(res=>{
+            
         })
+
+    function alt(){
+        let a=10;
+        
+        if(a==20){
+            console.log(b)
+        }else{
+          return  new Promise(function(resolve,reject){
+              console.log(a)
+          })
+        }
+    }
+
+    alt()
     </script>
 </body>
 
