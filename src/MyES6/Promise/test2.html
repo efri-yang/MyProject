@@ -16,28 +16,16 @@
         const p1=new Promise(function(resolve,reject){
             setTimeout(()=>reject(new Error('fail')),3000)
         });
-
         const p2=new Promise(function(resolve,reject){
             setTimeout(()=>resolve(p1),1000);
         });
-
         p2.then(res=>{
-            
-        })
-
-    function alt(){
-        let a=10;
-        
-        if(a==20){
-            console.log(b)
-        }else{
-          return  new Promise(function(resolve,reject){
-              console.log(a)
-          })
-        }
-    }
-
-    alt()
+            console.log("p2的then执行了");
+        }).catch(error => {
+            console.log(error);
+        }).finally(() => {
+            console.log(this)
+        });
     </script>
 </body>
 
