@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var obj = {
+            name: 'zhangsan'
+        }
+        var objCopy = {
+            name: 'zhangsan'
+        }
+        Object.defineProperty(obj, "name", {
+            set: function (val) {
+                if (val === 'lisi') {
+                    console.log("誓死不叫这么土的名字")
+                } else {
+                    objCopy.name = val
+                }
+            },
+            get: function () {
+                return objCopy.name.replace(/san/, '先生')
+            }
+        })
+
+        obj.name = "zhangxxxxsan";
+        console.log(objCopy.name)
+        console.log(obj.name)
+    </script>
+</body>
+
+</html>
