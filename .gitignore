@@ -13,3 +13,4 @@ remove/*
 *.zip
 package.json
 src/MyPhpCms/TPAdmin/
+src/MyVue/vue-router/
