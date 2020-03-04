@@ -10,12 +10,40 @@
 <body>
 
     <script>
-        let div = document.createElement('div')
-        let str = ''
-        for (const key in div) {
-            str += key + '-----'
+        function throttle(fn, time = 250) {
+            let isRuning = true;
+            return function () {
+                if (!isRuning) return;
+                isRuning = false;
+                setTimeout(function () {
+                    fn.apply(this, arguments);
+                    isRuning = true;
+                }, time)
+            }
         }
-        console.log(str)
+
+        function debounce(fn,time){
+            let timer;
+            return function(){
+                cleatTimeout(timer);
+                timer=setTimeout(function(){
+                    fn.apply(this,arguments);
+                },time)
+            }
+        }
+
+        function say(){
+            return new Promise((resolve,reject)=>{
+                setTimeout(function(){
+                    console.log("timeout 3秒执行")
+                },3000);
+                resolve(10);
+            })
+        }
+        say().then(res=>{
+            console.log(res);
+        })
+
     </script>
 
 </body>
